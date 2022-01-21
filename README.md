@@ -10,4 +10,3 @@ Based on [@esnvutbrno](https://github.com/esnvutbrno) members.
 ## License
 
 Distributed under the GNU GPLv3 License. See `LICENSE.txt` for more information.
-

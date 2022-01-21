@@ -4,6 +4,10 @@ SHELL := /bin/bash
 all: install runserver
 
 .PHONY:
+check: ## Runs all included lints/checks/reformats
+	poetry run pre-commit run --all-files
+
+.PHONY:
 install: pyproject.toml poetry.lock ## Installs deps from pyproject.toml and poetry lockfile
 	poetry install
 
@@ -14,4 +18,3 @@ runserver: ## Runs django server in development mode
 .PHONY:
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-20s\033[0m %s\n", $$1, $$2}'
-

@@ -1,0 +1,84 @@
+default_language_version:
+  python: python3.9
+
+repos:
+  # basic hooks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v3.2.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+      - id: check-added-large-files
+      - id: check-ast
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  # security linter on
+  - repo: https://github.com/pycqa/bandit
+    rev: 1.6.2
+    hooks:
+      - id: bandit
+        name: Security check by bandit
+        args: [ '-iii', '-ll' ]
+
+  # linter & complexity analyzer
+  # not used the default, since it doesn't currently support pyproject.toml
+  - repo: https://github.com/csachs/pyproject-flake8
+    rev: c40c2eb86d7efdd47f2087204cd05fd96e4f2014
+    hooks:
+      - id: pyproject-flake8
+        name: Code & complexity linting by flake8
+        additional_dependencies: [
+            "flake8-bugbear",
+            "flake8-comprehensions",
+            "flake8-print",
+            "flake8-simplify",
+        ]
+
+  # uncompromise python formatter
+  - repo: https://github.com/psf/black
+    rev: 21.12b0
+    hooks:
+      - id: black
+        name: Code formatter black
+
+  # local deps since they needed local enviroment
+  - repo: local
+    hooks:
+      - id: isort
+        name: Autosort of imports by isort
+        entry: poetry run isort
+        language: python
+        additional_dependencies: [ 'isort' ]
+        exclude: "[a-zA-Z]*/(migrations)/(.)*"
+        types: [ python ]
+        require_serial: true
+
+      - id: pylint
+        name: Pylint with django plugin
+        entry: poetry run pylint
+        language: system
+        exclude: "[a-zA-Z]*/(migrations)/(.)*"
+        args: [
+            "--load-plugins=pylint_django",
+            "--django-settings-module=fiesta.settings",
+        ]
+        types: [ python ]
+        require_serial: true
+
+
+
+ci:
+  autofix_commit_msg: |
+    [pre-commit.ci] auto fixes from pre-commit.com hooks
+  autofix_prs: true
+  autoupdate_branch: develop
+  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_schedule: weekly
+  skip: [ ]
+  submodules: false
