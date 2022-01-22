@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "debug_toolbar",
-    "apps.plugins",
+    "apps.plugins.apps.PluginsConfig",
+    "django_extensions",
 ]
 
 MIDDLEWARE = [
@@ -54,8 +55,9 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",  # admin needs it
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
 ]
 
 ROOT_URLCONF = "fiesta.urls"

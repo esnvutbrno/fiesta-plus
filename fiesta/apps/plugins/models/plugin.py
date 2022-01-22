@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from ..plugin import PluginAppConfig
+from ..utils import all_plugins_as_choices
 from apps.utils.models import BaseTimestampedModel
 
 
@@ -34,7 +35,7 @@ class Plugin(BaseTimestampedModel):
 
     app_label = models.CharField(
         max_length=256,
-        choices=PluginAppConfig.all_plugins_as_choices(),
+        choices=all_plugins_as_choices(),
         verbose_name=_("App label"),
         help_text=_("Defines system application, which specific plugin represents."),
     )

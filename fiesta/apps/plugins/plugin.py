@@ -14,15 +14,10 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     configuration_model: Optional[str] = None
 
-    @classmethod
-    def all_plugin_apps(cls) -> tuple["PluginAppConfig", ...]:
-        """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
-        from django.apps import apps
+    @property
+    def url_prefix(self) -> str:
+        """Defines prefix,"""
+        return self.label + "/"
 
-        return tuple(
-            filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs())
-        )
 
-    @classmethod
-    def all_plugins_as_choices(cls) -> list[tuple[str, str]]:
-        return [(a.label, a.verbose_name) for a in cls.all_plugin_apps()]
+__all__ = ["PluginAppConfig"]
