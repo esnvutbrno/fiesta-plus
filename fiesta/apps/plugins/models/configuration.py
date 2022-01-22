@@ -14,4 +14,7 @@ class BasePluginConfiguration(BasePolymorphicModel):
     name = models.CharField(max_length=64, default="default")
 
     def __str__(self):
-        return f"{self.polymorphic_ctype.name}: {self.name}"
+        return f"{self.polymorphic_ctype.name if self.polymorphic_ctype else '---'}: {self.name}"
+
+
+__all__ = ["BasePluginConfiguration"]

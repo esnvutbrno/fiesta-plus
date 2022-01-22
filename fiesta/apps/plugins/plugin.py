@@ -5,12 +5,18 @@ from django.apps import AppConfig
 
 
 class PluginAppConfig(AppConfig, metaclass=ABCMeta):
-    menu_template: str
+    """
+    Base app config for all pluginable applications.
+
+    Optinonaly defines model of configuration, which has to inherit from BasePluginConfiguration -- in that case,
+    plugin could be linked to model configuration. Otherwise, no configuration is provided.
+    """
 
     configuration_model: Optional[str] = None
 
     @classmethod
     def all_plugin_apps(cls) -> tuple["PluginAppConfig", ...]:
+        """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
         from django.apps import apps
 
         return tuple(

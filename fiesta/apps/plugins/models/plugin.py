@@ -79,8 +79,11 @@ class Plugin(BaseTimestampedModel):
             )
 
     def __str__(self):
-        return f"{self.label}: {self.get_state_display()}"
+        return f"{self.get_app_label_display()}: {self.get_state_display()}"
 
     @property
     def app_config(self) -> PluginAppConfig:
         return apps.app_configs[self.app_label]
+
+
+__all__ = ["Plugin"]
