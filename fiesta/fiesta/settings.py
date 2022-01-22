@@ -37,6 +37,7 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    # Django native
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -46,7 +47,10 @@ INSTALLED_APPS = [
     # Djago 3rd
     "polymorphic",
     "debug_toolbar",
+    # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
+    "apps.accounts.apps.AccountsConfig",
+    # Debugs
     "django_extensions",
 ]
 
@@ -57,7 +61,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",  # admin needs it
+    # admin needs it
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
 ]
