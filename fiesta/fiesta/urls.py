@@ -15,16 +15,13 @@ Including another URLconf
 """
 from django.conf import settings
 from django.contrib import admin
-from django.http import HttpResponse
 from django.urls import include, path
 
-
-def hello_world(request, *args, **kwargs):
-    return HttpResponse("<body>Hola Mundo!</body>")
-
+from apps.plugins.utils import all_plugin_apps
 
 urlpatterns = [
-    path("", hello_world),
+    path(app.url_prefix, include(f"{app.name}.urls")) for app in all_plugin_apps()
+] + [
     path("admin/", admin.site.urls),
 ]
 
