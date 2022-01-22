@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # Djago 3rd
+    "polymorphic",
     "debug_toolbar",
     "apps.plugins.apps.PluginsConfig",
     "django_extensions",
