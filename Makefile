@@ -1,4 +1,4 @@
-DJANGO_ADMIN = docker-compose run --rm web python manage.py
+DJANGO_ADMIN = docker-compose run -u 1000 --rm web python manage.py
 
 CMD = help
 ARG =

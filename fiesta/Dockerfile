@@ -1,6 +1,7 @@
 # pull official base image
 FROM python:3.9.7-alpine
 
+
 # set work directory
 WORKDIR /usr/src/app
 
@@ -11,8 +12,8 @@ ENV PYTHONUNBUFFERED 1
 ENV TZ Europe/Prague
 
 # configure users, dirs, install psycopg, install runtime deps
-RUN addgroup -S django \
-    && adduser -s /bin/sh -D -S -G django django \
+RUN addgroup -S 1000 \
+    && adduser -s /bin/sh -D -S -G 1000 1000 \
     && apk update \
     #   build deps
     && apk add --virtual build-deps gcc python3-dev musl-dev gettext-dev libffi-dev \
@@ -21,9 +22,7 @@ RUN addgroup -S django \
     && apk add postgresql-dev gettext tzdata bash \
     # && pipenv install psycopg2-binary --skip-lock --dev \
     && apk del build-deps \
-    && mkdir /usr/src/static /usr/src/media \
-    && chown django:django /usr/src/static \
-    && chown django:django /usr/src/media \
+    && mkdir -p /usr/src/static /usr/src/media /usr/src/app \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # install python deps
@@ -35,3 +34,6 @@ RUN apk add --virtual python-deps build-base \
 
 # copy project
 COPY ./fiesta/ /usr/src/app/
+
+RUN chown 1000:1000 -R /usr/src
+USER 1000
