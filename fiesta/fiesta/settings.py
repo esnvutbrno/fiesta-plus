@@ -17,8 +17,8 @@ from decouple import AutoConfig
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# to load .env or settings.ini
-config = AutoConfig(BASE_DIR)
+# to load .env from folder, where docker stores secrets files
+config = AutoConfig("/run/secrets/")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -27,9 +27,12 @@ config = AutoConfig(BASE_DIR)
 SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS: list[str] = [".localhost"]
+
+if DEBUG:
+    INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 
 # Application definition
 
@@ -40,10 +43,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",

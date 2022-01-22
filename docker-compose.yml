@@ -9,8 +9,8 @@ services:
       - web_media_files:/usr/src/media
     ports:
       - "8000:8000"
-    env_file:
-      - fiesta/.env
+    secrets:
+      - .env
     build:
       context: .
       dockerfile: fiesta/Dockerfile
@@ -48,9 +48,9 @@ services:
     depends_on:
       - web
 
-#secrets:
-#  .env:
-#    file: ./.env.local
+secrets:
+  .env:
+    file: ./.env
 
 volumes:
   postgres_data:
