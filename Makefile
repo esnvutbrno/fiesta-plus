@@ -1,28 +1,30 @@
-SHELL := /bin/bash
-IN_FIESTA := @cd . &&
+DJANGO_ADMIN = docker-compose run --rm web python manage.py
 
-.PHONY:
-all: install runserver
+CMD = help
+ARG =
 
-.PHONY:
+all: up
+
 check: ## Runs all included lints/checks/reformats
-	$(IN_FIESTA) poetry run pre-commit run --all-files
+	poetry run pre-commit run --all-files
+
+migrate: CMD = migrate ## Runs manage.py migrate for all apps
+migrate: da
 
 .PHONY:
-install: ./fiesta/pyproject.toml ./fiesta/poetry.lock ## Installs deps from pyproject.toml and poetry lockfile
-	$(IN_FIESTA) poetry install
+makemigrations: CMD = makemigrations ## Runs manage.py makemigrations for all apps
+makemigrations: da
 
-.PHONY:
-runserver: ## Runs django server in development mode OUT of docker
-	$(IN_FIESTA) poetry run python fiesta/manage.py runserver
+da: ## Invokes django-admin command stored in CMD
+	$(DJANGO_ADMIN) $(CMD) $(ARG)
 
-
-build:
+build: ## Builds docker images.
 	docker-compose build
 
-up:
+up: ## Runs all needed docker containers in non-deamon mode
 	docker-compose up
 
-.PHONY:
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-20s\033[0m %s\n", $$1, $$2}'
+
+.PHONY: all check migrate makemigrations da build up help

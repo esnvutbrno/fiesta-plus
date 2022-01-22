@@ -17,9 +17,9 @@ services:
       - db
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.django.rule=Host(`django.localhost`)"
-      - "traefik.http.routers.django.tls=true"
-#      - "traefik.http.routers.django.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.web.rule=Host(`fiesta.localhost`)"
+      - "traefik.http.routers.web.tls=true"
+
   db:
     image: postgres:12.0-alpine
     volumes:

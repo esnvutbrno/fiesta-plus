@@ -15,18 +15,11 @@ address = ":443"
 insecure = true
 
 [log]
-level = "DEBUG"
+#level = "DEBUG"
 
 [providers.docker]
 exposedByDefault = false
 endpoint = "unix:///var/run/docker.sock"
 
 [docker]
-domain = "docker.localhost"
-
-[certificatesResolvers.letsencrypt.acme]
-email = "thejoeejoee@gmail.com"
-storage = "/certs/acme.json"
-
-[certificatesResolvers.letsencrypt.acme.httpChallenge]
-entryPoint = "web"
+domain = "docker.local"
