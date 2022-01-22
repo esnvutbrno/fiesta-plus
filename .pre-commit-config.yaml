@@ -54,7 +54,7 @@ repos:
         name: Autosort of imports by isort
         entry: poetry run isort
         language: python
-        additional_dependencies: [ 'isort' ]
+        additional_dependencies: [ poetry, isort ]
         exclude: "[a-zA-Z]*/(migrations)/(.)*"
         types: [ python ]
         require_serial: true
@@ -62,7 +62,8 @@ repos:
       - id: pylint
         name: Pylint with django plugin
         entry: poetry run pylint
-        language: system
+        language: python
+        additional_dependencies: [ poetry, . ]
         exclude: "[a-zA-Z]*/(migrations)/(.)*"
         args: [
             "--load-plugins=pylint_django",
