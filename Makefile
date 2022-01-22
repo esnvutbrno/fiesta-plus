@@ -22,7 +22,7 @@ build: ## Builds docker images.
 	docker-compose build
 
 up: ## Runs all needed docker containers in non-deamon mode
-	docker-compose up
+	docker-compose up --build
 
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-20s\033[0m %s\n", $$1, $$2}'
