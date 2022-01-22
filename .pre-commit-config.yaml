@@ -47,35 +47,11 @@ repos:
       - id: black
         name: Code formatter black
 
-  # local deps since they needed local enviroment
-  - repo: local
+  - repo: https://github.com/pycqa/isort
+    rev: 5.10.1
     hooks:
-      - id: install-project
-        name: Checks, if project is installable && install it for following hooks
-        entry: sh -c 'python -mpip install poetry && poetry install'
-        language: system
-
       - id: isort
-        name: Autosort of imports by isort
-        entry: poetry run isort
-        language: system
-        exclude: "[a-zA-Z]*/(migrations)/(.)*"
-        types: [ python ]
-        require_serial: true
-
-      - id: pylint
-        name: Pylint with django plugin
-        entry: poetry run pylint
-        language: system
-        exclude: "[a-zA-Z]*/(migrations)/(.)*"
-        args: [
-            "--load-plugins=pylint_django",
-            "--django-settings-module=fiesta.settings",
-        ]
-        types: [ python ]
-        require_serial: true
-
-
+        name: isort (python)
 
 ci:
   autofix_commit_msg: |
