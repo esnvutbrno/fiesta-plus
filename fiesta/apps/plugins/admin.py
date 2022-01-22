@@ -34,6 +34,10 @@ class PluginAdmin(admin.ModelAdmin):
     # https://django-autocomplete-light.readthedocs.io/en/master/tutorial.html
     # Filtering results based on the value of other fields in the form
 
+    # TODO: relating to django-polymorphic docs, UUID PK should not work
+    # but I haven't encoutered any issue with this, so idk
+    # solution: https://github.com/django-polymorphic/django-polymorphic/issues/81#issuecomment-112152701
+
 
 @admin.register(BasePluginConfiguration)
 class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
