@@ -50,11 +50,15 @@ repos:
   # local deps since they needed local enviroment
   - repo: local
     hooks:
+      - id: install-project
+        name: Checks, if project is installable && install it for following hooks
+        entry: sh -c 'python -mpip install poetry && poetry install'
+        language: system
+
       - id: isort
         name: Autosort of imports by isort
         entry: poetry run isort
-        language: python
-        additional_dependencies: [ poetry, isort ]
+        language: system
         exclude: "[a-zA-Z]*/(migrations)/(.)*"
         types: [ python ]
         require_serial: true
@@ -62,8 +66,7 @@ repos:
       - id: pylint
         name: Pylint with django plugin
         entry: poetry run pylint
-        language: python
-        additional_dependencies: [ poetry, . ]
+        language: system
         exclude: "[a-zA-Z]*/(migrations)/(.)*"
         args: [
             "--load-plugins=pylint_django",
