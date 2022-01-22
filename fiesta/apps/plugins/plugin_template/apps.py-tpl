@@ -1,0 +1,9 @@
+from apps.plugins.plugin import PluginAppConfig
+
+class {{ camel_case_plugin_name }}Config(PluginAppConfig):
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'apps.{{ plugin_name }}'
+
+    configuration_model = '{{ plugin_name }}.{{ camel_case_plugin_name }}Configuration'
+
+__all__ = ['{{ camel_case_plugin_name }}Config']

@@ -1,0 +1,6 @@
+from django.urls import path, include
+
+# Define your urls here
+urlpatterns = [
+
+]

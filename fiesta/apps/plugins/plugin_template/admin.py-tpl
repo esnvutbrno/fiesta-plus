@@ -1,0 +1,12 @@
+from django.contrib import admin
+from polymorphic.admin import PolymorphicChildModelAdmin
+from apps.plugins.models import BasePluginConfiguration
+
+from .models import {{ camel_case_plugin_name }}Configuration
+
+@admin.register({{ camel_case_plugin_name }}Configuration)
+class {{ camel_case_plugin_name }}ConfigurationAdmin(PolymorphicChildModelAdmin):
+    base_model = BasePluginConfiguration
+
+    list_display = [...]
+    list_filter = [...]

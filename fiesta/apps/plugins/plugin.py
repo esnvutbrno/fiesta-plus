@@ -17,7 +17,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     @property
     def url_prefix(self) -> str:
         """Defines prefix,"""
-        return self.label + "/"
+        return self.label.replace("_", "-") + "/"
 
 
 __all__ = ["PluginAppConfig"]
