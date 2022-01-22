@@ -6,4 +6,5 @@ from apps.plugins.models import BasePluginConfiguration
 class {{ camel_case_plugin_name }}Configuration(BasePluginConfiguration):
     ...
 
+
 __all__ = ['{{ camel_case_plugin_name }}Configuration']
