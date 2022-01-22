@@ -1,0 +1,57 @@
+version: '3.3'
+services:
+  web:
+    command: /bin/bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py runserver 0.0.0.0:8000'
+    volumes:
+      - ./fiesta/:/usr/src/app/
+      - web_static_files:/usr/src/static
+      - web_media_files:/usr/src/media
+    ports:
+      - "8000:8000"
+    env_file:
+      - fiesta/.env
+    build:
+      context: .
+      dockerfile: fiesta/Dockerfile
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web.rule=Host(`fiesta.localhost`)"
+      - "traefik.http.routers.web.tls=true"
+
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - "127.0.0.1:15432:5432"
+    environment:
+      - POSTGRES_USER=fiesta
+      - POSTGRES_PASSWORD=fiesta
+      - POSTGRES_DB=fiesta
+      - TZ=Europe/Prague
+
+  webserver:
+    image: traefik:v2.5
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "443:443"
+    volumes:
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
+      - ./conf/certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock
+      - web_static_files:/static
+      - web_media_files:/media
+    depends_on:
+      - web
+
+#secrets:
+#  .env:
+#    file: ./.env.local
+
+volumes:
+  postgres_data:
+  web_static_files:
+  web_media_files:
