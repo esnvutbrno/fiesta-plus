@@ -42,6 +42,7 @@ DOMAIN = fiesta.localhost
 .ONESHELL:
 generate-localhost-certs:
 	# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
+	@mkdir -p .conf/certs
 	docker run \
 		--rm \
 		--name mkcert \
@@ -52,5 +53,10 @@ generate-localhost-certs:
 			chown -R `id -u`:`id -g` ./ && \
 			mv $(DOMAIN).pem $(DOMAIN).crt && \
 			mv $(DOMAIN)-key.pem $(DOMAIN).key"
+
+trust-localhost-ca:
+	mkdir -p /usr/local/share/ca-certificates/localhost
+	cp conf/certs/rootCA.pem /usr/local/share/ca-certificates/localhost/rootCA.crt
+	update-ca-certificates
 
 .PHONY: all check migrate makemigrations da build up help generate-localhost-certs

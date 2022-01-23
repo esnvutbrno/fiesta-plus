@@ -29,6 +29,7 @@ urlpatterns = [
     for app in all_plugin_apps()
 ] + [
     path("admin/", admin.site.urls),
+    path("auth/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:
