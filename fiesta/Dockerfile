@@ -1,7 +1,6 @@
 # pull official base image
 FROM python:3.9.7-alpine
 
-
 # set work directory
 WORKDIR /usr/src/app
 
@@ -33,6 +32,6 @@ RUN addgroup -S 1000 \
 # copy project
 COPY ./fiesta/ /usr/src/app/
 
-RUN chown 1000:1000 -R /usr/src
+RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]

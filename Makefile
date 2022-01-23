@@ -1,32 +1,41 @@
-DJANGO_ADMIN = docker-compose run --rm web python manage.py
+DC = docker-compose
+DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
+MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 
-CMD = help
+WEB_CMD = $(DC) run $(DCRUNFLAGS) web
+DJANGO_ADMIN =  $(WEB_CMD) python manage.py
+
+cmd ?= help
+DA_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
 GRAPH_MODELS_CMD = graph_models accounts plugins auth \
 	--arrow-shape normal \
-	--pydot -X 'ContentType|Base*Model'\
+	--pydot -X 'ContentType|Base*Model' \
 	 -g -o $(MODELS_PNG)
-
 
 all: up
 
 check: ## Runs all included lints/checks/reformats
 	poetry run pre-commit run --all-files
 
-migrate: CMD = migrate ## Runs manage.py migrate for all apps
+startplugin: DA_CMD = startplugin ## Create plugin in project with name=
+startplugin: ARG = $(name)
+startplugin: da
+
+migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
 
-makemigrations: CMD = makemigrations ## Runs manage.py makemigrations for all apps
+makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
 
-graph_models: CMD = $(GRAPH_MODELS_CMD)
+graph_models: DA_CMD = $(GRAPH_MODELS_CMD)
 graph_models: da ## Plot all Django models into models.png
 	@mv ./fiesta/$(MODELS_PNG) .
 
-da: ## Invokes django-admin command stored in CMD
-	$(DJANGO_ADMIN) $(CMD) $(ARG)
+da: ## Invokes django-admin command stored in cmd=
+	$(DC) run $(DCRUNFLAGS) web "python manage.py $(DA_CMD) $(ARG)"
 
 build: ## Builds docker images.
 	docker-compose build
@@ -35,14 +44,17 @@ up: ## Runs all needed docker containers in non-deamon mode
 	docker-compose up --build
 
 help: ## Shows help
-	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-20s\033[0m %s\n", $$1, $$2}'
+	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
 DOMAIN = fiesta.localhost
 
-.ONESHELL:
-generate-localhost-certs:
+generate-localhost-certs: conf/certs/fiesta.localhost.crt ## Generates self-signed localhost certs for working HTTPS.
+generate-localhost-certs: conf/certs/fiesta.localhost.key
+
+conf/certs/$(DOMAIN).crt:
+conf/certs/$(DOMAIN).key:
 	# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
-	@mkdir -p .conf/certs
+	@mkdir -p conf/certs
 	docker run \
 		--rm \
 		--name mkcert \
@@ -54,7 +66,7 @@ generate-localhost-certs:
 			mv $(DOMAIN).pem $(DOMAIN).crt && \
 			mv $(DOMAIN)-key.pem $(DOMAIN).key"
 
-trust-localhost-ca:
+trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 	mkdir -p /usr/local/share/ca-certificates/localhost
 	cp conf/certs/rootCA.pem /usr/local/share/ca-certificates/localhost/rootCA.crt
 	update-ca-certificates
