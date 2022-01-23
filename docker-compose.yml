@@ -1,8 +1,7 @@
 version: '3.3'
 services:
   web:
-    command: /bin/bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py runserver 0.0.0.0:8000'
-    user: 1000:1000
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./fiesta/:/usr/src/app/
       - web_static_files:/usr/src/static

@@ -29,7 +29,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS: list[str] = [".localhost"]
+ALLOWED_HOSTS: list[str] = [".localhost", "127.0.0.1"]
 
 if DEBUG:
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()

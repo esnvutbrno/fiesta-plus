@@ -34,4 +34,5 @@ RUN addgroup -S 1000 \
 COPY ./fiesta/ /usr/src/app/
 
 RUN chown 1000:1000 -R /usr/src
-USER 1000
+
+ENTRYPOINT ["./run.sh"]
