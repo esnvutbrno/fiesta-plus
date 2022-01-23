@@ -29,7 +29,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS: list[str] = [".localhost"]
+ALLOWED_HOSTS: list[str] = [".localhost", "127.0.0.1"]
 
 if DEBUG:
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
@@ -37,17 +37,27 @@ if DEBUG:
 # Application definition
 
 INSTALLED_APPS = [
+    # Django native
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
     # Djago 3rd
     "polymorphic",
     "debug_toolbar",
+    # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
+    "apps.accounts.apps.AccountsConfig",
+    # Debugs
     "django_extensions",
+    # django-allauth
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.facebook",
 ]
 
 MIDDLEWARE = [
@@ -57,7 +67,8 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",  # admin needs it
+    # admin needs it
+    "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
 ]
@@ -67,7 +78,7 @@ ROOT_URLCONF = "fiesta.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [(BASE_DIR / "templates").as_posix()],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -113,6 +124,50 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "accounts.User"
+
+
+# TODO: check, which settings are needed & move to settings subpackage
+AUTHENTICATION_BACKENDS = (
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+
+SITE_ID = 1
+
+
+SOCIALACCOUNT_PROVIDERS = {
+    "facebook": {
+        "METHOD": "oauth2",
+        "SDK_URL": "//connect.facebook.net/{locale}/sdk.js",
+        "SCOPE": ["email", "public_profile"],
+        # 'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+        "INIT_PARAMS": {"cookie": True},
+        "FIELDS": [
+            "id",
+            "first_name",
+            "last_name",
+            "name",
+            "name_format",
+            "picture",
+            "short_name",
+        ],
+        "EXCHANGE_TOKEN": True,
+        "LOCALE_FUNC": lambda request: "en",
+        "VERIFIED_EMAIL": False,
+        "VERSION": "v12.0",
+    }
+}
+
+ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
+ACCOUNT_AUTHENTICATION_METHOD = "email"
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # True by default
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
+ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -135,3 +190,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://*.localhost"]
+
+# DEBUG reasons
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

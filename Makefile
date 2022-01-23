@@ -1,7 +1,14 @@
-DJANGO_ADMIN = docker-compose run -u 1000 --rm web python manage.py
+DJANGO_ADMIN = docker-compose run --rm web python manage.py
 
 CMD = help
 ARG =
+
+MODELS_PNG = models.png
+GRAPH_MODELS_CMD = graph_models accounts plugins auth \
+	--arrow-shape normal \
+	--pydot -X 'ContentType|Base*Model'\
+	 -g -o $(MODELS_PNG)
+
 
 all: up
 
@@ -13,6 +20,10 @@ migrate: da
 
 makemigrations: CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
+
+graph_models: CMD = $(GRAPH_MODELS_CMD)
+graph_models: da ## Plot all Django models into models.png
+	@mv ./fiesta/$(MODELS_PNG) .
 
 da: ## Invokes django-admin command stored in CMD
 	$(DJANGO_ADMIN) $(CMD) $(ARG)
@@ -31,6 +42,7 @@ DOMAIN = fiesta.localhost
 .ONESHELL:
 generate-localhost-certs:
 	# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
+	@mkdir -p .conf/certs
 	docker run \
 		--rm \
 		--name mkcert \
@@ -41,5 +53,10 @@ generate-localhost-certs:
 			chown -R `id -u`:`id -g` ./ && \
 			mv $(DOMAIN).pem $(DOMAIN).crt && \
 			mv $(DOMAIN)-key.pem $(DOMAIN).key"
+
+trust-localhost-ca:
+	mkdir -p /usr/local/share/ca-certificates/localhost
+	cp conf/certs/rootCA.pem /usr/local/share/ca-certificates/localhost/rootCA.crt
+	update-ca-certificates
 
 .PHONY: all check migrate makemigrations da build up help generate-localhost-certs

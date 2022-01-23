@@ -20,9 +20,16 @@ from django.urls import include, path
 from apps.plugins.utils import all_plugin_apps
 
 urlpatterns = [
-    path(app.url_prefix, include(f"{app.name}.urls")) for app in all_plugin_apps()
+    path(
+        # url prefix to have same url for all plugin views
+        route=app.url_prefix,
+        # included with namespace
+        view=include((f"{app.name}.urls", app.label)),
+    )
+    for app in all_plugin_apps()
 ] + [
     path("admin/", admin.site.urls),
+    path("auth/", include("allauth.urls")),
 ]
 
 if settings.DEBUG:
