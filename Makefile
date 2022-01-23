@@ -17,7 +17,7 @@ GRAPH_MODELS_CMD = graph_models accounts plugins auth \
 
 all: up
 
-check: ## Runs all included lints/checks/reformats
+pre-commit: ## Runs all included lints/checks/reformats
 	poetry run pre-commit run --all-files
 
 startplugin: DA_CMD = startplugin ## Create plugin in project with name=
@@ -26,6 +26,9 @@ startplugin: da
 
 migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
+
+check: DA_CMD = check ## Runs all Django checks.
+check: da
 
 makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da

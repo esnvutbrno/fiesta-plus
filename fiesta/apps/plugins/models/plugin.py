@@ -26,7 +26,7 @@ class Plugin(BaseTimestampedModel):
         choices=State.choices,
         default=State.ENABLED,
         max_length=16,
-        verbose_name=_("Plugin state"),
+        verbose_name=_("plugin state"),
         help_text=_(
             "Current state of plugin - affects, if plugin could be displayed by "
             "international/member/editor/admin/at all."
@@ -36,7 +36,7 @@ class Plugin(BaseTimestampedModel):
     app_label = models.CharField(
         max_length=256,
         choices=all_plugins_as_choices(),
-        verbose_name=_("App label"),
+        verbose_name=_("app label"),
         help_text=_("Defines system application, which specific plugin represents."),
     )
 
@@ -46,9 +46,14 @@ class Plugin(BaseTimestampedModel):
         related_name="plugin",
         null=True,
         blank=True,
-        verbose_name=_("Plugin configuration"),
+        db_index=True,
+        verbose_name=_("plugin configuration"),
         help_text=_("Defines, in which configuration specific plugin runs."),
     )
+
+    class Meta:
+        verbose_name = _("plugin")
+        verbose_name_plural = _("plugins")
 
     def clean(self) -> None:
         super().clean()

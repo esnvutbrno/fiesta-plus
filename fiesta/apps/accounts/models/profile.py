@@ -2,6 +2,7 @@ import enum
 
 from django.conf import settings
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
 from apps.utils.models import BaseTimestampedModel
@@ -12,11 +13,12 @@ class UserProfile(BaseTimestampedModel):
         settings.AUTH_USER_MODEL,
         on_delete=models.RESTRICT,
         related_name="profile",
+        verbose_name=_("user"),
     )
 
-    nationality = CountryField(blank=True)
+    nationality = CountryField(blank=True, verbose_name=_("nationality"))
 
-    # TODO: define relation to section, membership, university
+    # TODO: define relation to section, membership, universities
     # home_faculty = models.ForeignKey(
     #     "core.Faculty",
     #     on_delete=models.RESTRICT,
@@ -40,7 +42,13 @@ class UserProfile(BaseTimestampedModel):
         WEEKLY_UPDATES = enum.auto()
         # TODO: push & emails
 
-    preferences = models.PositiveSmallIntegerField(default=0)
+    preferences = models.PositiveSmallIntegerField(
+        default=0, verbose_name=_("user preferences as flags")
+    )
+
+    class Meta:
+        verbose_name = _("user profile")
+        verbose_name_plural = _("user profiles")
 
 
 __all__ = ["UserProfile"]

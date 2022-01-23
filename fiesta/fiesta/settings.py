@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
-    # Djago 3rd
+    # Django 3rd party
     "polymorphic",
     "debug_toolbar",
     # Fiesta apps
