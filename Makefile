@@ -11,7 +11,6 @@ check: ## Runs all included lints/checks/reformats
 migrate: CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
 
-.PHONY:
 makemigrations: CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
 
@@ -27,4 +26,20 @@ up: ## Runs all needed docker containers in non-deamon mode
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-20s\033[0m %s\n", $$1, $$2}'
 
-.PHONY: all check migrate makemigrations da build up help
+DOMAIN = fiesta.localhost
+
+.ONESHELL:
+generate-localhost-certs:
+	# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
+	docker run \
+		--rm \
+		--name mkcert \
+		--volume `pwd`/conf/certs:/root/.local/share/mkcert \
+		vishnunair/docker-mkcert \
+		sh -c "mkcert -install && \
+			mkcert $(DOMAIN) && \
+			chown -R `id -u`:`id -g` ./ && \
+			mv $(DOMAIN).pem $(DOMAIN).crt && \
+			mv $(DOMAIN)-key.pem $(DOMAIN).key"
+
+.PHONY: all check migrate makemigrations da build up help generate-localhost-certs
