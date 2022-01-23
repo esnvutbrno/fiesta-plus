@@ -1,10 +1,15 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from apps.plugins.models import BasePluginConfiguration
 
 
 class {{ camel_case_plugin_name }}Configuration(BasePluginConfiguration):
     ...
+
+    class Meta:
+        verbose_name = _('{{ plugin_name|lower }} configuration')
+        verbose_name_plural = _('{{ plugin_name|lower }} configurations')
 
 
 __all__ = ['{{ camel_case_plugin_name }}Configuration']
