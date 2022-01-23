@@ -3,6 +3,13 @@ DJANGO_ADMIN = docker-compose run -u 1000 --rm web python manage.py
 CMD = help
 ARG =
 
+MODELS_PNG = models.png
+GRAPH_MODELS_CMD = graph_models accounts plugins auth \
+	--arrow-shape normal \
+	--pydot -X 'ContentType|Base*Model'\
+	 -g -o $(MODELS_PNG)
+
+
 all: up
 
 check: ## Runs all included lints/checks/reformats
@@ -13,6 +20,10 @@ migrate: da
 
 makemigrations: CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
+
+graph_models: CMD = $(GRAPH_MODELS_CMD)
+graph_models: da ## Plot all Django models into models.png
+	@mv ./fiesta/$(MODELS_PNG) .
 
 da: ## Invokes django-admin command stored in CMD
 	$(DJANGO_ADMIN) $(CMD) $(ARG)
