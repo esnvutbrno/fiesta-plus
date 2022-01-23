@@ -5,14 +5,29 @@ from apps.utils.models import BaseTimestampedModel
 
 
 class Faculty(BaseTimestampedModel):
-    name = models.CharField(max_length=128)
-    abbreviation = models.SlugField(max_length=16)
+    name = models.CharField(
+        max_length=128,
+        verbose_name=_("name of faculty"),
+        help_text=_("full name of faculty (w/o university)"),
+    )
+    abbr = models.SlugField(
+        max_length=16,
+        allow_unicode=True,
+        verbose_name=_("abbreviation of faculty name"),
+    )
 
-    university = models.ForeignKey("universities.University", on_delete=models.RESTRICT)
+    university = models.ForeignKey(
+        "universities.University",
+        on_delete=models.RESTRICT,
+        verbose_name=_("related university"),
+    )
 
     class Meta:
         verbose_name = _("faculty")
-        verbose_name_plural = _("faculties")
+        verbose_name_plural = _("Faculties")
+
+    def __str__(self):
+        return f"{self.university.abbr} {self.abbr}"
 
 
 __all__ = ["Faculty"]
