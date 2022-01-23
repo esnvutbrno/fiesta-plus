@@ -34,17 +34,14 @@ services:
       - TZ=Europe/Prague
 
   webserver:
-    image: traefik:v2.5
+    build: ./nginx
+    command: [ nginx-debug, '-g', 'daemon off;' ]
     ports:
-      - "80:80"
-      - "8080:8080"
-      - "443:443"
+      - "127.0.0.1:8080:80"
     volumes:
-      - ./traefik/traefik.toml:/etc/traefik/traefik.toml
-      - ./conf/certs:/certs
-      - /var/run/docker.sock:/var/run/docker.sock
       - web_static_files:/static
       - web_media_files:/media
+      - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - web
 
