@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
     "apps.accounts.apps.AccountsConfig",
+    "apps.universities.apps.UniversitiesConfig",
     # Debugs
     "django_extensions",
     # django-allauth
