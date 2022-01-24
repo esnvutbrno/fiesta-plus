@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic import TemplateView
 
 from apps.plugins.utils import all_plugin_apps
 
@@ -28,6 +29,7 @@ urlpatterns = [
     )
     for app in all_plugin_apps()
 ] + [
+    path("", TemplateView.as_view(template_name="fiesta/base.html")),
     path("admin/", admin.site.urls),
     path("auth/", include("allauth.urls")),
 ]
