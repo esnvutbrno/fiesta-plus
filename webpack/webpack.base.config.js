@@ -1,9 +1,11 @@
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
 const path = require('path');
-const publicPath = process.env.PUBLIC_PATH || 'https://webpack.localhost/';
+
+const publicPath = process.env.PUBLIC_PATH;
 const buildDir = process.env.BUILD_DIR;
 
+if (!publicPath) throw Error('Missing PUBLIC_PATH in env.');
 if (!buildDir) throw Error('Missing BUILD_DIR in env.');
 
 module.exports = {
@@ -18,7 +20,6 @@ module.exports = {
     },
     entry: {
         main: path.join(__dirname, './src/main.css'),
-        // login: path.join(__dirname, './src/js/pages/Login/login.ts'),
     },
     output: {
         publicPath,
@@ -72,8 +73,8 @@ module.exports = {
             filename: path.join(buildDir, 'webpack-stats.json'),
         }),
         new MiniCssExtractPlugin({
-            filename: '[name].[hash:8].css',
-            chunkFilename: '[id].[hash:8].css',
+            filename: '[name].[chunkhash:8].css',
+            chunkFilename: '[id].[chunkhash:8].css',
         }),
         // new MomentLocalesPlugin({
         //     localesToKeep: ['en', 'cs'],

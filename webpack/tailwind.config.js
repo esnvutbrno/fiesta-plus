@@ -1,10 +1,16 @@
+const colors = require('tailwindcss/colors');
+
 module.exports = {
     content: [
         // docker placement of Django application
-        "/usr/src/fiesta/**/*.html"
+        '/usr/src/fiesta/**/*.html',
     ],
     theme: {
-        extend: {},
+        colors: {
+            primary: colors.rose['500'],
+        },
     },
-    plugins: [],
+    plugins: [
+        require('@tailwindcss/typography'),
+    ],
 };
