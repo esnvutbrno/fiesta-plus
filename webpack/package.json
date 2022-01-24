@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "css-loader": "^6.5.1",
+    "mini-css-extract-plugin": "^2.5.2",
     "postcss": "^8.4.5",
     "postcss-loader": "^6.2.1",
     "postcss-preset-env": "^7.2.3",

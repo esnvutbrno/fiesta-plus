@@ -1,12 +1,10 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const BundleTracker = require('webpack-bundle-tracker');
 const path = require('path');
 const publicPath = process.env.PUBLIC_PATH || 'https://webpack.localhost/';
 const buildDir = process.env.BUILD_DIR;
 
 if (!buildDir) throw Error('Missing BUILD_DIR in env.');
-
-console.log('Build dir: ', buildDir);
-
-const BundleTracker = require('webpack-bundle-tracker');
 
 module.exports = {
     optimization: {
@@ -25,8 +23,7 @@ module.exports = {
     output: {
         publicPath,
         path: buildDir,
-        // TODO: found out about chunkhash/contenthash
-        filename: '[name].[fullhash:8].js',
+        filename: '[name].[chunkhash:3].js',
     },
     module: {
         rules: [
@@ -54,16 +51,18 @@ module.exports = {
             {
                 test: /\.css$/i,
                 include: path.resolve(__dirname, 'src'),
-                use: ['style-loader', 'css-loader', 'postcss-loader'],
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader',
+                    'postcss-loader',
+                ],
             },
         ],
     },
     resolve: {
         modules: [
-            // path.resolve(__dirname, './src/'),
             'node_modules/',
         ],
-        extensions: ['.js', '.ts'],
         unsafeCache: true,
     },
     plugins: [
@@ -72,11 +71,10 @@ module.exports = {
             // https://github.com/django-webpack/webpack-bundle-tracker/issues/108
             filename: path.join(buildDir, 'webpack-stats.json'),
         }),
-        // new MiniCssExtractPlugin({
-        //     filename: '[name].[hash:8].css',
-        //     chunkFilename: '[id].[hash:8].css',
-        //     ignoreOrder: true, // vuetify-plugin/loader problem
-        // }),
+        new MiniCssExtractPlugin({
+            filename: '[name].[hash:8].css',
+            chunkFilename: '[id].[hash:8].css',
+        }),
         // new MomentLocalesPlugin({
         //     localesToKeep: ['en', 'cs'],
         // }),
