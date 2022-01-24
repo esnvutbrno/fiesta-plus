@@ -1,6 +1,10 @@
 {
-  "name": "fiesta-frontend",
-  "license": "GNU",
+  "name": "buena-fiesta-frontend",
+  "version": "0.1.0",
+  "description": "New generation of social network for helping international students - used by sections of Erasmus Student Network. By volunteers, for volunteers.",
+  "repository": "git@github.com:esnvutbrno/buena-fiesta.git",
+  "author": "ESN VUT Brno",
+  "license": "GPLv3",
   "scripts": {
     "dev": "webpack-dev-server --config webpack.dev.config.js",
     "build": "webpack --mode production --config webpack.prod.config.js"
