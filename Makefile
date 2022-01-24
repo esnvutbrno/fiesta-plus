@@ -49,14 +49,17 @@ up: ## Runs all needed docker containers in non-deamon mode
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
-DOMAIN = fiesta.localhost
+generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
+generate-localhost-certs: conf/certs/fiesta.localhost.crt \
+	conf/certs/web.localhost.crt \
+	conf/certs/webpack.localhost.crt
 
-generate-localhost-certs: conf/certs/fiesta.localhost.crt ## Generates self-signed localhost certs for working HTTPS.
-generate-localhost-certs: conf/certs/fiesta.localhost.key
 
-conf/certs/$(DOMAIN).crt:
-conf/certs/$(DOMAIN).key:
-	# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
+# based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
+.ONESHELL:
+conf/certs/%.crt: TARGET = $@
+conf/certs/%.crt: DOMAIN = "$(TARGET:conf/certs/%.crt=%)"
+conf/certs/%.crt:
 	@mkdir -p conf/certs
 	docker run \
 		--rm \
@@ -68,6 +71,7 @@ conf/certs/$(DOMAIN).key:
 			chown -R `id -u`:`id -g` ./ && \
 			mv $(DOMAIN).pem $(DOMAIN).crt && \
 			mv $(DOMAIN)-key.pem $(DOMAIN).key"
+
 
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 	mkdir -p /usr/local/share/ca-certificates/localhost

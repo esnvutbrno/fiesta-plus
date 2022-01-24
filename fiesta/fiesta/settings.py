@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     # Django 3rd party
     "polymorphic",
     "debug_toolbar",
+    "webpack_loader",
     # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
     "apps.accounts.apps.AccountsConfig",
@@ -126,7 +127,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 AUTH_USER_MODEL = "accounts.User"
 
-
 # TODO: check, which settings are needed & move to settings subpackage
 AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
@@ -134,7 +134,6 @@ AUTHENTICATION_BACKENDS = (
 )
 
 SITE_ID = 1
-
 
 SOCIALACCOUNT_PROVIDERS = {
     "facebook": {
@@ -193,3 +192,11 @@ CSRF_TRUSTED_ORIGINS = ["https://*.localhost"]
 
 # DEBUG reasons
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+WEBPACK_LOADER = {
+    "DEFAULT": {
+        "CACHE": False,
+        "BUNDLE_DIR_NAME": "./",  # must end with slash
+        "STATS_FILE": (Path(config("BUILD_DIR")) / "webpack-stats.json").as_posix(),
+    }
+}

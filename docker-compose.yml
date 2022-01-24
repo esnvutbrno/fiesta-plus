@@ -7,8 +7,11 @@ services:
       - ./fiesta/:/usr/src/app/
       - web_static_files:/usr/src/static
       - web_media_files:/usr/src/media
+      - webpack_build:/usr/src/build
     expose:
       - 8000
+    env_file:
+      - ./fiesta/.env.base
     secrets:
       - .env
     build:
@@ -38,10 +41,11 @@ services:
     build: ./nginx
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
-      - "80"
+      - 80
     volumes:
       - web_static_files:/static
       - web_media_files:/media
+      - webpack_build:/build
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - web
@@ -59,11 +63,32 @@ services:
       - ./conf/certs:/etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
+  webpack:
+    build: ./webpack
+    command: dev
+    container_name: webpack
+    expose:
+      - 8003
+    volumes:
+      - ./webpack/:/usr/src/app
+      - webpack_build:/usr/src/build
+      # since tailwind need to access templates and all the stuff to dynamicaly strip classes
+      # see more in webpack/tailwind.config.js
+      - ./fiesta/:/usr/src/fiesta
+    environment:
+      - VIRTUAL_HOST=webpack.localhost
+      - VIRTUAL_PORT=8003
+      - BUILD_DIR=/usr/src/build
+      - NODE_ENV=development
+      - PUBLIC_PATH=https://webpack.localhost/static/
+
+
 secrets:
   .env:
     file: ./.env
 
 volumes:
   postgres_data:
+  webpack_build:
   web_static_files:
   web_media_files:
