@@ -15,28 +15,15 @@ class University(BaseTimestampedModel):
 
     country = CountryField(verbose_name=_("country of university"))
 
+    # TODO: logo? or color?
+
     class Meta:
         verbose_name = _("university")
         verbose_name_plural = _("universities")
-        ordering = ["name"]
+        ordering = ("country", "name")
 
     def __str__(self):
-        return self.name
-
-
-#
-# class Section(BaseTimestampedModel):
-#     name = models.CharField(
-#         max_length=64,
-#         unique=True,
-#     )
-#
-#     general_email = models.EmailField(
-#         blank=True,
-#         null=True,
-#     )
-#
-#     founding = models.DateField()
+        return self.abbr
 
 
 __all__ = ["University"]

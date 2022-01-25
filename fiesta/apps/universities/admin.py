@@ -6,7 +6,7 @@ from apps.universities.models import Faculty, University
 @admin.register(University)
 class UniversityAdmin(admin.ModelAdmin):
     list_display = ["name", "abbr", "country"]
-    list_filter = ["country"]
+    list_filter = (("country", admin.AllValuesFieldListFilter),)
 
 
 @admin.register(Faculty)

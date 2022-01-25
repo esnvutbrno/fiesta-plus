@@ -30,6 +30,7 @@ class UserProfile(BaseTimestampedModel):
         related_name="home_university_user_profiles",
         null=True,
         blank=True,
+        db_index=True,
     )
     home_faculty = models.ForeignKey(
         "universities.Faculty",
@@ -39,6 +40,7 @@ class UserProfile(BaseTimestampedModel):
         related_name="home_faculty_user_profiles",
         null=True,
         blank=True,
+        db_index=True,
     )
 
     guest_faculty = models.ForeignKey(
@@ -49,6 +51,7 @@ class UserProfile(BaseTimestampedModel):
         related_name="guest_user_profiles",
         blank=True,
         null=True,
+        db_index=True,
     )
 
     # TODO: profile picture

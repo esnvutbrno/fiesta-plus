@@ -20,11 +20,13 @@ class Faculty(BaseTimestampedModel):
         "universities.University",
         on_delete=models.RESTRICT,
         verbose_name=_("related university"),
+        db_index=True,
     )
 
     class Meta:
         verbose_name = _("faculty")
         verbose_name_plural = _("Faculties")
+        ordering = ("university", "name")
 
     def __str__(self):
         return f"{self.university.abbr} {self.abbr}"
