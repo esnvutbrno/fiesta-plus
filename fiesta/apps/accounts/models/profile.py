@@ -40,7 +40,7 @@ class UserProfile(BaseTimestampedModel):
     @enum.unique
     class Preferences(enum.Flag):
         WEEKLY_UPDATES = enum.auto()
-        # TODO: push & emails
+        # TODO: push notifications & emails
 
     # TODO: define formfield/widget to handle flagging
     preferences = models.PositiveSmallIntegerField(
