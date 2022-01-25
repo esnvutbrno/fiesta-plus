@@ -193,7 +193,7 @@ def check_models(app_configs, **kwargs):
     errors = []
     for app in django.apps.apps.get_app_configs():
         # Skip third party apps.
-        if APPS_PREFIX_TO_INCLUDE not in app.path:
+        if "site-packages" in app.path:
             continue
 
         for model in app.get_models():

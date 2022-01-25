@@ -31,7 +31,7 @@ def check_models(app_configs, **kwargs):
     errors = []
     for app in apps.get_app_configs():  # type: AppConfig
         # Skip third party apps.
-        if APPS_PREFIX_TO_INCLUDE not in app.path:
+        if "site-packages" in app.path:
             continue
 
         for error in check_app(app):
