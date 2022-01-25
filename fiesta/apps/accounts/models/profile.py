@@ -42,6 +42,7 @@ class UserProfile(BaseTimestampedModel):
         WEEKLY_UPDATES = enum.auto()
         # TODO: push & emails
 
+    # TODO: define formfield/widget to handle flagging
     preferences = models.PositiveSmallIntegerField(
         default=0, verbose_name=_("user preferences as flags")
     )
