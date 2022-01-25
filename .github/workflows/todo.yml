@@ -1,0 +1,12 @@
+name: "TODOs to issue"
+on: [ "push" ]
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: "actions/checkout@master"
+      - name: "TODOs to issue"
+        uses: "thejoeejoee/todo-to-issue-action@master"
+        id: "todo"
+        with:
+          PROCESS_TO_SINGLE_ISSUE: true
