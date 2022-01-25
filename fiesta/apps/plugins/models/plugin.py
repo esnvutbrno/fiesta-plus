@@ -13,8 +13,8 @@ class Plugin(BaseTimestampedModel):
     class State(models.TextChoices):
         ENABLED = "enabled", _("enabled")
         READ_ONLY = "read_only", _("read-only")
+        PRIVILEGED_ONLY = "privileged_only", _("privileged users only")
         DISABLED = "disabled", _("disabled")
-        # TODO: state with visibility only for editors and highers
 
     # section = models.ForeignKey(
     #     'core.Section',
