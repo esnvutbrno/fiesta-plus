@@ -28,6 +28,9 @@ class Section(BaseTimestampedModel):
         verbose_name_plural = _("ESN sections")
         ordering = ("country", "name")
 
+    def __str__(self):
+        return self.name
+
 
 class SectionUniversity(BaseTimestampedModel):
     section = models.ForeignKey(
