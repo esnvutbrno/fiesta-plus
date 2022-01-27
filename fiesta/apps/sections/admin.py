@@ -17,6 +17,9 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = ("name", "country", "all_universities")
     list_filter = (("country", admin.AllValuesFieldListFilter),)
 
+    def get_queryset(self, request):
+        return super().get_queryset(request).prefetch_related("memberships")
+
     @admin.display(
         description=_("Universities"),
     )
@@ -25,14 +28,34 @@ class SectionAdmin(admin.ModelAdmin):
 
     class SectionUniversityInline(admin.StackedInline):
         model = SectionUniversity
+        extra = 1
 
-    inlines = (SectionUniversityInline,)
+    # TODO: Listing all memberships in section admin
+    #  is kinda slow, so usega of some paginated would be usefull
+    class SectionMembershipInline(admin.TabularInline):
+        model = SectionMembership
+        autocomplete_fields = ("user",)
+        extra = 1
+
+        def get_queryset(self, request):
+            return (
+                super()
+                .get_queryset(request)
+                .select_related("section", "user")
+                .order_by("-role", "user__username")
+            )
+
+    inlines = (
+        SectionMembershipInline,
+        SectionUniversityInline,
+    )
 
 
 @admin.register(SectionMembership)
 class SectionMembershipAdmin(admin.ModelAdmin):
-    list_display = ("section", "user", "role", "state")
-    list_filter = ("section", "role", "state")
+    list_display = ("section", "user", "role", "state", "created")
+    list_filter = ("section", "role", "state", "user__state")
+    autocomplete_fields = ("user",)
     search_fields = (
         "user__username",
         "user__first_name",
