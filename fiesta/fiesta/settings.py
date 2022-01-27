@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "apps.accounts.apps.AccountsConfig",
     "apps.universities.apps.UniversitiesConfig",
     "apps.sections.apps.SectionsConfig",
+    "apps.utils.apps.UtilsConfig",
     # Debugs
     "django_extensions",
     # django-allauth
@@ -73,6 +74,8 @@ MIDDLEWARE = [
     # admin needs it
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # custom Fiesta
+    "apps.sections.middleware.user_membership.UserMembershipMiddleware",
     "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
 ]
 
@@ -106,7 +109,15 @@ DATABASES = {
         "USER": "fiesta",
         "NAME": "fiesta",
         "PASSWORD": "fiesta",
-    }
+    },
+    "legacydb": {
+        "ENGINE": "django.db.backends.mysql",
+        "HOST": "legacydb",
+        "NAME": "fiesta",
+        # TODO: access to legacy db by standard user
+        "USER": "root",
+        "PASSWORD": "root",
+    },
 }
 
 # Password validation

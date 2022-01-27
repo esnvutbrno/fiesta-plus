@@ -23,7 +23,7 @@ class UserProfile(BaseTimestampedModel):
 
     # TODO: define relation to section, membership
     home_university = models.ForeignKey(
-        "universities.Faculty",
+        "universities.University",
         on_delete=models.RESTRICT,
         verbose_name=_("home university"),
         help_text=_("home university for all users"),

@@ -51,5 +51,8 @@ class SectionUniversity(BaseTimestampedModel):
         verbose_name_plural = _("Section universities")
         unique_together = (("section", "university"),)
 
+    def __str__(self):
+        return f"{self.section} - {self.university}"
+
 
 __all__ = ["Section", "SectionUniversity"]

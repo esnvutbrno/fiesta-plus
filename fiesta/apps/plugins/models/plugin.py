@@ -40,7 +40,7 @@ class Plugin(BaseTimestampedModel):
         help_text=_("Defines system application, which specific plugin represents."),
     )
 
-    configuration = models.ForeignKey(
+    configuration = models.OneToOneField(
         "plugins.BasePluginConfiguration",
         on_delete=models.RESTRICT,
         related_name="plugin",
@@ -49,6 +49,14 @@ class Plugin(BaseTimestampedModel):
         db_index=True,
         verbose_name=_("plugin configuration"),
         help_text=_("Defines, in which configuration specific plugin runs."),
+    )
+
+    section = models.ForeignKey(
+        "sections.Section",
+        on_delete=models.RESTRICT,
+        related_name="plugins",
+        verbose_name=_("ESN section"),
+        db_index=True,
     )
 
     class Meta:

@@ -8,13 +8,15 @@ class User(AbstractUser):
     class State(models.TextChoices):
         REGISTERED = "registered", _("Registered")
         ACTIVE = "active", _("Active")
+        EXPIRED = "expired", _("Expired")
         BANNED = "banned", _("Banned")
 
     state = models.CharField(
         choices=State.choices,
         default=State.REGISTERED,
         max_length=16,
-        verbose_name=_("current state of user (different from user profile state)"),
+        verbose_name=_("state"),
+        help_text=_("current state of user (different from user profile state)"),
     )
 
     created = CreationDateTimeField(verbose_name=_("created"))

@@ -25,7 +25,7 @@ urlpatterns = [
         # url prefix to have same url for all plugin views
         route=app.url_prefix,
         # included with namespace
-        view=include((f"{app.name}.urls", app.label)),
+        view=include((app.urls_path, app.label)),
     )
     for app in all_plugin_apps()
 ] + [

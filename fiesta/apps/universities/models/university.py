@@ -8,7 +8,7 @@ from apps.utils.models import BaseTimestampedModel
 class University(BaseTimestampedModel):
     name = models.CharField(max_length=128, verbose_name=_("full name of university"))
     abbr = models.SlugField(
-        max_length=16,
+        max_length=32,
         allow_unicode=True,
         verbose_name=_("abbreviation of university name"),
     )
