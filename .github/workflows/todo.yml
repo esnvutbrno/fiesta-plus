@@ -9,7 +9,7 @@ jobs:
     steps:
       - uses: "actions/checkout@master"
       - name: "TODOs to issue"
-        uses: "thejoeejoee/todo-to-issue-action@master"
+        uses: "thejoeejoee/todo-to-issue-action@v4.6"
         id: "todo"
         with:
           PROCESS_TO_SINGLE_ISSUE: true
