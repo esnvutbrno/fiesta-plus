@@ -10,8 +10,8 @@ DA_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
-GRAPH_MODELS_CMD = graph_models accounts plugins auth \
-	--arrow-shape normal \
+GRAPH_MODELS_CMD = graph_models accounts plugins auth sections universities \
+	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
 	 -g -o $(MODELS_PNG)
 

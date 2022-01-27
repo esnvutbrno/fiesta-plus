@@ -19,7 +19,7 @@ RUN addgroup -S 1000 \
     # build deps
     && apk add --virtual build-deps build-base gcc python3-dev musl-dev gettext-dev libffi-dev \
     # runtime deps
-    && apk add postgresql-dev gettext tzdata bash graphviz graphviz-dev ttf-freefont \
+    && apk add postgresql-dev gettext tzdata bash graphviz graphviz-dev ttf-freefont mariadb-dev \
     # && pipenv install psycopg2-binary --skip-lock --dev \
     && pip install poetry \
     && poetry config virtualenvs.create false \
