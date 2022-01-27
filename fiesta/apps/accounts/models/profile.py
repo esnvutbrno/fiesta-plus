@@ -21,7 +21,6 @@ class UserProfile(BaseTimestampedModel):
 
     nationality = CountryField(blank=True, verbose_name=_("nationality"))
 
-    # TODO: define relation to section, membership
     home_university = models.ForeignKey(
         "universities.University",
         on_delete=models.RESTRICT,
