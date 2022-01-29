@@ -2,6 +2,7 @@ from allauth.account.admin import EmailAddressAdmin
 from allauth.account.models import EmailAddress
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.utils.translation import gettext_lazy as _
 from polymorphic.admin import PolymorphicChildModelAdmin
 
 from .models import AccountsConfiguration, User, UserProfile
@@ -16,7 +17,30 @@ class AccountsConfigurationAdmin(PolymorphicChildModelAdmin):
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
-    fieldsets = DjangoUserAdmin.fieldsets + ((None, {"fields": ("state",)}),)
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "password",
+                    "state",
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                )
+            },
+        ),
+        (_("Personal info"), {"fields": ("first_name", "last_name", "email")}),
+        (
+            _("Permissions"),
+            {
+                "fields": ("groups", "user_permissions"),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined", "modified")}),
+    )
+    readonly_fields = ("modified",)
 
 
 @admin.register(UserProfile)

@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from django_extensions.db.fields import ModificationDateTimeField
 
 
 class User(AbstractUser):
@@ -19,7 +19,6 @@ class User(AbstractUser):
         help_text=_("current state of user (different from user profile state)"),
     )
 
-    created = CreationDateTimeField(verbose_name=_("created"))
     modified = ModificationDateTimeField(verbose_name=_("modified"))
 
     class Meta(AbstractUser.Meta):

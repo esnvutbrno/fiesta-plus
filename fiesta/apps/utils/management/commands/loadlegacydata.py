@@ -3,8 +3,11 @@ import djclick as click
 from click import secho
 from django.db import connections, transaction
 from django.db.backends.utils import CursorWrapper
+from django.utils import timezone
+from django.utils.timezone import make_aware
 from django_countries.fields import Country
 
+from apps.accounts.hashers import LegacyBCryptSHA256PasswordHasher
 from apps.accounts.models import User, UserProfile
 from apps.sections.models import Section, SectionMembership, SectionUniversity
 from apps.universities.models import Faculty, University
@@ -13,6 +16,7 @@ LOAD_MEMBERS = """
 SELECT
     du.user_id, u.password,
     du.name, du.surname,
+    du.registered,
     u.status,
     json_array(ra.role),
     uni.section_short,
@@ -32,12 +36,13 @@ ORDER BY u.user_id;
 
 def load_users(*, cursor: CursorWrapper):
     cursor.execute(LOAD_MEMBERS)
-    for row in cursor.fetchall():
+    for i, row in enumerate(cursor.fetchall(), start=1):
         (
             email,
             password,
             first_name,
             last_name,
+            registered,
             status,
             roles,
             section_short,
@@ -47,14 +52,17 @@ def load_users(*, cursor: CursorWrapper):
             uni_id,
             uni_name,
         ) = row
-        secho(f"Processing: {row}")
+        # password = password.split('$')[3]
+        # is:        $2y$10$t9haqcKqlgXKrCv1pVTAxuqKh7vDtwksh0w7PXb44eNjRQOvY58Mu
+        # wanted: alg$2y$10$iqdxi8RXWCADYYFsfyHD1u6rrXBW4v73.AGHZ32uUYu9gVjD0x7IG
         user, _ = User.objects.update_or_create(
             username=email,
             defaults=dict(
                 email=email,
                 first_name=first_name,
                 last_name=last_name,
-                password=password,
+                password=f"{LegacyBCryptSHA256PasswordHasher.algorithm}${password}",
+                date_joined=make_aware(registered) if registered else timezone.now(),
                 state={
                     "active": User.State.ACTIVE,
                     "pending": User.State.REGISTERED,
@@ -105,7 +113,7 @@ def load_users(*, cursor: CursorWrapper):
                 home_faculty=faculty,
             ),
         )
-        secho(f"Processed {email}.")
+        secho(f"Processed {i: >4}: {email}.")
 
 
 def load(cursor: CursorWrapper):

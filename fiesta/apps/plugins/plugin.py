@@ -3,7 +3,7 @@ from importlib import import_module
 from typing import Optional
 
 from django.apps import AppConfig
-from django.urls import URLPattern
+from django.urls import URLPattern, reverse
 
 
 class PluginAppConfig(AppConfig, metaclass=ABCMeta):
@@ -16,13 +16,13 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     configuration_model: Optional[str] = None
 
-    @property
-    def urls_path(self):
-        return f"{self.name}.urls"
+    def reverse(self, viewname, args=None, kwargs=None):
+        """URL reverse for urls from this specific app (implicit namespaced)."""
+        return reverse(f"{self.label}:{viewname}", args=args, kwargs=kwargs)
 
     @property
-    def urls(self) -> list[URLPattern]:
-        return import_module(self.urls_path).urlpatterns
+    def urlpatterns(self) -> list[URLPattern]:
+        return import_module(f"{self.name}.urls").urlpatterns
 
     @property
     def url_prefix(self) -> str:

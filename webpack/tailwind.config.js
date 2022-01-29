@@ -3,7 +3,7 @@ const colors = require('tailwindcss/colors');
 module.exports = {
     content: [
         // docker placement of Django application
-        '/usr/src/fiesta/**/*.html',
+        '../fiesta/**/templates/**/*.html',
     ],
     theme: {
         colors: {
