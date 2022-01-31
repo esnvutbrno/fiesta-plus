@@ -1,0 +1,6 @@
+from .configuration import {{ camel_case_plugin_name }}Configuration
+
+
+__all__ = [
+    "{{ camel_case_plugin_name }}Configuration",
+]

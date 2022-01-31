@@ -1,0 +1,5 @@
+from django.views.generic import TemplateView
+
+
+class {{ camel_case_plugin_name }}IndexView(TemplateView):
+    template_name = '{{ plugin_name }}/index.html'

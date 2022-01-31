@@ -1,6 +1,8 @@
 from django.urls import path, include
 
+from .views import {{ camel_case_plugin_name }}IndexView
+
 # Define your urls here
 urlpatterns = [
-
+    path('', {{ camel_case_plugin_name }}IndexView.as_view())
 ]
