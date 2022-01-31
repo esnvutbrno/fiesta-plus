@@ -6,8 +6,10 @@ module.exports = {
         '../fiesta/**/templates/**/*.html',
     ],
     theme: {
-        colors: {
-            primary: colors.rose['500'],
+        extend: {
+            colors: {
+                primary: colors.rose['500'],
+            },
         },
     },
     plugins: [
