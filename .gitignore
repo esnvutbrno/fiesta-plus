@@ -130,3 +130,6 @@ dmypy.json
 
 # Installed npm packages
 node_modules/
+
+# template parts
+!**/templates/**/parts/*
