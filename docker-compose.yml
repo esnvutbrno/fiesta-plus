@@ -75,6 +75,8 @@ services:
       # since tailwind need to access templates and all the stuff to dynamicaly strip classes
       # see more in webpack/tailwind.config.js
       - ./fiesta/:/usr/src/fiesta
+    env_file:
+      - ./webpack/.env.base
     environment:
       - VIRTUAL_HOST=webpack.localhost
       - VIRTUAL_PORT=8003
@@ -85,6 +87,7 @@ services:
   legacydb:
     image: mariadb:10.3
     container_name: legacydb
+    profiles: ["migration"]
     volumes:
       - legacydb_data:/var/lib/mysql
       - ./legacy.sql:/docker-entrypoint-initdb.d/legacy.sql

@@ -1,10 +1,9 @@
 const colors = require('tailwindcss/colors');
 
+const content = (process.env.TAILWIND_CONTENT_PATH || '').split(/:/);
+
 module.exports = {
-    content: [
-        // docker placement of Django application
-        '../fiesta/**/templates/**/*.html',
-    ],
+    content,
     theme: {
         extend: {
             colors: {
@@ -14,5 +13,8 @@ module.exports = {
     },
     plugins: [
         require('@tailwindcss/typography'),
+        require('@tailwindcss/forms')({
+            strategy: 'class',
+        }),
     ],
 };
