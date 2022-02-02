@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "django.forms",
     # Django 3rd party
     "polymorphic",
     "debug_toolbar",
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     "apps.universities.apps.UniversitiesConfig",
     "apps.sections.apps.SectionsConfig",
     "apps.utils.apps.UtilsConfig",
+    "apps.esncards.apps.EsncardsConfig",
     # Debugs
     "django_extensions",
     # django-allauth
@@ -222,3 +224,5 @@ WEBPACK_LOADER = {
         "STATS_FILE": (Path(config("BUILD_DIR")) / "webpack-stats.json").as_posix(),
     }
 }
+
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
