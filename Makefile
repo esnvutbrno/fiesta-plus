@@ -43,8 +43,17 @@ da: ## Invokes django-admin command stored in cmd=
 build: ## Builds docker images.
 	docker-compose build
 
-up: ## Runs all needed docker containers in non-deamon mode
+upb: ## Build and runs all needed docker containers in non-deamon mode
 	docker-compose up --build
+
+upbd: ## Build and runs all needed docker containers in detached mode
+	docker-compose up --build --detach
+
+upd: ## Runs all needed docker containers in detached mode
+	docker-compose up --build --detach
+
+up: ## Runs all needed docker containers
+	docker-compose up
 
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
