@@ -1,21 +1,21 @@
 from __future__ import annotations
 
 from django.core.exceptions import ImproperlyConfigured
-from django.http import HttpRequest as DjHttpRequest, HttpResponse
+from django.http import HttpResponse
 
-from ...sections.models import SectionMembership
+from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 from ..models import Plugin
 
 
-class HttpRequest(DjHttpRequest):
-    membership: SectionMembership | None
+class HttpRequest(OrigHttpRequest):
+    plugin: Plugin | None
 
 
 class CurrentPluginMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: HttpRequest) -> HttpResponse:
+    def __call__(self, request: OrigHttpRequest) -> HttpResponse:
         if not hasattr(request, "membership"):
             raise ImproperlyConfigured(
                 "Missing request.membership, probably the "
@@ -51,4 +51,4 @@ class CurrentPluginMiddleware:
         # TODO: check, if plugin is enabled, perms and all the stuff
 
 
-__all__ = ["CurrentPluginMiddleware"]
+__all__ = ["CurrentPluginMiddleware", "HttpRequest"]
