@@ -14,6 +14,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
+    title: str
+
     configuration_model: Optional[str] = None
 
     def reverse(self, viewname, args=None, kwargs=None):

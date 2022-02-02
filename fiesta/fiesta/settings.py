@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     "apps.sections.apps.SectionsConfig",
     "apps.utils.apps.UtilsConfig",
     "apps.esncards.apps.EsncardsConfig",
+    "apps.fiestaforms.apps.FiestaformsConfig",
     # Debugs
     "django_extensions",
     # django-allauth

@@ -1,0 +1,17 @@
+{% load fiestaforms %}
+{% load as_widget_field as_label from fiestaforms %}
+{% for field in form %}
+
+    <div class="relative z-0 mb-6 w-full group">
+        {{ field.errors }}
+
+        {{ field|as_label }}
+        {{ field|as_widget_field }}
+
+        {% if field.help_text %}
+            <p class="Forms__help_text">{{ field.help_text }}</p>
+        {% endif %}
+
+
+    </div>
+{% endfor %}

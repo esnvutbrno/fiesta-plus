@@ -8,10 +8,10 @@
     {% render_bundle 'main' 'css' %}
 </head>
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
-<div class="max-w-xl mx-auto bg-gray-200">
+<div class="max-w-xl mx-auto shadow mt-6 p-3">
     <header>
         <h1 class="color-primary font-bold">Buena Fiesta</h1>
-        {% include "fiesta/parts/plugins_menu.html" %}
+{#        {% include "fiesta/parts/plugins_menu.html" %}#}
     </header>
     <main>
         {% block main %}{% endblock main %}
