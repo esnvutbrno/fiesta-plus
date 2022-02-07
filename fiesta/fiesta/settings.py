@@ -45,11 +45,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.sites",
+    "django.contrib.humanize",
     "django.forms",
     # Django 3rd party
     "polymorphic",
     "debug_toolbar",
     "webpack_loader",
+    "django_htmx",
+
     # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
     "apps.accounts.apps.AccountsConfig",
@@ -77,6 +80,8 @@ MIDDLEWARE = [
     # admin needs it
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # 3rd party
+    "django_htmx.middleware.HtmxMiddleware",
     # custom Fiesta
     "apps.sections.middleware.user_membership.UserMembershipMiddleware",
     "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
@@ -191,6 +196,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
 ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+
+LOGIN_URL = '/accounts/auth/login'
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

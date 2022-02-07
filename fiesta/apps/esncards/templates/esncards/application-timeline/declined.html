@@ -1,0 +1,13 @@
+{% extends "esncards/application-timeline/base.html" %}
+
+{% block content %}
+    User {{ record.editor }} <span class="font-semibold text-gray-900 dark:text-white">declined</span> the application.
+{% endblock content %}
+
+{% block extracontent %}
+    <div class="p-3 text-xs italic font-normal text-gray-500 bg-gray-50 rounded-lg border border-gray-200 dark:bg-gray-600 dark:border-gray-500 dark:text-gray-300">
+        {{ record.comment }}
+    </div>
+{% endblock extracontent %}
+
+{% block blockcss %}bg-red-50{% endblock %}

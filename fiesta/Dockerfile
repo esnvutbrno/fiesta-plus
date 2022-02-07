@@ -1,5 +1,21 @@
+FROM python:3.9.7-alpine as builder
+
+RUN apk add --no-cache --virtual build-deps \
+    build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ postgresql-dev mariadb-dev \
+    musl-dev rust cargo patchelf
+
+COPY pyproject.toml poetry.lock ./
+
+RUN python -m pip install poetry && \
+    poetry config virtualenvs.create false && \
+    poetry install && \
+    apk del build-deps
+
+
 # pull official base image
 FROM python:3.9.7-alpine
+
+COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
 
 # set work directory
 WORKDIR /usr/src/app
@@ -16,16 +32,9 @@ COPY pyproject.toml poetry.lock /usr/src/app/
 RUN addgroup -S 1000 \
     && adduser -s /bin/sh -D -S -G 1000 1000 \
     && apk update \
-    # build deps
-    && apk add --virtual build-deps build-base gcc python3-dev musl-dev gettext-dev libffi-dev \
     # runtime deps
-    && apk add postgresql-dev gettext tzdata bash graphviz graphviz-dev ttf-freefont mariadb-dev \
+    && apk add gettext tzdata bash graphviz graphviz-dev ttf-freefont postgresql-dev mariadb-dev \
     # && pipenv install psycopg2-binary --skip-lock --dev \
-    && pip install poetry \
-    && poetry config virtualenvs.create false \
-    && poetry install \
-    && apk del build-deps \
-    && rm -rf /var/cache/apk/* \
     && mkdir -p /usr/src/static /usr/src/media /usr/src/app \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
