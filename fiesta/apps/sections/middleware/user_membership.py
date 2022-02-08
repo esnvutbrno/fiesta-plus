@@ -31,7 +31,7 @@ class UserMembershipMiddleware:
 
         try:
             user.profile
-        except UserProfile.DoesNotExist:
+        except (UserProfile.DoesNotExist, AttributeError):
             ...
             # TODO: check, if user does have a filled profile
             #  and if not, redirect him to profile-form-page to complete the profile

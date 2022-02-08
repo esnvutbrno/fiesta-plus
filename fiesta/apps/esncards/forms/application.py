@@ -6,7 +6,7 @@ from apps.fiestaforms.forms import BaseModelForm, DateInput
 
 
 class ESNcardApplicationForm(BaseModelForm):
-    title = _("ESNcard Application Form")
+    title = _("Application Form")
 
     photo = ImageField(
         label=_("Holder photo"),

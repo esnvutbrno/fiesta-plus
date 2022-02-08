@@ -1,20 +1,18 @@
+{% load static %}
 {% load i18n %}
 {% load plugins %}
 <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
     <div class="container flex flex-wrap justify-between items-center mx-auto">
         <a href="/" class="flex">
-            <svg class="mr-3 h-10" width="48" height="60" fill="none" viewBox="0 0 48 60" xmlns="http://www.w3.org/2000/svg">
-                <path d="m28.571 42.8h-28.571c0-11.046 8.6984-20 19.429-20h28.571c-0.08657 10.556-8.9105 18.802-19.429 20z" fill="#f43f5e" stroke-width=".84646"></path>
-
-                <path d="m28.571 1.7703e-8h-28.571c0 11.046 8.6984 20 19.429 20h28.571c-0.086574-10.556-8.9105-18.802-19.429-20z" fill="#f43f5e" stroke-width=".84646"></path>
-
-                <path d="m0 24.286v35.714c13.807 0 25-10.873 25-24.286v-35.714c-13.195 0.10822-23.502 11.138-25 24.286z" fill="#7b3ff4" stroke-width="1.0581"></path>
-
-                <circle cx="16" cy="10" r="3" fill="#f43f5e" stroke-linecap="round" stroke-width="53.608" style="paint-order:fill markers stroke"></circle>
+            <svg class="mr-3 h-10" width="48" height="60" viewBox="0 0 48 60">
+                <use href="{% static "logo.svg" %}#logo"></use>
             </svg>
-            <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">
-                Buena Fiesta
-            </span>
+            {% if not request.plugin %}
+                <span class="self-center text-lg font-semibold whitespace-nowrap dark:text-white">
+                    Buena Fiesta
+                </span>
+            {% endif %}
+
         </a>
         <div class="flex items-center md:order-2">
             <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
@@ -58,12 +56,6 @@
 
         <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
             <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-                <li>
-                    <a href="/" class="block py-2 pr-4 pl-3 text-gray-700 border-b
-                        border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                        {% trans "Home" %}
-                    </a>
-                </li>
                 {% for item in items %}
                     <li>
                         {% if item.active %}

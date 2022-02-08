@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="logo" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path d="m28.571 42.8h-28.571c0-11.046 8.6984-20 19.429-20h28.571c-0.08657 10.556-8.9105 18.802-19.429 20z"
+              fill="#f43f5e" stroke-width=".84646"/>
+        <path d="m28.571 1.7703e-8h-28.571c0 11.046 8.6984 20 19.429 20h28.571c-0.086574-10.556-8.9105-18.802-19.429-20z"
+              fill="#f43f5e" stroke-width=".84646"/>
+        <path d="m0 24.286v35.714c13.807 0 25-10.873 25-24.286v-35.714c-13.195 0.10822-23.502 11.138-25 24.286z"
+              fill="#7b3ff4" stroke-width="1.0581"/>
+        <circle cx="16" cy="10" r="3" fill="#f43f5e" stroke-linecap="round" stroke-width="53.608"
+                style="paint-order:fill markers stroke"/>
+    </g>
+</svg>
