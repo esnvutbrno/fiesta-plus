@@ -13,18 +13,27 @@
 
     {% django_htmx_script %}
 </head>
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' class="overflow-scroll">
 {% block body %}
-    {% include "fiesta/parts/navbar.html" %}
+    {% block navigation_container %}
+        <div class="max-w-3xl mx-auto">
+            {% include "fiesta/parts/header.html" %}
+        </div>
+    {% endblock %}
 
-    <div class="max-w-xl mx-auto my-1">
-        {% breadcrumbs %}
-    </div>
-    <div class="max-w-xl mx-auto shadow mt-6 p-3">
-        <main>
-            {% block main %}{% endblock main %}
-        </main>
-    </div>
+    {% block breadcrumbs_container %}
+        <div class="max-w-xl mx-auto my-1">
+            {% breadcrumbs %}
+        </div>
+    {% endblock breadcrumbs_container %}
+
+    {% block main_container %}
+        <div class="max-w-xl mx-auto shadow mt-6 p-3">
+            <main>
+                {% block main %}{% endblock main %}
+            </main>
+        </div>
+    {% endblock main_container %}
 {% endblock body %}
 </body>
 </html>

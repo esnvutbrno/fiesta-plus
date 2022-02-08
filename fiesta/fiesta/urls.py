@@ -19,7 +19,7 @@ urlpatterns = [
     )
     for app in all_plugin_apps()
 ] + [
-    path("", TemplateView.as_view(template_name="fiesta/base.html")),
+    path("", TemplateView.as_view(template_name="fiesta/public.html")),
     path("admin/", admin.site.urls),
     path("auth/", include("allauth.urls")),
 ]

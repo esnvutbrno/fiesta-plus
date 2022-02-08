@@ -22,7 +22,10 @@ class UserMembershipMiddleware:
             # TODO: Detect, in which membership is user logged:
             #  probably the default one, with possibility to switch
             #  with sesstion flag
-            request.membership = user.memberships.first()
+            request.membership = user.memberships.select_related(
+                # to remove another query for relating section
+                "section"
+            ).first()
         else:
             request.membership = None
 

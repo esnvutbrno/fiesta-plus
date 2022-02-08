@@ -23,7 +23,7 @@ def with_breadcrumb(title: str):
     return inner
 
 
-def with_object_breadcrumb(prefix: str = _("Detail")):
+def with_object_breadcrumb(prefix: str = None):
     """
     Class decorator to register breadcrumbs for detail views.
     Used like:
@@ -35,7 +35,9 @@ def with_object_breadcrumb(prefix: str = _("Detail")):
 
     @wraps(with_breadcrumb)
     def inner(view_klass: Type[View]):
-        view_klass.title = property(lambda s: f"{prefix}: {str(s.object)}")
+        view_klass.title = property(
+            lambda s: f"{prefix or _('Detail')}: {str(s.object)}"
+        )
         return view_klass
 
     return inner

@@ -9,4 +9,5 @@ urlpatterns = [
         TemplateView.as_view(template_name="accounts/auth/login.html"),
         name="login",
     ),
+    path("", TemplateView.as_view(template_name="accounts/index.html")),
 ]

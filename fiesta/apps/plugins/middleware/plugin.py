@@ -42,7 +42,9 @@ class CurrentPluginMiddleware:
         target_app = request.resolver_match.app_name.split(".")[-1]
 
         try:
-            request.plugin = Plugin.objects.get(
+            # could be already prefetched from membership fetch in previous middleware,
+            # but isn't it premature optimalization?
+            request.plugin = request.membership.section.plugins.get(
                 app_label=target_app,
                 section_id=request.membership.section_id,
             )
