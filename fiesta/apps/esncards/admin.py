@@ -10,8 +10,9 @@ class EsncardsConfigurationAdmin(PolymorphicChildModelAdmin):
     base_model = BasePluginConfiguration
     show_in_index = True
 
+
 @admin.register(ESNcardApplication)
 class ESNcardApplicationAdmin(admin.ModelAdmin):
-    list_display = ['user', 'section', 'state', 'created']
-    list_filter = ['section', 'state']
-    raw_id_fields = ['user', 'section']
+    list_display = ["user", "section", "state", "created"]
+    list_filter = ["section", "state"]
+    raw_id_fields = ["user", "section"]

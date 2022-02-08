@@ -26,15 +26,17 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     @property
     def urlpatterns(self) -> Iterable[URLPattern]:
         urls: list[URLPattern] = import_module(f"{self.name}.urls").urlpatterns
-        return tuple(map(
-            lambda p: URLPattern(
-                pattern=p.pattern,
-                callback=login_required(p.callback),
-                default_args=p.default_args,
-                name=p.name
-            ),
-            urls,
-        ))
+        return tuple(
+            map(
+                lambda p: URLPattern(
+                    pattern=p.pattern,
+                    callback=login_required(p.callback),
+                    default_args=p.default_args,
+                    name=p.name,
+                ),
+                urls,
+            )
+        )
 
     @property
     def url_prefix(self) -> str:

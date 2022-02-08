@@ -2,5 +2,5 @@ from django.apps import AppConfig
 
 
 class FiestaformsConfig(AppConfig):
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.fiestaforms'
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "apps.fiestaforms"

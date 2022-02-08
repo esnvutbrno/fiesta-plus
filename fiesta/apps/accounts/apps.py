@@ -1,6 +1,6 @@
-from apps.plugins.plugin import PluginAppConfig
-
 from django.utils.translation import gettext_lazy as _
+
+from apps.plugins.plugin import PluginAppConfig
 
 
 class AccountsConfig(PluginAppConfig):
@@ -9,7 +9,7 @@ class AccountsConfig(PluginAppConfig):
 
     configuration_model = "accounts.AccountsConfiguration"
 
-    title = _('Users')
+    title = _("Users")
 
 
 __all__ = ["AccountsConfig"]

@@ -4,5 +4,9 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path("auth/login", TemplateView.as_view(template_name="accounts/auth/login.html"), name="login"),
+    path(
+        "auth/login",
+        TemplateView.as_view(template_name="accounts/auth/login.html"),
+        name="login",
+    ),
 ]

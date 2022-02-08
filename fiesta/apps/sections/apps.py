@@ -1,6 +1,6 @@
-from apps.plugins.plugin import PluginAppConfig
-
 from django.utils.translation import gettext_lazy as _
+
+from apps.plugins.plugin import PluginAppConfig
 
 
 class SectionsConfig(PluginAppConfig):
@@ -9,7 +9,7 @@ class SectionsConfig(PluginAppConfig):
 
     configuration_model = "sections.SectionsConfiguration"
 
-    title = _('ESN section')
+    title = _("ESN section")
 
 
 __all__ = ["SectionsConfig"]

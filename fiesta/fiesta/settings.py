@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     "debug_toolbar",
     "webpack_loader",
     "django_htmx",
-
     # Fiesta apps
     "apps.plugins.apps.PluginsConfig",
     "apps.accounts.apps.AccountsConfig",
@@ -197,7 +196,7 @@ ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
 ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
-LOGIN_URL = '/accounts/auth/login'
+LOGIN_URL = "/accounts/auth/login"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

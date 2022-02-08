@@ -57,7 +57,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         default=State.CREATED,
     )
 
-    history: list['HistoryRecord'] = models.JSONField(
+    history: list["HistoryRecord"] = models.JSONField(
         default=list,
         encoder=DjangoJSONEncoder,
     )
@@ -74,11 +74,13 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     @hook(BEFORE_SAVE, when="state", has_changed=True)
     @hook(BEFORE_CREATE)
     def on_state_change(self):
-        self.history.append(self.HistoryRecord(
-            timestamp=datetime.now(),
-            initial_state=self.initial_value('state'),
-            final_state=self.state,
-        ))
+        self.history.append(
+            self.HistoryRecord(
+                timestamp=datetime.now(),
+                initial_state=self.initial_value("state"),
+                final_state=self.state,
+            )
+        )
 
 
 __all__ = ["ESNcardApplication"]
