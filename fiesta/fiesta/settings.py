@@ -215,7 +215,7 @@ USE_TZ = True
 STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    (BASE_DIR / 'static').as_posix(),
+    (BASE_DIR / "static").as_posix(),
 ]
 
 # Default primary key field type
