@@ -1,0 +1,26 @@
+{% extends "fiesta/base.html" %}
+
+{% block main %}
+    <ul class="list-disc">
+        {% for sa in request.user.socialaccount_set.all %}
+            <li>
+                {% if sa.provider == 'esnaccounts' %}
+                    <ul class="list-disc">
+                        {% for role in sa.extra_data.roles %}
+                            <li>role: {{ role }}</li>
+                        {% endfor %}
+
+                        <li>joined: {{ sa.date_joined }}
+                        <li>email: {{ sa.extra_data.mail }}
+                        <li>uid: {{ sa.extra_data.uid }}
+                        <li><img src="{{ sa.extra_data.picture }}" width="60px">
+                        <li>data: {{ sa.extra_data }}
+                    </ul>
+                {% else %}
+                    {{ sa.provider }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

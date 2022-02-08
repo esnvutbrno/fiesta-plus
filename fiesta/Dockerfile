@@ -1,8 +1,9 @@
 FROM python:3.9.7-alpine as builder
 
 RUN apk add --no-cache --virtual build-deps \
-    build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ postgresql-dev mariadb-dev \
-    musl-dev rust cargo patchelf
+    build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
+    postgresql-dev mariadb-dev libxml2-dev libxslt-dev \
+    musl-dev rust cargo patchelf git
 
 COPY pyproject.toml poetry.lock ./
 
