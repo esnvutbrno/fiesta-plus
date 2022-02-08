@@ -1,0 +1,17 @@
+{% extends "fiesta/base.html" %}
+
+{% block main %}
+    <div class="flex flex-col sm:flex-row sm:items-center items-start mx-auto py-24">
+        <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">
+            Discounts at local partners, <br>
+            bonuses from global players, <br>
+            and cheaper ESN events?
+        </h1>
+        <a class="flex-shrink-0 text-white bg-primary border-0 py-2 px-8 focus:outline-none
+            hover:bg-rose-700 transition rounded text-lg mt-10 sm:mt-0"
+            href="{% url "esncards:create-application-form" %}"
+        >
+            Apply for ESNcard
+        </a>
+    </div>
+{% endblock %}

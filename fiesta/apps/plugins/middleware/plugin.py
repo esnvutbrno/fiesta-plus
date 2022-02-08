@@ -26,6 +26,7 @@ class CurrentPluginMiddleware:
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
         # if not request.user.is_authenticated:
         #     return
+        request.plugin = None
 
         if not request.membership:
             # TODO: not active membership, redirect or?
@@ -41,12 +42,13 @@ class CurrentPluginMiddleware:
         target_app = request.resolver_match.app_name.split(".")[-1]
 
         try:
-            request.plugin = Plugin.objects.get(
+            # could be already prefetched from membership fetch in previous middleware,
+            # but isn't it premature optimalization?
+            request.plugin = request.membership.section.plugins.get(
                 app_label=target_app,
                 section_id=request.membership.section_id,
             )
         except Plugin.DoesNotExist:
-            request.plugin = None
             return
         # TODO: check, if plugin is enabled, perms and all the stuff
 

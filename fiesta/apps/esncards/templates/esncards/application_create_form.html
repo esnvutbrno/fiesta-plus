@@ -1,0 +1,9 @@
+<form
+    hx-post="{% url "esncards:create-application-form" %}"
+    hx-swap="outerHTML"
+    {% if form.is_multipart %} enctype="multipart/form-data" hx-encoding="multipart/form-data" {% endif %}
+>
+    {% csrf_token %}
+
+    {{ form }}
+</form>

@@ -1,4 +1,6 @@
 {% load render_bundle from webpack_loader %}
+{% load django_htmx %}
+{% load breadcrumbs %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,16 +8,41 @@
     <title>Buena Fiesta</title>
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
+    {# TODO: include with webpack #}
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+
+    {% django_htmx_script %}
 </head>
-<body>
-<div class="max-w-xl mx-auto bg-gray-200">
-    <header>
-        <h1 class="color-primary font-bold">Buena Fiesta</h1>
-        {% include "fiesta/parts/plugins_menu.html" %}
-    </header>
-    <main>
-        {% block main %}{% endblock main %}
-    </main>
-</div>
+<body
+    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+    class="overflow-y-scroll flex flex-col justify-between min-h-screen box-border"
+>
+{% block body %}
+    {% block navigation_container %}
+        <div class="max-w-3xl mx-auto w-full">
+            {% include "fiesta/parts/header.html" %}
+        </div>
+    {% endblock %}
+
+    {% block breadcrumbs_container %}
+        <div class="max-w-3xl mx-auto w-full">
+            {% breadcrumbs %}
+        </div>
+    {% endblock breadcrumbs_container %}
+
+    <div class="border border-gray-50"></div>
+
+    {% block main_container %}
+        <div class="max-w-3xl mx-auto mb-auto w-full">
+            <main class="p-3">
+                {% block main %}{% endblock main %}
+            </main>
+        </div>
+    {% endblock main_container %}
+
+    <div class="border border-gray-50"></div>
+
+    {% include "fiesta/parts/footer.html" %}
+{% endblock body %}
 </body>
 </html>

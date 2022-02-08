@@ -1,8 +1,9 @@
 from abc import ABCMeta
 from importlib import import_module
-from typing import Optional
+from typing import Iterable, Optional
 
 from django.apps import AppConfig
+from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, reverse
 
 
@@ -14,6 +15,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
+    title: str
+
     configuration_model: Optional[str] = None
 
     def reverse(self, viewname, args=None, kwargs=None):
@@ -21,8 +24,19 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         return reverse(f"{self.label}:{viewname}", args=args, kwargs=kwargs)
 
     @property
-    def urlpatterns(self) -> list[URLPattern]:
-        return import_module(f"{self.name}.urls").urlpatterns
+    def urlpatterns(self) -> Iterable[URLPattern]:
+        urls: list[URLPattern] = import_module(f"{self.name}.urls").urlpatterns
+        return tuple(
+            map(
+                lambda p: URLPattern(
+                    pattern=p.pattern,
+                    callback=login_required(p.callback),
+                    default_args=p.default_args,
+                    name=p.name,
+                ),
+                urls,
+            )
+        )
 
     @property
     def url_prefix(self) -> str:

@@ -1,0 +1,59 @@
+{% load i18n %}
+{% load fiestaforms %}
+{% load as_widget_field as_label from fiestaforms %}
+
+{% if form.title %}
+    <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">{{ form.title }}</h3>
+{% endif %}
+
+{% if errors %}
+    <div class="flex p-4 mb-4 text-sm text-yellow-700 bg-yellow-100 rounded-lg dark:bg-yellow-200 dark:text-yellow-800" role="alert">
+        <svg class="inline flex-shrink-0 mr-3 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+        </svg>
+        <div>
+            <ul>
+                {% for error in errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endif %}
+
+{% for bf, errors in fields %}
+    <div class="Forms__field{% if errors %} Forms__field--error{% endif %} ">
+        {% if bf.field.required and not bf.field.disabled %}
+            <span class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded dark:bg-gray-700
+            dark:text-gray-300 float-right font-light">{% trans "Required" %}</span>
+        {% endif %}
+
+        {{ bf|as_label }}
+        {{ bf|as_widget_field }}
+
+        {% if errors %}
+            <div class="Forms__error_text">{{ errors }}</div>
+        {% endif %}
+
+        {% if bf.help_text %}
+            <p class="Forms__help_text">{{ bf.help_text }}</p>
+        {% endif %}
+    </div>
+{% endfor %}
+
+{% for field in hidden_fields %}
+    {{ field }}
+{% endfor %}
+
+<div class="Forms__field flex justify-end items-center">
+    <svg
+        class="-ml-1 mr-3 h-5 w-5 text-primary animate-spin htmx-indicator opacity-0"
+        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+    </svg>
+
+    <button type="submit" class="Forms__button Forms__button--submit">
+        {% trans "Submit" %}
+    </button>
+</div>

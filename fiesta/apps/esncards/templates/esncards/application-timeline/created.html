@@ -1,0 +1,7 @@
+{% extends "esncards/application-timeline/base.html" %}
+
+{% block content %}
+    User {{ application.user }} created application for ESNcard.
+
+    <div>{{ application.first_name }}, {{ application.last_name }}</div>
+{% endblock content %}
