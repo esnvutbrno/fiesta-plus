@@ -1,5 +1,6 @@
 {% load render_bundle from webpack_loader %}
 {% load django_htmx %}
+{% load breadcrumbs %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -15,6 +16,10 @@
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body %}
     {% include "fiesta/parts/navbar.html" %}
+
+    <div class="max-w-xl mx-auto my-1">
+        {% breadcrumbs %}
+    </div>
     <div class="max-w-xl mx-auto shadow mt-6 p-3">
         <main>
             {% block main %}{% endblock main %}

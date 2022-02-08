@@ -26,6 +26,7 @@ class CurrentPluginMiddleware:
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
         # if not request.user.is_authenticated:
         #     return
+        request.plugin = None
 
         if not request.membership:
             # TODO: not active membership, redirect or?
@@ -46,7 +47,6 @@ class CurrentPluginMiddleware:
                 section_id=request.membership.section_id,
             )
         except Plugin.DoesNotExist:
-            request.plugin = None
             return
         # TODO: check, if plugin is enabled, perms and all the stuff
 

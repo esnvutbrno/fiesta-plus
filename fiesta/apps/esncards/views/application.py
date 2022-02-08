@@ -1,13 +1,16 @@
 from django.urls import reverse
 from django.views.generic import CreateView, DetailView
+from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.middleware.plugin import HttpRequest
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 
 
+@with_breadcrumb(_('New Application'))
 class ApplicationCreateView(HtmxFormMixin, CreateView):
     request: HttpRequest
 
@@ -44,6 +47,8 @@ class ApplicationCreateView(HtmxFormMixin, CreateView):
         return reverse("esncards:detail-application", kwargs=dict(pk=self.object.pk))
 
 
+
+@with_object_breadcrumb()
 class ApplicationDetailView(DetailView):
     request: HttpRequest
 

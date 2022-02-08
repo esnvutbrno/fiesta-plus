@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     "apps.universities.apps.UniversitiesConfig",
     "apps.sections.apps.SectionsConfig",
     "apps.utils.apps.UtilsConfig",
-    "apps.esncards.apps.EsncardsConfig",
+    "apps.esncards.apps.ESNcardsConfig",
     "apps.fiestaforms.apps.FiestaformsConfig",
     # Debugs
     "django_extensions",
