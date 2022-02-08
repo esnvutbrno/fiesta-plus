@@ -1,8 +1,8 @@
 from functools import wraps
 from typing import Type
 
-from django.views import View
 from django.utils.translation import gettext_lazy as _
+from django.views import View
 
 
 def with_breadcrumb(title: str):
@@ -23,7 +23,7 @@ def with_breadcrumb(title: str):
     return inner
 
 
-def with_object_breadcrumb(prefix: str = _('Detail')):
+def with_object_breadcrumb(prefix: str = _("Detail")):
     """
     Class decorator to register breadcrumbs for detail views.
     Used like:
@@ -35,7 +35,7 @@ def with_object_breadcrumb(prefix: str = _('Detail')):
 
     @wraps(with_breadcrumb)
     def inner(view_klass: Type[View]):
-        view_klass.title = property(lambda s: f'{prefix}: {str(s.object)}')
+        view_klass.title = property(lambda s: f"{prefix}: {str(s.object)}")
         return view_klass
 
     return inner
