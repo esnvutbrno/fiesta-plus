@@ -1,6 +1,6 @@
+from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from allauth.socialaccount.models import SocialAccount, SocialLogin
 from django.http import HttpRequest
-from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 from apps.esnaccounts.provider import ESNAccountsProvider
 

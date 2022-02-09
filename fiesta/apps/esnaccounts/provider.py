@@ -13,8 +13,8 @@ if typing.TYPE_CHECKING:
 
 class ESNAccountsAccount(ProviderAccount):
     def get_avatar_url(self):
-        sa: 'SocialAccount' = self.account
-        return sa.extra_data.get('picture')
+        sa: "SocialAccount" = self.account
+        return sa.extra_data.get("picture")
 
 
 class ESNAccountsProvider(CASProvider):
@@ -25,28 +25,28 @@ class ESNAccountsProvider(CASProvider):
     def extract_common_fields(self, data):
         uid, extra = data
         return {
-            'username': extra.get('username', uid),
-            'email': extra.get('mail'),
-            'first_name': extra.get('first'),
-            'last_name': extra.get('last'),
+            "username": extra.get("username", uid),
+            "email": extra.get("mail"),
+            "first_name": extra.get("first"),
+            "last_name": extra.get("last"),
         }
 
-    MEMBER_ROLE = 'Local.activeMember'
-    EDITOR_ROLE = 'Local.regularBoardMember'
+    MEMBER_ROLE = "Local.activeMember"
+    EDITOR_ROLE = "Local.regularBoardMember"
 
     @classmethod
     def pre_social_login(
-            cls,
-            request: HttpRequest,
-            login: 'SocialLogin',
+        cls,
+        request: HttpRequest,
+        login: "SocialLogin",
     ):
         user: User = login.user
         sa: SocialAccount = login.account
-        roles = sa.extra_data.get('roles', [])
-        section_code = sa.extra_data.get('sc')
-        section_name = sa.extra_data.get('section')
-        user_nationality = sa.extra_data.get('nationality')
-        national_section = sa.extra_data.get('country')
+        roles = sa.extra_data.get("roles", [])
+        section_code = sa.extra_data.get("sc")
+        section_name = sa.extra_data.get("section")
+        user_nationality = sa.extra_data.get("nationality")
+        national_section = sa.extra_data.get("country")
 
         user.save()
         SectionMembership.objects.update_or_create(
@@ -57,15 +57,17 @@ class ESNAccountsProvider(CASProvider):
                     code=section_code,
                     # TODO: definitely not, user nationality != section assignment
                     country=user_nationality,
-                )
+                ),
             )[0],
             defaults=dict(
                 # TODO: check all possible for ESN Accounts roles
                 state=SectionMembership.State.ACTIVE,
-                role=SectionMembership.Role.EDITOR if cls.EDITOR_ROLE in roles
-                else SectionMembership.Role.MEMBER if cls.MEMBER_ROLE in roles
-                else SectionMembership.Role.INTERNATIONAL
-            )
+                role=SectionMembership.Role.EDITOR
+                if cls.EDITOR_ROLE in roles
+                else SectionMembership.Role.MEMBER
+                if cls.MEMBER_ROLE in roles
+                else SectionMembership.Role.INTERNATIONAL,
+            ),
         )
 
 

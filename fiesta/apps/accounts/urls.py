@@ -1,4 +1,5 @@
 from django.urls import path
+
 # Define your urls here
 from django.views.generic import TemplateView
 
