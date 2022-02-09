@@ -53,13 +53,14 @@ INSTALLED_APPS = [
     "webpack_loader",
     "django_htmx",
     # Fiesta apps
-    "apps.plugins.apps.PluginsConfig",
     "apps.accounts.apps.AccountsConfig",
-    "apps.universities.apps.UniversitiesConfig",
-    "apps.sections.apps.SectionsConfig",
-    "apps.utils.apps.UtilsConfig",
+    "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
     "apps.esncards.apps.ESNcardsConfig",
     "apps.fiestaforms.apps.FiestaformsConfig",
+    "apps.plugins.apps.PluginsConfig",
+    "apps.sections.apps.SectionsConfig",
+    "apps.universities.apps.UniversitiesConfig",
+    "apps.utils.apps.UtilsConfig",
     # Debugs
     "django_extensions",
     # django-allauth
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.facebook",
+    "allauth_cas",
 ]
 
 MIDDLEWARE = [
@@ -164,6 +166,8 @@ PASSWORD_HASHERS = [
 
 SITE_ID = 1
 
+SECURE_PROXY_SSL_HEADER = "HTTP_X_FORWARDED_SSL", "on"
+
 SOCIALACCOUNT_PROVIDERS = {
     "facebook": {
         "METHOD": "oauth2",
@@ -184,7 +188,8 @@ SOCIALACCOUNT_PROVIDERS = {
         "LOCALE_FUNC": lambda request: "en",
         "VERIFIED_EMAIL": False,
         "VERSION": "v12.0",
-    }
+    },
+    "esnaccounts": {},
 }
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
@@ -195,8 +200,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
 ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+SOCIALACCOUNT_ADAPTER = "apps.accounts.social.SocialAccountAdapter"
 
 LOGIN_URL = "/accounts/auth/login"
+LOGIN_REDIRECT_URL = "/accounts/profile"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
