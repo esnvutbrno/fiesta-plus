@@ -1,6 +1,6 @@
 import datetime
-from _operator import attrgetter
 from typing import Reversible
+from operator import attrgetter
 
 from django import template
 

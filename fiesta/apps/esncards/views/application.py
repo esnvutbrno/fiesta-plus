@@ -17,7 +17,7 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
 
     form_class = ESNcardApplicationForm
     template_name = "esncards/application_create.html"
-    success_message = _('Application has been created.')
+    success_message = _("Application has been created.")
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile

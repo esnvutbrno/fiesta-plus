@@ -58,7 +58,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         max_length=16,
         choices=State.choices,
         default=State.CREATED,
-        verbose_name=_('state'),
+        verbose_name=_("state"),
     )
 
     history: list["HistoryRecord"] = models.JSONField(

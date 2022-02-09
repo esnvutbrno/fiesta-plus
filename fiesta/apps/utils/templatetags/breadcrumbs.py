@@ -20,7 +20,7 @@ class BreadcrumbTitle(NamedTuple):
 def breadcrumb_items(context: dict):
     req: HttpRequest = context.get("request")
 
-    if hasattr(req, 'breadcrumbs'):
+    if hasattr(req, "breadcrumbs"):
         return req.breadcrumbs
 
     view: View | None = context.get("view")
