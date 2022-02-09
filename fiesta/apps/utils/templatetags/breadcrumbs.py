@@ -5,6 +5,7 @@ from typing import NamedTuple
 from django import template
 from django.template.loader import render_to_string
 from django.views import View
+from django.utils.translation import gettext_lazy as _
 
 from apps.plugins.middleware.plugin import HttpRequest
 
@@ -34,7 +35,10 @@ def breadcrumbs(context: dict):
                     None,
                     [
                         # TODO: slash is not always the home page?
-                        BreadcrumbTitle(req.membership.section, "/"),
+                        BreadcrumbTitle(
+                            req.membership.section if req.membership else _('Home'),
+                            "/"
+                        ),
                         BreadcrumbTitle(apps.title, f"/{apps.url_prefix}")
                         if (plugin := req.plugin) and (apps := plugin.app_config)
                         else None,

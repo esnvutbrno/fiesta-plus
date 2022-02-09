@@ -3,7 +3,7 @@
 {% load plugins %}
 <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5 rounded dark:bg-gray-800">
     <div class="container flex flex-wrap justify-between items-center mx-auto">
-        <a href="/" class="flex">
+        <a href="{% url "home" %}" class="flex">
             <svg class="mr-3 h-10" width="48" height="60" viewBox="0 0 48 60">
                 <use href="{% static "logo.svg" %}#logo"></use>
             </svg>

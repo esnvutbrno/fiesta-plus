@@ -1,6 +1,9 @@
+@import "_Home.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 .Forms__field {
   @apply relative z-0 mb-3 w-full;
@@ -31,12 +34,12 @@
 
 .Forms__input[disabled] {
   @apply
-    bg-gray-200 border-gray-300 text-gray-700
+  bg-gray-200 border-gray-300 text-gray-700
 
-    focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed
+  focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed
 
-    dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500
-    dark:text-gray-500 dark:focus:ring-blue-500 dark:focus:border-blue-500
+  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500
+  dark:text-gray-500 dark:focus:ring-blue-500 dark:focus:border-blue-500
   ;
 }
 
