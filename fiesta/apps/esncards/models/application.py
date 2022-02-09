@@ -25,6 +25,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         "universities.University",
         on_delete=models.RESTRICT,
         verbose_name=_("university"),
+        db_index=True,
     )
 
     # filled by user
@@ -35,11 +36,13 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         "sections.Section",
         on_delete=models.RESTRICT,
         verbose_name=_("section"),
+        db_index=True,
     )
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.RESTRICT,
         verbose_name=_("issuer"),
+        db_index=True,
     )
 
     class State(TextChoices):
@@ -55,6 +58,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         max_length=16,
         choices=State.choices,
         default=State.CREATED,
+        verbose_name=_('state'),
     )
 
     history: list["HistoryRecord"] = models.JSONField(
