@@ -46,7 +46,7 @@ class ESNAccountsProvider(CASProvider):
         section_code = sa.extra_data.get("sc")
         section_name = sa.extra_data.get("section")
         user_nationality = sa.extra_data.get("nationality")
-        national_section = sa.extra_data.get("country")
+        # national_section = sa.extra_data.get("country")
 
         user.save()
         SectionMembership.objects.update_or_create(
