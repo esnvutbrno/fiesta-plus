@@ -23,6 +23,13 @@ class Section(BaseTimestampedModel):
         help_text=_("Universities, for whose this section offers services."),
     )
 
+    code = models.SlugField(
+        verbose_name=_('code'),
+        help_text=_('Official code used in ESN world, especially in ESN Accounts database.'),
+        # TODO: remove blankness after proper migration from ESN accounts
+        null=True, blank=True,
+    )
+
     class Meta:
         verbose_name = _("ESN section")
         verbose_name_plural = _("ESN sections")

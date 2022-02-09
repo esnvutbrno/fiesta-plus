@@ -200,6 +200,7 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
 ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
+SOCIALACCOUNT_ADAPTER = 'apps.accounts.social.SocialAccountAdapter'
 
 LOGIN_URL = "/accounts/auth/login"
 LOGIN_REDIRECT_URL = "/accounts/profile"

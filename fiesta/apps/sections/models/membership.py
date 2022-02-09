@@ -43,6 +43,8 @@ class SectionMembership(BaseTimestampedModel):
         verbose_name=_("membership state"),
     )
 
+    # TODO: add flag to signalize, if membership has been added from ESN Accounts
+
     class Meta:
         verbose_name = _("section membership")
         verbose_name_plural = _("section memberships")
