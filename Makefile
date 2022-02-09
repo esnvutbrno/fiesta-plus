@@ -61,7 +61,9 @@ help: ## Shows help
 generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
 generate-localhost-certs: conf/certs/fiesta.localhost.crt \
 	conf/certs/web.localhost.crt \
-	conf/certs/webpack.localhost.crt
+	conf/certs/webpack.localhost.crt \
+	conf/certs/kibana.localhost.crt \
+	conf/certs/elastic.crt
 
 
 # based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
@@ -80,6 +82,16 @@ conf/certs/%.crt:
 			chown -R `id -u`:`id -g` ./ && \
 			mv $(DOMAIN).pem $(DOMAIN).crt && \
 			mv $(DOMAIN)-key.pem $(DOMAIN).key"
+
+.ONESHELL:
+setup-elastic: ## Starts elasticsearch standalone an generates keystore and passwords for all users.
+	docker run \
+		-i -t --rm \
+		--volume $(shell pwd)/conf/elastic/:/usr/share/elasticsearch/config/ \
+		elasticsearch:7.17.0 \
+		sh -c "elasticsearch-keystore create auto"
+	chown -v 1000 ./conf/elastic/elasticsearch.keystore
+	docker-compose run --rm elastic elasticsearch-setup-passwords interactive -u "https://elastic:9200"
 
 
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
