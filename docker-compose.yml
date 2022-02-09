@@ -23,7 +23,6 @@ services:
       - VIRTUAL_PORT=8000
 
   db:
-    container_name: db
     image: postgres:12.0-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -36,7 +35,6 @@ services:
       - TZ=Europe/Prague
 
   webserver:
-    container_name: webserver
     build: ./nginx
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
@@ -53,7 +51,6 @@ services:
       - VIRTUAL_PORT=80
 
   localproxy:
-    container_name: localproxy
     image: nginxproxy/nginx-proxy:alpine
     ports:
       - "80:80"
@@ -66,7 +63,6 @@ services:
   webpack:
     build: ./webpack
     command: dev
-    container_name: webpack
     expose:
       - 8003
     volumes:
@@ -86,8 +82,7 @@ services:
 
   legacydb:
     image: mariadb:10.3
-    container_name: legacydb
-    profiles: ["migration"]
+    profiles: [ "migration" ]
     volumes:
       - legacydb_data:/var/lib/mysql
       - ./legacy.sql:/docker-entrypoint-initdb.d/legacy.sql
@@ -101,12 +96,39 @@ services:
     expose:
       - 3306
 
+  elastic:
+    image: elasticsearch:7.17.0
+    profiles: [ "wiki" ]
+    volumes:
+      - elastic_data:/usr/share/elasticsearch/data
+      # - ./conf/elastic:/usr/share/elasticsearch/config/
+      - ./conf/certs:/usr/share/elasticsearch/config/certs
+      - ./elastic/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+    ports:
+      - "9200"
+
+  kibana:
+    image: kibana:7.17.0
+    profiles: [ "wiki" ]
+    depends_on:
+      - elastic
+    volumes:
+      - ./elastic/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./conf/certs:/etc/kibana/certs
+    ports:
+      - "5601"
+    environment:
+      - VIRTUAL_HOST=kibana.localhost
+      - VIRTUAL_PORT=5601
+
 secrets:
   .env:
     file: ./.env
 
 volumes:
   postgres_data:
+  elastic_data:
   legacydb_data:
   webpack_build:
   web_static_files:

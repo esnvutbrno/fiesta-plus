@@ -1,0 +1,19 @@
+server.name: kibana
+server.host: 0.0.0.0
+
+elasticsearch.hosts: [ "https://elastic:9200" ]
+elasticsearch.username: "elastic"
+elasticsearch.password: "elastic"
+
+elasticsearch.ssl.certificate: /etc/kibana/certs/elastic.crt
+elasticsearch.ssl.key: /etc/kibana/certs/elastic.key
+elasticsearch.ssl.certificateAuthorities: [ "/etc/kibana/certs/rootCA.pem" ]
+
+server.ssl.certificateAuthorities: [ "/etc/kibana/certs/rootCA.pem" ]
+
+# TODO: load from .env
+xpack.security.encryptionKey: "asdoahsiduqhruahsdfasgdfdiaguzhduzagsdawe"
+xpack.security.session.idleTimeout: "1h"
+xpack.security.session.lifespan: "30d"
+
+
