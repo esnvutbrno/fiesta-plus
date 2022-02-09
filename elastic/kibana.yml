@@ -15,5 +15,3 @@ server.ssl.certificateAuthorities: [ "/etc/kibana/certs/rootCA.pem" ]
 xpack.security.encryptionKey: "asdoahsiduqhruahsdfasgdfdiaguzhduzagsdawe"
 xpack.security.session.idleTimeout: "1h"
 xpack.security.session.lifespan: "30d"
-
-

@@ -13,4 +13,3 @@ xpack.security.transport.ssl.enabled: true
 xpack.security.transport.ssl.key: /usr/share/elasticsearch/config/certs/elastic.key
 xpack.security.transport.ssl.certificate: /usr/share/elasticsearch/config/certs/elastic.crt
 xpack.security.transport.ssl.certificate_authorities: /usr/share/elasticsearch/config/certs/rootCA.pem
-
