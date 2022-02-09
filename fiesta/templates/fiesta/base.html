@@ -1,17 +1,26 @@
+{% load utils %}
+{% load breadcrumbs %}
+{% load static %}
 {% load render_bundle from webpack_loader %}
 {% load django_htmx %}
-{% load breadcrumbs %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Buena Fiesta</title>
+    {% breadcrumb_items as items %}
+    {% if items|length_is:1 %}
+        <title>Buena Fiesta</title>
+    {% else %}
+        <title>{{ items | slice:"::-1" | map_attrgetter:"title" | join:" | " }} | Buena Fiesta</title>
+    {% endif %}
+
+    <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
+
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {# TODO: include with webpack #}
     <script src="https://unpkg.com/htmx.org@1.6.1"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
 
     {% django_htmx_script %}
 </head>
@@ -29,7 +38,7 @@
 
     {% block breadcrumbs_container %}
         <div class="max-w-3xl mx-auto w-full">
-            {% breadcrumbs %}
+            {% include "fiesta/parts/breadcrumbs.html" %}
         </div>
     {% endblock breadcrumbs_container %}
 

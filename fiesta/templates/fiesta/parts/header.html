@@ -1,3 +1,4 @@
+{% load socialaccount %}
 {% load static %}
 {% load i18n %}
 {% load plugins %}
@@ -12,7 +13,6 @@
                     Buena Fiesta
                 </span>
             {% endif %}
-
         </a>
         <div class="flex items-center md:order-2">
             <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
@@ -56,6 +56,10 @@
 
         <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
             <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+{#            <li>#}
+{#                <a href="{% provider_login_url "esnaccounts" %}">ESN Accounts</a>#}
+{##}
+{#            </li>#}
                 {% for item in items %}
                     <li>
                         {% if item.active %}
