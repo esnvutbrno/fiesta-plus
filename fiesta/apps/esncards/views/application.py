@@ -1,3 +1,4 @@
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView
@@ -11,11 +12,12 @@ from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 
 
 @with_breadcrumb(_("New Application"))
-class ApplicationCreateView(HtmxFormMixin, CreateView):
+class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
     request: HttpRequest
 
     form_class = ESNcardApplicationForm
     template_name = "esncards/application_create.html"
+    success_message = _('Application has been created.')
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile

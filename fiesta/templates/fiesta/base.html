@@ -20,6 +20,7 @@
     class="overflow-y-scroll flex flex-col justify-between min-h-screen box-border"
 >
 {% block body %}
+    {% include "fiesta/parts/messages.html" %}
     {% block navigation_container %}
         <div class="max-w-3xl mx-auto w-full">
             {% include "fiesta/parts/header.html" %}
