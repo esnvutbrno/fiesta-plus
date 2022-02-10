@@ -131,5 +131,8 @@ dmypy.json
 # Installed npm packages
 node_modules/
 
+# Install ruby packages
+nclude-dependencies/
+
 # template parts
 !**/templates/**/parts
