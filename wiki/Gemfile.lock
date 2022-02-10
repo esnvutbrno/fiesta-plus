@@ -1,0 +1,77 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    RedCloth (4.3.2)
+    asciidoctor (2.0.17)
+    builder (3.2.4)
+    charlock_holmes (0.7.7)
+    commonmarker (0.18.2)
+      ruby-enum (~> 0.5)
+    concurrent-ruby (1.1.9)
+    creole (0.3.8)
+    escape_utils (1.2.1)
+    expression_parser (0.9.0)
+    git (1.10.2)
+      rchardet (~> 1.8)
+    github-linguist (7.18.0)
+      charlock_holmes (~> 0.7.7)
+      escape_utils (~> 1.2.0)
+      mini_mime (~> 1.0)
+      rugged (>= 0.25.1)
+    github-markup (4.0.0)
+    htmlentities (4.3.4)
+    i18n (1.9.1)
+      concurrent-ruby (~> 1.0)
+    json (1.8.6)
+    mini_mime (1.1.2)
+    mini_portile2 (2.7.1)
+    nokogiri (1.13.1)
+      mini_portile2 (~> 2.7.0)
+      racc (~> 1.4)
+    org-ruby (0.9.9)
+      rubypants (~> 0.2)
+    posix-spawn (0.3.15)
+    racc (1.6.0)
+    rake (13.0.6)
+    rchardet (1.8.0)
+    rdoc (3.12.2)
+      json (~> 1.4)
+    redcarpet (3.5.1)
+    ruby-enum (0.9.0)
+      i18n
+    rubypants (0.7.1)
+    rugged (1.3.1)
+    twitter-text (1.14.7)
+      unf (~> 0.1.0)
+    unf (0.1.4)
+      unf_ext
+    unf_ext (0.0.8)
+    wikicloth (0.8.3)
+      builder
+      expression_parser
+      htmlentities
+      nokogiri
+      twitter-text
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  RedCloth
+  asciidoctor (~> 2.0.5)
+  commonmarker (~> 0.18.1)
+  creole (~> 0.3.6)
+  git (~> 1.10)
+  github-linguist
+  github-markup (~> 4.0)
+  kramdown
+  org-ruby (= 0.9.9)
+  posix-spawn
+  rake
+  rdoc (~> 3.6)
+  redcarpet
+  twitter-text (~> 1.14)
+  wikicloth (= 0.8.3)
+
+BUNDLED WITH
+   2.1.4

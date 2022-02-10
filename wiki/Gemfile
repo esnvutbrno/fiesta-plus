@@ -1,0 +1,24 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+# original
+gem "git", "~> 1.10"
+gem "github-markup", "~> 4.0"
+gem "github-linguist"
+
+# for github-markup
+gem "posix-spawn", :platforms => :ruby
+gem "redcarpet", :platforms => :ruby
+gem "kramdown", :platforms => :jruby
+gem "RedCloth"
+gem "commonmarker", "~> 0.18.1"
+gem "rdoc", "~>3.6"
+gem "org-ruby", "= 0.9.9"
+gem "creole", "~>0.3.6"
+gem "wikicloth", "=0.8.3"
+gem "twitter-text", "~> 1.14"
+gem "asciidoctor", "~> 2.0.5"
+gem "rake"

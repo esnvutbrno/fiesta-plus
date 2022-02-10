@@ -122,6 +122,12 @@ services:
       - VIRTUAL_HOST=kibana.localhost
       - VIRTUAL_PORT=5601
 
+  wikifetcher:
+    build: ./wiki
+    profiles: [ "wiki" ]
+    volumes:
+      - ./wiki/fetcher.rb:/usr/src/app/fetcher.rb
+
 secrets:
   .env:
     file: ./.env
