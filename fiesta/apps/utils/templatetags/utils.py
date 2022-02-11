@@ -1,4 +1,5 @@
 import datetime
+
 from operator import attrgetter
 from pathlib import Path
 from typing import Reversible
@@ -10,7 +11,7 @@ register = template.Library()
 
 @register.filter
 def strip_file_extension(name: str) -> str:
-    return Path(name).with_suffix('').as_posix()
+    return Path(name).with_suffix("").as_posix()
 
 
 @register.filter
