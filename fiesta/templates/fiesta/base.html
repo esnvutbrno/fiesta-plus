@@ -49,12 +49,14 @@
 
     {% block main_container %}
         <div class="max-w-3xl mx-auto mb-auto w-full flex flex-rox justify-between items-start">
-            <main class="flex-grow p-3">
+            <main class="p-3">
                 {% block main %}{% endblock main %}
             </main>
             {% block main_right %}{% endblock main_right %}
         </div>
     {% endblock main_container %}
+    
+    {% block upper_footer %}{% endblock upper_footer %}
 
     <div class="border border-gray-50"></div>
 

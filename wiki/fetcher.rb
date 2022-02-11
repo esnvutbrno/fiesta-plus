@@ -15,6 +15,7 @@ git = Git.clone(
   # :log => Logger.new(STDOUT)
 )
 
+git.config('log.date', 'unix')
 
 wait_for_port('elastic', 9200)
 
@@ -56,10 +57,12 @@ Dir[PATH + '/**/*'].select {
         content: rendered,
         file: name,
         last_change: {
-          at: last_commit.date,
+            # 2022-02-11 10:40:58 +0000
+          at: last_commit.date.iso8601,
           name: last_commit.author.name,
           email: last_commit.author.email,
           sha: last_commit.sha,
+          parent_sha: last_commit.parent.sha,
         }
       }
     )

@@ -1,4 +1,6 @@
 {% extends "fiesta/base.html" %}
+{% load humanize %}
+{% load utils %}
 
 {% block breadcrumbs_right %}
     <form class="relative my-2 w-1/4">
@@ -30,7 +32,52 @@
 {% endblock %}
 
 {% block main_right %}
-    <div class="Docs__sidebar w-1/4 sticky top-5">
+    <div class="Docs__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
         {{ sidebar.content|safe }}
+
+        <div class="mt-5 text-xs flex flex-col items-center space-y-1 text-gray-800">
+            <div class="border-t border-gray-50 w-full"></div>
+
+            {# TODO: links to conf #}
+
+            <svg class="w-6 h-6 inline-block" fill="none" stroke="currentColor"
+                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+
+            <a
+                    href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.sha }}..{{ page.last_change.parent_sha }}"
+                    target="_blank" rel="noreferrer,nofollow"
+                    class="hover:underline font-mono"
+                    title="{{ page.last_change.at|date_from_iso|date }}"
+            >
+                {{ page.last_change.at|date_from_iso|naturaltime }}
+            </a>
+
+            {{ page.last_change.name }}
+
+            <a
+                    href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
+                    target="_blank" rel="noreferrer,nofollow"
+            >
+                Page History
+            </a>
+
+            {% if request.user.is_superuser %}
+                <a
+                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
+                        target="_blank" rel="noreferrer,nofollow"
+                >
+                    Edit this Page
+                </a>
+            {% endif %}
+        </div>
     </div>
 {% endblock main_right %}
+
+
+{% block upper_footer %}
+
+{% endblock upper_footer %}
