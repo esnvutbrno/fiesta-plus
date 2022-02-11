@@ -19,6 +19,7 @@ class UserProfile(BaseTimestampedModel):
         verbose_name=_("user"),
     )
 
+    # TODO: required by section configuration...
     nationality = CountryField(blank=True, verbose_name=_("nationality"))
 
     home_university = models.ForeignKey(
