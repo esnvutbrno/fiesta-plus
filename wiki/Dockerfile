@@ -10,11 +10,11 @@ RUN apt-get update && \
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-RUN apt-get remove cmake && \
+RUN apt-get remove -y cmake && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
-COPY fetcher.rb .
+COPY ./ .
 
 ENTRYPOINT [ "./fetcher.rb" ]

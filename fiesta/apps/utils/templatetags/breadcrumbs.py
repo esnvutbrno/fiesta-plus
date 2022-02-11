@@ -3,8 +3,6 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from django import template
-from django.utils.translation import gettext_lazy as _
-from django.views import View
 
 from apps.plugins.middleware.plugin import HttpRequest
 
@@ -23,27 +21,28 @@ def breadcrumb_items(context: dict):
     if hasattr(req, "breadcrumbs"):
         return req.breadcrumbs
 
-    view: View | None = context.get("view")
-
     try:
-        view_title = view.title
+        view_titles = req.titles
     except AttributeError:
-        view_title = None
+        view_titles = ()
 
     req.breadcrumbs = list(
         filter(
             None,
             [
                 # TODO: slash is not always the home page?
-                BreadcrumbTitle(
-                    req.membership.section if req.membership else _("Home"), "/"
-                ),
+                BreadcrumbTitle(req.membership.section, "/")
+                if req.membership
+                else None,  # TODO: eg "Home > Docs" doesn't make
                 BreadcrumbTitle(apps.title, f"/{apps.url_prefix}")
                 if (plugin := req.plugin) and (apps := plugin.app_config)
                 else None,
-                BreadcrumbTitle(view_title, req.build_absolute_uri())
-                if view_title
-                else None,
+            ]
+            + [
+                BreadcrumbTitle(title, req.build_absolute_uri())
+                if isinstance(title, str)
+                else title
+                for title in view_titles
             ],
         )
     )

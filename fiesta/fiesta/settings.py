@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "apps.sections.apps.SectionsConfig",
     "apps.universities.apps.UniversitiesConfig",
     "apps.utils.apps.UtilsConfig",
+    "apps.wiki.apps.WikiConfig",
     # Debugs
     "django_extensions",
     # django-allauth
