@@ -90,8 +90,16 @@ setup-elastic: ## Starts elasticsearch standalone an generates keystore and pass
 		--volume $(shell pwd)/conf/elastic/:/usr/share/elasticsearch/config/ \
 		elasticsearch:7.17.0 \
 		sh -c "elasticsearch-keystore create auto"
-	chown -v 1000 ./conf/elastic/elasticsearch.keystore
-	docker-compose run --rm elastic elasticsearch-setup-passwords interactive -u "https://elastic:9200"
+	sudo chown -v 1000 ./conf/elastic/elasticsearch.keystore
+
+	docker container stop buena-fiesta-elastic-setup-run | true
+	docker container rm buena-fiesta-elastic-setup-run | true
+
+	docker-compose run -d --name buena-fiesta-elastic-setup-run --rm elastic
+	docker container exec -it buena-fiesta-elastic-setup-run bash -c \
+	'sleep 25 && elasticsearch-setup-passwords interactive'
+	docker stop buena-fiesta-elastic-setup-run
+	docker rm buena-fiesta-elastic-setup-run
 
 
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.

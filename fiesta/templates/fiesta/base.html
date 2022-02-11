@@ -27,8 +27,8 @@
     {% django_htmx_script %}
 </head>
 <body
-    hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-    class="overflow-y-scroll flex flex-col justify-between min-h-screen box-border"
+        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        class="overflow-y-scroll flex flex-col justify-between min-h-screen box-border"
 >
 {% block body %}
     {% include "fiesta/parts/messages.html" %}
@@ -39,18 +39,20 @@
     {% endblock %}
 
     {% block breadcrumbs_container %}
-        <div class="max-w-3xl mx-auto w-full">
+        <div class="max-w-3xl mx-auto w-full flex flex-rox justify-between items-center">
             {% include "fiesta/parts/breadcrumbs.html" %}
+            {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
         </div>
 
         <div class="border border-gray-50"></div>
     {% endblock breadcrumbs_container %}
 
     {% block main_container %}
-        <div class="max-w-3xl mx-auto mb-auto w-full">
-            <main class="p-3">
+        <div class="max-w-3xl mx-auto mb-auto w-full flex flex-rox justify-between items-start">
+            <main class="flex-grow p-3">
                 {% block main %}{% endblock main %}
             </main>
+            {% block main_right %}{% endblock main_right %}
         </div>
     {% endblock main_container %}
 

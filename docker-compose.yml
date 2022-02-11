@@ -4,6 +4,7 @@ services:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./fiesta/:/usr/src/app/
+      - ./conf/certs:/usr/share/certs
       - web_static_files:/usr/src/static
       - web_media_files:/usr/src/media
       - webpack_build:/usr/src/build
@@ -47,7 +48,7 @@ services:
     depends_on:
       - web
     environment:
-      - VIRTUAL_HOST=*.fiesta.localhost
+      - VIRTUAL_HOST=fiesta.localhost
       - VIRTUAL_PORT=80
 
   localproxy:
@@ -125,8 +126,12 @@ services:
   wikifetcher:
     build: ./wiki
     profiles: [ "wiki" ]
+    depends_on:
+      - elastic
     volumes:
-      - ./wiki/fetcher.rb:/usr/src/app/fetcher.rb
+      - ./wiki/:/usr/src/app/
+      - ./conf/certs:/usr/share/certs
+
 
 secrets:
   .env:
