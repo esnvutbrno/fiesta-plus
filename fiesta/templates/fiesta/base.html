@@ -7,6 +7,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    {% block upper_head %}{% endblock upper_head %}
+
     {% breadcrumb_items as items %}
     {% if items|length_is:1 %}
         <title>Buena Fiesta</title>
@@ -40,9 +42,9 @@
         <div class="max-w-3xl mx-auto w-full">
             {% include "fiesta/parts/breadcrumbs.html" %}
         </div>
-    {% endblock breadcrumbs_container %}
 
-    <div class="border border-gray-50"></div>
+        <div class="border border-gray-50"></div>
+    {% endblock breadcrumbs_container %}
 
     {% block main_container %}
         <div class="max-w-3xl mx-auto mb-auto w-full">

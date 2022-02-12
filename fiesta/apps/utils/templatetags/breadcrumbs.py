@@ -48,3 +48,12 @@ def breadcrumb_items(context: dict):
         )
     )
     return req.breadcrumbs
+
+
+@register.simple_tag(takes_context=True)
+def breadcrumb_push_item(context: dict, item: str):
+    view: View = context["view"]
+
+    view.title = item
+
+    return ''

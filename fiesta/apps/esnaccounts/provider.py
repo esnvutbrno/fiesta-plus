@@ -35,20 +35,19 @@ class ESNAccountsProvider(CASProvider):
     EDITOR_ROLE = "Local.regularBoardMember"
 
     @classmethod
-    def pre_social_login(
-        cls,
+    def update_section_membership(
+        cls, *,
         request: HttpRequest,
-        login: "SocialLogin",
+        sociallogin: "SocialLogin",
     ):
-        user: User = login.user
-        sa: SocialAccount = login.account
+        user: User = request.user
+        sa: SocialAccount = sociallogin.account
         roles = sa.extra_data.get("roles", [])
         section_code = sa.extra_data.get("sc")
         section_name = sa.extra_data.get("section")
         user_nationality = sa.extra_data.get("nationality")
         # national_section = sa.extra_data.get("country")
 
-        user.save()
         SectionMembership.objects.update_or_create(
             user=user,
             section=Section.objects.get_or_create(
