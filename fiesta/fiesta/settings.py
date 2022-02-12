@@ -192,18 +192,21 @@ SOCIALACCOUNT_PROVIDERS = {
     "esnaccounts": {},
 }
 
+# configuration for fiesta accounts
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"  # email or username
+ACCOUNT_SESSION_REMEMBER = None  # ask user for `remember`
+ACCOUNT_ADAPTER = "apps.accounts.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
+LOGIN_URL = "/accounts/auth/login"
+LOGIN_REDIRECT_URL = "/"
+
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-ACCOUNT_AUTHENTICATION_METHOD = "email"
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # True by default
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
-ACCOUNT_SESSION_REMEMBER = True  # None by default (to ask 'Remember me?'). I want the user to be always logged in
-ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-SOCIALACCOUNT_ADAPTER = "apps.accounts.social.SocialAccountAdapter"
 
-LOGIN_URL = "/accounts/auth/login"
-LOGIN_REDIRECT_URL = "/accounts/profile"
+ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/

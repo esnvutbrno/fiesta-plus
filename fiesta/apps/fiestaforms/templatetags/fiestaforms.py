@@ -19,3 +19,10 @@ def as_label(bf: BoundField):
     return bf.label_tag(
         attrs={"class": f"Forms__label " f"Forms__label--{bf.field.widget.input_type} "}
     )
+
+
+@register.filter
+def with_class(bf: BoundField, klass: str):
+    return bf.as_widget(attrs={
+        'class': klass,
+    })

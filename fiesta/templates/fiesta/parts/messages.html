@@ -1,11 +1,14 @@
 {% load messages %}
-{% if messages %}
-    <div class="absolute top-5 right-5 flex flex-col gap-y-4">
-        {% for message in messages %}
-            {% with message|message_to_template as template %}
-                {% include template %}
-            {% endwith %}
-            {# <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> #}
-        {% endfor %}
-    </div>
-{% endif %}
+{# Enables HTMX to swap this element from response. #}
+<div id="messages" hx-swap-oob="true">
+    {% if messages %}
+        <div class="absolute top-5 right-5 flex flex-col gap-y-4">
+            {% for message in messages %}
+                {% with message|message_to_template as template %}
+                    {% include template %}
+                {% endwith %}
+                {# <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li> #}
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
