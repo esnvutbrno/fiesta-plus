@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from apps.utils.models import BaseTimestampedModel
@@ -26,6 +27,10 @@ class SectionMembership(BaseTimestampedModel):
         EDITOR = "editor", _("Editor")
         ADMIN = "admin", _("Admin")
 
+        @property
+        def is_privileged(self):
+            return self in (self.__class__.EDITOR, self.__class__.ADMIN)
+
     role = models.CharField(
         max_length=16,
         choices=Role.choices,
@@ -52,6 +57,19 @@ class SectionMembership(BaseTimestampedModel):
 
     def __str__(self):
         return f"{self.section}: {self.get_role_display()} {self.user} ({self.get_state_display()})"
+
+    @property
+    def available_plugins_filter(self) -> Q:
+        # on context of Queryset[Plugin]
+        from apps.plugins.models import Plugin
+
+        avaiable_states = (
+            (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY)
+            if self.Role(self.role).is_privileged else
+            (Plugin.State.ENABLED,)
+        )
+
+        return Q(section=self.section, state__in=avaiable_states)
 
 
 __all__ = ["SectionMembership"]

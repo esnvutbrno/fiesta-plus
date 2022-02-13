@@ -1,0 +1,13 @@
+{% extends "fiesta/base.html" %}
+
+
+{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+
+
+{% block main %}
+    <div class="p-4 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800" role="alert">
+        <span class="font-medium">Wait a second!</span> Before going futher, we're gonna need some information.
+    </div>
+
+    {% include "accounts/user_profile/profile_finish_form.html" %}
+{% endblock %}

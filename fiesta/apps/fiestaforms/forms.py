@@ -8,11 +8,3 @@ class DateInput(DjDateInput):
 class BaseModelForm(ModelForm):
     template_name = "fiestaforms/classic.html"
     title: str
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def get_context(self):
-        ctx: dict = super().get_context()
-
-        return ctx

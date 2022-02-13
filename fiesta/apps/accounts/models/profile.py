@@ -3,15 +3,16 @@ import enum
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import CheckConstraint
+from django.db.models import CheckConstraint, TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
+from django_lifecycle import hook, LifecycleModelMixin, AFTER_SAVE
 
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import Q
 
 
-class UserProfile(BaseTimestampedModel):
+class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     user = models.OneToOneField(
         settings.AUTH_USER_MODEL,
         on_delete=models.RESTRICT,
@@ -19,8 +20,10 @@ class UserProfile(BaseTimestampedModel):
         verbose_name=_("user"),
     )
 
-    # TODO: required by section configuration...
-    nationality = CountryField(blank=True, verbose_name=_("nationality"))
+    nationality = CountryField(
+        verbose_name=_("nationality"),
+        blank=True, null=True,
+    )
 
     home_university = models.ForeignKey(
         "universities.University",
@@ -69,6 +72,18 @@ class UserProfile(BaseTimestampedModel):
         default=0, verbose_name=_("user preferences as flags")
     )
 
+    class State(TextChoices):
+        # CREATED = 'created', _('Created')
+        INCOMPLETE = 'incomplete', _('Filled')
+        COMPLETE = 'complete', _('Filled')
+
+    state = models.CharField(
+        verbose_name=_('state'),
+        max_length=16,
+        choices=State.choices,
+        default=State.INCOMPLETE
+    )
+
     class Meta:
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
@@ -91,6 +106,11 @@ class UserProfile(BaseTimestampedModel):
                     )
                 }
             )
+
+    @hook(AFTER_SAVE)
+    def on_save(self):
+        from apps.accounts.services import UserProfileStateSynchronizer
+        UserProfileStateSynchronizer.on_user_profile_update(profile=self)
 
     def __str__(self):
         return (

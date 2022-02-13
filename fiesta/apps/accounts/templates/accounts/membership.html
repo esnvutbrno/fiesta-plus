@@ -1,0 +1,13 @@
+{% extends "fiesta/base.html" %}
+
+{% block breadcrumbs_container %}{% endblock %}
+
+{% block main %}
+    <ul>
+        {% for membership in request.user.memberships.all %}
+            <li>{{ membership }}</li>
+        {% empty %}
+            <li>no memberships :-(</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
-from django.http import HttpRequest as DjHttpRequest, HttpResponse
+from django.http import HttpRequest as DjHttpRequest, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 
-from ...accounts.models import User, UserProfile
 from ..models import SectionMembership
+from ...accounts.models import User
+from ...plugins.utils import target_plugin_app_from_resolver_match
 
 
 class HttpRequest(DjHttpRequest):
@@ -12,33 +16,47 @@ class HttpRequest(DjHttpRequest):
 
 
 class UserMembershipMiddleware:
+    MEMBERSHIP_URL_NAME = 'accounts:membership'
+
     def __init__(self, get_response):
         self.get_response = get_response
 
     def __call__(self, request: DjHttpRequest) -> HttpResponse:
         user: User | AnonymousUser = request.user
 
-        if user.is_authenticated:
-            # TODO: Detect, in which membership is user logged:
-            #  probably the default one, with possibility to switch
-            #  with sesstion flag
-            request.membership = user.memberships.select_related(
-                # to remove another query for relating section
-                "section"
-            ).first()
-        else:
-            request.membership = None
+        request.membership = None
 
-        try:
-            user.profile
-        except (UserProfile.DoesNotExist, AttributeError):
-            ...
-            # TODO: check, if user does have a filled profile
-            #  and if not, redirect him to profile-form-page to complete the profile
-            #  be aware and check, if profile-form-page is not the target one.
+        if user.is_anonymous:
+            return self.get_response(request)
 
-        response: HttpResponse = self.get_response(request)
-        return response
+        # TODO: Detect, in which membership is user logged:
+        #  probably the default one, with possibility to switch
+        #  with sesstion flag
+        request.membership = user.memberships.select_related(
+            # to remove another query for relating section
+            "section"
+        ).first()
+
+        return self.get_response(request)
+
+    @classmethod
+    def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
+        target_plugin = target_plugin_app_from_resolver_match(request.resolver_match)
+
+        if not target_plugin:
+            # target apps are not plugin, so probably public
+            # additional checks needs to be in views itself
+            return
+
+        if request.resolver_match.view_name == cls.MEMBERSHIP_URL_NAME:
+            # on membership page, so fine -> we don't want to loop
+            return
+
+        if not request.membership:
+            # target is plugin view, but user does not have any membership,
+            # and we're not on memberships page
+            messages.warning(request, _('You don\'t have any active membership to view this page.'))
+            return HttpResponseRedirect(reverse(cls.MEMBERSHIP_URL_NAME))
 
 
 __all__ = ["UserMembershipMiddleware", "HttpRequest"]

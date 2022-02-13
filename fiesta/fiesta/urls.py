@@ -10,6 +10,9 @@ admin.site.site_title = _("Buena Fiesta admin")
 admin.site.site_header = _("Buena Fiesta")
 admin.site.index_title = _("Site administration")
 
+handler403 = 'fiesta.views.handler_403'
+
+
 urlpatterns = [
     path(
         # url prefix to have same url for all plugin views

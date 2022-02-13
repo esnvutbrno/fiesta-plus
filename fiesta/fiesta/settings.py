@@ -86,6 +86,7 @@ MIDDLEWARE = [
     # custom Fiesta
     "apps.sections.middleware.user_membership.UserMembershipMiddleware",
     "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
+    "apps.accounts.middleware.user_profile.UserProfileMiddleware",
 ]
 
 ROOT_URLCONF = "fiesta.urls"
@@ -197,7 +198,7 @@ ACCOUNT_AUTHENTICATION_METHOD = "username_email"  # email or username
 ACCOUNT_SESSION_REMEMBER = None  # ask user for `remember`
 ACCOUNT_ADAPTER = "apps.accounts.adapters.AccountAdapter"
 SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
-LOGIN_URL = "/accounts/auth/login"
+LOGIN_URL = "/auth/login"
 LOGIN_REDIRECT_URL = "/"
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False

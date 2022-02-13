@@ -1,10 +1,11 @@
 from __future__ import annotations
 
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, PermissionDenied
 from django.http import HttpResponse
 
-from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 from ..models import Plugin
+from ..utils import target_plugin_app_from_resolver_match
+from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 
 
 class HttpRequest(OrigHttpRequest):
@@ -24,32 +25,32 @@ class CurrentPluginMiddleware:
         return self.get_response(request)
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):
-        # if not request.user.is_authenticated:
-        #     return
         request.plugin = None
 
+        target_app = target_plugin_app_from_resolver_match(request.resolver_match)
+
+        if not target_app:
+            # target is not a plugin page, so feel free to display on public
+            # additional permission should solve each view
+            return
+
+        if request.user.is_anonymous:
+            # target is plugin view, but request by anonymous user
+            # our 403 handler makes the job = redirection to login page
+            raise PermissionDenied
+
         if not request.membership:
-            # TODO: not active membership, redirect or?
             return
-
-        if not request.resolver_match.app_name:
-            # no app --> cannot resolve plugin
-            return
-
-        # TODO: resolver.app_name is full-dotted path
-        # Plugin.app_label is just ending section
-        # is there a cleaner way?
-        target_app = request.resolver_match.app_name.split(".")[-1]
 
         try:
-            # could be already prefetched from membership fetch in previous middleware,
-            # but isn't it premature optimalization?
-            request.plugin = request.membership.section.plugins.get(
-                app_label=target_app,
+            plugin = request.membership.section.plugins.get(
+                app_label=target_app.label,
                 section_id=request.membership.section_id,
             )
         except Plugin.DoesNotExist:
             return
+
+        request.plugin = plugin
         # TODO: check, if plugin is enabled, perms and all the stuff
 
 
