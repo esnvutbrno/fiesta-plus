@@ -6,10 +6,10 @@ from apps.plugins.middleware.plugin import HttpRequest
 
 
 def on_social_account_change(
-        *,
-        request: HttpRequest,
-        sociallogin: SocialLogin,
-        **kwargs,
+    *,
+    request: HttpRequest,
+    sociallogin: SocialLogin,
+    **kwargs,
 ):
     if sociallogin.account.provider == ESNAccountsProvider.id:
         ESNAccountsProvider.update_section_membership(
@@ -18,5 +18,9 @@ def on_social_account_change(
         )
 
 
-signals.social_account_added.connect(on_social_account_change, dispatch_uid='update_section_membership')
-signals.social_account_updated.connect(on_social_account_change, dispatch_uid='update_section_membership')
+signals.social_account_added.connect(
+    on_social_account_change, dispatch_uid="update_section_membership"
+)
+signals.social_account_updated.connect(
+    on_social_account_change, dispatch_uid="update_section_membership"
+)

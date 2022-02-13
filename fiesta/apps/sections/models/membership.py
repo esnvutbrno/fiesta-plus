@@ -65,8 +65,8 @@ class SectionMembership(BaseTimestampedModel):
 
         avaiable_states = (
             (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY)
-            if self.Role(self.role).is_privileged else
-            (Plugin.State.ENABLED,)
+            if self.Role(self.role).is_privileged
+            else (Plugin.State.ENABLED,)
         )
 
         return Q(section=self.section, state__in=avaiable_states)

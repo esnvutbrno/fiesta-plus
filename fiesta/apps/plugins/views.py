@@ -1,4 +1,4 @@
-from typing import Protocol, TypeVar, Generic
+from typing import Generic, Protocol, TypeVar
 
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import BasePluginConfiguration
@@ -8,7 +8,7 @@ class HasRequestProtocol(Protocol):
     request: HttpRequest
 
 
-T = TypeVar('T', bound=BasePluginConfiguration)
+T = TypeVar("T", bound=BasePluginConfiguration)
 
 
 class PluginConfigurationViewMixin(Generic[T]):

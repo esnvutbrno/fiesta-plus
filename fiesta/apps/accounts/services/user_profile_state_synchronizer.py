@@ -1,5 +1,5 @@
 from apps.accounts.forms.profile_finish import UserProfileForm
-from apps.accounts.models import UserProfile, AccountsConfiguration
+from apps.accounts.models import AccountsConfiguration, UserProfile
 
 
 class UserProfileStateSynchronizer:
@@ -37,10 +37,10 @@ class UserProfileStateSynchronizer:
                 break
 
         profile.state = final_state
-        profile.save(update_fields=['state'], skip_hooks=True)
+        profile.save(update_fields=["state"], skip_hooks=True)
 
     def on_accounts_configuration_update(self, configuration: AccountsConfiguration):
         ...
 
 
-__all__ = ['UserProfileStateSynchronizer']
+__all__ = ["UserProfileStateSynchronizer"]

@@ -16,54 +16,164 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('plugins', '0001_initial'),
-        ('accounts', '0001_initial'),
-        ('auth', '0012_alter_user_first_name_max_length'),
-        ('universities', '0001_initial'),
+        ("plugins", "0001_initial"),
+        ("accounts", "0001_initial"),
+        ("auth", "0012_alter_user_first_name_max_length"),
+        ("universities", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='AccountsConfiguration',
+            name="AccountsConfiguration",
             fields=[
-                ('basepluginconfiguration_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='plugins.basepluginconfiguration')),
+                (
+                    "basepluginconfiguration_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="plugins.basepluginconfiguration",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'accounts configuration',
-                'verbose_name_plural': 'accounts configurations',
+                "verbose_name": "accounts configuration",
+                "verbose_name_plural": "accounts configurations",
             },
-            bases=('plugins.basepluginconfiguration',),
+            bases=("plugins.basepluginconfiguration",),
         ),
         migrations.CreateModel(
-            name='UserProfile',
+            name="UserProfile",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('nationality', django_countries.fields.CountryField(blank=True, max_length=2, verbose_name='nationality')),
-                ('preferences', models.PositiveSmallIntegerField(default=0, verbose_name='user preferences as flags')),
-                ('guest_faculty', models.ForeignKey(blank=True, help_text='guest faculty for international students, empty for members', null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='guest_user_profiles', to='universities.faculty', verbose_name='guest faculty')),
-                ('home_faculty', models.ForeignKey(blank=True, help_text='home faculty for members, empty for internationals', null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='home_faculty_user_profiles', to='universities.faculty', verbose_name='home faculty')),
-                ('home_university', models.ForeignKey(blank=True, help_text='home university for all users', null=True, on_delete=django.db.models.deletion.RESTRICT, related_name='home_university_user_profiles', to='universities.university', verbose_name='home university')),
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.RESTRICT, related_name='profile', to=settings.AUTH_USER_MODEL, verbose_name='user')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "nationality",
+                    django_countries.fields.CountryField(
+                        blank=True, max_length=2, verbose_name="nationality"
+                    ),
+                ),
+                (
+                    "preferences",
+                    models.PositiveSmallIntegerField(
+                        default=0, verbose_name="user preferences as flags"
+                    ),
+                ),
+                (
+                    "guest_faculty",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="guest faculty for international students, empty for members",
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="guest_user_profiles",
+                        to="universities.faculty",
+                        verbose_name="guest faculty",
+                    ),
+                ),
+                (
+                    "home_faculty",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="home faculty for members, empty for internationals",
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="home_faculty_user_profiles",
+                        to="universities.faculty",
+                        verbose_name="home faculty",
+                    ),
+                ),
+                (
+                    "home_university",
+                    models.ForeignKey(
+                        blank=True,
+                        help_text="home university for all users",
+                        null=True,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="home_university_user_profiles",
+                        to="universities.university",
+                        verbose_name="home university",
+                    ),
+                ),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="profile",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="user",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'user profile',
-                'verbose_name_plural': 'user profiles',
+                "verbose_name": "user profile",
+                "verbose_name_plural": "user profiles",
             },
         ),
         migrations.AddField(
-            model_name='user',
-            name='groups',
-            field=models.ManyToManyField(blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', related_name='user_set', related_query_name='user', to='auth.Group', verbose_name='groups'),
+            model_name="user",
+            name="groups",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
+                related_name="user_set",
+                related_query_name="user",
+                to="auth.Group",
+                verbose_name="groups",
+            ),
         ),
         migrations.AddField(
-            model_name='user',
-            name='user_permissions',
-            field=models.ManyToManyField(blank=True, help_text='Specific permissions for this user.', related_name='user_set', related_query_name='user', to='auth.Permission', verbose_name='user permissions'),
+            model_name="user",
+            name="user_permissions",
+            field=models.ManyToManyField(
+                blank=True,
+                help_text="Specific permissions for this user.",
+                related_name="user_set",
+                related_query_name="user",
+                to="auth.Permission",
+                verbose_name="user permissions",
+            ),
         ),
         migrations.AddConstraint(
-            model_name='userprofile',
-            constraint=models.CheckConstraint(check=apps.utils.models.query.Q(apps.utils.models.query.Q(('home_university', None), apps.utils.models.query.Q(('home_faculty', None), _negated=True)), apps.utils.models.query.Q(apps.utils.models.query.Q(('home_university', None), _negated=True), ('home_faculty', None)), _connector='OR'), name='home_university_or_faculty'),
+            model_name="userprofile",
+            constraint=models.CheckConstraint(
+                check=apps.utils.models.query.Q(
+                    apps.utils.models.query.Q(
+                        ("home_university", None),
+                        apps.utils.models.query.Q(
+                            ("home_faculty", None), _negated=True
+                        ),
+                    ),
+                    apps.utils.models.query.Q(
+                        apps.utils.models.query.Q(
+                            ("home_university", None), _negated=True
+                        ),
+                        ("home_faculty", None),
+                    ),
+                    _connector="OR",
+                ),
+                name="home_university_or_faculty",
+            ),
         ),
     ]

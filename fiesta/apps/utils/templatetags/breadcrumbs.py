@@ -56,4 +56,4 @@ def breadcrumb_push_item(context: dict, item: str):
 
     view.title = item
 
-    return ''
+    return ""

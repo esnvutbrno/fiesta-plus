@@ -3,9 +3,9 @@ from __future__ import annotations
 from typing import Type
 
 from django.db.models import Field
-from django.forms import HiddenInput, modelform_factory, Field as FormField
+from django.forms import Field as FormField, HiddenInput, modelform_factory
 
-from apps.accounts.models import UserProfile, AccountsConfiguration
+from apps.accounts.models import AccountsConfiguration, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
 
 
@@ -13,7 +13,9 @@ class UserProfileForm(BaseModelForm):
     # title = _("Application Form")
 
     @classmethod
-    def from_accounts_configuration(cls, conf: AccountsConfiguration) -> Type[UserProfileForm]:
+    def from_accounts_configuration(
+        cls, conf: AccountsConfiguration
+    ) -> Type[UserProfileForm]:
         # TODO: find generic way for configuration instance -> form setup
         include_nationality = conf.required_nationality is not None
 

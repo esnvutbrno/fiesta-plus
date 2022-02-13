@@ -6,7 +6,7 @@ from django.db import models
 from django.db.models import CheckConstraint, TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
-from django_lifecycle import hook, LifecycleModelMixin, AFTER_SAVE
+from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
 
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import Q
@@ -22,7 +22,8 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
 
     nationality = CountryField(
         verbose_name=_("nationality"),
-        blank=True, null=True,
+        blank=True,
+        null=True,
     )
 
     home_university = models.ForeignKey(
@@ -74,14 +75,14 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
 
     class State(TextChoices):
         # CREATED = 'created', _('Created')
-        INCOMPLETE = 'incomplete', _('Filled')
-        COMPLETE = 'complete', _('Filled')
+        INCOMPLETE = "incomplete", _("Filled")
+        COMPLETE = "complete", _("Filled")
 
     state = models.CharField(
-        verbose_name=_('state'),
+        verbose_name=_("state"),
         max_length=16,
         choices=State.choices,
-        default=State.INCOMPLETE
+        default=State.INCOMPLETE,
     )
 
     class Meta:
@@ -110,6 +111,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     @hook(AFTER_SAVE)
     def on_save(self):
         from apps.accounts.services import UserProfileStateSynchronizer
+
         UserProfileStateSynchronizer.on_user_profile_update(profile=self)
 
     def __str__(self):

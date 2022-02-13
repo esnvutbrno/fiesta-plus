@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.contrib.auth.views import redirect_to_login
-from django.http import HttpRequest as DjHttpRequest, HttpResponse, HttpRequest
+from django.http import HttpRequest, HttpRequest as DjHttpRequest, HttpResponse
 from django.urls import reverse
 
 from ...accounts.models import User, UserProfile
@@ -10,7 +10,7 @@ from ...sections.middleware import UserMembershipMiddleware
 
 
 class UserProfileMiddleware:
-    FINISH_PROFILE_URL_NAME = 'accounts:profile-finish'
+    FINISH_PROFILE_URL_NAME = "accounts:profile-finish"
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -23,8 +23,8 @@ class UserProfileMiddleware:
         user: User = request.user
 
         if request.resolver_match.view_name in (
-                cls.FINISH_PROFILE_URL_NAME,
-                UserMembershipMiddleware.MEMBERSHIP_URL_NAME,
+            cls.FINISH_PROFILE_URL_NAME,
+            UserMembershipMiddleware.MEMBERSHIP_URL_NAME,
         ):
             # to prevent loop, profile needs to be finished
             return
@@ -42,14 +42,14 @@ class UserProfileMiddleware:
             # redirect to profile finish page with next parameter
             return redirect_to_login(
                 next=request.get_full_path(),
-                login_url=reverse(cls.FINISH_PROFILE_URL_NAME)
+                login_url=reverse(cls.FINISH_PROFILE_URL_NAME),
             )
 
         if profile.state != profile.State.COMPLETE:
             # profile is not complete, so redirect to profile page with next= parameter
             return redirect_to_login(
                 next=request.get_full_path(),
-                login_url=reverse(cls.FINISH_PROFILE_URL_NAME)
+                login_url=reverse(cls.FINISH_PROFILE_URL_NAME),
             )
 
 

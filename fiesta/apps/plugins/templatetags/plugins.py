@@ -39,6 +39,8 @@ def active_plugins_as_navigation_items(context):
             ],
             active=plugin == current_plugin,
         )
-        for plugin in membership.section.plugins.filter(membership.available_plugins_filter)  # type: Plugin
+        for plugin in membership.section.plugins.filter(
+            membership.available_plugins_filter
+        )  # type: Plugin
         if (apps := plugin.app_config)
     ]

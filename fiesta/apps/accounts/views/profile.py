@@ -3,7 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, UpdateView
 
 from apps.accounts.forms.profile_finish import UserProfileForm
-from apps.accounts.models import UserProfile, AccountsConfiguration
+from apps.accounts.models import AccountsConfiguration, UserProfile
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb
@@ -23,7 +23,7 @@ class ProfileFinishFormView(
 ):
     form_class = UserProfileForm
     template_name = "accounts/user_profile/profile_finish.html"
-    success_message = _('Your profile has been updated.')
+    success_message = _("Your profile has been updated.")
 
     def get_object(self, queryset=None):
         try:
@@ -41,12 +41,12 @@ class ProfileFinishFormView(
 
     def get_initial(self):
         return {
-            'user': self.request.user,
+            "user": self.request.user,
         }
 
     def get_success_url(self):
         # TODO: next?
-        return '/'
+        return "/"
 
     def get_form_class(self):
         return UserProfileForm.from_accounts_configuration(conf=self.configration)

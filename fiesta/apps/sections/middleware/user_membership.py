@@ -16,7 +16,7 @@ class HttpRequest(DjHttpRequest):
 
 
 class UserMembershipMiddleware:
-    MEMBERSHIP_URL_NAME = 'accounts:membership'
+    MEMBERSHIP_URL_NAME = "accounts:membership"
 
     def __init__(self, get_response):
         self.get_response = get_response
@@ -55,7 +55,9 @@ class UserMembershipMiddleware:
         if not request.membership:
             # target is plugin view, but user does not have any membership,
             # and we're not on memberships page
-            messages.warning(request, _('You don\'t have any active membership to view this page.'))
+            messages.warning(
+                request, _("You don't have any active membership to view this page.")
+            )
             return HttpResponseRedirect(reverse(cls.MEMBERSHIP_URL_NAME))
 
 

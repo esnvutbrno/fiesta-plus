@@ -36,7 +36,8 @@ class ESNAccountsProvider(CASProvider):
 
     @classmethod
     def update_section_membership(
-        cls, *,
+        cls,
+        *,
         request: HttpRequest,
         sociallogin: "SocialLogin",
     ):

@@ -14,74 +14,219 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('plugins', '0001_initial'),
+        ("plugins", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('universities', '0001_initial'),
+        ("universities", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Section',
+            name="Section",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('name', models.CharField(help_text='Full name of section, e.g. ESN VUT Brno', max_length=64, unique=True, verbose_name='name')),
-                ('country', django_countries.fields.CountryField(max_length=2, verbose_name='country')),
-                ('code', models.SlugField(blank=True, help_text='Official code used in ESN world, especially in ESN Accounts database.', null=True, verbose_name='code')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "name",
+                    models.CharField(
+                        help_text="Full name of section, e.g. ESN VUT Brno",
+                        max_length=64,
+                        unique=True,
+                        verbose_name="name",
+                    ),
+                ),
+                (
+                    "country",
+                    django_countries.fields.CountryField(
+                        max_length=2, verbose_name="country"
+                    ),
+                ),
+                (
+                    "code",
+                    models.SlugField(
+                        blank=True,
+                        help_text="Official code used in ESN world, especially in ESN Accounts database.",
+                        null=True,
+                        verbose_name="code",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'ESN section',
-                'verbose_name_plural': 'ESN sections',
-                'ordering': ('country', 'name'),
+                "verbose_name": "ESN section",
+                "verbose_name_plural": "ESN sections",
+                "ordering": ("country", "name"),
             },
         ),
         migrations.CreateModel(
-            name='SectionsConfiguration',
+            name="SectionsConfiguration",
             fields=[
-                ('basepluginconfiguration_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='plugins.basepluginconfiguration')),
+                (
+                    "basepluginconfiguration_ptr",
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to="plugins.basepluginconfiguration",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'sections configuration',
-                'verbose_name_plural': 'sections configurations',
+                "verbose_name": "sections configuration",
+                "verbose_name_plural": "sections configurations",
             },
-            bases=('plugins.basepluginconfiguration',),
+            bases=("plugins.basepluginconfiguration",),
         ),
         migrations.CreateModel(
-            name='SectionUniversity',
+            name="SectionUniversity",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('section', models.ForeignKey(db_index=False, on_delete=django.db.models.deletion.RESTRICT, to='sections.section', verbose_name='ESN section')),
-                ('university', models.ForeignKey(db_index=False, on_delete=django.db.models.deletion.CASCADE, to='universities.university', verbose_name='university')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        db_index=False,
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        to="sections.section",
+                        verbose_name="ESN section",
+                    ),
+                ),
+                (
+                    "university",
+                    models.ForeignKey(
+                        db_index=False,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="universities.university",
+                        verbose_name="university",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'Section university',
-                'verbose_name_plural': 'Section universities',
-                'unique_together': {('section', 'university')},
+                "verbose_name": "Section university",
+                "verbose_name_plural": "Section universities",
+                "unique_together": {("section", "university")},
             },
         ),
         migrations.AddField(
-            model_name='section',
-            name='universities',
-            field=models.ManyToManyField(help_text='Universities, for whose this section offers services.', through='sections.SectionUniversity', to='universities.University', verbose_name='universities'),
+            model_name="section",
+            name="universities",
+            field=models.ManyToManyField(
+                help_text="Universities, for whose this section offers services.",
+                through="sections.SectionUniversity",
+                to="universities.University",
+                verbose_name="universities",
+            ),
         ),
         migrations.CreateModel(
-            name='SectionMembership',
+            name="SectionMembership",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('role', models.CharField(choices=[('international', 'International'), ('member', 'Member'), ('editor', 'Editor'), ('admin', 'Admin')], max_length=16, verbose_name='section role')),
-                ('state', models.CharField(choices=[('inactive', 'Inactive'), ('active', 'Active'), ('suspended', 'Suspended')], max_length=16, verbose_name='membership state')),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='memberships', to='sections.section', verbose_name='section')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='memberships', to=settings.AUTH_USER_MODEL, verbose_name='user')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(
+                        auto_now=True, verbose_name="modified"
+                    ),
+                ),
+                (
+                    "role",
+                    models.CharField(
+                        choices=[
+                            ("international", "International"),
+                            ("member", "Member"),
+                            ("editor", "Editor"),
+                            ("admin", "Admin"),
+                        ],
+                        max_length=16,
+                        verbose_name="section role",
+                    ),
+                ),
+                (
+                    "state",
+                    models.CharField(
+                        choices=[
+                            ("inactive", "Inactive"),
+                            ("active", "Active"),
+                            ("suspended", "Suspended"),
+                        ],
+                        max_length=16,
+                        verbose_name="membership state",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="memberships",
+                        to="sections.section",
+                        verbose_name="section",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="memberships",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="user",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'section membership',
-                'verbose_name_plural': 'section memberships',
-                'unique_together': {('user', 'section')},
+                "verbose_name": "section membership",
+                "verbose_name_plural": "section memberships",
+                "unique_together": {("user", "section")},
             },
         ),
     ]

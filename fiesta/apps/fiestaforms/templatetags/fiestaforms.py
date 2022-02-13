@@ -23,6 +23,8 @@ def as_label(bf: BoundField):
 
 @register.filter
 def with_class(bf: BoundField, klass: str):
-    return bf.as_widget(attrs={
-        'class': klass,
-    })
+    return bf.as_widget(
+        attrs={
+            "class": klass,
+        }
+    )
