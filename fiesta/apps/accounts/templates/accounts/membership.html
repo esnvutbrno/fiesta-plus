@@ -1,13 +1,28 @@
 {% extends "fiesta/base.html" %}
+{% load breadcrumbs %}
+{% load i18n %}
 
-{% block breadcrumbs_container %}{% endblock %}
+{% block upper_head %}
+    {% trans "Memberships" as title %}
+    {% breadcrumb_push_item title %}
+{% endblock upper_head %}
 
 {% block main %}
-    <ul>
-        {% for membership in request.user.memberships.all %}
-            <li>{{ membership }}</li>
-        {% empty %}
-            <li>no memberships :-(</li>
-        {% endfor %}
-    </ul>
+    {% if request.user.memberships.exists %}
+        <ul>
+            {% for membership in request.user.memberships.all %}
+                <li>{{ membership.section }}: {{ membership.role }} {{ membership.state }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% include "accounts/parts/new_membership_form.html" %}
+    {% endif %}
+
+    <a
+            class="bg-primary text-white p-2 my-2 rounded inline-block"
+            href="{% url "accounts:membership-new" %}"
+    >
+        new membership
+    </a>
+
 {% endblock %}

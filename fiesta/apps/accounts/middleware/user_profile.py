@@ -24,7 +24,8 @@ class UserProfileMiddleware:
 
         if request.resolver_match.view_name in (
             cls.FINISH_PROFILE_URL_NAME,
-            UserMembershipMiddleware.MEMBERSHIP_URL_NAME,
+        ) or UserMembershipMiddleware.should_ignore(
+            resolver_match=request.resolver_match
         ):
             # to prevent loop, profile needs to be finished
             return

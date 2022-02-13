@@ -45,6 +45,7 @@ class SectionMembership(BaseTimestampedModel):
     state = models.CharField(
         max_length=16,
         choices=State.choices,
+        default=State.INACTIVE,
         verbose_name=_("membership state"),
     )
 

@@ -1,0 +1,62 @@
+<h1 class="text-center text-3xl title-font py-4">New Membership</h1>
+<h2 class="text-center text-lg title-font pb-4">Who you are?</h2>
+
+<form
+        method="POST"
+        action="{% url "accounts:membership-new" %}"
+        id="membership-form"
+        x-data="{roleInput: document.querySelector('#membership-form input[name=role]'), role: ''}"
+        x-init="role = roleInput.value"
+>
+    {% csrf_token %}
+    <div
+            class="
+                max-w-md mx-auto flex border-2 rounded-lg
+                border-gray-200 border-opacity-50 p-4 sm:flex-row flex-col items-center
+                hover:bg-gray-50/50 transition
+            "
+            :class="{'ring ring-primary shadow': role === 'international'}"
+            @click="roleInput.value = role = 'international'"
+
+    >
+        <div class="w-16 h-16 sm:mr-4 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full
+                    bg-rose-100 text-primary flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                 class="w-8 h-8" viewBox="0 0 24 24">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+            </svg>
+        </div>
+        <div class="flex-grow">
+            <h2 class="text-gray-900 text-lg title-font font-medium mb-3">International Student</h2>
+            <p class="leading-relaxed text-base">
+                Are you ready for your Erasmus experience? Buddy, ESNcard, events?
+            </p>
+        </div>
+    </div>
+
+    <div
+            class="max-w-xs mx-auto flex border-2 rounded-lg border-gray-200 border-opacity-50 p-4 sm:flex-row flex-col
+                   hover:bg-gray-50/50 items-center transition my-6
+                   "
+            :class="{'ring ring-indigo-500 shadow': role === 'member'}"
+            @click="roleInput.value = role = 'member'"
+    >
+        <div class="w-12 h-12 sm:mr-4 sm:mb-0 mb-4 inline-flex items-center justify-center rounded-full
+                    bg-indigo-100 text-indigo-500 flex-shrink-0">
+            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                 stroke-width="2"
+                 class="w-8 h-8" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        </div>
+        <div class="flex-grow">
+            <h2 class="text-gray-900 text-sm font-medium mb-2">ESN Section Member</h2>
+            <p class="text-sm">Ready to spend all your time in ESN?</p>
+        </div>
+    </div>
+
+    <div class="max-w-md mx-auto">
+        {{ form }}
+    </div>
+</form>

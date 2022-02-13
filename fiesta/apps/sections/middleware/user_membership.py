@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest as DjHttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.urls import reverse, ResolverMatch
 from django.utils.translation import gettext_lazy as _
 
 from ..models import SectionMembership
@@ -35,6 +35,8 @@ class UserMembershipMiddleware:
         request.membership = user.memberships.select_related(
             # to remove another query for relating section
             "section"
+        ).filter(
+            state=SectionMembership.State.ACTIVE,
         ).first()
 
         return self.get_response(request)
@@ -48,7 +50,7 @@ class UserMembershipMiddleware:
             # additional checks needs to be in views itself
             return
 
-        if request.resolver_match.view_name == cls.MEMBERSHIP_URL_NAME:
+        if cls.should_ignore(request.resolver_match):
             # on membership page, so fine -> we don't want to loop
             return
 
@@ -60,5 +62,8 @@ class UserMembershipMiddleware:
             )
             return HttpResponseRedirect(reverse(cls.MEMBERSHIP_URL_NAME))
 
+    @classmethod
+    def should_ignore(cls, resolver_match: ResolverMatch):
+        return resolver_match.view_name.startswith(cls.MEMBERSHIP_URL_NAME)
 
 __all__ = ["UserMembershipMiddleware", "HttpRequest"]
