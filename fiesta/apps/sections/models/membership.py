@@ -1,11 +1,12 @@
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
+from django_lifecycle import hook, AFTER_CREATE, LifecycleModelMixin
 
 from apps.utils.models import BaseTimestampedModel
 
 
-class SectionMembership(BaseTimestampedModel):
+class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.RESTRICT,
@@ -71,6 +72,12 @@ class SectionMembership(BaseTimestampedModel):
         )
 
         return Q(section=self.section, state__in=avaiable_states)
+
+    @hook(AFTER_CREATE)
+    def update_user_profile_state(self):
+        from apps.accounts.services import UserProfileStateSynchronizer
+
+        UserProfileStateSynchronizer.on_membership_update(membership=self)
 
 
 __all__ = ["SectionMembership"]

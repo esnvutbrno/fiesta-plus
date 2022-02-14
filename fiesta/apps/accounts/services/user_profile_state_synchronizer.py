@@ -1,5 +1,8 @@
+from django.forms import model_to_dict
+
 from apps.accounts.forms.profile_finish import UserProfileForm
 from apps.accounts.models import AccountsConfiguration, UserProfile
+from apps.sections.models import SectionMembership
 
 
 class UserProfileStateSynchronizer:
@@ -15,32 +18,32 @@ class UserProfileStateSynchronizer:
 
         User probably has not just one section membership, so not only one accounts configuration.
         """
-        configurations = AccountsConfiguration.objects.filter(
-            plugin__section__memberships__user=profile.user,
-        )
 
         # assumes profile is fine for all possible configurations
         final_state = UserProfile.State.COMPLETE
 
-        for conf in configurations:  # type: AccountsConfiguration
-            # UserProfile form is here as validator
-            form = UserProfileForm.from_accounts_configuration(conf=conf)(
-                instance=profile,
-                # data=dict(),
-            )
+        # UserProfile form is here as validator
+        form_class = UserProfileForm.for_user(user=profile.user)
+        form = form_class(
+            instance=profile,
+            data=model_to_dict(profile, form_class._meta.fields, form_class._meta.exclude),
+        )
 
-            # cannot use is_valid(), since it checks for bounded data (and we have no incoming data)
-            if form.errors:
-                # for this specific accounts conf, profile is not OK,
-                # so final state leds to incomplete
-                final_state = UserProfile.State.INCOMPLETE
-                break
+        # make the form bounded, so it thinks it¨s connected to data
+        # and performs full clean to validate instance
+        form.is_bound = True
+        form.full_clean()
+        # cannot use is_valid(), since it checks for bounded data (and we have no incoming data)
+        if form.errors:
+            # for this specific accounts conf, profile is not OK,
+            # so final state leds to incomplete
+            final_state = UserProfile.State.INCOMPLETE
 
         profile.state = final_state
         profile.save(update_fields=["state"], skip_hooks=True)
 
-    @staticmethod
-    def on_accounts_configuration_update(conf: AccountsConfiguration):
+    @classmethod
+    def on_accounts_configuration_update(cls, conf: AccountsConfiguration):
         """
         After change of Accounts configuration, checks all COMPLETED profiles if they're fine for new configuration.
         If not, profile is set to UNCOMPLETED.
@@ -53,20 +56,11 @@ class UserProfileStateSynchronizer:
                 user__memberships__section__plugins__configuration=conf,
                 state=UserProfile.State.COMPLETE,
         ):
-            final_state = profile.state
+            cls.on_user_profile_update(profile=profile)
 
-            form = UserProfileForm.from_accounts_configuration(conf=conf)(
-                instance=profile,
-            )
-
-            # cannot use is_valid(), since it checks for bounded data (and we have no incoming data)
-            if form.errors:
-                # for this specific accounts conf, profile is not OK,
-                # so final state leds to incomplete
-                final_state = UserProfile.State.INCOMPLETE
-
-            profile.state = final_state
-            profile.save(update_fields=["state"], skip_hooks=True)
+    @classmethod
+    def on_membership_update(cls, membership: SectionMembership):
+        return cls.on_user_profile_update(profile=membership.user.profile)
 
 
 __all__ = ["UserProfileStateSynchronizer"]

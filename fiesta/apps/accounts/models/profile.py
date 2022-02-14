@@ -3,7 +3,7 @@ import enum
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import CheckConstraint, TextChoices
+from django.db.models import CheckConstraint, TextChoices, CharField
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
@@ -20,10 +20,27 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("user"),
     )
 
+    # ### FIELDS, which are conditionaly REQUIRED ###
+    # see AccountsConfiguration
+
     nationality = CountryField(
         verbose_name=_("nationality"),
         blank=True,
         null=True,
+    )
+
+    class Gender(TextChoices):
+        MALE = "male", _("male")
+        FEMALE = "female", _("female")
+        DECLINE_TO_STATE = "decline_to_state", _('decline to state')
+        OTHER = "other", _("other")
+
+    gender = CharField(
+        verbose_name=_("gender"),
+        blank=True,
+        null=True,
+        choices=Gender.choices,
+        max_length=16,
     )
 
     home_university = models.ForeignKey(

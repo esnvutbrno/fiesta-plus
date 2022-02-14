@@ -4,6 +4,11 @@ from django_lifecycle import hook, AFTER_SAVE
 
 from apps.plugins.models import BasePluginConfiguration
 
+FLAG_HELP_TEXT = _(
+    "Flag if nationality is needed to fill in user profile: "
+    "True=is required, False=is optional, None=not available"
+)
+
 
 class AccountsConfiguration(BasePluginConfiguration):
     required_nationality = models.BooleanField(
@@ -11,10 +16,14 @@ class AccountsConfiguration(BasePluginConfiguration):
         default=None,
         null=True,
         blank=True,
-        help_text=_(
-            "Flag if nationality is needed to fill in user profile: "
-            "True=is required, False=is optional, None=not available"
-        ),
+        help_text=FLAG_HELP_TEXT,
+    )
+    required_gender = models.BooleanField(
+        verbose_name=_("required gender"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
     )
 
     class Meta:

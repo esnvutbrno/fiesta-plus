@@ -39,14 +39,13 @@ class ProfileFinishFormView(
             else ["accounts/user_profile/profile_finish.html"]
         )
 
-    def get_initial(self):
-        return {
-            "user": self.request.user,
-        }
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_success_url(self):
         # TODO: next?
         return "/"
 
     def get_form_class(self):
-        return UserProfileForm.from_accounts_configuration(conf=self.configration)
+        return UserProfileForm.for_user(user=self.request.user)
