@@ -8,21 +8,12 @@
 {% endblock upper_head %}
 
 {% block main %}
+
     {% if request.user.memberships.exists %}
-        <ul>
-            {% for membership in request.user.memberships.all %}
-                <li>{{ membership.section }}: {{ membership.role }} {{ membership.state }}</li>
-            {% endfor %}
-        </ul>
+        {% include "accounts/parts/membership_list.html" with memberships=request.user.memberships.all %}
     {% else %}
         no memberships
     {% endif %}
 
-    <a
-            class="bg-primary text-white p-2 my-2 rounded inline-block"
-            href="{% url "accounts:membership-new" %}"
-    >
-        new membership
-    </a>
 
 {% endblock %}
