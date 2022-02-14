@@ -47,12 +47,13 @@ repos:
     hooks:
       - id: black
         name: Code formatter black
+        exclude: ^.*\b(migrations)\b.*$
 
-  - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
-    hooks:
-      - id: isort
-        name: Sort all imports by isort
+#  - repo: https://github.com/pycqa/isort
+#    rev: 5.10.1
+#    hooks:
+#      - id: isort
+#        name: Sort all imports by isort
 
 ci:
   autofix_commit_msg: |

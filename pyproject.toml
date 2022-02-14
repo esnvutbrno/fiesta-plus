@@ -42,3 +42,12 @@ combine_as_imports = true
 line_length = 120
 known_first_party = ["fiesta", "apps"]
 known_local_folder = ["apps"]
+
+[tool.black]
+exclude = '''
+(
+  /(
+    | .+/migrations
+  )/
+)
+'''
