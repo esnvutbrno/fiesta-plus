@@ -4,7 +4,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.urls import reverse
 from django.utils.html import format_html
 from django.utils.translation import gettext as _
-from polymorphic.admin import PolymorphicChildModelFilter, PolymorphicParentModelAdmin, PolymorphicChildModelAdmin
+from polymorphic.admin import (
+    PolymorphicChildModelAdmin,
+    PolymorphicChildModelFilter,
+    PolymorphicParentModelAdmin,
+)
 
 from apps.plugins.models import BasePluginConfiguration, Plugin
 
@@ -32,7 +36,7 @@ class PluginAdmin(admin.ModelAdmin):
         )
 
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related('configuration')
+        return super().get_queryset(request).select_related("configuration")
 
     # TODO: make configuration form field dependent on selected configuration
     # https://django-autocomplete-light.readthedocs.io/en/master/tutorial.html
@@ -57,13 +61,13 @@ class BaseChildConfigurationAdmin(PolymorphicChildModelAdmin):
     base_model = BasePluginConfiguration
     show_in_index = True
 
-    list_display = ['name', 'plugin__section', 'plugin__state']
-    list_filter = ['plugin__section', 'plugin__state']
+    list_display = ["name", "plugin__section", "plugin__state"]
+    list_filter = ["plugin__section", "plugin__state"]
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        return qs.select_related('plugin', 'plugin__section')
+        return qs.select_related("plugin", "plugin__section")
 
     @display
     def plugin__section(self, conf: BasePluginConfiguration):
