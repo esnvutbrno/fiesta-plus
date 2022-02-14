@@ -3,17 +3,14 @@ from allauth.account.models import EmailAddress
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
-from polymorphic.admin import PolymorphicChildModelAdmin
 
 from .models import AccountsConfiguration, User, UserProfile
-from apps.plugins.models import BasePluginConfiguration
+from ..plugins.admin import BaseChildConfigurationAdmin
 
 
 @admin.register(AccountsConfiguration)
-class AccountsConfigurationAdmin(PolymorphicChildModelAdmin):
-    base_model = BasePluginConfiguration
-    show_in_index = True
-
+class AccountsConfigurationAdmin(BaseChildConfigurationAdmin):
+    ...
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -55,8 +52,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return (
             super()
-            .get_queryset(request)
-            .select_related(
+                .get_queryset(request)
+                .select_related(
                 "user",
                 "home_university",
                 "home_faculty__university",

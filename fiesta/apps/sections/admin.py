@@ -2,8 +2,8 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from polymorphic.admin import PolymorphicChildModelAdmin
 
-from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 from apps.plugins.models import BasePluginConfiguration
+from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 
 
 @admin.register(SectionsConfiguration)
@@ -55,6 +55,7 @@ class SectionAdmin(admin.ModelAdmin):
 class SectionMembershipAdmin(admin.ModelAdmin):
     list_display = ("section", "user", "role", "state", "created")
     list_filter = ("section", "role", "state", "user__state")
+    list_editable = ("role", "state")
     autocomplete_fields = ("user",)
     search_fields = (
         "user__username",

@@ -15,9 +15,9 @@ class NewSectionMembershipForm(BaseModelForm):
     class Meta:
         model = SectionMembership
         fields = (
-            'section',
+            "section",
             "user",  # to keep the validation unique together
-            'role',
+            "role",
         )
         widgets = {
             "role": HiddenInput,
@@ -34,7 +34,7 @@ class NewMembershipFormView(CreateView):
     form_class = NewSectionMembershipForm
 
     def get_success_url(self):
-        return reverse('accounts:membership')
+        return reverse("accounts:membership")
 
     def form_valid(self, form):
         # override to be sure

@@ -9,7 +9,8 @@
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
             <form
                     method="POST" action="{% url 'account_login' %}"
-                    class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8" action="#"
+                    class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_class }}"
+
             >
                 {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
 
@@ -17,22 +18,10 @@
                 {% if redirect_field_value %}
                     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
                 {% endif %}
-                {#                <h3 class="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h3>#}
-                <div>
-                    <label for="{{ form.login.name }}"
-                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Your email
-                    </label>
+                {#                <h3 class="text-xl font-medium text-gray-900 dark:text-white">Log in to our platform</h3>#}
+                {% include "fiestaforms/parts/field.html" with bf=form.login errors=form.errors.login %}
+                {% include "fiestaforms/parts/field.html" with bf=form.password errors=form.password.login %}
 
-                    {{ form.login|with_class:"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" }}
-                </div>
-                <div>
-                    <label for="{{ form.password.name }}"
-                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">
-                        Your password
-                    </label>
-                    {{ form.password|with_class:"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white" }}
-                </div>
                 <div class="flex justify-between">
                     <div class="flex items-start">
                         <div class="flex items-center h-5">

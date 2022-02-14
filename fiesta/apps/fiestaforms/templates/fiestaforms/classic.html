@@ -2,45 +2,32 @@
 {% load fiestaforms %}
 {% load as_widget_field as_label from fiestaforms %}
 
-{% if form.title %}
-    <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">{{ form.title }}</h3>
-{% endif %}
+<div class="{{ form|get_form_class }}">
+    {% if form.title %}
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white mb-2">{{ form.title }}</h3>
+    {% endif %}
 
-{% include "fiestaforms/parts/errors.html" %}
+    {% include "fiestaforms/parts/errors.html" %}
 
-{% for bf, errors in fields %}
-    <div class="Forms__field{% if errors %} Forms__field--error{% endif %} ">
-        {% if bf.field.required and not bf.field.disabled %}
-            <span class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded dark:bg-gray-700
-            dark:text-gray-300 float-right font-light">{% trans "Required" %}</span>
-        {% endif %}
+    {% for bf, errors in fields %}
+        {% include "fiestaforms/parts/field.html" with bf=bf errors=errors %}
+    {% endfor %}
 
-        {{ bf|as_label }}
-        {{ bf|as_widget_field }}
+    {% for field in hidden_fields %}
+        {{ field }}
+    {% endfor %}
 
-        {% if errors %}
-            <div class="Forms__error_text">{{ errors }}</div>
-        {% endif %}
+    <div class="Forms__field flex justify-end items-center">
+        <svg
+                class="-ml-1 mr-3 h-5 w-5 text-primary animate-spin htmx-indicator opacity-0"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
 
-        {% if bf.help_text %}
-            <p class="Forms__help_text">{{ bf.help_text }}</p>
-        {% endif %}
+        <button type="submit" class="Forms__button Forms__button--submit">
+            {{ form.submit_text }}
+        </button>
     </div>
-{% endfor %}
-
-{% for field in hidden_fields %}
-    {{ field }}
-{% endfor %}
-
-<div class="Forms__field flex justify-end items-center">
-    <svg
-        class="-ml-1 mr-3 h-5 w-5 text-primary animate-spin htmx-indicator opacity-0"
-        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-    </svg>
-
-    <button type="submit" class="Forms__button Forms__button--submit">
-        {{ form.submit_text }}
-    </button>
 </div>

@@ -1,10 +1,11 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from django_lifecycle import LifecycleModelMixin
 
 from apps.utils.models import BasePolymorphicModel
 
 
-class BasePluginConfiguration(BasePolymorphicModel):
+class BasePluginConfiguration(LifecycleModelMixin, BasePolymorphicModel):
     """
     Base configuration model for plugins.
     Usually it's extended and used for configuring running plugin.
@@ -15,7 +16,7 @@ class BasePluginConfiguration(BasePolymorphicModel):
     name = models.CharField(
         max_length=64,
         default="default",
-        verbose_name=_("human readable name used for recognizing."),
+        verbose_name=_("human readable name"),
     )
 
     class Meta:

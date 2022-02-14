@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
 from django.http import HttpRequest as DjHttpRequest, HttpResponse, HttpResponseRedirect
-from django.urls import reverse, ResolverMatch
+from django.urls import ResolverMatch, reverse
 from django.utils.translation import gettext_lazy as _
 
 from ..models import SectionMembership
@@ -32,12 +32,16 @@ class UserMembershipMiddleware:
         # TODO: Detect, in which membership is user logged:
         #  probably the default one, with possibility to switch
         #  with sesstion flag
-        request.membership = user.memberships.select_related(
-            # to remove another query for relating section
-            "section"
-        ).filter(
-            state=SectionMembership.State.ACTIVE,
-        ).first()
+        request.membership = (
+            user.memberships.select_related(
+                # to remove another query for relating section
+                "section"
+            )
+            .filter(
+                state=SectionMembership.State.ACTIVE,
+            )
+            .first()
+        )
 
         return self.get_response(request)
 
@@ -65,5 +69,6 @@ class UserMembershipMiddleware:
     @classmethod
     def should_ignore(cls, resolver_match: ResolverMatch):
         return resolver_match.view_name.startswith(cls.MEMBERSHIP_URL_NAME)
+
 
 __all__ = ["UserMembershipMiddleware", "HttpRequest"]
