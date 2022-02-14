@@ -200,13 +200,14 @@ ACCOUNT_ADAPTER = "apps.accounts.adapters.AccountAdapter"
 ACCOUNT_EMAIL_REQUIRED = True  # email ftw
 ACCOUNT_USERNAME_REQUIRED = False  # email ftw
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
-
+# social account settings
+SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
+# general django urls
 LOGIN_URL = "/auth/login"
 LOGIN_REDIRECT_URL = "/"
 
 # fixme: verify it
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # True by default
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference

@@ -28,6 +28,7 @@ def with_class(bf: BoundField, klass: str):
         }
     )
 
+
 @register.filter
 def get_form_class(form: Form):
-    return f'Forms__form Forms__form--{form.__class__.__name__.lower()}'
+    return f"Forms__form Forms__form--{form.__class__.__name__.lower()}"

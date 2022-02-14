@@ -5,7 +5,7 @@ from typing import Type
 from django.db.models import Field
 from django.forms import Field as FormField, modelform_factory
 
-from apps.accounts.models import AccountsConfiguration, UserProfile, User
+from apps.accounts.models import AccountsConfiguration, User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
 
 
@@ -22,8 +22,8 @@ class UserProfileForm(BaseModelForm):
 
     @classmethod
     def for_user(
-            cls,
-            user: User,
+        cls,
+        user: User,
     ) -> Type[UserProfileForm]:
         confs = AccountsConfiguration.objects.filter(
             plugin__section__memberships__user=user,
@@ -33,8 +33,7 @@ class UserProfileForm(BaseModelForm):
         def callback(f: Field, **kwargs) -> FormField:
             if conf_field := cls.FIELD_NAMES_TO_CONFIGURATION.get(f.name):
                 return f.formfield(
-                    required=any(conf_field.__get__(c) for c in confs),
-                    **kwargs
+                    required=any(conf_field.__get__(c) for c in confs), **kwargs
                 )
             return f.formfield(**kwargs)
 

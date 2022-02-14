@@ -62,6 +62,9 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
 
     @property
     def available_plugins_filter(self) -> Q:
+        """
+        Returns Q object filtering Plugins, which are available for this specific membership.
+        """
         # on context of Queryset[Plugin]
         from apps.plugins.models import Plugin
 

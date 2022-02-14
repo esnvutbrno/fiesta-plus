@@ -1,6 +1,6 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import hook, AFTER_SAVE
+from django_lifecycle import AFTER_SAVE, hook
 
 from apps.plugins.models import BasePluginConfiguration
 

@@ -10,7 +10,8 @@ from ..plugins.admin import BaseChildConfigurationAdmin
 
 @admin.register(AccountsConfiguration)
 class AccountsConfigurationAdmin(BaseChildConfigurationAdmin):
-    ...
+    pass
+
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
@@ -42,9 +43,10 @@ class UserAdmin(DjangoUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "nationality")
+    list_display = ("user", "nationality", "gender")
     list_filter = (
         "user__memberships__section",
+        "gender",
         ("nationality", admin.AllValuesFieldListFilter),
     )
     autocomplete_fields = ("user",)
@@ -52,8 +54,8 @@ class UserProfileAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         return (
             super()
-                .get_queryset(request)
-                .select_related(
+            .get_queryset(request)
+            .select_related(
                 "user",
                 "home_university",
                 "home_faculty__university",

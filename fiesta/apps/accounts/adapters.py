@@ -20,3 +20,6 @@ class AccountAdapter(DefaultAccountAdapter):
 
         if redirect_to:
             return HttpResponseClientRedirect(redirect_to=redirect_to)
+
+    # TODO: making usernames from first_name is kinda bleeh
+    #  so generate_unique_username could be ovveriden here to compose username from last_name+smth?
