@@ -1,16 +1,20 @@
 from __future__ import annotations
 
-from typing import NamedTuple
+from typing import NamedTuple, Iterable
 
 from django import template
 from django.http import HttpRequest
+from django.utils.encoding import force_str
 
 register = template.Library()
 
 
 class BreadcrumbTitle(NamedTuple):
-    title: str
+    title: str  # or lazy str
     url: str
+
+    def __str__(self):
+        return force_str(self.title)
 
 
 @register.simple_tag(takes_context=True)
@@ -30,9 +34,10 @@ def breadcrumb_items(context: dict):
             None,
             [
                 # TODO: slash is not always the home page?
-                BreadcrumbTitle(req.membership.section, "/")
-                if req.membership
-                else None,  # TODO: eg "Home > Docs" doesn't make
+                # BreadcrumbTitle(req.membership.section, "/")
+                # if req.membership
+                # else None,
+                # TODO: eg "Home > Docs" doesn't make sense
                 BreadcrumbTitle(apps.title, f"/{apps.url_prefix}")
                 if (plugin := req.plugin) and (apps := plugin.app_config)
                 else None,
@@ -58,3 +63,8 @@ def breadcrumb_push_item(context: dict, item: str):
         request.titles = [item]
 
     return ""
+
+
+@register.filter
+def join_breadcrumbs(items: Iterable[BreadcrumbTitle], sep=' | '):
+    return sep.join(map(force_str, map(str, items[::-1])))
