@@ -9,7 +9,7 @@ from django.utils.encoding import force_str
 register = template.Library()
 
 
-class BreadcrumbTitle(NamedTuple):
+class BreadcrumbItem(NamedTuple):
     title: str  # or lazy str
     url: str
 
@@ -38,12 +38,12 @@ def breadcrumb_items(context: dict):
                 # if req.membership
                 # else None,
                 # TODO: eg "Home > Docs" doesn't make sense
-                BreadcrumbTitle(apps.title, f"/{apps.url_prefix}")
+                BreadcrumbItem(apps.title, f"/{apps.url_prefix}")
                 if (plugin := req.plugin) and (apps := plugin.app_config)
                 else None,
             ]
             + [
-                BreadcrumbTitle(title, req.build_absolute_uri())
+                BreadcrumbItem(title, req.build_absolute_uri())
                 if isinstance(title, str)
                 else title
                 for title in view_titles
@@ -66,5 +66,5 @@ def breadcrumb_push_item(context: dict, item: str):
 
 
 @register.filter
-def join_breadcrumbs(items: Iterable[BreadcrumbTitle], sep=" · "):
+def join_breadcrumbs(items: Iterable[BreadcrumbItem], sep=" · "):
     return sep.join(map(force_str, map(str, items[::-1])))

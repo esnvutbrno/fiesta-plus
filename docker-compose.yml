@@ -134,9 +134,11 @@ services:
       - ./wiki/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
       - wiki_static_files:/usr/src/static
+    env_file:
+      - ./.env
     environment:
-      - WIKI_STATIC_URL=${PUBLIC_URL}/static/wiki/
-      - WIKI_STATIC_PATH=/usr/src/static
+      WIKI_STATIC_URL: "${PUBLIC_URL:-https://fiesta.localhost}/static/wiki/"
+      WIKI_STATIC_PATH: /usr/src/static
 
 secrets:
   .env:

@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from apps.utils.templatetags.breadcrumbs import BreadcrumbTitle
+from apps.utils.templatetags.breadcrumbs import BreadcrumbItem
 
 
 def with_breadcrumb(title: str, *, url_name: str = None):
@@ -23,7 +23,7 @@ def with_breadcrumb(title: str, *, url_name: str = None):
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
             _title_to_append = (
-                BreadcrumbTitle(title, reverse(url_name)) if url_name else title
+                BreadcrumbItem(title, reverse(url_name)) if url_name else title
             )
 
             request.titles = [
