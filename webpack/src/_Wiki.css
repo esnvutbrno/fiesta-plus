@@ -21,7 +21,7 @@
     }
 
     .Wiki__content img {
-        @apply hidden;
+
     }
 
     .Wiki__content img.emoji {

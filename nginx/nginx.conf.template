@@ -5,6 +5,7 @@ gzip_proxied expired no-cache no-store private auth;
 gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
 gzip_disable "MSIE [1-6]\.";
 
+
 upstream web {
     server web:8000;
 }
@@ -14,17 +15,23 @@ server {
 
     client_max_body_size 32M;
 
-    # TODO: in dev, pass /static/ to django, otherwise, serve it by nginx
-    #    location ~ ^/static/(.*)$ {
-    #        root /;
-    #
-    #        expires modified 1M;
-    #        add_header Cache-Control "public, no-transform";
-    #
-    #        # /static is collectstatic result
-    #        try_files /static/$1 =404;
-    #    }
+    # wiki static are always served by nginx
+    location ~ ^/static/wiki/(.*) {
+        root /;
+        expires modified 1M;
+        add_header Cache-Control "public, no-transform";
+        try_files /wiki/$1 =404;
+    }
 
+    # do not serve static in DEBUG, since it's handled by django
+    # location ~ ^/static/(.*)$ {
+    #     root /;
+    #     expires modified 1M;
+    #     add_header Cache-Control "public, no-transform";
+    #     try_files /static/$1 =404;
+    # }
+
+    # TODO: in dev, pass /static/ to django, otherwise, serve it by nginx
     location /media/ {
         # serving by x-accel-redirect from django AttachmentViewSet
         internal;

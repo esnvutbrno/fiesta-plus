@@ -44,6 +44,8 @@ services:
       - web_static_files:/static
       - web_media_files:/media
       - webpack_build:/build
+      - wiki_static_files:/wiki
+      - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - /var/run/docker.sock:/var/run/docker.sock
     depends_on:
       - web
@@ -131,7 +133,10 @@ services:
     volumes:
       - ./wiki/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
-
+      - wiki_static_files:/usr/src/static
+    environment:
+      - WIKI_STATIC_URL=${PUBLIC_URL}/static/wiki/
+      - WIKI_STATIC_PATH=/usr/src/static
 
 secrets:
   .env:
@@ -144,3 +149,4 @@ volumes:
   webpack_build:
   web_static_files:
   web_media_files:
+  wiki_static_files:
