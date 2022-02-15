@@ -10,10 +10,10 @@
     {% block upper_head %}{% endblock upper_head %}
 
     {% breadcrumb_items as items %}
-    {% if items|length_is:1 %}
+    {% if items|length_is:0 %}
         <title>Buena Fiesta</title>
     {% else %}
-        <title>{{ items | slice:"::-1" | map_attrgetter:"title" | join:" | " }} | Buena Fiesta</title>
+        <title>{{ items|join_breadcrumbs }} | Buena Fiesta</title>
     {% endif %}
 
     <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
