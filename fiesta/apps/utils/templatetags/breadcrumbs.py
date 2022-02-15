@@ -66,5 +66,5 @@ def breadcrumb_push_item(context: dict, item: str):
 
 
 @register.filter
-def join_breadcrumbs(items: Iterable[BreadcrumbTitle], sep=' · '):
+def join_breadcrumbs(items: Iterable[BreadcrumbTitle], sep=" · "):
     return sep.join(map(force_str, map(str, items[::-1])))
