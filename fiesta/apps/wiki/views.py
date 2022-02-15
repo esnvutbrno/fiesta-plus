@@ -23,6 +23,55 @@ es = Elasticsearch(
 
 
 @with_breadcrumb(_("Docs"), url_name="wiki:index")
+class SearchWikiView(TemplateView):
+    template_name = "wiki/search.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        q = self.request.GET.get('q')
+        results = es.search(
+            index="wiki",
+            query={
+                "match_phrase": {
+                    "content_plain": q,
+                },
+                # "multi_match": {
+                #     "query": q,
+                #     "fields": ["content_plain"],
+                #     "fuzziness": "AUTO"
+                # }
+            },
+            highlight={
+                "tags_schema": "styled",
+                "fields": {
+                    "content_plain": {
+                        "type": "unified",
+                        "matched_fields": ["content_plain"],
+                        "number_of_fragments": 1,
+                        "fragment_size": 200,
+                        # "pre_tags": ["<b>"],
+                        # "post_tags": ["</b>"]
+                    }
+                }
+            }
+        )
+
+        ctx['results'] = [
+            dict(
+                source=hit['_source'],
+                highlight=hit['highlight'],
+                score=hit['_score']
+            )
+            for hit in results['hits']['hits']
+        ]
+        ctx['q'] = q
+
+        self.request.titles.append(_('Search results: {}').format(q))
+
+        return ctx
+
+
+@with_breadcrumb(_("Docs"), url_name="wiki:index")
 class WikiView(TemplateView):
     template_name = "wiki/index.html"
 

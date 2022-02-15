@@ -24,6 +24,10 @@
 
     }
 
+    .Wiki__search-results em {
+        @apply bg-primary text-white;
+    }
+
     .Wiki__content img.emoji {
         @apply inline-block my-0 align-text-top;
     }
