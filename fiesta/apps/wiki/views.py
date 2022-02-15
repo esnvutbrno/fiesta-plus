@@ -48,7 +48,7 @@ class WikiView(TemplateView):
             page = found_hits[0]["_source"]
             ctx["page"] = page
 
-            self.request.titles.append(page.get("file"))
+            self.request.titles.append(page.get("title"))
         else:
             ctx["page"] = es.get(index="wiki", id="Home.md")["_source"]
 

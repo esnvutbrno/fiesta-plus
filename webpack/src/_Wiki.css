@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+
+  https://flowbite.com/docs/docs.css?v=1.3.3
+
+*/
+
+
+@layer components {
+
+    .Wiki__content {
+        @apply
+        prose prose-lg
+        prose-headings:border-b prose-headings:border-gray-200
+        prose-hr:py-0 prose-hr:my-3
+        prose-h1:text-4xl prose-h1:pb-1.5
+        ;
+    }
+
+    .Wiki__content img {
+        @apply hidden;
+    }
+
+    .Wiki__content img.emoji {
+        @apply inline-block my-0 align-text-top;
+    }
+
+    .Wiki__content .anchor {
+        @apply transition -ml-5 opacity-0 inline-block scroll-mt-6;
+    }
+
+    .Wiki__content h1:hover .anchor,
+    .Wiki__content h2:hover .anchor,
+    .Wiki__content h3:hover .anchor,
+    .Wiki__content h4:hover .anchor,
+    .Wiki__content h5:hover .anchor,
+    .Wiki__content h6:hover .anchor {
+        @apply opacity-100;
+    }
+
+    .Wiki__sidebar {
+        @apply mt-3;
+    }
+
+    .Wiki__sidebar ul {
+        @apply space-y-6 lg:space-y-2 border-l border-slate-100 dark:border-slate-800;
+    }
+
+    .Wiki__sidebar li a {
+        @apply block border-l pl-4 -ml-px border-transparent text-slate-700
+        hover:border-slate-400 dark:hover:border-slate-500
+        hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300
+        ;
+        /*@apply block border-l pl-4 -ml-px text-sky-500 border-current font-semibold dark:text-sky-400;*/
+    }
+}
+
+/* not present in HTML files, so placed outside layer */
+.Wiki__link-icon {
+    @apply h-4 w-4 mr-1;
+}
