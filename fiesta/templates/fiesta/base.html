@@ -4,9 +4,10 @@
 {% load render_bundle from webpack_loader %}
 {% load django_htmx %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1">
     {% block upper_head %}{% endblock upper_head %}
 
     {% breadcrumb_items as items %}
@@ -20,16 +21,15 @@
 
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
-    {# TODO: include with webpack #}
-    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 
     {% django_htmx_script %}
 </head>
 <body
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        class="overflow-y-scroll flex flex-col justify-between
-        min-h-screen box-border"
+        class="overflow-y-scroll
+        flex flex-col justify-between min-h-screen box-border
+        selection:bg-primary selection:text-white
+        "
 >
 {% block body %}
     {% include "fiesta/parts/messages.html" %}
