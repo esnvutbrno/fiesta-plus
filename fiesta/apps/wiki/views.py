@@ -28,7 +28,7 @@ class SearchWikiView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        q = self.request.GET.get('q')
+        q = self.request.GET.get("q")
         results = es.search(
             index="wiki",
             query={
@@ -52,21 +52,17 @@ class SearchWikiView(TemplateView):
                         # "pre_tags": ["<b>"],
                         # "post_tags": ["</b>"]
                     }
-                }
-            }
+                },
+            },
         )
 
-        ctx['results'] = [
-            dict(
-                source=hit['_source'],
-                highlight=hit['highlight'],
-                score=hit['_score']
-            )
-            for hit in results['hits']['hits']
+        ctx["results"] = [
+            dict(source=hit["_source"], highlight=hit["highlight"], score=hit["_score"])
+            for hit in results["hits"]["hits"]
         ]
-        ctx['q'] = q
+        ctx["q"] = q
 
-        self.request.titles.append(_('Search results: {}').format(q))
+        self.request.titles.append(_("Search results: {}").format(q))
 
         return ctx
 
