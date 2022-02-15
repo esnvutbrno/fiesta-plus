@@ -3,7 +3,7 @@
 {% load utils %}
 
 {% block breadcrumbs_right %}
-    <form class="relative my-2 w-1/4">
+    <form class="relative my-1 w-1/4">
         <label for="search" class="sr-only">Search</label>
         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
             <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20"
@@ -15,8 +15,8 @@
         </div>
         <input
                 type="text" id="search" name="search"
-                class="bg-gray-50 border border-gray-300 text-gray-700 text-sm rounded-lg
-                block w-full pl-10 p-1.5
+                class="bg-gray-50 border border-gray-300 text-gray-700
+                text-xs rounded-lg block w-full pl-10 p-1.5
                 focus:ring-primary focus:border-primary
                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                 dark:text-white dark:focus:ring-primary dark:focus:border-primary"
@@ -25,57 +25,57 @@
     </form>
 {% endblock breadcrumbs_right %}
 
-{% block main %}
-    <div class="Docs__content prose">
-        {{ page.content|safe }}
-    </div>
-{% endblock %}
 
-{% block main_right %}
-    <div class="Docs__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
-        {{ sidebar.content|safe }}
+{% block main_container %}
+    <div class="max-w-3xl mx-auto mb-auto w-full flex flex-row justify-between items-start px-4 sm:px-2">
+        <main class="w-3/4 Docs__content prose">
+            {{ page.content|safe }}
+        </main>
+        <nav class="Docs__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
+            {{ sidebar.content|safe }}
 
-        <div class="mt-5 text-xs flex flex-col items-center space-y-1 text-gray-800">
-            <div class="border-t border-gray-50 w-full"></div>
+            <div class="mt-5 text-xs flex flex-col items-center space-y-1 text-gray-800">
+                <div class="border-t border-gray-50 w-full"></div>
 
-            {# TODO: links to conf #}
+                {# TODO: links to conf #}
 
-            <svg class="w-6 h-6 inline-block" fill="none" stroke="currentColor"
-                 viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-            >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
+                <svg class="w-6 h-6 inline-block" fill="none" stroke="currentColor"
+                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
 
-            <a
-                    href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.sha }}..{{ page.last_change.parent_sha }}"
-                    target="_blank" rel="noreferrer,nofollow"
-                    class="hover:underline font-mono"
-                    title="{{ page.last_change.at|date_from_iso|date }}"
-            >
-                {{ page.last_change.at|date_from_iso|naturaltime }}
-            </a>
-
-            {{ page.last_change.name }}
-
-            <a
-                    href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
-                    target="_blank" rel="noreferrer,nofollow"
-            >
-                Page History
-            </a>
-
-            {% if request.user.is_superuser %}
                 <a
-                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
+                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.sha }}..{{ page.last_change.parent_sha }}"
+                        target="_blank" rel="noreferrer,nofollow"
+                        class="hover:underline font-mono"
+                        title="{{ page.last_change.at|date_from_iso|date }}"
+                >
+                    {{ page.last_change.at|date_from_iso|naturaltime }}
+                </a>
+
+                {{ page.last_change.name }}
+
+                <a
+                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
                         target="_blank" rel="noreferrer,nofollow"
                 >
-                    Edit this Page
+                    Page History
                 </a>
-            {% endif %}
-        </div>
+
+                {% if request.user.is_superuser %}
+                    <a
+                            href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
+                            target="_blank" rel="noreferrer,nofollow"
+                    >
+                        Edit this Page
+                    </a>
+                {% endif %}
+            </div>
+        </nav>
     </div>
-{% endblock main_right %}
+{% endblock main_container %}
 
 
 {% block upper_footer %}
