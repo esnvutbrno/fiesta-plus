@@ -23,9 +23,7 @@ def with_breadcrumb(title: str, *, url_name: str = None):
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
             _title_to_append = (
-                BreadcrumbTitle(title, reverse(url_name))
-                if url_name else
-                title
+                BreadcrumbTitle(title, reverse(url_name)) if url_name else title
             )
 
             request.titles = [
