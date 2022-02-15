@@ -9,17 +9,10 @@ if (!publicPath) throw Error('Missing PUBLIC_PATH in env.');
 if (!buildDir) throw Error('Missing BUILD_DIR in env.');
 
 module.exports = {
-    optimization: {
-        splitChunks: {
-            name: 'common',
-            chunks: 'all',
-        },
-        runtimeChunk: {
-            name: 'vendor',
-        },
-    },
     entry: {
-        main: path.join(__dirname, './src/main.css'),
+        main: [
+            path.join(__dirname, './src/main.js')
+        ],
     },
     output: {
         publicPath,
