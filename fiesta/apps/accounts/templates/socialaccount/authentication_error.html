@@ -1,11 +1,18 @@
 {% extends "fiesta/base.html" %}
+{% load breadcrumbs %}
 
 {% load i18n %}
+
+{% block upper_head %}
+    {% trans "Social account login failure" as title %}
+    {% breadcrumb_push_item title %}
+{% endblock upper_head %}
 
 {% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
 
 {% block main %}
-    <h1>{% trans "Social Network Login Failure" %}</h1>
+    {# TODO: styling #}
+    <h1>{% trans "Social Account Login Failure" %}</h1>
 
     <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
 {% endblock main %}
