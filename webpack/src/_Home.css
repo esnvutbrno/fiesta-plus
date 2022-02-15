@@ -2,49 +2,54 @@
 @tailwind components;
 @tailwind utilities;
 
-/** Prepare animations and center-oriented transforms */
-.BuddySystem__drawing .on-right,
-  /* center arrows are composed */
-.BuddySystem__drawing .on-center path,
-.BuddySystem__drawing .on-left {
-  @apply transition duration-500
-  ease-in-out origin-center;
-}
+@layer components {
 
-/** With group hover, fade out all of objects. */
-.BuddySystem__drawing.hover .on-right,
-  /* center arrows are composed */
-.BuddySystem__drawing.hover .on-center path,
-.BuddySystem__drawing.hover .on-left {
-  @apply grayscale-[80%];
-}
 
-/** All transform withing the objects (so scaling from center of each object) */
-.BuddySystem__drawing svg * {
-  transform-box: fill-box;
-}
+    /** Prepare animations and center-oriented transforms */
+    .BuddySystem__drawing .on-right,
+        /* center arrows are composed */
+    .BuddySystem__drawing .on-center path,
+    .BuddySystem__drawing .on-left {
+        @apply transition duration-500
+        ease-in-out origin-center;
+    }
 
-/** Hightlight sides on hover by scaling */
-.BuddySystem__drawing.hover--internationals .on-right,
-.BuddySystem__drawing.hover--buddies .on-left {
-  @apply scale-125 drop-shadow;
-}
+    /** With group hover, fade out all of objects. */
+    .BuddySystem__drawing.hover .on-right,
+        /* center arrows are composed */
+    .BuddySystem__drawing.hover .on-center path,
+    .BuddySystem__drawing.hover .on-left {
+        @apply grayscale-[80%];
+    }
 
-/** Remove fade out on group on hover */
-.BuddySystem__drawing.hover--internationals .on-right,
-.BuddySystem__drawing.hover--matching .on-center path,
-.BuddySystem__drawing.hover--buddies .on-left {
-  @apply grayscale-0;
-}
+    /** All transform withing the objects (so scaling from center of each object) */
+    .BuddySystem__drawing svg * {
+        transform-box: fill-box;
+    }
 
-/** Highlight for arrows-lines */
-.BuddySystem__drawing.hover--matching .on-center path:first-child {
-  /* first fill, since it's a line */
-  @apply fill-primary drop-shadow;
-}
+    /** Hightlight sides on hover by scaling */
+    .BuddySystem__drawing.hover--internationals .on-right,
+    .BuddySystem__drawing.hover--buddies .on-left {
+        @apply scale-125 drop-shadow;
+    }
 
-/** Highlight for arrows-arrows */
-.BuddySystem__drawing.hover--matching .on-center path:last-child {
-  /* second stroke, since it's an arrow */
-  @apply stroke-primary drop-shadow;
+    /** Remove fade out on group on hover */
+    .BuddySystem__drawing.hover--internationals .on-right,
+    .BuddySystem__drawing.hover--matching .on-center path,
+    .BuddySystem__drawing.hover--buddies .on-left {
+        @apply grayscale-0;
+    }
+
+    /** Highlight for arrows-lines */
+    .BuddySystem__drawing.hover--matching .on-center path:first-child {
+        /* first fill, since it's a line */
+        @apply fill-primary drop-shadow;
+    }
+
+    /** Highlight for arrows-arrows */
+    .BuddySystem__drawing.hover--matching .on-center path:last-child {
+        /* second stroke, since it's an arrow */
+        @apply stroke-primary drop-shadow;
+    }
+
 }

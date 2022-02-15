@@ -1,0 +1,83 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+
+    .Forms__field {
+        @apply relative z-0 mb-3 w-full;
+    }
+
+    .Forms__button {
+        @apply font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
+        inline-flex items-center
+        ;
+    }
+
+    .Forms__button--submit {
+        @apply text-white bg-blue-700
+        hover:bg-blue-800
+        focus:ring-4 focus:ring-blue-300
+        dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+    }
+
+    .Forms__error_text {
+        @apply mt-2 text-sm text-red-600 dark:text-red-500;
+    }
+
+    .Forms__input {
+        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
+
+        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    }
+
+    .Forms__input[disabled] {
+        @apply
+        bg-gray-200 border-gray-300 text-gray-700
+
+        focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed
+
+        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500
+        dark:text-gray-500 dark:focus:ring-blue-500 dark:focus:border-blue-500
+        ;
+    }
+
+    .Forms__select {
+        @apply
+        bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+        focus:ring-blue-500 focus:border-blue-500
+        block w-full p-2.5
+
+        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    }
+
+    .Forms__label {
+        @apply block mb-2 text-sm font-medium text-gray-900
+
+        dark:text-gray-400;
+    }
+
+    .Forms__help_text {
+        @apply mt-2 text-sm text-gray-500 dark:text-gray-400;
+    }
+
+    .Forms__field--error .Forms__input {
+        @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700
+        focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400;
+    }
+
+    .Forms__field--error .Forms__label {
+        @apply text-red-700 dark:text-red-500;
+    }
+
+
+    .Forms__label--file {
+        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300;
+    }
+
+    .Forms__file {
+        @apply block w-full p-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+
+    }
+}
