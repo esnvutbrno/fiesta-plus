@@ -3,8 +3,7 @@ from __future__ import annotations
 from typing import NamedTuple
 
 from django import template
-
-from apps.plugins.middleware.plugin import HttpRequest
+from django.http import HttpRequest
 
 register = template.Library()
 
@@ -51,8 +50,11 @@ def breadcrumb_items(context: dict):
 
 @register.simple_tag(takes_context=True)
 def breadcrumb_push_item(context: dict, item: str):
-    view: View = context["view"]
+    request: HttpRequest = context["request"]
 
-    view.title = item
+    try:
+        request.titles.append(item)
+    except AttributeError:
+        request.titles = [item]
 
     return ""
