@@ -13,7 +13,7 @@
     {% if items|length_is:0 %}
         <title>Buena Fiesta</title>
     {% else %}
-        <title>{{ items|join_breadcrumbs }} | Buena Fiesta</title>
+        <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
     {% endif %}
 
     <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
@@ -34,13 +34,13 @@
 {% block body %}
     {% include "fiesta/parts/messages.html" %}
     {% block navigation_container %}
-        <header class="max-w-3xl mx-auto w-full px-4 sm:px-2">
+        <header class="max-w-4xl mx-auto w-full px-4 sm:px-2">
             {% include "fiesta/parts/header.html" %}
         </header>
     {% endblock %}
 
     {% block breadcrumbs_container %}
-        <div class="max-w-3xl mx-auto w-full flex flex-rox justify-between items-center
+        <div class="max-w-4xl mx-auto w-full flex flex-rox justify-between items-center
                     px-4 sm:px-2">
             {% include "fiesta/parts/breadcrumbs.html" %}
             {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
@@ -50,7 +50,7 @@
     {% endblock breadcrumbs_container %}
 
     {% block main_container %}
-        <div class="max-w-3xl mx-auto mb-auto w-full">
+        <div class="max-w-4xl mx-auto mb-auto w-full">
             {% block main_columns %}
                 <main class="p-3">
                     {% block main %}{% endblock main %}

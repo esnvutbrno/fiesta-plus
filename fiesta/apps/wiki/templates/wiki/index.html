@@ -27,35 +27,31 @@
 
 
 {% block main_container %}
-    <div class="max-w-3xl mx-auto mb-auto w-full flex flex-row justify-between items-start px-4 sm:px-2">
-        <main class="w-3/4 Docs__content prose">
+    <div class="max-w-4xl mx-auto mb-auto w-full flex flex-row justify-between items-start px-4 sm:px-2">
+        <main class="w-3/4 mt-5 pr-5 Wiki__content">
             {{ page.content|safe }}
         </main>
-        <nav class="Docs__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
-            {{ sidebar.content|safe }}
+        <nav class="Wiki__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
+            {% if not page.toc %}
+                {{ sidebar.content|safe }}
+            {% else %}
+                {{ page.toc|safe }}
+            {% endif %}
 
-            <div class="mt-5 text-xs flex flex-col items-center space-y-1 text-gray-800">
-                <div class="border-t border-gray-50 w-full"></div>
-
+            <div class="mt-5 text-xs items-center space-y-1 text-gray-600">
                 {# TODO: links to conf #}
 
-                <svg class="w-6 h-6 inline-block" fill="none" stroke="currentColor"
-                     viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-
+                Last revision: {{ page.last_change.name }}
                 <a
-                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.sha }}..{{ page.last_change.parent_sha }}"
+                        href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
                         target="_blank" rel="noreferrer,nofollow"
-                        class="hover:underline font-mono"
+                        class="hover:underline"
                         title="{{ page.last_change.at|date_from_iso|date }}"
                 >
                     {{ page.last_change.at|date_from_iso|naturaltime }}
                 </a>
 
-                {{ page.last_change.name }}
+                <div class="border-t border-gray-100"></div>
 
                 <a
                         href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
