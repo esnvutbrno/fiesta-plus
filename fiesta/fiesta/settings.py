@@ -31,8 +31,6 @@ DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS: list[str] = [".localhost", "127.0.0.1"]
 
-if DEBUG:
-    INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 
 # Application definition
 
@@ -49,7 +47,6 @@ INSTALLED_APPS = [
     "django.forms",
     # Django 3rd party
     "polymorphic",
-    "debug_toolbar",
     "webpack_loader",
     "django_htmx",
     # Fiesta apps
@@ -72,9 +69,9 @@ INSTALLED_APPS = [
     "allauth_cas",
 ]
 
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -213,7 +210,6 @@ ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # True by default
 ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.0/topics/i18n/
 
@@ -230,6 +226,8 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
+STATIC_ROOT = config("STATIC_DIR")
+
 STATICFILES_DIRS = [
     (BASE_DIR / "static").as_posix(),
     (BASE_DIR / "templates/static").as_posix(),
@@ -242,15 +240,25 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = ["https://*.localhost"]
 
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
 # DEBUG reasons
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 WEBPACK_LOADER = {
     "DEFAULT": {
-        "CACHE": False,
+        "CACHE": not DEBUG,
         "BUNDLE_DIR_NAME": "./",  # must end with slash
         "STATS_FILE": (Path(config("BUILD_DIR")) / "webpack-stats.json").as_posix(),
+        "INTEGRITY": True,
     }
 }
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+
+if DEBUG:
+    INSTALLED_APPS.append("debug_toolbar")
+    INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")

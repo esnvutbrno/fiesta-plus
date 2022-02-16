@@ -14,7 +14,7 @@ django-polymorphic = "^3.1.0"
 django-extensions = "^3.1.5"
 django-countries = "^7.2.1"
 django-allauth = "^0.47.0"
-django-webpack-loader = "^1.4.1"
+django-webpack-loader = { git = "https://github.com/thejoeejoee/django-webpack-loader", rev = "6590100a5609b8"}
 django-click = "^2.3.0"
 mysqlclient = "^2.1.0"
 bcrypt = "^3.2.0"

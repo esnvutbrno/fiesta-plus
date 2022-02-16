@@ -1,0 +1,25 @@
+version: '3.3'
+services:
+  web:
+    command: './manage.py collectstatic --noinput && ./manage.py runserver 0.0.0.0:8000'
+
+  webserver:
+    command: [ nginx, '-g', 'daemon off;' ]
+    environment:
+      STATIC_LOCATION_PATTERN: '^/static/(.*)$$'
+
+  webpack:
+    command: yarn build
+    volumes:
+      - webpack_build:/usr/src/build
+    environment:
+      NODE_ENV: production
+      PUBLIC_PATH: https://fiesta.localhost/static/
+
+  dockerproxy:
+    ports:
+      - "80:80"
+      - "443:443"
+
+  elastic:
+    profiles: [ ]

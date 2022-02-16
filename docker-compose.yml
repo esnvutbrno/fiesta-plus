@@ -36,7 +36,9 @@ services:
       - TZ=Europe/Prague
 
   webserver:
-    build: ./nginx
+    build:
+      context: ./nginx
+      dockerfile: webserver.Dockerfile
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
@@ -48,11 +50,14 @@ services:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - VIRTUAL_HOST=fiesta.localhost
-      - VIRTUAL_PORT=80
+      STATIC_LOCATION_PATTERN: "^/@@@/(.*)$$"
+      VIRTUAL_HOST: fiesta.localhost
+      VIRTUAL_PORT: 80
 
-  localproxy:
-    image: nginxproxy/nginx-proxy:alpine
+  dockerproxy:
+    build:
+      context: ./nginx
+      dockerfile: dockerproxy.Dockerfile
     ports:
       - "80:80"
       - "443:443"
@@ -63,7 +68,7 @@ services:
 
   webpack:
     build: ./webpack
-    command: dev
+    command: yarn dev
     expose:
       - 8003
     volumes:
