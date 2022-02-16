@@ -11,9 +11,9 @@ class SearchWikiView(TemplateView):
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        q = self.request.GET.get('q')
+        q = self.request.GET.get("q")
 
-        ctx['results'] = wiki_elastic.search(term=q) if q else []
+        ctx["results"] = wiki_elastic.search(term=q) if q else []
         ctx["q"] = q
 
         self.request.titles.append(_("Search: {}").format(q))
@@ -28,7 +28,7 @@ class WikiView(TemplateView):
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        path = self.kwargs.get("path") or '/'
+        path = self.kwargs.get("path") or "/"
 
         ctx["sidebar"], ctx["footer"] = wiki_elastic.get_page_parts(path=path)
 
