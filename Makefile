@@ -102,6 +102,7 @@ setup-elastic: ## Starts elasticsearch standalone an generates keystore and pass
 	docker rm buena-fiesta-elastic-setup-run
 
 
+# chrome://settings/certificates
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 	mkdir -p /usr/local/share/ca-certificates/localhost
 	cp conf/certs/rootCA.pem /usr/local/share/ca-certificates/localhost/rootCA.crt

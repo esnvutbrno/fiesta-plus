@@ -54,7 +54,7 @@ last_revision = git.object("HEAD^").sha
 wait_for_port("elastic", 9200)
 
 elastic = Elasticsearch::Client.new(
-  url: "https://elastic:elastic@elastic:9200",
+  url: ENV["ELASTIC_URL"],
   transport_options: {
     ssl: { ca_file: "/usr/share/certs/rootCA.pem" },
   },
@@ -137,7 +137,7 @@ Dir[WIKI_REPO_PATH + "/**/*"].select {
     :anchor_icon => '<svg class="Wiki__link-icon" viewBox="0 0 16 16" version="1.1" aria-hidden="true"><path fill-rule="evenodd" d="M7.775 3.275a.75.75 0 001.06 1.06l1.25-1.25a2 2 0 112.83 2.83l-2.5 2.5a2 2 0 01-2.83 0 .75.75 0 00-1.06 1.06 3.5 3.5 0 004.95 0l2.5-2.5a3.5 3.5 0 00-4.95-4.95l-1.25 1.25zm-4.69 9.64a2 2 0 010-2.83l2.5-2.5a2 2 0 012.83 0 .75.75 0 001.06-1.06 3.5 3.5 0 00-4.95 0l-2.5 2.5a3.5 3.5 0 004.95 4.95l1.25-1.25a.75.75 0 00-1.06-1.06l-1.25 1.25a2 2 0 01-2.83 0z"></path></svg>',
     # TODO: well, GH or self-hosted?
     # https://github.com/WebpageFX/emoji-cheat-sheet.com/tree/master/public/graphics/emojis
-    :asset_root => "https://github.githubassets.com/images/icons/",
+    :asset_root => ENV["WIKI_STATIC_ASSETS_URL"],
     :image_base_url => ENV["WIKI_STATIC_URL"],
     :image_subpage_url => ENV["WIKI_STATIC_URL"],
     :revision => last_revision,
