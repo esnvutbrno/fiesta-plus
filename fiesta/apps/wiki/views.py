@@ -30,15 +30,15 @@ class WikiView(TemplateView):
     path: str
 
     def get(self, request, *args, **kwargs):
-        self.path = self.kwargs.get("path") or '/'
+        self.path = self.kwargs.get("path") or "/"
 
         base, file_name = wiki_elastic.split_path(self.path)
 
-        if file_name.startswith('_'):
+        if file_name.startswith("_"):
             return HttpResponsePermanentRedirect(
-                reverse('wiki:page', kwargs=dict(path=base))
-                if base else
-                reverse('wiki:index')
+                reverse("wiki:page", kwargs=dict(path=base))
+                if base
+                else reverse("wiki:index")
             )
         return super().get(request, *args, **kwargs)
 
