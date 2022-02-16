@@ -34,8 +34,9 @@
             {% endblock main %}
         </main>
         {% block main_right %}
-            <nav class="Wiki__sidebar w-1/4 sticky top-5 h-full flex flex-col justify-between">
+            <nav class="Wiki__sidebar w-1/4 sticky md:top-[126px] top-[171px] h-full flex flex-col justify-between">
                 {% if not page.toc %}
+                    {# TODO: sidebar html broken #}
                     {{ sidebar.content_html|safe }}
                 {% else %}
                     {{ page.toc|safe }}
@@ -47,7 +48,7 @@
                     Last revision: {{ page.last_change.name }}
                     <a
                             href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
-                            target="_blank" rel="noreferrer,nofollow"
+                            target="_blank" rel="noreferrer nofollow noopener"
                             class="hover:underline"
                             title="{{ page.last_change.at|date_from_iso|date }}"
                     >
@@ -58,7 +59,7 @@
 
                     <a
                             href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
-                            target="_blank" rel="noreferrer,nofollow"
+                            target="_blank" rel="noreferrer nofollow noopener"
                     >
                         Page History
                     </a>

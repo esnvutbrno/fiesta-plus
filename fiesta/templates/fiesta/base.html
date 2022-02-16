@@ -33,21 +33,23 @@
 >
 {% block body %}
     {% include "fiesta/parts/messages.html" %}
-    {% block navigation_container %}
-        <header class="max-w-4xl mx-auto w-full px-4 sm:px-2">
-            {% include "fiesta/parts/header.html" %}
-        </header>
-    {% endblock %}
+    <div class="sticky top-0 bg-white z-20">
+        {% block navigation_container %}
+            <header class="max-w-4xl mx-auto w-full px-4 sm:px-2">
+                {% include "fiesta/parts/header.html" %}
+            </header>
+        {% endblock %}
 
-    {% block breadcrumbs_container %}
-        <div class="max-w-4xl mx-auto w-full flex flex-rox justify-between items-center
+        {% block breadcrumbs_container %}
+            <div class="max-w-4xl mx-auto w-full flex flex-rox justify-between items-center
                     px-4 sm:px-2">
-            {% include "fiesta/parts/breadcrumbs.html" %}
-            {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
-        </div>
+                {% include "fiesta/parts/breadcrumbs.html" %}
+                {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
+            </div>
 
-        <div class="border border-gray-50"></div>
-    {% endblock breadcrumbs_container %}
+            <div class="border border-gray-50"></div>
+        {% endblock breadcrumbs_container %}
+    </div>
 
     {% block main_container %}
         <div class="max-w-4xl mx-auto mb-auto w-full">
