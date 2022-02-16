@@ -36,7 +36,7 @@ class WikiElastic:
 
     @staticmethod
     def split_path(path: str) -> tuple[str, str]:
-        return path.rpartition('/')[::2]
+        return path.rpartition("/")[::2]
 
     def get_page_parts(self, path: str) -> tuple[Page | None, Page | None]:
         base, _ = self.split_path(path)
