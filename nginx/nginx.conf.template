@@ -5,10 +5,16 @@ gzip_proxied expired no-cache no-store private auth;
 gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml;
 gzip_disable "MSIE [1-6]\.";
 
+resolver 8.8.8.8;
+
+server_tokens off;
 
 upstream web {
     server web:8000;
 }
+
+proxy_cache_path /tmp/cache levels=1:2 keys_zone=gh-assets-cache:8m max_size=1000m inactive=600m;
+proxy_temp_path /tmp/cache/tmp;
 
 server {
     listen 80;
@@ -19,15 +25,24 @@ server {
     location ~ ^/static/wiki/(.*) {
         root /;
         expires modified 1M;
-        add_header Cache-Control "public, no-transform";
+        add_header Cache-Control "public, max-age=31536000";
         try_files /wiki/$1 =404;
+    }
+
+    # wiki gh is pass to GH assets
+    location ~ ^/static/gh/(.*) {
+        proxy_set_header Host github.githubassets.com;
+        proxy_cache gh-assets-cache;
+        proxy_cache_valid  200 302  60m;
+        proxy_cache_valid  404      1m;
+        proxy_pass https://github.githubassets.com/images/icons/$1;
     }
 
     # do not serve static in DEBUG, since it's handled by django
     # location ~ ^/static/(.*)$ {
     #     root /;
     #     expires modified 1M;
-    #     add_header Cache-Control "public, no-transform";
+    #     add_header Cache-Control "public, max-age=31536000";
     #     try_files /static/$1 =404;
     # }
 
