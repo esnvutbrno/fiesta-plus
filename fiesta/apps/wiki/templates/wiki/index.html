@@ -31,6 +31,11 @@
         <main class="w-3/4 mt-5 pr-5 Wiki__content">
             {% block main %}
                 {{ page.content_html|safe }}
+
+                <hr class="mt-10">
+                <div class="mt-5 mb-5 text-sm">
+                    {{ footer.content_html|safe }}
+                </div>
             {% endblock main %}
         </main>
         {% block main_right %}

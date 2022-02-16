@@ -34,8 +34,12 @@ class WikiElastic:
     def __init__(self, client: Elasticsearch):
         self._client = client
 
+    @staticmethod
+    def split_path(path: str) -> tuple[str, str]:
+        return path.rpartition('/')[::2]
+
     def get_page_parts(self, path: str) -> tuple[Page | None, Page | None]:
-        base = path.rpartition("/")[0]
+        base, _ = self.split_path(path)
         return (
             self._page_for_filename("_Sidebar", base=base),
             self._page_for_filename("_Footer", base=base),
@@ -43,7 +47,7 @@ class WikiElastic:
 
     def page_for_path(self, path: str) -> Page | None:
         path = path.strip("/")
-        base, _, file_name = path.rpartition("/")
+        base, file_name = self.split_path(path)
 
         if file_name:
             page = self._page_for_filename(file_name=file_name, base=base)

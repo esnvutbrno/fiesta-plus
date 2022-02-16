@@ -1,3 +1,5 @@
+from django.http import HttpResponsePermanentRedirect
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView
 
@@ -25,14 +27,26 @@ class SearchWikiView(TemplateView):
 class WikiView(TemplateView):
     template_name = "wiki/index.html"
 
+    path: str
+
+    def get(self, request, *args, **kwargs):
+        self.path = self.kwargs.get("path") or '/'
+
+        base, file_name = wiki_elastic.split_path(self.path)
+
+        if file_name.startswith('_'):
+            return HttpResponsePermanentRedirect(
+                reverse('wiki:page', kwargs=dict(path=base))
+                if base else
+                reverse('wiki:index')
+            )
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
 
-        path = self.kwargs.get("path") or "/"
-
-        ctx["sidebar"], ctx["footer"] = wiki_elastic.get_page_parts(path=path)
-
-        page = wiki_elastic.page_for_path(path=path)
+        ctx["sidebar"], ctx["footer"] = wiki_elastic.get_page_parts(path=self.path)
+        page = wiki_elastic.page_for_path(path=self.path)
         ctx["page"] = page
         self.request.titles.append(page.get("title"))
 
