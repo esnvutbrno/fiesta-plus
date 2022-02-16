@@ -35,15 +35,15 @@ class WikiElastic:
         self._client = client
 
     def get_page_parts(self, path: str) -> tuple[Page | None, Page | None]:
-        base = path.rpartition('/')[0]
+        base = path.rpartition("/")[0]
         return (
-            self._page_for_filename('_Sidebar', base=base),
-            self._page_for_filename('_Footer', base=base),
+            self._page_for_filename("_Sidebar", base=base),
+            self._page_for_filename("_Footer", base=base),
         )
 
     def page_for_path(self, path: str) -> Page | None:
-        path = path.strip('/')
-        base, _, file_name = path.rpartition('/')
+        path = path.strip("/")
+        base, _, file_name = path.rpartition("/")
 
         if file_name:
             page = self._page_for_filename(file_name=file_name, base=base)
@@ -52,7 +52,7 @@ class WikiElastic:
 
             return page
 
-        return self._page_for_filename('Home', base=base)
+        return self._page_for_filename("Home", base=base)
 
     def search(self, term: str) -> list[SearchPage]:
         results = self._client.search(
@@ -83,27 +83,25 @@ class WikiElastic:
         )
         return [
             SearchPage(
-                source=hit["_source"],
-                highlight=hit["highlight"],
-                score=hit["_score"]
+                source=hit["_source"], highlight=hit["highlight"], score=hit["_score"]
             )
             for hit in results["hits"]["hits"]
         ]
 
-    def _page_for_filename(self, file_name: str, *, base: str = '') -> Page | None:
-        base = f'{base}/' if base else ''
+    def _page_for_filename(self, file_name: str, *, base: str = "") -> Page | None:
+        base = f"{base}/" if base else ""
 
         hits = self._client.search(
             index="wiki",
             query=dict(
                 prefix={
-                    "file.keyword": f'{base}{file_name}.',
+                    "file.keyword": f"{base}{file_name}.",
                 }
             ),
         )["hits"]["hits"]
 
         if hits:
-            return hits[0]['_source']
+            return hits[0]["_source"]
 
 
 class LocalCATrustedTransportion(Transport):
