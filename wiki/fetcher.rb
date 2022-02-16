@@ -14,8 +14,8 @@ class String
   def titleize
     split(/(\W)/).map {
       |w|
-      # firsth two cahrs is uppercase, so probably a abbreviation, so no capitalizing
-      if w.match(/^([A-Z][A-Z][a-z]*)$/) then w else w.capitalize end
+      # firsth two chars is uppercase, so probably a abbreviation, so no capitalizing
+      if w.match(/([A-Z][A-Z][a-z]*)/) then w else w.capitalize end
     }.join
   end
 end
@@ -42,9 +42,9 @@ FileUtils.rm_rf(File.join(ENV["WIKI_STATIC_PATH"], "*"))
 
 # clone wiki repository local
 git = Git.clone(
-  "https://github.com/d3/d3.wiki.git",
+  ENV["WIKI_GIT_URL"],
   WIKI_REPO_PATH,
-  # :log => Logger.new(STDOUT)
+  :log => Logger.new(STDOUT)
 )
 
 git.config("log.date", "unix")
