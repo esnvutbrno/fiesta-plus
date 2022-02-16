@@ -8,7 +8,13 @@ const buildDir = process.env.BUILD_DIR;
 if (!publicPath) throw Error('Missing PUBLIC_PATH in env.');
 if (!buildDir) throw Error('Missing BUILD_DIR in env.');
 
+console.log(`BUILD_DIR=${buildDir}`)
+console.log(`PUBLIC_PATH=${publicPath}`)
+
 module.exports = {
+    stats: {
+        outputPath: true,
+    },
     entry: {
         main: [
             path.join(__dirname, './src/main.js')
@@ -17,7 +23,7 @@ module.exports = {
     output: {
         publicPath,
         path: buildDir,
-        filename: '[name].[chunkhash:3].js',
+        filename: '[name].[chunkhash:8].js',
     },
     module: {
         rules: [
@@ -27,7 +33,7 @@ module.exports = {
                     {
                         loader: 'url-loader',
                         options: {
-                            name: 'assets/[name]-[hash:12].[ext]',
+                            name: 'assets/[name]-[hash:6].[ext]',
                             limit: 10 * 1024, // inline smaller files in css (than 10kB)
                             esModule: false,
                         },
@@ -69,6 +75,7 @@ module.exports = {
             path: buildDir,
             // https://github.com/django-webpack/webpack-bundle-tracker/issues/108
             filename: path.join(buildDir, 'webpack-stats.json'),
+            integrity: true,
         }),
         new MiniCssExtractPlugin({
             filename: '[name].[chunkhash:8].css',

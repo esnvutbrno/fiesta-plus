@@ -55,6 +55,9 @@ upd: ## Runs all needed docker containers in detached mode
 up: ## Runs all needed docker containers
 	docker-compose up
 
+produp: ## Runs fiesta in production mode.
+	docker-compose --file docker-compose.yml --file docker-compose.prod.yml up --build webpack webserver web dockerproxy
+
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 

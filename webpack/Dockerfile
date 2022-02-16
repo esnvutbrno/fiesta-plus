@@ -9,4 +9,4 @@ RUN npm install yarn && yarn install
 
 COPY ./*.config.js ./src/ /usr/src/app/
 
-ENTRYPOINT ["yarn", "run"]
+CMD ["yarn", "run"]
