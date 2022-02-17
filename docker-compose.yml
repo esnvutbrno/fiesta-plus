@@ -50,7 +50,7 @@ services:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      STATIC_LOCATION_PATTERN: "^/@@@/(.*)$$"
+      STATIC_LOCATION_PATTERN: "^\b$$"
       VIRTUAL_HOST: fiesta.localhost
       VIRTUAL_PORT: 80
 
