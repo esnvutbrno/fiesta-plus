@@ -3,8 +3,6 @@ services:
   web:
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
-      - ./fiesta/:/usr/src/app/
-      - ./conf/certs:/usr/share/certs
       - web_static_files:/usr/src/static
       - web_media_files:/usr/src/media
       - webpack_build:/usr/src/build
@@ -20,8 +18,8 @@ services:
     depends_on:
       - db
     environment:
-      - VIRTUAL_HOST=web.localhost
-      - VIRTUAL_PORT=8000
+      VIRTUAL_HOST: web.localhost
+      VIRTUAL_PORT: 8000
 
   db:
     image: postgres:12.0-alpine
@@ -30,10 +28,10 @@ services:
     ports:
       - "127.0.0.1:15432:5432"
     environment:
-      - POSTGRES_USER=fiesta
-      - POSTGRES_PASSWORD=fiesta
-      - POSTGRES_DB=fiesta
-      - TZ=Europe/Prague
+      POSTGRES_USER: fiesta
+      POSTGRES_PASSWORD: fiesta
+      POSTGRES_DB: fiesta
+      TZ: Europe/Prague
 
   webserver:
     build:
@@ -47,7 +45,6 @@ services:
       - web_media_files:/media
       - webpack_build:/build
       - wiki_static_files:/wiki
-      - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       STATIC_LOCATION_PATTERN: "^\b$$"
@@ -58,40 +55,38 @@ services:
     build:
       context: ./nginx
       dockerfile: dockerproxy.Dockerfile
+    logging:
+      driver: none
     ports:
       - "80:80"
       - "443:443"
       - "3306:3306"
     volumes:
-      - ./conf/certs:/etc/nginx/certs
       - /var/run/docker.sock:/tmp/docker.sock:ro
 
   webpack:
-    build: ./webpack
+    build:
+      context: .
+      dockerfile: ./webpack/Dockerfile
     command: yarn dev
     expose:
       - 8003
     volumes:
-      - ./webpack/:/usr/src/app
       - webpack_build:/usr/src/build
-      # since tailwind need to access templates and all the stuff to dynamicaly strip classes
-      # see more in webpack/tailwind.config.js
-      - ./fiesta/:/usr/src/fiesta
     env_file:
       - ./webpack/.env.base
     environment:
-      - VIRTUAL_HOST=webpack.localhost
-      - VIRTUAL_PORT=8003
-      - BUILD_DIR=/usr/src/build
-      - NODE_ENV=development
-      - PUBLIC_PATH=https://webpack.localhost/static/
+      VIRTUAL_HOST: webpack.localhost
+      VIRTUAL_PORT: 8003
+      BUILD_DIR: /usr/src/build
+      NODE_ENV: development
+      PUBLIC_PATH: https://webpack.localhost/static/
 
   legacydb:
     image: mariadb:10.3
     profiles: [ "migration" ]
     volumes:
       - legacydb_data:/var/lib/mysql
-      - ./legacy.sql:/docker-entrypoint-initdb.d/legacy.sql
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: fiesta
@@ -104,13 +99,9 @@ services:
 
   elastic:
     image: elasticsearch:7.17.0
-    profiles: [ "wiki" ]
+    profiles: [ "wiki", "prod" ]
     volumes:
       - elastic_data:/usr/share/elasticsearch/data
-      # - ./conf/elastic:/usr/share/elasticsearch/config/
-      - ./conf/certs:/usr/share/elasticsearch/config/certs
-      - ./elastic/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./conf/elastic/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
     ports:
       - "9200"
 
@@ -119,26 +110,23 @@ services:
     profiles: [ "wiki" ]
     depends_on:
       - elastic
-    volumes:
-      - ./elastic/kibana.yml:/usr/share/kibana/config/kibana.yml
-      - ./conf/certs:/etc/kibana/certs
     ports:
       - "5601"
     env_file:
       - ./wiki/.env.base
       - ./.env
     environment:
-      - VIRTUAL_HOST=kibana.localhost
-      - VIRTUAL_PORT=5601
+      VIRTUAL_HOST: kibana.localhost
+      VIRTUAL_PORT: 5601
 
   wikifetcher:
     build: ./wiki
-    profiles: [ "wiki" ]
+    profiles: [ "wiki", "prod" ]
+    # when elastic is not ready yet, try it again
+    restart: on-failure
     depends_on:
       - elastic
     volumes:
-      - ./wiki/:/usr/src/app/
-      - ./conf/certs:/usr/share/certs
       - wiki_static_files:/usr/src/static
     env_file:
       - .env

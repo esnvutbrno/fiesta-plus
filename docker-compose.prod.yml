@@ -2,6 +2,8 @@ version: '3.3'
 services:
   web:
     command: './manage.py collectstatic --noinput && ./manage.py runserver 0.0.0.0:8000'
+    environment:
+      DEBUG: "false"
 
   webserver:
     command: [ nginx, '-g', 'daemon off;' ]
@@ -19,5 +21,9 @@ services:
       - "80:80"
       - "443:443"
 
+  # remove profiles so production env does have filled elastic search
   elastic:
+    profiles: [ ]
+
+  wikifetcher:
     profiles: [ ]

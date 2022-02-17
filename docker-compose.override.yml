@@ -1,0 +1,42 @@
+version: '3.3'
+services:
+  web:
+    volumes:
+      - ./fiesta/:/usr/src/app/
+      - ./conf/certs:/usr/share/certs
+
+  webserver:
+    volumes:
+      - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
+
+  webpack:
+    volumes:
+      - ./webpack/:/usr/src/app
+      # since tailwind need to access templates and all the stuff to dynamicaly strip classes
+      # see more in webpack/tailwind.config.js
+      - ./fiesta/:/usr/src/fiesta
+
+  dockerproxy:
+    volumes:
+      - ./conf/certs:/etc/nginx/certs
+
+  legacydb:
+    volumes:
+      - ./legacy.sql:/docker-entrypoint-initdb.d/legacy.sql
+
+  elastic:
+    volumes:
+      - ./elastic/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+      - ./conf/elastic/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
+      - ./conf/certs:/usr/share/elasticsearch/config/certs
+
+  kibana:
+    volumes:
+      - ./elastic/kibana.yml:/usr/share/kibana/config/kibana.yml
+      - ./conf/certs:/etc/kibana/certs
+
+  wikifetcher:
+    volumes:
+      - ./wiki/:/usr/src/app/
+      - ./conf/certs:/usr/share/certs
+
