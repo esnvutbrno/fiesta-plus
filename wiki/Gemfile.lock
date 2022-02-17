@@ -64,7 +64,6 @@ GEM
     htmlentities (4.3.4)
     i18n (1.9.1)
       concurrent-ruby (~> 1.0)
-    json (1.8.6)
     mini_mime (1.1.2)
     mini_portile2 (2.7.1)
     minitest (5.15.0)
@@ -79,9 +78,9 @@ GEM
     racc (1.6.0)
     rake (13.0.6)
     rchardet (1.8.0)
-    rdoc (3.12.2)
-      json (~> 1.4)
+    rdoc (6.3.1)
     redcarpet (3.5.1)
+    rinku (2.0.6)
     ruby-enum (0.9.0)
       i18n
     ruby2_keywords (0.0.5)
@@ -123,8 +122,9 @@ DEPENDENCIES
   org-ruby (= 0.9.9)
   posix-spawn
   rake
-  rdoc (~> 3.6)
+  rdoc (~> 6.3)
   redcarpet
+  rinku
   sanitize
   twitter-text (~> 1.14)
   wikicloth (= 0.8.3)
