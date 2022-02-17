@@ -8,7 +8,7 @@ from apps.sections.models import SectionMembership
 
 
 class NewSectionMembershipForm(BaseModelForm):
-    # TODO: limit role only to member/international
+    # TODO: clean role only to member/international
 
     submit_text = _("Request for membership")
 

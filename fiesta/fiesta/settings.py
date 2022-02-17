@@ -78,7 +78,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     # admin needs it
     "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # TODO: replace by CSP
+    # "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # 3rd party
     "django_htmx.middleware.HtmxMiddleware",
     # custom Fiesta
@@ -242,16 +243,17 @@ CSRF_TRUSTED_ORIGINS = ["https://*.localhost"]
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True
 
 # DEBUG reasons
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 WEBPACK_LOADER = {
     "DEFAULT": {
-        "CACHE": not DEBUG,
+        "CACHE": False,
         "BUNDLE_DIR_NAME": "./",  # must end with slash
         "STATS_FILE": (Path(config("BUILD_DIR")) / "webpack-stats.json").as_posix(),
-        "INTEGRITY": True,
+        "INTEGRITY": not DEBUG,
     }
 }
 
