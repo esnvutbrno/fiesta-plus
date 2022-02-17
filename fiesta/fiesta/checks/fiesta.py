@@ -17,7 +17,7 @@ def check_app(app: AppConfig):
         )
 
     # it's not much but it's an honest work
-    if len(app.name.rpartition('.')[-1]) > 4 and not app.name.endswith("s"):
+    if len(app.name.rpartition(".")[-1]) > 4 and not app.name.endswith("s"):
         yield django.core.checks.Warning(
             "App name is singular",
             hint="Make the app name plural.",
