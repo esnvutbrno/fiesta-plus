@@ -12,9 +12,6 @@ console.log(`BUILD_DIR=${buildDir}`)
 console.log(`PUBLIC_PATH=${publicPath}`)
 
 module.exports = {
-    stats: {
-        outputPath: true,
-    },
     entry: {
         main: [
             path.join(__dirname, './src/main.js')
@@ -75,7 +72,6 @@ module.exports = {
             path: buildDir,
             // https://github.com/django-webpack/webpack-bundle-tracker/issues/108
             filename: path.join(buildDir, 'webpack-stats.json'),
-            integrity: true,
         }),
         new MiniCssExtractPlugin({
             filename: '[name].[chunkhash:8].css',

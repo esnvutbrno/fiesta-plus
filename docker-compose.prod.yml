@@ -10,8 +10,6 @@ services:
 
   webpack:
     command: yarn build
-    volumes:
-      - webpack_build:/usr/src/build
     environment:
       NODE_ENV: production
       PUBLIC_PATH: https://fiesta.localhost/static/

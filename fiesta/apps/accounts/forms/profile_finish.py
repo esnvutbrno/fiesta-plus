@@ -25,6 +25,11 @@ class UserProfileForm(BaseModelForm):
         cls,
         user: User,
     ) -> Type[UserProfileForm]:
+        """
+        Creates the profile form class for specific user.
+        Fields and configuration are constructed from all AccountsConfigurations from
+        all sections from all memberships of that specific user.
+        """
         confs = AccountsConfiguration.objects.filter(
             plugin__section__memberships__user=user,
             # TODO: check also Membership.state?

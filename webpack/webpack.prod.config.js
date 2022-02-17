@@ -8,4 +8,15 @@ config.plugins.push(
     }),
 );
 
+Object.assign(
+    config.plugins[0].options,
+    {
+        // doesn't work with dev server :-|
+        // https://github.com/esnvutbrno/buena-fiesta/issues/37
+        integrity: true,
+        integrityHashes: ['sha384'],
+    }
+)
+
+
 module.exports = config;
