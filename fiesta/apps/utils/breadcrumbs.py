@@ -1,11 +1,31 @@
-from functools import wraps
-from typing import Type
+from __future__ import annotations
 
+from functools import wraps
+from typing import Type, NamedTuple
+
+from django.http import HttpRequest
 from django.urls import reverse
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
-from apps.utils.templatetags.breadcrumbs import BreadcrumbItem
+
+class BreadcrumbItem(NamedTuple):
+    title: str  # or lazy str
+    url: str
+
+    def __str__(self):
+        return force_str(self.title)
+
+
+def push_breadcrumb_item(request: HttpRequest, item: str | BreadcrumbItem):
+    """
+    Adds breadcrumb item to current request context.
+    """
+    try:
+        request.titles.append(item)
+    except AttributeError:
+        request.titles = [item]
 
 
 def with_breadcrumb(title: str, *, url_name: str = None):
@@ -26,9 +46,8 @@ def with_breadcrumb(title: str, *, url_name: str = None):
                 BreadcrumbItem(title, reverse(url_name)) if url_name else title
             )
 
-            request.titles = [
-                _title_to_append,
-            ]
+            push_breadcrumb_item(request=request, item=_title_to_append)
+
             return super(self.__class__, self).dispatch(request, *args, **kwargs)
 
         view_klass.dispatch = dispatch
@@ -51,12 +70,13 @@ def with_object_breadcrumb(prefix: str = None):
     def inner(view_klass: Type[View]):
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
-            request.titles = property(
-                lambda s: [
-                    f"{prefix or _('Detail')}: {str(s.object)}",
-                ]
+            response = super(self.__class__, self).dispatch(request, *args, **kwargs)
+
+            push_breadcrumb_item(
+                request=request,
+                item=f"{prefix or _('Detail')}: {str(self.object)}"
             )
-            return super(self.__class__, self).dispatch(request, *args, **kwargs)
+            return response
 
         view_klass.dispatch = dispatch
         return view_klass

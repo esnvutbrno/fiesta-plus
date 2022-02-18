@@ -1,20 +1,14 @@
 from __future__ import annotations
 
-from typing import NamedTuple, Iterable
+from typing import Iterable
 
 from django import template
 from django.http import HttpRequest
 from django.utils.encoding import force_str
 
+from apps.utils.breadcrumbs import push_breadcrumb_item, BreadcrumbItem
+
 register = template.Library()
-
-
-class BreadcrumbItem(NamedTuple):
-    title: str  # or lazy str
-    url: str
-
-    def __str__(self):
-        return force_str(self.title)
 
 
 @register.simple_tag(takes_context=True)
@@ -57,10 +51,7 @@ def breadcrumb_items(context: dict):
 def breadcrumb_push_item(context: dict, item: str):
     request: HttpRequest = context["request"]
 
-    try:
-        request.titles.append(item)
-    except AttributeError:
-        request.titles = [item]
+    push_breadcrumb_item(request=request, item=item)
 
     return ""
 
