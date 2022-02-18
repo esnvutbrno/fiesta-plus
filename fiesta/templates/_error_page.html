@@ -1,0 +1,57 @@
+{% extends "fiesta/base.html" %}
+{% load static %}
+
+{% block breadcrumbs_container %}{% endblock %}
+
+{% block header_container %}
+    {% include "fiesta/parts/header.html" with hide_navigation=True %}
+{% endblock header_container %}
+
+{% block head_title %}
+    <title>{% block error_title %}{{ exception }}{% endblock %} · Buena Fiesta</title>
+{% endblock head_title %}
+
+{% block main_container %}
+    <div class="md:max-w-4xl mx-auto mb-auto w-full flex flex-col
+                justify-start md:justify-around items-center grow
+    ">
+        <main class="p-3 w-full flex flex-col md:flex-row
+                    justify-start md:justify-between items-center
+                    md:pb-40
+        ">
+            <div class="sm:w-1/2 m-8 text-center relative">
+                <span class="
+                    inline-block relative p-4
+                    before:block before:absolute before:-inset-4
+                    before:skew-y-6 before:bg-pink-500
+                    before:border before:border-[#7b3ff4] before:border-8
+                ">
+                    <span class="
+                        relative text-white text-right
+                        text-4xl md:text-5xl lg:text-6xl
+                        font-bold font-mono
+                    ">
+                        {% block error_left %}{% endblock %}
+                    </span>
+                </span>
+            </div>
+            <div class="sm:w-1/2 mt-4 md:mt-0">
+                {% block error_right %}
+                    <div class="text-2xl font-semibold relative mb-[6rem]">
+                        {% block error_right_text %}
+
+                        {% endblock %}
+                        <pre class="
+                            text-xs text-gray-500 font-mono font-normal break-all
+                            whitespace-pre-line pt-6 absolute top-full
+                        ">
+                            {{ request.build_absolute_uri }}
+                            {% now "c" %}
+                            {{ exception }}
+                        </pre>
+                    </div>
+                {% endblock %}
+            </div>
+        </main>
+    </div>
+{% endblock main_container %}

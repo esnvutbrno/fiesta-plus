@@ -1,6 +1,7 @@
 @import "_Home.css";
 @import "_Wiki.css";
 @import "_Forms.css";
+@import "_Menu.css";
 
 @tailwind base;
 @tailwind components;

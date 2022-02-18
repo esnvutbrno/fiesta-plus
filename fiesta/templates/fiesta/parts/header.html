@@ -4,6 +4,7 @@
 {% load plugins %}
 <nav
         class="bg-white border-gray-200 py-2.5 rounded dark:bg-gray-800"
+        x-data="{menu: true, user: false}"
 >
     <div class="container flex flex-wrap justify-between items-center mx-auto">
         <a href="{% url "home" %}" class="flex">
@@ -37,31 +38,32 @@
                 </svg>
             </button>
         </div>
-        {% active_plugins_as_navigation_items as items %}
+        {% if not hide_navigation %}
+            {% active_plugins_as_navigation_items as items %}
 
-        <div
-                x-show="menu"
-                class="justify-between items-center w-full md:flex md:w-auto md:order-1"
-        >
-            <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-                <li>
-                    <a href="{% url "wiki:index" %}">Docs</a>
-                </li>
-                {% for item in items %}
+            <div
+                    x-show="menu"
+                    class="w-full md:flex md:w-auto md:order-1 justify-between items-center"
+            >
+                <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
                     <li>
-                        {% if item.active %}
-                            <a href="{{ item.index_url }}"
-                               class="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white"
-                               aria-current="page">{{ item.title }}</a>
-                        {% else %}
-                            <a href="{{ item.index_url }}" class="block py-2 pr-4 pl-3 text-gray-700 border-b
-                        border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
-                                {{ item.title }}
-                            </a>
-                        {% endif %}
+                        <a class="Menu__link" href="{% url "wiki:index" %}">Docs</a>
                     </li>
-                {% endfor %}
-            </ul>
-        </div>
+                    {% for item in items %}
+                        <li>
+                            {% if item.active %}
+                                <a href="{{ item.index_url }}"
+                                   class="Menu__link Menu__link--active"
+                                   aria-current="page">{{ item.title }}</a>
+                            {% else %}
+                                <a href="{{ item.index_url }}" class="Menu__link">
+                                    {{ item.title }}
+                                </a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
     </div>
 </nav>

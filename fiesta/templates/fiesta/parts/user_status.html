@@ -1,81 +1,80 @@
 {% if request.user.is_authenticated %}
-    <div x-data="{menu: true, user: false}">
-        <button type="button"
-                class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0
+    <button type="button"
+            class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0
             focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                aria-expanded="false"
-                @click="user = !user"
-        >
-            <span class="sr-only">Open user menu</span>
-            <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-                 alt="user photo">
-        </button>
+            aria-expanded="false"
+            @click="user = !user"
+    >
+        <span class="sr-only">Open user menu</span>
+        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+             alt="user photo">
+    </button>
 
-        <div class="z-30 my-4 text-base list-none bg-white rounded
+    <div class="z-30 my-4 text-base list-none bg-white rounded
                     divide-y divide-gray-100 shadow w-40
                     dark:bg-gray-700 dark:divide-gray-600
                     absolute top-full -right-1/2 hidden"
-             :class="{hidden: !user}"
-        >
-            <div class="py-3 px-4">
+         :class="{hidden: !user}"
+    >
+        <div class="py-3 px-4">
                 <span class="block text-sm text-gray-900 dark:text-white">
                     {{ request.user.get_full_name }}
                 </span>
-                <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+            <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
                     {{ request.user.username }}
                 </span>
-            </div>
-            {% if request.membership %}
-                <a
-                        class="block py-2 px-4 text-gray-800
+        </div>
+        {% if request.membership %}
+            <a
+                    class="block py-2 px-4 text-gray-800
                             hover:bg-gray-100
                             dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                        href="{% url "accounts:membership" %}"
-                >
+                    href="{% url "accounts:membership" %}"
+            >
                     <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
                         {{ request.membership.get_role_display }}
                     </span>
-                    <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
+                <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
                         {{ request.membership.section }}
                     </span>
-                </a>
-            {% else %}
-                <a href="{% url "accounts:membership-new" %}"
-                   class="block py-2 px-4 text-sm text-primary
+            </a>
+        {% else %}
+            <a href="{% url "accounts:membership-new" %}"
+               class="block py-2 px-4 text-sm text-primary
                    hover:underline dark:text-blue-500"
-                >New membership</a>
-            {% endif %}
+            >New membership</a>
+        {% endif %}
 
-            <ul class="py-1">
-                <li>
-                    <a href="{% url "accounts:profile" %}"
-                       class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
-                </li>
-                <li>
-                    <a href="#"
-                       class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
-                </li>
-                <li>
-                    <a href="#"
-                       class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
-                </li>
-                <li>
-                    <a
-                            href="{% url 'account_logout' %}"
-                            hx-post="{% url 'account_logout' %}"
-                            {% if redirect_field_value %}
-                            hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'
-                            {% endif %}
-                            class="block py-2 px-4 text-sm text-gray-700
+        <ul class="py-1">
+            <li>
+                <a href="{% url "accounts:profile" %}"
+                   class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+            </li>
+            <li>
+                <a href="#"
+                   class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+            </li>
+            <li>
+                <a href="#"
+                   class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+            </li>
+            <li>
+                <a
+                        href="{% url 'account_logout' %}"
+                        hx-post="{% url 'account_logout' %}"
+                        {% if redirect_field_value %}
+                        hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'
+                        {% endif %}
+                        class="block py-2 px-4 text-sm text-gray-700
                             hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >Sign out</a>
-                </li>
-            </ul>
-        </div>
+                >Sign out</a>
+            </li>
+        </ul>
     </div>
 {% else %}
     <a href="{% url "account_login" %}" title="Log in">
-        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                   d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
         </svg>
