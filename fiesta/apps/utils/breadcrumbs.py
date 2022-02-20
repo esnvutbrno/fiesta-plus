@@ -73,8 +73,7 @@ def with_object_breadcrumb(prefix: str = None):
             response = super(self.__class__, self).dispatch(request, *args, **kwargs)
 
             push_breadcrumb_item(
-                request=request,
-                item=f"{prefix or _('Detail')}: {str(self.object)}"
+                request=request, item=f"{prefix or _('Detail')}: {str(self.object)}"
             )
             return response
 
