@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import enum
 
 from django.conf import settings
@@ -8,8 +10,17 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
 
+from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import Q
+
+user_profile_picture_storage = NamespacedFilesStorage("profile-picture")
+
+
+class UserProfileState(TextChoices):
+    # CREATED = 'created', _('Created')
+    INCOMPLETE = "incomplete", _("Filled")
+    COMPLETE = "complete", _("Filled")
 
 
 class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
@@ -75,8 +86,13 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         db_index=True,
     )
 
-    # TODO: profile picture
-    picture = models.CharField
+    picture = models.ImageField(
+        storage=user_profile_picture_storage,
+        upload_to=user_profile_picture_storage.upload_to,
+        verbose_name=_("profile picture image"),
+        null=True,
+        blank=True,
+    )
 
     # TODO: phone, profiles
 
@@ -90,10 +106,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         default=0, verbose_name=_("user preferences as flags")
     )
 
-    class State(TextChoices):
-        # CREATED = 'created', _('Created')
-        INCOMPLETE = "incomplete", _("Filled")
-        COMPLETE = "complete", _("Filled")
+    State = UserProfileState
 
     state = models.CharField(
         verbose_name=_("state"),
@@ -108,7 +121,8 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         constraints = (
             CheckConstraint(
                 # home university XOR home faculty
-                check=Q(home_university=None) ^ Q(home_faculty=None),
+                check=Q(state=UserProfileState.INCOMPLETE.value)
+                | (Q(home_university=None) ^ Q(home_faculty=None)),
                 name="home_university_or_faculty",
             ),
         )
@@ -138,4 +152,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         )
 
 
-__all__ = ["UserProfile"]
+__all__ = [
+    "UserProfile",
+    "user_profile_picture_storage",
+]

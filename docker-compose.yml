@@ -41,10 +41,10 @@ services:
     expose:
       - 80
     volumes:
-      - web_static_files:/static
-      - web_media_files:/media
-      - webpack_build:/build
-      - wiki_static_files:/wiki
+      - web_static_files:/var/static
+      - web_media_files:/var/media
+      - webpack_build:/var/build
+      - wiki_static_files:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       STATIC_LOCATION_PATTERN: "^\b$$"

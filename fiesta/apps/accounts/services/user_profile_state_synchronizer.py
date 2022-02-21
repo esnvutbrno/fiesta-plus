@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
 
 from apps.accounts.forms.profile_finish import UserProfileForm
@@ -39,6 +40,12 @@ class UserProfileStateSynchronizer:
         if form.errors:
             # for this specific accounts conf, profile is not OK,
             # so final state leds to incomplete
+            final_state = UserProfile.State.INCOMPLETE
+
+        try:
+            # validate also model itself
+            profile.full_clean()
+        except ValidationError:
             final_state = UserProfile.State.INCOMPLETE
 
         profile.state = final_state

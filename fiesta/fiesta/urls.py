@@ -32,6 +32,7 @@ urlpatterns = [
     ),
     path("admin/", admin.site.urls),
     path("docs/", include("apps.wiki.urls", namespace="wiki")),
+    path("files/", include("apps.files.urls", namespace="files")),
     path("auth/", include("allauth.urls")),
 ]
 

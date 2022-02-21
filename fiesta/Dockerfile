@@ -3,7 +3,7 @@ FROM python:3.9.9-alpine as builder
 RUN apk add --no-cache --virtual build-deps \
     build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
     postgresql-dev mariadb-dev libxml2-dev libxslt-dev \
-    musl-dev rust cargo patchelf git
+    musl-dev rust cargo patchelf git jpeg-dev zlib-dev
 
 COPY pyproject.toml poetry.lock ./
 
@@ -34,9 +34,10 @@ RUN addgroup -S 1000 \
     && adduser -s /bin/sh -D -S -G 1000 1000 \
     && apk update \
     # runtime deps
-    && apk add gettext tzdata bash graphviz graphviz-dev ttf-freefont postgresql-dev mariadb-dev \
+    && apk add gettext tzdata bash graphviz graphviz-dev ttf-freefont postgresql-dev mariadb-dev libmagic \
     # && pipenv install psycopg2-binary --skip-lock --dev \
     && mkdir -p /usr/src/static /usr/src/media /usr/src/app \
+    && chown 1000:1000 -R /usr/src \
     && ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # copy project

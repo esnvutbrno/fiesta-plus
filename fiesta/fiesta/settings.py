@@ -31,7 +31,6 @@ DEBUG = config("DEBUG", cast=bool)
 
 ALLOWED_HOSTS: list[str] = [".localhost", "127.0.0.1"]
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,7 +67,6 @@ INSTALLED_APPS = [
     # "allauth.socialaccount.providers.facebook",
     "allauth_cas",
 ]
-
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -227,12 +225,17 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-STATIC_ROOT = config("STATIC_DIR")
+STATIC_ROOT = config("STATIC_DIR", cast=Path)
 
 STATICFILES_DIRS = [
     (BASE_DIR / "static").as_posix(),
     (BASE_DIR / "templates/static").as_posix(),
 ]
+
+MEDIA_ROOT = config("MEDIA_DIR", cast=Path)
+
+# internal for nginx
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
@@ -252,15 +255,45 @@ WEBPACK_LOADER = {
     "DEFAULT": {
         "CACHE": False,
         "BUNDLE_DIR_NAME": "./",  # must end with slash
-        "STATS_FILE": (Path(config("BUILD_DIR")) / "webpack-stats.json").as_posix(),
+        "STATS_FILE": config("BUILD_DIR", cast=Path) / "webpack-stats.json",
         "INTEGRITY": not DEBUG,
     }
 }
 
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
-
 if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+        },
+        "simple": {"format": "%(levelname)s %(message)s"},
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": "INFO",
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": config("DJANGO_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}
+
+# DEBUG_PROPAGATE_EXCEPTIONS = False

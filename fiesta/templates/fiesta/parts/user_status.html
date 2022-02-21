@@ -1,13 +1,26 @@
+{% load user_profile %}
 {% if request.user.is_authenticated %}
     <button type="button"
-            class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0
+            class="flex mr-3 text-sm rounded-full md:mr-0
             focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
             aria-expanded="false"
             @click="user = !user"
     >
         <span class="sr-only">Open user menu</span>
-        <img class="w-8 h-8 rounded-full" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
-             alt="user photo">
+        {% get_user_picture_url request.user as picture_url %}
+        {% if picture_url %}
+            <div
+                    class="w-10 h-10 rounded-full bg-cover bg-center"
+                    style='background-image: url("{{ picture_url }}")'
+            ></div>
+        {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+            </svg>
+        {% endif %}
     </button>
 
     <div class="z-30 my-4 text-base list-none bg-white rounded
@@ -73,10 +86,9 @@
     </div>
 {% else %}
     <a href="{% url "account_login" %}" title="Log in">
-        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-             xmlns="http://www.w3.org/2000/svg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
         </svg>
     </a>
 {% endif %}

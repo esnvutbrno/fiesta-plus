@@ -31,6 +31,7 @@ class Section(BaseTimestampedModel):
         # TODO: remove blankness after proper migration from ESN accounts
         null=True,
         blank=True,
+        unique=True,
     )
 
     class Meta:
