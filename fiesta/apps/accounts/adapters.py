@@ -13,13 +13,10 @@ class AccountAdapter(DefaultAccountAdapter):
         return super().is_ajax(request) or request.htmx
 
     def ajax_response(self, request, response, redirect_to=None, form=None, data=None):
-        if not request.htmx or not redirect_to:
-            return super().ajax_response(
-                request, response, redirect_to=redirect_to, form=form, data=data
-            )
-
         if redirect_to:
             return HttpResponseClientRedirect(redirect_to=redirect_to)
+        # do not send the JSON response, since we use the HTMX replacements with raw HTML
+        return response
 
     # TODO: making usernames from first_name is kinda bleeh
     #  so generate_unique_username could be ovveriden here to compose username from last_name+smth?

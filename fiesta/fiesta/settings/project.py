@@ -8,6 +8,8 @@ class ProjectConfigMixin:
 
     DEBUG = False
 
+    DEBUG_PROPAGATE_EXCEPTIONS = False
+
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     SITE_ID = 1

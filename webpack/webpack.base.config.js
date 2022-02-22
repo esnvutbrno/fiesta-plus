@@ -12,6 +12,7 @@ console.log(`BUILD_DIR=${buildDir}`)
 console.log(`PUBLIC_PATH=${publicPath}`)
 
 module.exports = {
+    mode: 'production',
     entry: {
         main: [
             path.join(__dirname, './src/main.js')

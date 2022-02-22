@@ -20,6 +20,9 @@ class FilesConfigMixin(BaseConfigurationProtocol):
             (self.BASE_DIR / "templates/static"),
         ]
 
+    def USE_WEBPACK_INTEGRITY(self):
+        return not self.DEBUG
+
     @property
     def WEBPACK_LOADER(self):
         return {
@@ -27,6 +30,6 @@ class FilesConfigMixin(BaseConfigurationProtocol):
                 "CACHE": False,
                 "BUNDLE_DIR_NAME": "./",  # must end with slash
                 "STATS_FILE": self.BUILD_DIR / "webpack-stats.json",
-                "INTEGRITY": not self.DEBUG,
+                "INTEGRITY": self.USE_WEBPACK_INTEGRITY,
             }
         }

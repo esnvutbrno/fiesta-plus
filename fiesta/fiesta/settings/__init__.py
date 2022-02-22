@@ -25,6 +25,7 @@ class Base(
 class Development(Base):
     DEBUG = True
     DEBUG_PROPAGATE_EXCEPTIONS = False
+    USE_WEBPACK_INTEGRITY = False
 
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 

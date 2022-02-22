@@ -1,6 +1,6 @@
 {% load breadcrumbs %}
 
-<nav class="flex my-1" aria-label="Breadcrumb">
+<nav class="flex my-1" aria-label="Breadcrumb" hx-boost="true">
     <ol class="inline-flex items-center space-x-1 md:space-x-3">
         {% breadcrumb_items as items %}
         {% for item in items %}

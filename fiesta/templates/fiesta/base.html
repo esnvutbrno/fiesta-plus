@@ -28,6 +28,7 @@
 </head>
 <body
         hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+        hx-ext="preload"
         class="overflow-y-scroll
         flex flex-col justify-between min-h-screen box-border
         selection:bg-primary selection:text-white

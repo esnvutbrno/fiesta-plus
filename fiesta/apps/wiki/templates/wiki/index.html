@@ -39,7 +39,10 @@
             {% endblock main %}
         </main>
         {% block main_right %}
-            <nav class="Wiki__sidebar w-1/4 sticky md:top-[126px] top-[171px] h-full flex flex-col justify-between">
+            <nav
+                    class="Wiki__sidebar w-1/4 sticky md:top-[126px] top-[171px] h-full flex flex-col justify-between"
+                    hx-boost="true"
+            >
                 {% if not page.toc %}
                     {# TODO: sidebar html broken #}
                     {{ sidebar.content_html|safe }}
