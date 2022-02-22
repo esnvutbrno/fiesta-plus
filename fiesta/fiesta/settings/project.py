@@ -44,6 +44,7 @@ class ProjectConfigMixin:
         "polymorphic",
         "webpack_loader",
         "django_htmx",
+        "django_tables2",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks

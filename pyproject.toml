@@ -27,6 +27,8 @@ elasticsearch = "^7.17.0"
 Pillow = "^9.0.1"
 python-magic = "^0.4.25"
 django-configurations = { extras = ["cache", "database", "email", "search"], version = "^2.3.2" }
+django-tables2 = "^2.4.1"
+django-filter = "^21.1"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.17.0"

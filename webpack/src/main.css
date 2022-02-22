@@ -2,6 +2,7 @@
 @import "_Wiki.css";
 @import "_Forms.css";
 @import "_Menu.css";
+@import "_Tables.css";
 
 @tailwind base;
 @tailwind components;

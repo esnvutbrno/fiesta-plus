@@ -1,0 +1,14 @@
+{% extends "fiesta/base.html" %}
+
+{% load django_tables2 %}
+
+{% block main %}
+    <form>
+        {{ filter.form }}
+        <button type="submit">filter</button>
+    </form>
+
+    <div hx-boost="true">
+        {% render_table table %}
+    </div>
+{% endblock %}
