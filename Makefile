@@ -55,7 +55,7 @@ upd: ## Runs all needed docker containers in detached mode
 up: ## Runs all needed docker containers
 	docker-compose up
 
-produp: export DEBUG = False ## Runs fiesta in production mode.
+produp: export DJANGO_CONFIGURATION = LocalProduction ## Runs fiesta in production mode.
 produp:
 	docker-compose -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
 
