@@ -1,13 +1,12 @@
 from pathlib import Path
 
-from . import config
+from ._utils import PathValue
 
 
-class AppConfigMixin:
-    BASE_DIR = Path(__file__).resolve().parent.parent.parent
+class ProjectConfigMixin:
+    BASE_DIR = PathValue(Path(__file__).resolve().parent.parent.parent)
 
     DEBUG = False
-    SECRET_KEY = config("SECRET_KEY")
 
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 

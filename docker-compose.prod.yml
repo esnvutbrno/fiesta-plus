@@ -3,7 +3,7 @@ services:
   web:
     command: './manage.py collectstatic --noinput && ./manage.py runserver 0.0.0.0:8000'
     environment:
-      DEBUG: "false"
+      DJANGO_CONFIGURATION: Production
 
   webserver:
     command: [ nginx, '-g', 'daemon off;' ]

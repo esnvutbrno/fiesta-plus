@@ -1,4 +1,4 @@
-from . import BaseConfigurationProtocol
+from ._utils import BaseConfigurationProtocol
 
 
 class TemplatesConfigMixin(BaseConfigurationProtocol):

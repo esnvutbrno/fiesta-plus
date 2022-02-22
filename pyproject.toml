@@ -7,7 +7,6 @@ authors = ["ESN VUT BRNO"]
 [tool.poetry.dependencies]
 python = "^3.9"
 django = "^4.0.1"
-python-decouple = "^3.5"
 psycopg2-binary = "^2.9.3"
 django-debug-toolbar = "^3.2.4"
 django-polymorphic = "^3.1.0"

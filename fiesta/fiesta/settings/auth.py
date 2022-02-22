@@ -16,7 +16,7 @@ class AuthConfigMixin:
 
     AUTH_USER_MODEL = "accounts.User"
 
-    # TODO: check, which settings are needed & move to settings subpackage
+    # TODO: check, which settings are needed
     AUTHENTICATION_BACKENDS = (
         "django.contrib.auth.backends.ModelBackend",
         "allauth.account.auth_backends.AuthenticationBackend",

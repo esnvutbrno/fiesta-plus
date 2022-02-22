@@ -540,14 +540,6 @@ requests = ">=2.11.1"
 six = ">=1.10.0"
 
 [[package]]
-name = "python-decouple"
-version = "3.6"
-description = "Strict separation of settings from code."
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "python-magic"
 version = "0.4.25"
 description = "File type identification using libmagic"
@@ -685,7 +677,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "c79ad81f80c1f2b9b98e4193418880b11a8260a846595012919248f8618dc056"
+content-hash = "9edd33862b2ba776bb1fe62b6a148b965e3bcb8899f674a9e6669a298311ac74"
 
 [metadata.files]
 asgiref = [
@@ -1079,10 +1071,6 @@ pyparsing = [
 python-cas = [
     {file = "python-cas-1.6.0.tar.gz", hash = "sha256:b8f1dcb1b6c56b3ff4f86bbef47bcdfcf932061ccd4812ae35e3f63954dfdb28"},
     {file = "python_cas-1.6.0-py2.py3-none-any.whl", hash = "sha256:2abc0dae93c3b14097999fb7062f23cd09bc9f4e33d93f03c0cc040bd71ed50e"},
-]
-python-decouple = [
-    {file = "python-decouple-3.6.tar.gz", hash = "sha256:2838cdf77a5cf127d7e8b339ce14c25bceb3af3e674e039d4901ba16359968c7"},
-    {file = "python_decouple-3.6-py3-none-any.whl", hash = "sha256:6cf502dc963a5c642ea5ead069847df3d916a6420cad5599185de6bab11d8c2e"},
 ]
 python-magic = [
     {file = "python-magic-0.4.25.tar.gz", hash = "sha256:21f5f542aa0330f5c8a64442528542f6215c8e18d2466b399b0d9d39356d83fc"},

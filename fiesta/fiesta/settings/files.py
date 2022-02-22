@@ -1,12 +1,18 @@
 from pathlib import Path
 
-from . import config, BaseConfigurationProtocol
+from ._utils import PathValue, BaseConfigurationProtocol
 
 
 class FilesConfigMixin(BaseConfigurationProtocol):
-    STATIC_URL = "static/"
+    MEDIA_ROOT: Path = PathValue()
 
-    STATIC_ROOT = config("STATIC_DIR", cast=Path)
+    STATIC_ROOT: Path = PathValue()
+
+    BUILD_DIR: Path = PathValue()
+
+    # internal for nginx
+    MEDIA_URL = "/media/"
+    STATIC_URL = "static/"
 
     def STATICFILES_DIRS(self):
         return [
@@ -14,18 +20,13 @@ class FilesConfigMixin(BaseConfigurationProtocol):
             (self.BASE_DIR / "templates/static"),
         ]
 
-    MEDIA_ROOT = config("MEDIA_DIR", cast=Path)
-
-    # internal for nginx
-    MEDIA_URL = "/media/"
-
     @property
     def WEBPACK_LOADER(self):
         return {
             "DEFAULT": {
                 "CACHE": False,
                 "BUNDLE_DIR_NAME": "./",  # must end with slash
-                "STATS_FILE": config("BUILD_DIR", cast=Path) / "webpack-stats.json",
+                "STATS_FILE": self.BUILD_DIR / "webpack-stats.json",
                 "INTEGRITY": not self.DEBUG,
             }
         }
