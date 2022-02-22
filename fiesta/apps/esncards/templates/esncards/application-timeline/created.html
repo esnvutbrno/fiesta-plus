@@ -1,7 +1,25 @@
 {% extends "esncards/application-timeline/base.html" %}
 
 {% block content %}
-    User {{ application.user }} created application for ESNcard.
+    User {{ application.user.get_full_name }} created application for ESNcard.
 
-    <div>{{ application.first_name }}, {{ application.last_name }}</div>
+
 {% endblock content %}
+
+
+{% block extracontent %}
+    <div class="flex justify-center items-enter w-full">
+        <div class="
+            group relative w-full md:w-1/2 xl:w-1/2
+            text-transparent text-2xl
+            hover:text-black
+            after:text-current after:font-semibold
+            after:absolute after:w-full after:h-full after:top-0 after:left-0
+            after:flex after:justify-center after:items-end after:rounded after:p-3
+            after:content-['card_is_not_ready_yet']
+        "
+        >
+            {% include "esncards/esn-card-template.svg" with name=application.holder_full_name nationality=application.nationality.name section=application.section university=application.university.name birth_date=application.birth_date|date:"d.m.y" valid_since=application.created|date:"d.m.y" photo_url=application.holder_photo.url css_class="transition group-hover:blur-sm w-full rounded-xl" %}
+        </div>
+    </div>
+{% endblock extracontent %}

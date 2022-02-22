@@ -3,6 +3,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import TypedDict
 
+from django.contrib.auth import get_user_model
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import TextChoices
@@ -10,7 +11,11 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import BEFORE_CREATE, BEFORE_SAVE, LifecycleModelMixin, hook
 
+from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
+from apps.utils.models.query import get_object_or_none
+
+esncard_application_picture_storage = NamespacedFilesStorage('esncard-application-picture')
 
 
 class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
@@ -31,6 +36,13 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     # filled by user
     birth_date = models.DateField(verbose_name=_("birth date"))
 
+    holder_photo = models.ImageField(
+        verbose_name=_('holder photo'),
+        upload_to=esncard_application_picture_storage.upload_to,
+        storage=esncard_application_picture_storage,
+        help_text=_("Front passport-sized photo is needed."),
+    )
+
     # related to request
     section = models.ForeignKey(
         "sections.Section",
@@ -40,6 +52,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     )
     user = models.ForeignKey(
         "accounts.User",
+        related_name='esncard_applications',
         on_delete=models.RESTRICT,
         verbose_name=_("issuer"),
         db_index=True,
@@ -70,10 +83,19 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         timestamp: datetime
         initial_state: ESNcardApplication.State | str
         final_state: ESNcardApplication.State | str
+        user_id: int | None = None
+
+        @property
+        def user(self):
+            return get_object_or_none(get_user_model(), pk=self.user_id)
 
     class Meta:
         verbose_name = _("ESNcard application")
         verbose_name_plural = _("ESNcard applications")
+
+    @property
+    def holder_full_name(self):
+        return f'{self.first_name} {self.last_name}'
 
     @hook(BEFORE_SAVE, when="state", has_changed=True)
     @hook(BEFORE_CREATE)

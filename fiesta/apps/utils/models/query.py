@@ -1,4 +1,6 @@
 from django.db.models import Q as DjQ
+from django.http import Http404
+from django.shortcuts import get_object_or_404
 
 
 class Q(DjQ):
@@ -13,4 +15,11 @@ class Q(DjQ):
         return x | y
 
 
-__all__ = ["Q"]
+def get_object_or_none(klass, *args, **kwargs):
+    try:
+        get_object_or_404(klass=klass, *args, **kwargs)
+    except Http404:
+        return None
+
+
+__all__ = ["Q", 'get_object_or_none']

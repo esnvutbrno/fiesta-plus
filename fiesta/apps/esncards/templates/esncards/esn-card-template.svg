@@ -1,0 +1,162 @@
+<svg
+        viewBox="0 0 85.599998 53.98"
+        version="1.1"
+        class="font-mono text-4xl {{ css_class }}"
+        id="svg5"
+        xmlns="http://www.w3.org/2000/svg"
+>
+    <!--
+            width="85.599998mm"
+            height="53.98mm"
+            -->
+    <defs
+            id="defs2">
+        <rect
+                x="166.8581"
+                y="60.524084"
+                width="343.78688"
+                height="68.106696"
+                id="rect1818"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="204.17917"
+                height="51.232529"
+                id="rect1818-3"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="533.51817"
+                height="68.822566"
+                id="rect1818-3-7"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3-2"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3-2-1"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3-2-1-7"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="533.51819"
+                height="68.822563"
+                id="rect1818-3-7-0"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3-2-9"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="409.24844"
+                height="124.61165"
+                id="rect1818-3-3-3"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="204.17917"
+                height="51.232529"
+                id="rect1818-3-6"/>
+        <rect
+                x="166.85809"
+                y="60.524082"
+                width="343.78687"
+                height="68.106697"
+                id="rect1818-0"/>
+    </defs>
+    <rect
+            style="fill:#e6e6e6;stroke-width:1.94252;stroke-linecap:round;paint-order:fill markers stroke"
+            id="rect20272"
+            width="85.599998"
+            height="53.98"
+            x="0"
+            y="0"/>
+    <rect
+            style="fill:#1ca7da;stroke-width:0.58999;stroke-linecap:round;paint-order:fill markers stroke"
+            id="rect20168"
+            width="28.85"
+            height="53.98"
+            x="0"
+            y="0"/>
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,14.428049,14.490579)"
+            id="text32384"><tspan
+       x="166.85742"
+       y="102.53278"
+       id="tspan33040"><tspan
+         id="tspan33038">{{ name }}</tspan></tspan></text>
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,14.284314,19.99395)"
+            id="text32388"><tspan
+       x="166.85742"
+       y="95.914062"
+       id="tspan33042">{{ nationality }}</tspan></text>
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,44.700095,19.995975)"
+            id="text32392"><tspan
+       x="166.85742"
+       y="95.914062"
+       id="tspan33044">{{ birth_date }}</tspan></text>
+
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,44.836507,31.004739)"
+            id="text32396"><tspan
+       x="166.85742"
+       y="95.914062"
+       id="tspan33046">{{ valid_since }}</tspan></text>
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,14.106163,25.497319)"
+            id="text32400"><tspan
+       x="166.85742"
+       y="95.914062"
+       id="tspan33048">{{ university }}</tspan></text>
+    <text
+            xml:space="preserve"
+            transform="matrix(0.10122178,0,0,0.10122178,14.106163,31.00069)"
+            id="text32404"><tspan
+       x="166.85742"
+       y="95.914062"
+       id="tspan33050">{{ section }}</tspan></text>
+
+
+    <rect
+            style="fill:white;"
+            width="27"
+            height="37"
+            x="0.92500019"
+            y="8.4899998"
+    />
+    <image
+            id="rect870"
+            width="27"
+            height="37"
+            x="0.92500019"
+            y="8.4899998"
+            href="{{ photo_url }}"
+    />
+</svg>
