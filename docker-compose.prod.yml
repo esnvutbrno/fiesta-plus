@@ -22,8 +22,8 @@ services:
       - "443:443"
 
   # remove profiles so production env does have filled elastic search
-  elastic:
-    profiles: [ ]
+#  elastic:
+#    profiles: [ ]
 
-  wikifetcher:
-    profiles: [ ]
+#  wikifetcher:
+#    profiles: [ ]

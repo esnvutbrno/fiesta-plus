@@ -2,7 +2,7 @@ from configurations.values import Value
 
 
 class LoggingConfigMixin:
-    LOG_LEVEL: str = Value('INFO')
+    LOG_LEVEL: str = Value("INFO")
 
     def LOGGING(self):
         return {

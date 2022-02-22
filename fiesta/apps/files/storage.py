@@ -38,4 +38,4 @@ class NamespacedFilesStorage(FileSystemStorage):
         except AttributeError:
             modified = now().isoformat()
 
-        return hashlib.md5(f"{instance.pk}-{modified}".encode()).hexdigest()
+        return hashlib.sha256(f"{instance.pk}-{modified}".encode()).hexdigest()

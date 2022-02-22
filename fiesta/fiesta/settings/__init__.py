@@ -29,7 +29,7 @@ class Development(Base):
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 
     def INSTALLED_APPS(self):
-        return super().INSTALLED_APPS + ['debug_toolbar']
+        return super().INSTALLED_APPS + ["debug_toolbar"]
 
     def MIDDLEWARE(self):
         middlewares = super().MIDDLEWARE
