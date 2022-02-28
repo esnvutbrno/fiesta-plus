@@ -20,7 +20,7 @@ repos:
 
   # security linter on
   - repo: https://github.com/pycqa/bandit
-    rev: 1.7.2
+    rev: 1.7.3
     hooks:
       - id: bandit
         name: Security check by bandit
