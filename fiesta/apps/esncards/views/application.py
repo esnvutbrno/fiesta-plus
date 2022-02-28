@@ -49,7 +49,7 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
         # details, if he doesn't have them
         user.first_name = user.first_name or self.object.first_name
         user.last_name = user.last_name or self.object.last_name
-        user.save(update_fields=['first_name', 'last_name'])
+        user.save(update_fields=["first_name", "last_name"])
 
         if profile := user.profile_or_none:
             # same with profile information and user picture
@@ -59,7 +59,7 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
                 to_=profile.picture,
                 to_instance=profile,
             )
-            profile.save(update_fields=['nationality', 'picture'])
+            profile.save(update_fields=["nationality", "picture"])
 
         return resp
 
