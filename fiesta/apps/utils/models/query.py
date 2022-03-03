@@ -22,4 +22,4 @@ def get_object_or_none(klass, *args, **kwargs):
         return None
 
 
-__all__ = ["Q", 'get_object_or_none']
+__all__ = ["Q", "get_object_or_none"]
