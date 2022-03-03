@@ -15,7 +15,9 @@ from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import get_object_or_none
 
-esncard_application_picture_storage = NamespacedFilesStorage('esncard-application-picture')
+esncard_application_picture_storage = NamespacedFilesStorage(
+    "esncard-application-picture"
+)
 
 
 class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
@@ -37,7 +39,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     birth_date = models.DateField(verbose_name=_("birth date"))
 
     holder_photo = models.ImageField(
-        verbose_name=_('holder photo'),
+        verbose_name=_("holder photo"),
         upload_to=esncard_application_picture_storage.upload_to,
         storage=esncard_application_picture_storage,
         help_text=_("Front passport-sized photo is needed."),
@@ -52,7 +54,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     )
     user = models.ForeignKey(
         "accounts.User",
-        related_name='esncard_applications',
+        related_name="esncard_applications",
         on_delete=models.RESTRICT,
         verbose_name=_("issuer"),
         db_index=True,
@@ -95,7 +97,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
 
     @property
     def holder_full_name(self):
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
 
     @hook(BEFORE_SAVE, when="state", has_changed=True)
     @hook(BEFORE_CREATE)
