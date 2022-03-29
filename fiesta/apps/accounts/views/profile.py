@@ -11,7 +11,7 @@ from apps.utils.breadcrumbs import with_breadcrumb
 
 @with_breadcrumb(_("My Profile"))
 class MyProfileView(TemplateView):
-    template_name = "accounts/my_profile.html"
+    template_name = "accounts/my_profile/base.html"
 
 
 @with_breadcrumb(_("Finish my profile"))
@@ -37,6 +37,43 @@ class ProfileFinishFormView(
             ["accounts/user_profile/profile_finish_form.html"]
             if self.request.htmx
             else ["accounts/user_profile/profile_finish.html"]
+        )
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        # TODO: next?
+        return "/"
+
+    def get_form_class(self):
+        return UserProfileForm.for_user(user=self.request.user)
+
+
+@with_breadcrumb(_("Update my profile"))
+class ProfileUpdateFormView(
+    HtmxFormMixin,
+    SuccessMessageMixin,
+    PluginConfigurationViewMixin[AccountsConfiguration],
+    UpdateView,
+):
+    form_class = UserProfileForm
+    template_name = "accounts/my_profile/profile_update.html"
+    success_message = _("Your profile has been updated.")
+
+    def get_object(self, queryset=None):
+        try:
+            return self.request.user.profile
+        except UserProfile.DoesNotExist:
+            return None
+
+    def get_template_names(self):
+        # TODO: mixin?
+        return (
+            ["accounts/my_profile/profile_update_form.html"]
+            if self.request.htmx
+            else ["accounts/my_profile/profile_update.html"]
         )
 
     def form_valid(self, form):

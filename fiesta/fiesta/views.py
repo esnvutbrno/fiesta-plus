@@ -11,3 +11,5 @@ def handler_403(request: HttpRequest, exception: Exception):
         return redirect_to_login(request.get_full_path())
 
     return permission_denied(request, exception)
+
+1+1
