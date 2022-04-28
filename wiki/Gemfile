@@ -5,7 +5,7 @@ source "https://rubygems.org"
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
 # original
-gem "git", "~> 1.10"
+gem "git", "~> 1.11"
 gem "github-markup", "~> 4.0"
 gem "github-linguist"
 gem "elasticsearch", "~> 7.17.0"
