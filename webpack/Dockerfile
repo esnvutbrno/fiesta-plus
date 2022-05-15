@@ -1,5 +1,5 @@
 # context is root of project, since we need
-FROM node:17.4.0-slim
+FROM node:17.8-slim
 
 RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential
 
