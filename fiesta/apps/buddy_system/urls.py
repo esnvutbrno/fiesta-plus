@@ -1,7 +1,6 @@
 from django.urls import path
 
 from .views import BuddySystemIndexView
-# Define your urls here
 from .views.request import WannaBuddyView, SignUpBeforeRequestView, NewRequestView
 
 urlpatterns = [
