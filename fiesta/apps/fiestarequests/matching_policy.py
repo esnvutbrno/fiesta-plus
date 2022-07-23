@@ -3,6 +3,7 @@ import typing
 from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 
+from apps.buddy_system.models import BuddyRequest
 from apps.sections.models import SectionMembership
 
 
@@ -14,14 +15,14 @@ class MatchingPolicyProtocol(typing.Protocol):
 
     @staticmethod
     def limit_requests(
-        qs: QuerySet['BaseRequest'],
+        qs: typing.Union[QuerySet[BuddyRequest]],
         membership: SectionMembership
-    ) -> QuerySet['BaseRequest']:
+    ) -> typing.Union[QuerySet[BuddyRequest]]:
         ...
 
     def on_created_request(
         self,
-        request: 'BaseRequest',
+        request: BuddyRequest,
     ) -> None:
         ...
 
