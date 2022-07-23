@@ -17,6 +17,11 @@
           Buena Fiesta
         </span>
       {% endif %}
+      {% if request.in_space_of_section %}
+        <span class="self-center text-lg font-semibold whitespace-nowrap ml-3 dark:text-white">
+          {{ request.in_space_of_section }}
+        </span>
+      {% endif %}
     </a>
     <div class="flex items-center md:order-2 relative">
       {% include "fiesta/parts/user_status.html" %}

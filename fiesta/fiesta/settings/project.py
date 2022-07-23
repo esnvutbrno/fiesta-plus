@@ -81,6 +81,7 @@ class ProjectConfigMixin:
         # 3rd party
         "django_htmx.middleware.HtmxMiddleware",
         # custom Fiesta
+        "apps.sections.middleware.section_space.SectionSpaceMiddleware",
         "apps.sections.middleware.user_membership.UserMembershipMiddleware",
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",

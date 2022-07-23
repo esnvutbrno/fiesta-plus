@@ -63,7 +63,9 @@ help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
 generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
-generate-localhost-certs: conf/certs/fiesta.localhost.crt \
+generate-localhost-certs: \
+	conf/certs/fiesta.localhost.crt \
+	conf/certs/*.fiesta.localhost.crt \
 	conf/certs/web.localhost.crt \
 	conf/certs/webpack.localhost.crt \
 	conf/certs/kibana.localhost.crt \

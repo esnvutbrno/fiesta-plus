@@ -36,8 +36,14 @@ def with_class(bf: BoundField, klass: str):
 
 
 @register.filter
-def get_form_class(form: BaseForm | BaseModelForm):
+def get_form_classes(form: BaseForm | BaseModelForm):
+    # for generic forms, which does not have the base form class
+    base_form_class_name = form.base_form_class.__name__.lower() \
+        if hasattr(form, 'base_form_class') else\
+        form.__class__.__name__.lower()
+
     return (
-        f"Forms__form Forms__form--{form.base_form_class.__name__.lower()}"
-        f"Forms__form--{form.__class__.__name__.lower()}"
+        f"Forms__form "
+        f"Forms__form--{base_form_class_name} "
+        f"Forms__form--{form.__class__.__name__.lower()} "
     )
