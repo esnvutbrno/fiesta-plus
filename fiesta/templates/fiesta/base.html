@@ -31,8 +31,8 @@
         hx-ext="preload"
         class="overflow-y-scroll
         flex flex-col justify-between min-h-screen box-border
-        selection:bg-primary selection:text-white
-        "
+        selection:bg-primary selection:text-white"
+        {% block body_attrs %}{% endblock body_attrs %}
 >
 {% block body %}
     {% include "fiesta/parts/messages.html" %}
@@ -57,7 +57,7 @@
     {% block main_container %}
         <div class="max-w-4xl mx-auto mb-auto w-full">
             {% block main_columns %}
-                <main class="p-3">
+                <main class="p-2">
                     {% block main %}{% endblock main %}
                 </main>
                 {% block main_right %}{% endblock main_right %}

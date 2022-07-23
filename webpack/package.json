@@ -10,6 +10,7 @@
     "build": "webpack --mode production --config webpack.prod.config.js"
   },
   "dependencies": {
+    "@alpinejs/persist": "^3.9.1",
     "@tailwindcss/forms": "^0.4.0",
     "@tailwindcss/typography": "^0.5.1",
     "alpinejs": "^3.9.0",

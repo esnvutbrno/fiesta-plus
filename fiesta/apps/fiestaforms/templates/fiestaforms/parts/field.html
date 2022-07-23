@@ -7,7 +7,9 @@
     {% endif %}
 
     {{ bf|as_label }}
-    {{ bf|as_widget_field }}
+    <div class="Forms__widget">
+        {{ bf|as_widget_field }}
+    </div>
 
     {% if errors %}
         <div class="Forms__error_text">{{ errors }}</div>

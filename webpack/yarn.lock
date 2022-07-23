@@ -125,6 +125,11 @@
     "@algolia/logger-common" "4.12.1"
     "@algolia/requester-common" "4.12.1"
 
+"@alpinejs/persist@^3.9.1":
+  version "3.9.1"
+  resolved "https://registry.yarnpkg.com/@alpinejs/persist/-/persist-3.9.1.tgz#ccb91cd395f88009799f3115f1f057f36d779fa6"
+  integrity sha512-jlrQbcrwmRFhmcaIPq0x1WevW7fpHFu9ZC/bpqzPRBItPlNj++a80AlFWPTlT/Y9vy0K2HMrqiy1G5cfW7I7EA==
+
 "@babel/code-frame@^7.0.0":
   version "7.16.7"
   resolved "https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.16.7.tgz"
