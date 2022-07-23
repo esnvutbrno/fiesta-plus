@@ -6,46 +6,46 @@
 
 
 {% block upper_head %}
-    {% trans "Sign up social account" as title %}
-    {% breadcrumb_push_item title %}
+  {% trans "Sign up social account" as title %}
+  {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
 
 {% block main_container %}
-    <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
-            <form
-                    method="POST" action="{% url 'socialaccount_signup' %}"
-                    class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_class }}"
-            >
+  <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
+    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
+      <form
+        method="POST" action="{% url 'socialaccount_signup' %}"
+        class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_class }}"
+      >
 
-                {% csrf_token %}
-                <h3 class="text-xl font-medium text-gray-900 dark:text-white">Create Account</h3>
+        {% csrf_token %}
+        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Create Account</h3>
 
-                <p class="text-gray-800 dark:text-gray-300">
-                    You are about to use
-                    your <strong class="font-semibold">{{ account.get_provider.name }}</strong>
-                    account to log in.
-                    <br>
-                    As a final step, please complete the following form:
-                </p>
+        <p class="text-gray-800 dark:text-gray-300">
+          You are about to use
+          your <strong class="font-semibold">{{ account.get_provider.name }}</strong>
+          account to log in.
+          <br>
+          As a final step, please complete the following form:
+        </p>
 
-                {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
+        {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
 
-                {% if redirect_field_value %}
-                    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-                {% endif %}
+        {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+        {% endif %}
 
-                {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
+        {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
 
-                <button type="submit"
-                        class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
+        <button type="submit"
+                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
                         font-medium rounded-lg text-sm px-5 py-2.5 text-center
                         dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                    Sign up
-                </button>
-            </form>
-        </div>
+          Sign up
+        </button>
+      </form>
     </div>
+  </div>
 {% endblock main_container %}
