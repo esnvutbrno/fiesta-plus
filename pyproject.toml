@@ -6,7 +6,7 @@ authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-django = "^4.0.1"
+django = "^4.0.6"
 psycopg2-binary = "^2.9.3"
 # to get AJAX commits
 django-debug-toolbar = { git = "https://github.com/jazzband/django-debug-toolbar", rev = "571b2400" }
