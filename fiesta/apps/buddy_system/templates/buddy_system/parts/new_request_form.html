@@ -1,0 +1,12 @@
+<h1 class="text-center text-3xl title-font py-4">Request for Buddy</h1>
+
+<form
+  method="POST"
+  action="{% url "buddy_system:new-request" %}"
+  id="new-request-form"
+>
+  {% csrf_token %}
+  <div class="max-w-md mx-auto">
+    {{ form }}
+  </div>
+</form>

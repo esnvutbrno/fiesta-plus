@@ -21,6 +21,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     login_not_required_urls: list[str] = []
 
+    membership_not_required_urls: list[str] = []
+
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""
         return reverse(f"{self.label}:{viewname}", args=args, kwargs=kwargs)

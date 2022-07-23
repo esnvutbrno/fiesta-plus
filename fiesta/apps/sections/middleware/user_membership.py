@@ -60,9 +60,10 @@ class UserMembershipMiddleware:
             # or urls is not requiring logged user (=membership)
             return
 
-        if not request.membership:
+        if not request.membership and request.resolver_match.url_name not in target_app.membership_not_required_urls:
             # target is plugin view, but user does not have any membership,
             # and we're not on memberships page
+            # (and url is not whitelisted)
             messages.warning(
                 request, _("You don't have any active membership to view this page.")
             )
