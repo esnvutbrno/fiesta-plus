@@ -15,8 +15,7 @@ class MatchingPolicyProtocol(typing.Protocol):
 
     @staticmethod
     def limit_requests(
-        qs: typing.Union[QuerySet[BuddyRequest]],
-        membership: SectionMembership
+        qs: typing.Union[QuerySet[BuddyRequest]], membership: SectionMembership
     ) -> typing.Union[QuerySet[BuddyRequest]]:
         ...
 
@@ -28,31 +27,35 @@ class MatchingPolicyProtocol(typing.Protocol):
 
 
 class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
-    id = 'manual-by-editor'
-    title = _('Manual by editors')
-    description = _('Matching done manualy only by editors.')
+    id = "manual-by-editor"
+    title = _("Manual by editors")
+    description = _("Matching done manualy only by editors.")
     can_member_match = False
 
 
 class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
-    id = 'manual-by-member'
-    title = _('Manual by members')
-    description = _('Matching done manualy also by members.')
+    id = "manual-by-member"
+    title = _("Manual by members")
+    description = _("Matching done manualy also by members.")
     can_member_match = True
 
 
 class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
-    id = 'same-faculty'
-    title = _('Limited by faculty')
-    description = _('Matching done manualy by members themselfs, but limited to the same faculty.')
+    id = "same-faculty"
+    title = _("Limited by faculty")
+    description = _(
+        "Matching done manualy by members themselfs, but limited to the same faculty."
+    )
     can_member_match = True
 
 
 class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
-    id = 'same-faculty-limited'
-    title = _('Limited by faculty till limit')
-    description = _('Matching done manualy by members themselfs, but limited to same faculty till'
-                    'the rolling limit - limitation is not enabled after reaching the rolling limit.')
+    id = "same-faculty-limited"
+    title = _("Limited by faculty till limit")
+    description = _(
+        "Matching done manualy by members themselfs, but limited to same faculty till"
+        "the rolling limit - limitation is not enabled after reaching the rolling limit."
+    )
 
     # same faculty for N buddies
     # after N matches (to rolling_limit), faculty is not limited
@@ -76,8 +79,8 @@ class MatchingPoliciesRegister:
 
     DEFAULT_POLICY = ManualByEditorMatchingPolicy
 
-    CHOICES = [
-        (p.id, p.title) for p in AVAILABLE_POLICIES
-    ]
+    CHOICES = [(p.id, p.title) for p in AVAILABLE_POLICIES]
 
-    DESCRIPTION = ' <br />'.join(f'{p.title}: {p.description}' for p in AVAILABLE_POLICIES)
+    DESCRIPTION = " <br />".join(
+        f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES
+    )

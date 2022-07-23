@@ -39,7 +39,9 @@ class ProfileFinishFormView(
         data.update(
             {
                 "redirect_field_name": REDIRECT_FIELD_NAME,
-                "redirect_field_value": get_request_param(self.request, REDIRECT_FIELD_NAME),
+                "redirect_field_value": get_request_param(
+                    self.request, REDIRECT_FIELD_NAME
+                ),
             }
         )
         return data

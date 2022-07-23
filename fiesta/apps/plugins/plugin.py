@@ -32,7 +32,9 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         urls: list[URLPattern] = import_module(f"{self.name}.urls").urlpatterns
         return tuple(
             map(
-                lambda p: p if p.name in self.login_not_required_urls else URLPattern(
+                lambda p: p
+                if p.name in self.login_not_required_urls
+                else URLPattern(
                     pattern=p.pattern,
                     callback=login_required(p.callback),
                     default_args=p.default_args,

@@ -9,23 +9,29 @@ from apps.sections.models import SectionMembership
 
 
 class WannaBuddyView(TemplateView):
-    template_name = 'buddy_system/wanna_buddy.html'
+    template_name = "buddy_system/wanna_buddy.html"
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data.update({
-            'continue_url': '?'.join((
-                reverse('buddy_system:sign-up-before-request'),
-                urlencode({REDIRECT_FIELD_NAME: reverse('buddy_system:new-request')})
-            ))
-        })
+        data.update(
+            {
+                "continue_url": "?".join(
+                    (
+                        reverse("buddy_system:sign-up-before-request"),
+                        urlencode(
+                            {REDIRECT_FIELD_NAME: reverse("buddy_system:new-request")}
+                        ),
+                    )
+                )
+            }
+        )
         return data
 
 
 class SignUpBeforeRequestView(SignupView):
-    template_name = 'buddy_system/sign_up_before_request.html'
+    template_name = "buddy_system/sign_up_before_request.html"
 
-    success_url = reverse_lazy('buddy_system:new-request')
+    success_url = reverse_lazy("buddy_system:new-request")
 
     def form_valid(self, form):
         response = super().form_valid(form)

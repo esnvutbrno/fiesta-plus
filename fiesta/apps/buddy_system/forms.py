@@ -12,8 +12,6 @@ class NewBuddyRequestForm(BaseModelForm):
         model = BuddyRequest
         fields = (
             # TODO: add notes, interests, etc
-
-
         )
         widgets = {
             "responsible_section": HiddenInput,

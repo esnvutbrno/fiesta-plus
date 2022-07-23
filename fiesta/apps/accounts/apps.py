@@ -11,9 +11,7 @@ class AccountsConfig(PluginAppConfig):
 
     title = _("Users")
 
-    membership_not_required_urls = (
-        'profile-finish',
-    )
+    membership_not_required_urls = ("profile-finish",)
 
 
 __all__ = ["AccountsConfig"]

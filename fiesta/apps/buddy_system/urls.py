@@ -5,8 +5,12 @@ from .views import BuddySystemIndexView
 from .views.request import WannaBuddyView, SignUpBeforeRequestView, NewRequestView
 
 urlpatterns = [
-    path('', BuddySystemIndexView.as_view()),
-    path('wanna-buddy', WannaBuddyView.as_view(), name='wanna-buddy'),
-    path('sign-up-before-request', SignUpBeforeRequestView.as_view(), name='sign-up-before-request'),
-    path('new-request', NewRequestView.as_view(), name='new-request'),
+    path("", BuddySystemIndexView.as_view()),
+    path("wanna-buddy", WannaBuddyView.as_view(), name="wanna-buddy"),
+    path(
+        "sign-up-before-request",
+        SignUpBeforeRequestView.as_view(),
+        name="sign-up-before-request",
+    ),
+    path("new-request", NewRequestView.as_view(), name="new-request"),
 ]

@@ -24,7 +24,7 @@ class SectionSpaceMiddleware:
         site: Site = get_current_site(request=request)
 
         # xxx or empty
-        space_slug = requested_host.removesuffix(site.domain).removesuffix('.')
+        space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
         request.in_space_of_section = get_object_or_none(Section, space_slug=space_slug)
 

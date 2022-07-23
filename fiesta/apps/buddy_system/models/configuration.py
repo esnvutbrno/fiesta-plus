@@ -7,8 +7,8 @@ class BuddySystemConfiguration(BaseRequestSystemConfiguration):
     ...
 
     class Meta:
-        verbose_name = _('buddy system configuration')
-        verbose_name_plural = _('buddy system configurations')
+        verbose_name = _("buddy system configuration")
+        verbose_name_plural = _("buddy system configurations")
 
 
-__all__ = ['BuddySystemConfiguration']
+__all__ = ["BuddySystemConfiguration"]

@@ -8,21 +8,22 @@ from apps.utils.models import BaseTimestampedModel
 def base_request_model_factory(related_base: str):
     class BaseRequestModel(BaseTimestampedModel):
         class State(TextChoices):
-            CREATED = 'created', _('Created')
-            MATCHED = 'matched', _('Matched')
+            CREATED = "created", _("Created")
+            MATCHED = "matched", _("Matched")
 
-            CANCELLED = 'cancelled', _('Cancelled')
+            CANCELLED = "cancelled", _("Cancelled")
 
         state = models.CharField(
-            verbose_name=_('state'),
+            verbose_name=_("state"),
             choices=State.choices,
             default=State.CREATED,
             max_length=16,
         )
 
         matched_at = models.DateTimeField(
-            verbose_name=_('matched at'),
-            null=True, blank=True,
+            verbose_name=_("matched at"),
+            null=True,
+            blank=True,
         )
 
         issuer = models.ForeignKey(
@@ -46,12 +47,14 @@ def base_request_model_factory(related_base: str):
             related_name=f"{related_base}_matched_requests",
             on_delete=models.RESTRICT,
             verbose_name=_("matched by"),
-            db_index=True, null=True, blank=True,
+            db_index=True,
+            null=True,
+            blank=True,
         )
 
         class Meta:
             abstract: True
-            verbose_name = _('request')
-            verbose_name_plural = _('requests')
+            verbose_name = _("request")
+            verbose_name_plural = _("requests")
 
     return BaseRequestModel

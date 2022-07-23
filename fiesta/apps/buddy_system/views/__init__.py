@@ -1,5 +1,3 @@
 from .index import BuddySystemIndexView
 
-__all__ = [
-    "BuddySystemIndexView"
-]
+__all__ = ["BuddySystemIndexView"]

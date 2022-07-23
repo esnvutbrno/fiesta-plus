@@ -60,7 +60,11 @@ class UserMembershipMiddleware:
             # or urls is not requiring logged user (=membership)
             return
 
-        if not request.membership and request.resolver_match.url_name not in target_app.membership_not_required_urls:
+        if (
+            not request.membership
+            and request.resolver_match.url_name
+            not in target_app.membership_not_required_urls
+        ):
             # target is plugin view, but user does not have any membership,
             # and we're not on memberships page
             # (and url is not whitelisted)
@@ -71,13 +75,15 @@ class UserMembershipMiddleware:
 
     @classmethod
     def should_ignore(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
-        on_membership_page = resolver_match.view_name.startswith(cls.MEMBERSHIP_URL_NAME)
+        on_membership_page = resolver_match.view_name.startswith(
+            cls.MEMBERSHIP_URL_NAME
+        )
 
-        anonymnous_allowed = resolver_match.url_name in target_app.login_not_required_urls
+        anonymnous_allowed = (
+            resolver_match.url_name in target_app.login_not_required_urls
+        )
 
         return on_membership_page or anonymnous_allowed
-
-
 
 
 __all__ = ["UserMembershipMiddleware", "HttpRequest"]
