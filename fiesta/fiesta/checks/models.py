@@ -51,7 +51,7 @@ def check_model(model):
     Yields (django.checks.CheckMessage)
     """
     model_source = inspect.getsource(model)
-    model_node = ast.parse(model_source)
+    model_node = ast.parse(model_source.strip())
     assert isinstance(model_node, ast.Module)
 
     class_meta = None

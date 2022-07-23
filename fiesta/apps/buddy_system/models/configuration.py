@@ -1,9 +1,9 @@
 from django.utils.translation import gettext_lazy as _
 
-from apps.plugins.models import BasePluginConfiguration
+from apps.fiestarequests.models import BaseRequestSystemConfiguration
 
 
-class BuddySystemConfiguration(BasePluginConfiguration):
+class BuddySystemConfiguration(BaseRequestSystemConfiguration):
     ...
 
     class Meta:

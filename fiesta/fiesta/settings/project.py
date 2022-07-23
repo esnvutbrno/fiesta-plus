@@ -52,6 +52,7 @@ class ProjectConfigMixin:
         "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
+        "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
         "apps.plugins.apps.PluginsConfig",
         "apps.sections.apps.SectionsConfig",
