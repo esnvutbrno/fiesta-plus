@@ -48,6 +48,7 @@ class ProjectConfigMixin:
         "django_filters",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
+        "apps.buddy_system.apps.BuddySystemConfig",
         "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
