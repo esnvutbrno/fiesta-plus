@@ -8,6 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from ..models import SectionMembership
 from ...accounts.models import User
+from ...plugins.plugin import PluginAppConfig
 from ...plugins.utils import target_plugin_app_from_resolver_match
 
 
@@ -47,15 +48,16 @@ class UserMembershipMiddleware:
 
     @classmethod
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
-        target_plugin = target_plugin_app_from_resolver_match(request.resolver_match)
+        target_app = target_plugin_app_from_resolver_match(request.resolver_match)
 
-        if not target_plugin:
+        if not target_app:
             # target apps are not plugin, so probably public
             # additional checks needs to be in views itself
             return
 
-        if cls.should_ignore(request.resolver_match):
+        if cls.should_ignore(target_app, request.resolver_match):
             # on membership page, so fine -> we don't want to loop
+            # or urls is not requiring logged user (=membership)
             return
 
         if not request.membership:
@@ -67,8 +69,14 @@ class UserMembershipMiddleware:
             return HttpResponseRedirect(reverse(cls.MEMBERSHIP_URL_NAME))
 
     @classmethod
-    def should_ignore(cls, resolver_match: ResolverMatch):
-        return resolver_match.view_name.startswith(cls.MEMBERSHIP_URL_NAME)
+    def should_ignore(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
+        on_membership_page = resolver_match.view_name.startswith(cls.MEMBERSHIP_URL_NAME)
+
+        anonymnous_allowed = resolver_match.url_name in target_app.login_not_required_urls
+
+        return on_membership_page or anonymnous_allowed
+
+
 
 
 __all__ = ["UserMembershipMiddleware", "HttpRequest"]

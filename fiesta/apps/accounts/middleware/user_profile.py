@@ -22,18 +22,19 @@ class UserProfileMiddleware:
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
         user: User = request.user
 
-        if request.resolver_match.view_name in (
-            cls.FINISH_PROFILE_URL_NAME,
-        ) or UserMembershipMiddleware.should_ignore(
-            resolver_match=request.resolver_match
-        ):
-            # to prevent loop, profile needs to be finished
-            return
-
         target_app = target_plugin_app_from_resolver_match(request.resolver_match)
 
         if not target_app:
             # target is not a plugin page, profile is not needed to have it completed
+            return
+
+        if request.resolver_match.view_name in (
+            cls.FINISH_PROFILE_URL_NAME,
+        ) or UserMembershipMiddleware.should_ignore(
+            target_app=target_app,
+            resolver_match=request.resolver_match
+        ):
+            # to prevent loop, profile needs to be finished
             return
 
         try:

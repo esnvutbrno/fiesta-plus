@@ -10,5 +10,7 @@ class BuddySystemConfig(PluginAppConfig):
 
     configuration_model = 'buddy_system.BuddySystemConfiguration'
 
+    login_not_required_urls = ['wanna-buddy']
+
 
 __all__ = ['BuddySystemConfig']
