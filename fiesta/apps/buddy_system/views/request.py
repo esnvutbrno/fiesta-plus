@@ -4,8 +4,9 @@ from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
 from django.views.generic import TemplateView, CreateView
 
-from apps.buddy_system.forms import NewBuddyRequestForm
+from apps.buddy_system.forms import NewRequestForm
 from apps.sections.models import SectionMembership
+from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
 
 
 class WannaBuddyView(TemplateView):
@@ -28,7 +29,7 @@ class WannaBuddyView(TemplateView):
         return data
 
 
-class SignUpBeforeRequestView(SignupView):
+class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
     template_name = "buddy_system/sign_up_before_request.html"
 
     success_url = reverse_lazy("buddy_system:new-request")
@@ -47,6 +48,6 @@ class SignUpBeforeRequestView(SignupView):
         return response
 
 
-class NewRequestView(CreateView):
+class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
     template_name = "buddy_system/new_request.html"
-    form_class = NewBuddyRequestForm
+    form_class = NewRequestForm

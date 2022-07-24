@@ -5,7 +5,7 @@ from apps.buddy_system.models import BuddyRequest
 from apps.fiestaforms.forms import BaseModelForm
 
 
-class NewBuddyRequestForm(BaseModelForm):
+class NewRequestForm(BaseModelForm):
     submit_text = _("Request for buddy")
 
     class Meta:

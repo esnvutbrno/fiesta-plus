@@ -11,5 +11,9 @@ class SectionsConfig(PluginAppConfig):
 
     title = _("ESN section")
 
+    login_not_required_urls = [
+        "choose-space",
+    ]
+
 
 __all__ = ["SectionsConfig"]

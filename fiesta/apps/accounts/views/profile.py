@@ -1,5 +1,4 @@
 from allauth.account.utils import get_next_redirect_url
-from allauth.utils import get_request_param
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.translation import gettext_lazy as _
@@ -14,7 +13,7 @@ from apps.utils.breadcrumbs import with_breadcrumb
 
 @with_breadcrumb(_("My Profile"))
 class MyProfileView(TemplateView):
-    template_name = "accounts/my_profile.html"
+    template_name = "accounts/user_profile/index.html"
 
 
 @with_breadcrumb(_("Finish my profile"))
@@ -39,7 +38,7 @@ class ProfileFinishFormView(
         data.update(
             {
                 "redirect_field_name": REDIRECT_FIELD_NAME,
-                "redirect_field_value": get_request_param(
+                "redirect_field_value": get_next_redirect_url(
                     self.request, REDIRECT_FIELD_NAME
                 ),
             }

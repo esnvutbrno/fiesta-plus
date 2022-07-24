@@ -1,3 +1,4 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -49,6 +50,11 @@ class Section(BaseTimestampedModel):
 
     def __str__(self):
         return self.name
+
+    def section_url(self, request):
+        site = get_current_site(request)
+
+        return f"//{self.space_slug}.{site.domain}"
 
 
 class SectionUniversity(BaseTimestampedModel):

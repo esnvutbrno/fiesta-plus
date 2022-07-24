@@ -1,0 +1,20 @@
+{% extends "fiesta/base.html" %}
+
+
+{% block main %}
+  <div class="prose prose-lg mx-auto">
+    <h1>Please, choose section space</h1>
+
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam blanditiis consectetur debitis deserunt
+      dignissimos dolor eos ex exercitationem fugiat ipsa laboriosam maxime modi quaerat rem repudiandae, veritatis
+      vitae
+      voluptatem. Aliquid!</p>
+    <ul>
+      {% for spec in sections %}
+        <li>
+          <a href="{{ spec.url }}">{{ spec.name }}</a>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endblock %}
