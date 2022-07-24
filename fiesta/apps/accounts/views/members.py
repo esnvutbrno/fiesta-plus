@@ -1,21 +1,15 @@
 import django_tables2 as tables
-from django.db.models.fields.files import FieldFile
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 from django_filters import ChoiceFilter, DateRangeFilter
 from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, Column, LazyPaginator
 
+from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.htmx import HtmxTableMixin
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.utils.breadcrumbs import with_breadcrumb
-
-
-class ImageColumn(tables.Column):
-    def render(self, value: FieldFile):
-        return format_html('<img src="{}" class="h-12" />', value.url)
 
 
 class SectionMembershipFilter(BaseFilterSet):

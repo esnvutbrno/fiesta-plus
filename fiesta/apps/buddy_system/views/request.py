@@ -51,6 +51,8 @@ class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
     template_name = "buddy_system/new_request.html"
     form_class = NewRequestForm
 
+    success_url = reverse_lazy("buddy_system:index")
+
     def get_initial(self):
         return {
             "responsible_section": self.request.in_space_of_section,

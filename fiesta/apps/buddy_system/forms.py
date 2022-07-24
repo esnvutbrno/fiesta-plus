@@ -12,6 +12,7 @@ class NewRequestForm(BaseModelForm):
         model = BuddyRequest
         fields = (
             # TODO: add notes, interests, etc
+            # TODO: and others by preference of responsible_section
             "responsible_section",
             "issuer",
         )
