@@ -3,10 +3,10 @@
 {% load i18n %}
 
 {% block upper_head %}
-    {% trans "New Membership" as title %}
-    {% breadcrumb_push_item title %}
+  {% trans "New Membership" as title %}
+  {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block main %}
-    {% include "accounts/parts/new_membership_form.html" %}
+  {% include "accounts/parts/new_membership_form.html" %}
 {% endblock %}

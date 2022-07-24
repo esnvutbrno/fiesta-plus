@@ -1,0 +1,89 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.table-container {
+    @apply overflow-hidden shadow-md sm:rounded-lg flex flex-col items-center;
+}
+
+.table-container table {
+    @apply min-w-full;
+}
+
+.table-container thead {
+    @apply bg-gray-100 dark:bg-gray-700;
+}
+
+.table-container thead th {
+    @apply py-3 px-4 text-xs font-medium tracking-tight text-left text-gray-700 uppercase dark:text-gray-400;
+}
+
+.table-container tbody tr {
+    @apply border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700;
+}
+
+.table-container tbody td {
+    @apply py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400;
+}
+
+.table-container tbody td:first-child {
+    @apply font-medium text-gray-900 whitespace-nowrap dark:text-white;
+}
+
+.table-container th.orderable {
+
+}
+
+.table-container th.orderable a {
+    @apply inline-block w-full relative;
+}
+
+.table-container th.orderable a:after {
+    @apply text-primary w-4 h-4 inline-block float-right bg-gray-700 absolute right-0
+    p-1;
+    pointer-events: auto;
+    mask-size: cover;
+    content: '';
+
+    mask: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" /></svg>');
+}
+
+.table-container th.orderable.desc a:after {
+    @apply bg-primary;
+    mask: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" /></svg>');
+}
+
+.table-container th.orderable.asc a:after {
+    @apply bg-primary;
+    mask: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" /></svg>');
+}
+
+.table-container ul.pagination {
+    @apply inline-flex -space-x-px mx-auto py-4 relative;
+}
+
+.table-container ul.pagination li a {
+    @apply py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white;
+}
+
+.table-container ul.pagination li.active a {
+    @apply text-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white;
+}
+
+
+.table-container ul.pagination li.previous {
+    @apply absolute right-full;
+}
+
+.table-container ul.pagination li.next {
+    @apply absolute left-full;
+}
+
+.table-container ul.pagination li:first-child a {
+    @apply rounded-l-lg;
+}
+
+
+.table-container ul.pagination li:last-child a {
+    @apply rounded-r-lg;
+}
