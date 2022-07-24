@@ -61,6 +61,7 @@ class UserProfileForm(BaseModelForm):
         model = UserProfile
 
         fields = (
+            # TODO: think about limiting the choices by country of section, in which is current membership
             "home_university",
             "home_faculty",
             "guest_faculty",

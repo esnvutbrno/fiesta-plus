@@ -10,7 +10,8 @@ DA_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
-GRAPH_MODELS_CMD = graph_models accounts plugins auth sections universities esncards \
+GRAPH_MODELS_CMD = graph_models accounts plugins auth sections \
+	universities esncards buddy_system \
 	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
 	 -g -o $(MODELS_PNG)
@@ -63,7 +64,9 @@ help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
 generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
-generate-localhost-certs: conf/certs/fiesta.localhost.crt \
+generate-localhost-certs: \
+	conf/certs/fiesta.localhost.crt \
+	conf/certs/*.fiesta.localhost.crt \
 	conf/certs/web.localhost.crt \
 	conf/certs/webpack.localhost.crt \
 	conf/certs/kibana.localhost.crt \

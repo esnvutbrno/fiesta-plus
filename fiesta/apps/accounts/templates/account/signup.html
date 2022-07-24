@@ -14,42 +14,6 @@
 
 {% block main_container %}
   <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
-      <form
-        method="POST" action="{% url 'account_signup' %}"
-        class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_class }}"
-      >
-        {% csrf_token %}
-        {% if redirect_field_value %}
-          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-        {% endif %}
-
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Create Account</h3>
-
-        {% include "account/parts/social_login_buttons.html" with process="Sign up" %}
-        <hr>
-        {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
-
-        {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
-        {% include "fiestaforms/parts/field.html" with bf=form.password1 errors=form.password1.email %}
-        {% include "fiestaforms/parts/field.html" with bf=form.password2 errors=form.password2.email %}
-
-        <button type="submit"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
-                        font-medium rounded-lg text-sm px-5 py-2.5 text-center
-                        dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-          Sign up
-        </button>
-
-
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
-          Already registered?
-          <a
-            href="{{ login_url }}"
-            class="text-blue-700 hover:underline dark:text-blue-500"
-          >Log in</a>
-        </div>
-      </form>
-    </div>
+    {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url %}
   </div>
 {% endblock main_container %}

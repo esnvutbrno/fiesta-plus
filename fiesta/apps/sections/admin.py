@@ -14,7 +14,7 @@ class SectionsConfigurationAdmin(PolymorphicChildModelAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "all_universities")
+    list_display = ("name", "country", "space_slug", "all_universities")
     list_filter = (("country", admin.AllValuesFieldListFilter),)
 
     def get_queryset(self, request):
@@ -46,7 +46,7 @@ class SectionAdmin(admin.ModelAdmin):
             )
 
     inlines = (
-        SectionMembershipInline,
+        # SectionMembershipInline,
         SectionUniversityInline,
     )
 

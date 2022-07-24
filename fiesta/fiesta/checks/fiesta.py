@@ -4,11 +4,9 @@ import django
 from django.apps import AppConfig, apps
 from django.core import checks
 
-APPS_PREFIX_TO_INCLUDE = __name__.partition(".")[0]
-
 
 def check_app(app: AppConfig):
-    if "_" in app.name:
+    if "_" in app.name and "_system" not in app.name:
         yield django.core.checks.Warning(
             "App name contains an underscore",
             hint="Rename the application to keep Django style.",
@@ -17,7 +15,11 @@ def check_app(app: AppConfig):
         )
 
     # it's not much but it's an honest work
-    if len(app.name.rpartition(".")[-1]) > 4 and not app.name.endswith("s"):
+    if (
+        len(app.name.rpartition(".")[-1]) > 4
+        and not app.name.endswith("s")
+        and "_system" not in app.name
+    ):
         yield django.core.checks.Warning(
             "App name is singular",
             hint="Make the app name plural.",

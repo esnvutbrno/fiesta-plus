@@ -1,0 +1,23 @@
+{% extends "fiesta/base.html" %}
+{% load i18n %}
+{% load breadcrumbs %}
+{% load fiestaforms %}
+{% load socialaccount %}
+
+
+{% block upper_head %}
+  {% trans "Sign up before getting a buddy" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+
+{% block main_container %}
+
+  <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
+    <h1 class="text-4xl my-8 font-bold mx-auto">First step: please sign up</h1>
+
+    {% url "buddy_system:sign-up-before-request" as form_url %}
+    {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url hide_title=True form_url=form_url %}
+  </div>
+{% endblock main_container %}
