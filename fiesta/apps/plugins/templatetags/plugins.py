@@ -31,7 +31,7 @@ def active_plugins_as_navigation_items(context):
 
     return [
         PluginItemSpec(
-            apps.title,
+            apps.verbose_name,
             f"/{apps.url_prefix}",
             [
                 # apps.reverse(pattern.name)

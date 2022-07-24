@@ -15,7 +15,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
-    title: str
+    verbose_name: str
 
     configuration_model: Optional[str] = None
 

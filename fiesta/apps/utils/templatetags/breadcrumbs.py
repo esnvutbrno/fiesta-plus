@@ -32,7 +32,7 @@ def breadcrumb_items(context: dict):
                 # if req.membership
                 # else None,
                 # TODO: eg "Home > Docs" doesn't make sense
-                BreadcrumbItem(apps.title, f"/{apps.url_prefix}")
+                BreadcrumbItem(apps.verbose_name, f"/{apps.url_prefix}")
                 if (plugin := req.plugin) and (apps := plugin.app_config)
                 else None,
             ]

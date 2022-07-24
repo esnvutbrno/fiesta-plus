@@ -6,12 +6,15 @@ from apps.utils.models import BaseTimestampedModel
 
 
 def base_request_model_factory(related_base: str):
-    class BaseRequestModel(BaseTimestampedModel):
+    class BaseRequest(BaseTimestampedModel):
         class State(TextChoices):
             CREATED = "created", _("Created")
             MATCHED = "matched", _("Matched")
 
             CANCELLED = "cancelled", _("Cancelled")
+
+        class Meta:
+            abstract = True
 
         state = models.CharField(
             verbose_name=_("state"),
@@ -19,13 +22,6 @@ def base_request_model_factory(related_base: str):
             default=State.CREATED,
             max_length=16,
         )
-
-        matched_at = models.DateTimeField(
-            verbose_name=_("matched at"),
-            null=True,
-            blank=True,
-        )
-
         issuer = models.ForeignKey(
             "accounts.User",
             related_name=f"{related_base}_issued_requests",
@@ -33,7 +29,6 @@ def base_request_model_factory(related_base: str):
             verbose_name=_("issuer"),
             db_index=True,
         )
-
         responsible_section = models.ForeignKey(
             "sections.Section",
             related_name=f"{related_base}_requests",
@@ -41,7 +36,6 @@ def base_request_model_factory(related_base: str):
             verbose_name=_("responsible section"),
             db_index=True,
         )
-
         matched_by = models.ForeignKey(
             "accounts.User",
             related_name=f"{related_base}_matched_requests",
@@ -51,10 +45,10 @@ def base_request_model_factory(related_base: str):
             null=True,
             blank=True,
         )
+        matched_at = models.DateTimeField(
+            verbose_name=_("matched at"),
+            null=True,
+            blank=True,
+        )
 
-        class Meta:
-            abstract: True
-            verbose_name = _("request")
-            verbose_name_plural = _("requests")
-
-    return BaseRequestModel
+    return BaseRequest

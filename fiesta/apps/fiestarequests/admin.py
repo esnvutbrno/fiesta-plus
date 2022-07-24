@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
 
@@ -7,7 +8,7 @@ class BaseRequestAdmin(ModelAdmin):
     date_hierarchy = "created"
 
     list_filter = [
-        "responsible_section__country",
+        ("responsible_section__country", admin.AllValuesFieldListFilter),
         "state",
     ]
 

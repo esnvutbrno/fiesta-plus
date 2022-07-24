@@ -37,7 +37,6 @@ class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
     def form_valid(self, form):
         response = super().form_valid(form)
 
-        # TODO: check existence of in_space_of_section, since without section it doesn't make sense
         SectionMembership.objects.get_or_create(
             user=self.user,
             section=self.request.in_space_of_section,
@@ -51,3 +50,15 @@ class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
 class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
     template_name = "buddy_system/new_request.html"
     form_class = NewRequestForm
+
+    def get_initial(self):
+        return {
+            "responsible_section": self.request.in_space_of_section,
+            "issuer": self.request.user,
+        }
+
+    def form_valid(self, form):
+        # override to be sure
+        form.instance.responsible_section = self.request.in_space_of_section
+        form.instance.issuer = self.request.user
+        return super().form_valid(form)
