@@ -1,9 +1,11 @@
+from django.utils.translation import gettext_lazy as _
 from apps.plugins.plugin import PluginAppConfig
 
 
 class {{ camel_case_plugin_name }}Config(PluginAppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'apps.{{ plugin_name }}'
+    title = _('{{ plugin_name }}')
 
     configuration_model = '{{ plugin_name }}.{{ camel_case_plugin_name }}Configuration'
 

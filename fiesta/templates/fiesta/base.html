@@ -6,70 +6,70 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1,width=device-width">
-    {% block upper_head %}{% endblock upper_head %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1,width=device-width">
+  {% block upper_head %}{% endblock upper_head %}
 
-    {% block head_title %}
-        {% breadcrumb_items as items %}
-        {% if items|length_is:0 %}
-            <title>Buena Fiesta</title>
-        {% else %}
-            <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
-        {% endif %}
-    {% endblock head_title %}
+  {% block head_title %}
+    {% breadcrumb_items as items %}
+    {% if items|length_is:0 %}
+      <title>Buena Fiesta</title>
+    {% else %}
+      <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
+    {% endif %}
+  {% endblock head_title %}
 
-    <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
+  <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
 
-    {% render_bundle 'main' 'js' attrs='defer' %}
-    {% render_bundle 'main' 'css' %}
+  {% render_bundle 'main' 'js' attrs='defer' %}
+  {% render_bundle 'main' 'css' %}
 
-    {% django_htmx_script %}
+  {% django_htmx_script %}
 </head>
 <body
-        hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-        hx-ext="preload"
-        class="overflow-y-scroll
+  hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+  hx-ext="preload"
+  class="overflow-y-scroll
         flex flex-col justify-between min-h-screen box-border
-        selection:bg-primary selection:text-white
-        "
+        selection:bg-primary selection:text-white"
+  {% block body_attrs %}{% endblock body_attrs %}
 >
 {% block body %}
-    {% include "fiesta/parts/messages.html" %}
-    <div class="sticky top-0 bg-white z-20">
-        <header class="max-w-4xl mx-auto w-full px-4 sm:px-2">
-            {% block header_container %}
-                {% include "fiesta/parts/header.html" %}
-            {% endblock header_container %}
-        </header>
+  {% include "fiesta/parts/messages.html" %}
+  <div class="sticky top-0 bg-white z-20">
+    <header class="max-w-4xl mx-auto w-full px-4 sm:px-2">
+      {% block header_container %}
+        {% include "fiesta/parts/header.html" %}
+      {% endblock header_container %}
+    </header>
 
-        {% block breadcrumbs_container %}
-            <div class="max-w-4xl mx-auto w-full flex flex-rox justify-between items-center
-                    px-4 sm:px-2">
-                {% include "fiesta/parts/breadcrumbs.html" %}
-                {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
-            </div>
+    {% block breadcrumbs_container %}
+      <div class="max-w-4xl mx-auto w-full flex flex-rox justify-between items-center
+                  px-4 sm:px-2">
+        {% include "fiesta/parts/breadcrumbs.html" %}
+        {% block breadcrumbs_right %}{% endblock breadcrumbs_right %}
+      </div>
 
-            <div class="border border-gray-50"></div>
-        {% endblock breadcrumbs_container %}
+      <div class="border border-gray-50"></div>
+    {% endblock breadcrumbs_container %}
+  </div>
+
+  {% block main_container %}
+    <div class="max-w-4xl mx-auto mb-auto w-full">
+      {% block main_columns %}
+        <main class="p-2">
+          {% block main %}{% endblock main %}
+        </main>
+        {% block main_right %}{% endblock main_right %}
+      {% endblock %}
     </div>
+  {% endblock main_container %}
 
-    {% block main_container %}
-        <div class="max-w-4xl mx-auto mb-auto w-full">
-            {% block main_columns %}
-                <main class="p-3">
-                    {% block main %}{% endblock main %}
-                </main>
-                {% block main_right %}{% endblock main_right %}
-            {% endblock %}
-        </div>
-    {% endblock main_container %}
+  {% block upper_footer %}{% endblock upper_footer %}
 
-    {% block upper_footer %}{% endblock upper_footer %}
+  <div class="border border-gray-50"></div>
 
-    <div class="border border-gray-50"></div>
-
-    {% include "fiesta/parts/footer.html" %}
+  {% include "fiesta/parts/footer.html" %}
 {% endblock body %}
 </body>
 </html>

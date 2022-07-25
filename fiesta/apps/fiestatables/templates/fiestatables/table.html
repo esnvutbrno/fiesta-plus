@@ -1,0 +1,24 @@
+{% load django_tables2 %}
+
+<div
+  hx-boost="true"
+  hx-target="#table-{{ table.prefix|default:'default' }}"
+  id="table-{{ table.prefix|default:'default' }}"
+>
+  <form
+    hx-get="{{ request.path }}"
+    hx-vals='{"page": ""}'
+    hx-push-url="true"
+    {# alpine js store defined in src/filter.js #}
+    x-data
+    x-show="$store.tableFilter.shown"
+    x-cloak
+    x-ref="filterForm"
+    @change="htmx.trigger($refs.filterForm, 'submit')"
+  >
+    {{ filter.form }}
+  </form>
+  <div>
+    {% render_table table %}
+  </div>
+</div>

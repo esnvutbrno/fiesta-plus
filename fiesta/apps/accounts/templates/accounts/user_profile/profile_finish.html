@@ -5,9 +5,13 @@
 
 
 {% block main %}
-    <div class="p-4 mb-4 text-sm text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800" role="alert">
-        <span class="font-medium">Wait a second!</span> Before going futher, we're gonna need some information.
+  <div class="shadow rounded bg-white p-4 max-w-xl mx-auto">
+    <div class="p-4 mb-4 text-blue-700 bg-blue-100 rounded-lg dark:bg-blue-200 dark:text-blue-800"
+         role="alert">
+      <div class="font-medium">Wait a second!</div>
+      Before going futher, we're gonna need some information.
     </div>
 
     {% include "accounts/user_profile/profile_finish_form.html" %}
+  </div>
 {% endblock %}

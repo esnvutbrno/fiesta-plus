@@ -9,7 +9,11 @@ class SectionsConfig(PluginAppConfig):
 
     configuration_model = "sections.SectionsConfiguration"
 
-    title = _("ESN section")
+    verbose_name = _("ESN section")
+
+    login_not_required_urls = [
+        "choose-space",
+    ]
 
 
 __all__ = ["SectionsConfig"]

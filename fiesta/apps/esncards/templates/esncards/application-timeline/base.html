@@ -3,23 +3,24 @@
 {% load utils %}
 
 <li class="mb-10 ml-6">
-    {% get_user_picture_url user as picture_url %}
-    <span class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900 bg-cover bg-center"
-          style='background-image: url("{{ picture_url }}")'
-    ></span>
+  {% get_user_picture_url user as picture_url %}
+  <span
+    class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900 bg-cover bg-center"
+    style='background-image: url("{{ picture_url }}")'
+  ></span>
 
-    <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-600
+  <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-600
                     {% block blockcss %}{% endblock %}">
-        <div class="justify-between items-center mb-3 sm:flex">
-            <time class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
-                  title="{{ record.timestamp|date_from_iso }}">
-                {{ record.timestamp|date_from_iso|naturaltime }}
-            </time>
-            <div class="text-sm font-normal text-gray-500 lex dark:text-gray-300">
-                {% block content %}{% endblock %}
-            </div>
-        </div>
-        {% block extracontent %}{% endblock %}
+    <div class="justify-between items-center mb-3 sm:flex">
+      <time class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0"
+            title="{{ record.timestamp|date_from_iso }}">
+        {{ record.timestamp|date_from_iso|naturaltime }}
+      </time>
+      <div class="text-sm font-normal text-gray-500 lex dark:text-gray-300">
+        {% block content %}{% endblock %}
+      </div>
     </div>
+    {% block extracontent %}{% endblock %}
+  </div>
 
 </li>

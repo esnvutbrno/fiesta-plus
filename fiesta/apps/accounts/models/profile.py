@@ -68,6 +68,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         "universities.Faculty",
         on_delete=models.RESTRICT,
         verbose_name=_("home faculty"),
+        # TODO: help, not description
         help_text=_("home faculty for members, empty for internationals"),
         related_name="home_faculty_user_profiles",
         null=True,

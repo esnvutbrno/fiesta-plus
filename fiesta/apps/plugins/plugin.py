@@ -15,9 +15,13 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
-    title: str
+    verbose_name: str
 
     configuration_model: Optional[str] = None
+
+    login_not_required_urls: list[str] = []
+
+    membership_not_required_urls: list[str] = []
 
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""
@@ -28,7 +32,9 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         urls: list[URLPattern] = import_module(f"{self.name}.urls").urlpatterns
         return tuple(
             map(
-                lambda p: URLPattern(
+                lambda p: p
+                if p.name in self.login_not_required_urls
+                else URLPattern(
                     pattern=p.pattern,
                     callback=login_required(p.callback),
                     default_args=p.default_args,
@@ -40,7 +46,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     @property
     def url_prefix(self) -> str:
-        """Defines prefix, undef which are all urls included."""
+        """Defines prefix, under which are all urls included."""
         return self.label.replace("_", "-") + "/"
 
 

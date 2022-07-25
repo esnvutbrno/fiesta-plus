@@ -3,34 +3,34 @@
 {% load i18n %}
 
 {% block upper_head %}
-    {% trans "Memberships" as title %}
-    {% breadcrumb_push_item title %}
+  {% trans "Memberships" as title %}
+  {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block main %}
 
-    {% if request.user.memberships.exists %}
-        {% include "accounts/parts/membership_list.html" with memberships=request.user.memberships.all %}
-    {% else %}
-        <div class="max-w-md flex flex-col mx-auto">
-            <span class="self-center py-4">
-                no memberships
-            </span>
+  {% if request.user.memberships.exists %}
+    {% include "accounts/parts/membership_list.html" with memberships=request.user.memberships.all %}
+  {% else %}
+    <div class="max-w-md flex flex-col mx-auto">
+      <span class="self-center py-4">
+        no memberships
+      </span>
 
-            <div class="flex flex-row justify-between items-center">
-                <h1 class="text-gray-900 text-lg font-medium">
-                    Your section is not here?
-                </h1>
-                <a class="bg-primary text-white p-2 rounded inline-block"
-                   href="{% url "accounts:membership-new" %}"
-                >
-                    Ask for membership
-                </a>
-            </div>
-        </div>
+      <div class="flex flex-row justify-between items-center">
+        <h1 class="text-gray-900 text-lg font-medium">
+          Your section is not here?
+        </h1>
+        <a class="bg-primary text-white p-2 rounded inline-block"
+           href="{% url "accounts:membership-new" %}"
+        >
+          Ask for membership
+        </a>
+      </div>
+    </div>
 
 
-    {% endif %}
+  {% endif %}
 
 
 {% endblock %}

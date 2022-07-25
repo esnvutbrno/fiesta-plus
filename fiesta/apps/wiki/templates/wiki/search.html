@@ -4,29 +4,29 @@
 {% block main_right %}{% endblock main_right %}
 
 {% block main %}
-    <div class="Wiki__search-results not-prose">
-        {% for hit in results %}
-            {% with hit.source.file|strip_file_extension as page_path %}
-                <a href="{% url "wiki:page" page_path %}#:~:text={{ q|urlencode }}">
-                    <div class="flex flex-row justify-between items-center">
-                        <h2 class="text-3xl font-medium font-gray-800 my-3">
-                            {{ hit.source.title }}
-                        </h2>
+  <div class="Wiki__search-results not-prose">
+    {% for hit in results %}
+      {% with hit.source.file|strip_file_extension as page_path %}
+        <a href="{% url "wiki:page" page_path %}#:~:text={{ q|urlencode }}">
+          <div class="flex flex-row justify-between items-center">
+            <h2 class="text-3xl font-medium font-gray-800 my-3">
+              {{ hit.source.title }}
+            </h2>
 
-                        <span class="bg-gray-100 text-gray-500 text-xs
+            <span class="bg-gray-100 text-gray-500 text-xs
                             font-semibold mr-2 px-2.5 py-0.5 rounded self-middle
                             dark:bg-gray-700 dark:text-gray-300
                             "
-                        >
-                            {{ hit.score }}
-                        </span>
-                    </div>
+            >
+              {{ hit.score }}
+            </span>
+          </div>
 
-                    <p class="text-gray-700 text-md">
-                        {{ hit.highlight.content_plain|safeseq|join:"<br>"|safe }}
-                    </p>
-                </a>
-            {% endwith %}
-        {% endfor %}
-    </div>
+          <p class="text-gray-700 text-md">
+            {{ hit.highlight.content_plain|safeseq|join:"<br>"|safe }}
+          </p>
+        </a>
+      {% endwith %}
+    {% endfor %}
+  </div>
 {% endblock main %}

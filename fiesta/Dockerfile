@@ -1,4 +1,4 @@
-FROM python:3.9.9-alpine as builder
+FROM python:3.10.5-alpine as builder
 
 RUN apk add --no-cache --virtual build-deps \
     build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
@@ -14,9 +14,9 @@ RUN python -m pip install poetry && \
 
 
 # pull official base image
-FROM python:3.9.9-alpine
+FROM python:3.10.5-alpine
 
-COPY --from=builder /usr/local/lib/python3.9/site-packages /usr/local/lib/python3.9/site-packages
+COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
 
 # set work directory
 WORKDIR /usr/src/app

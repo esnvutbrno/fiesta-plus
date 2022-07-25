@@ -9,7 +9,9 @@ class AccountsConfig(PluginAppConfig):
 
     configuration_model = "accounts.AccountsConfiguration"
 
-    title = _("Users")
+    verbose_name = _("Users")
+
+    membership_not_required_urls = ("profile-finish",)
 
 
 __all__ = ["AccountsConfig"]

@@ -29,7 +29,7 @@ class MembershipView(TemplateView):
     template_name = "accounts/membership.html"
 
 
-class NewMembershipFormView(CreateView):
+class NewSectionMembershipFormView(CreateView):
     template_name = "accounts/new_membership.html"
     form_class = NewSectionMembershipForm
 

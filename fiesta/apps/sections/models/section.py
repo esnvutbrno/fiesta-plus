@@ -1,8 +1,10 @@
+from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
 from apps.utils.models import BaseTimestampedModel
+from apps.utils.models.validators import validate_plain_slug_lowercase
 
 
 class Section(BaseTimestampedModel):
@@ -34,6 +36,13 @@ class Section(BaseTimestampedModel):
         unique=True,
     )
 
+    space_slug = models.SlugField(
+        verbose_name=_("space slug"),
+        help_text=_("Slug used for defining section spaces as URL subdomains."),
+        unique=True,
+        validators=[validate_plain_slug_lowercase],
+    )
+
     class Meta:
         verbose_name = _("ESN section")
         verbose_name_plural = _("ESN sections")
@@ -41,6 +50,11 @@ class Section(BaseTimestampedModel):
 
     def __str__(self):
         return self.name
+
+    def section_url(self, request):
+        site = get_current_site(request)
+
+        return f"//{self.space_slug}.{site.domain}"
 
 
 class SectionUniversity(BaseTimestampedModel):

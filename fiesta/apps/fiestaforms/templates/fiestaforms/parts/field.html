@@ -1,19 +1,21 @@
 {% load i18n %}
 {% load fiestaforms %}
 <div class="Forms__field{% if errors %} Forms__field--error{% endif %} ">
-    {% if bf.field.required and not bf.field.disabled %}
-        <span class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded dark:bg-gray-700
+  {% if bf.field.required and not bf.field.disabled %}
+    <span class="bg-gray-100 text-gray-600 text-xs px-2.5 py-0.5 rounded dark:bg-gray-700
             dark:text-gray-300 float-right font-light">{% trans "Required" %}</span>
-    {% endif %}
+  {% endif %}
 
-    {{ bf|as_label }}
+  {{ bf|as_label }}
+  <div class="Forms__widget">
     {{ bf|as_widget_field }}
+  </div>
 
-    {% if errors %}
-        <div class="Forms__error_text">{{ errors }}</div>
-    {% endif %}
+  {% if errors %}
+    <div class="Forms__error_text">{{ errors }}</div>
+  {% endif %}
 
-    {% if bf.help_text %}
-        <p class="Forms__help_text">{{ bf.help_text }}</p>
-    {% endif %}
+  {% if bf.help_text %}
+    <p class="Forms__help_text">{{ bf.help_text }}</p>
+  {% endif %}
 </div>
