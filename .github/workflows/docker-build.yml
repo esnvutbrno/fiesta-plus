@@ -44,6 +44,8 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: .
           file: ${{ matrix.image }}/Dockerfile
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
           # tags: |
           #   oskardudycz/eventsourcing.nodejs.simple:latest
