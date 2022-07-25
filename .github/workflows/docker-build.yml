@@ -39,6 +39,7 @@ jobs:
         with:
           # relative path to the place where source code with Dockerfile is located
           context: ./fiesta/
+          file: ./fiesta/Dockerfile
           # Note: tags has to be all lower-case
           # tags: |
           #   oskardudycz/eventsourcing.nodejs.simple:latest 
