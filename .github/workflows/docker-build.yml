@@ -9,11 +9,11 @@ on:
 jobs:
   build-docker-images:
     name: Build Docker images
-    
+
     strategy:
       matrix:
         image: [fiesta, webpack]
-        
+
     runs-on: ubuntu-latest
 
     steps:
@@ -36,8 +36,8 @@ jobs:
 #          registry: ghcr.io
 #          username: ${{ github.actor }}
 #          password: ${{ secrets.GHCR_PAT }}
-      
-      - name: Build ${{ matrix.image }}/ image 
+
+      - name: Build ${{ matrix.image }}/ image
         id: build_and_push
         uses: docker/build-push-action@v2
         with:
@@ -46,7 +46,7 @@ jobs:
           file: ${{ matrix.image }}/Dockerfile
 
           # tags: |
-          #   oskardudycz/eventsourcing.nodejs.simple:latest 
+          #   oskardudycz/eventsourcing.nodejs.simple:latest
           #   ghcr.io/oskardudycz/eventsourcing.nodejs/simple:latest
           # # build on feature branches, push only on main branch
           # push: ${{ github.ref == 'refs/heads/main' }}
