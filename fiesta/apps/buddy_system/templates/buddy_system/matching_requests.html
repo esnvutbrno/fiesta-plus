@@ -1,0 +1,30 @@
+{% extends "fiesta/base.html" %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block upper_head %}
+  {% trans "Matching" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+
+{% block main %}
+  policy: <strong>{{ conf.matching_policy }}</strong>
+
+  can member match? <strong>{{ conf.matching_policy_instance.can_member_match|yesno }}</strong>
+
+  <ul class="flex flex-col gap-y-2">
+    {% for br in object_list %}
+      <li class="border-4 rounded-xl border-blue-500 p-4">
+        <div class="float-right">{{ br.created }}</div>
+        <pre class="whitespace-pre-line">
+          gender: {{ br.issuer.profile.gender }} display? {{ conf.display_issuer_gender|yesno }}
+          exch. faculty: {{ br.issuer.profile.guest_faculty }} display? {{ conf.display_issuer_faculty|yesno }}
+          country: {{ br.issuer.profile.nationality }} display? {{ conf.display_issuer_country|yesno }}
+          home university: {{ br.issuer.profile.home_university }} display? {{ conf.display_issuer_university|yesno }}
+        </pre>
+      </li>
+    {% endfor %}
+
+  </ul>
+{% endblock %}

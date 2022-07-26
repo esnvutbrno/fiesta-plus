@@ -20,6 +20,7 @@ class ChooseSpaceView(TemplateView):
             {
                 "sections": [
                     SectionSpec(s.name, s.section_url(self.request) + next_url)
+                    # TODO: limit to current membership
                     for s in Section.objects.all()
                 ]
             }

@@ -86,3 +86,9 @@ class MatchingPoliciesRegister:
     DESCRIPTION = " <br />".join(
         f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES
     )
+
+    _ID_TO_POLICY = {p.id: p() for p in AVAILABLE_POLICIES}
+
+    @classmethod
+    def get_policy_by_id(cls, policy_id: str) -> MatchingPolicyProtocol:
+        return cls._ID_TO_POLICY.get(policy_id)

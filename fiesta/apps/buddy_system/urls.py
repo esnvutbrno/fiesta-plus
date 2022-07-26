@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import BuddySystemIndexView
 from .views.editor import RequestsEditorView
+from .views.matching import MatchingRequestsView
 from .views.request import WannaBuddyView, SignUpBeforeRequestView, NewRequestView
 
 urlpatterns = [
@@ -14,4 +15,5 @@ urlpatterns = [
     ),
     path("new-request", NewRequestView.as_view(), name="new-request"),
     path("requests", RequestsEditorView.as_view(), name="requests-editor"),
+    path("matching-requests", MatchingRequestsView.as_view(), name="matching-requests"),
 ]

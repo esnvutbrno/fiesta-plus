@@ -20,5 +20,10 @@ class BaseRequestSystemConfiguration(BasePluginConfiguration):
         help_text=MatchingPoliciesRegister.DESCRIPTION,
     )
 
+    @property
+    def matching_policy_instance(self):
+        # TODO: pass configuration?
+        return MatchingPoliciesRegister.get_policy_by_id(self.matching_policy)
+
     class Meta:
         abstract = True
