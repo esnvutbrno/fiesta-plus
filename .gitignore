@@ -136,3 +136,9 @@ nclude-dependencies/
 
 # template parts
 !**/templates/**/parts
+
+# local generated certs
+conf/certs/
+
+# local generated elastic settings
+conf/elastic
