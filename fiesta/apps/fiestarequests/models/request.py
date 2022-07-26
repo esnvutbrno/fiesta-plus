@@ -13,7 +13,7 @@ def base_request_model_factory(related_base: str):
 
             CANCELLED = "cancelled", _("Cancelled")
 
-        class Meta:
+        class Meta(BaseTimestampedModel.Meta):
             abstract = True
 
         state = models.CharField(
