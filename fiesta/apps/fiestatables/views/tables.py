@@ -3,6 +3,7 @@ from datetime import datetime
 
 from django.db.models import QuerySet
 from django.utils.text import slugify
+from django_filters.views import FilterView
 from django_tables2 import SingleTableMixin, LazyPaginator
 from django_tables2.export import ExportMixin, TableExport
 
@@ -29,3 +30,7 @@ class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
             f"{(datetime.now().isoformat('_', 'seconds')).replace(':', '-')}"
             f"_{export_name}.{export_format}"
         )
+
+
+class FiestaTableView(FiestaTableMixin, FilterView):
+    pass

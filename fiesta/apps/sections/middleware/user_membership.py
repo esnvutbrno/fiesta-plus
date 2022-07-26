@@ -1,18 +1,17 @@
 from __future__ import annotations
 
 from django.contrib import messages
-from django.contrib.auth.models import AnonymousUser
-from django.http import HttpRequest as DjHttpRequest, HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import ResolverMatch, reverse
 from django.utils.translation import gettext_lazy as _
 
 from ..models import SectionMembership
-from ...accounts.models import User
 from ...plugins.plugin import PluginAppConfig
 from ...plugins.utils import target_plugin_app_from_resolver_match
+from ...utils.request import HttpRequest as OrigHttpRequest
 
 
-class HttpRequest(DjHttpRequest):
+class HttpRequest(OrigHttpRequest):
     membership: SectionMembership | None
 
 
@@ -22,19 +21,17 @@ class UserMembershipMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
 
-    def __call__(self, request: DjHttpRequest) -> HttpResponse:
-        user: User | AnonymousUser = request.user
-
+    def __call__(self, request: OrigHttpRequest) -> HttpResponse:
         request.membership = None
 
-        if user.is_anonymous:
+        if request.user.is_anonymous:
             return self.get_response(request)
 
         # TODO: Detect, in which membership is user logged:
         #  probably the default one, with possibility to switch
         #  with sesstion flag
         request.membership = (
-            user.memberships.select_related(
+            request.user.memberships.select_related(
                 # to remove another query for relating section
                 "section"
             )
@@ -75,6 +72,7 @@ class UserMembershipMiddleware:
 
     @classmethod
     def should_ignore(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
+        """Checks if specific request for specific plugin should be excluded from existing membership check."""
         on_membership_page = resolver_match.view_name.startswith(
             cls.MEMBERSHIP_URL_NAME
         )
