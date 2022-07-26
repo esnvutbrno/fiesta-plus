@@ -1,26 +1,33 @@
 {% extends "fiesta/base.html" %}
+{% load django_tables2 %}
 
 {% block main %}
-  {% include "fiestatables/table.html" with table=table %}
+  {% include "fiestatables/table.html" %}
 {% endblock %}
 
 {% block breadcrumbs_right %}
   <button
     type="button"
-    class="my-1 flex flex-row items-center font-medium text-blue-500"
-    x-data @click="$store.tableFilter.toggle()"
+    class="
+      my-1 flex flex-row items-center font-medium text-sm
+      hover:text-blue-500
+    "
+    :class="{'text-blue-500': $store.tableControls.isFilterActive}"
+    x-data @click="$store.tableControls.toggle()"
   >
     <svg
       class="w-6 h-6 shrink-0"
-      :class="{'rotate-180': $store.tableFilter.shown}"
+      :class="{'rotate-180': $store.tableControls.shown}"
       fill="currentColor" viewBox="0 0 20 20"
       xmlns="http://www.w3.org/2000/svg"
     >
-      <path fill-rule="evenodd"
-            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-            clip-rule="evenodd"></path>
+      <path
+        fill-rule="evenodd"
+        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+        clip-rule="evenodd"
+      ></path>
     </svg>
 
-    <span>Filter</span>
+    <span>Filter & Export</span>
   </button>
 {% endblock %}

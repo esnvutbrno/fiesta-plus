@@ -6,3 +6,6 @@ from django.utils.html import format_html
 class ImageColumn(tables.Column):
     def render(self, value: FieldFile):
         return format_html('<img src="{}" class="h-12" />', value.url)
+
+    def value(self, record, value):
+        return value.url

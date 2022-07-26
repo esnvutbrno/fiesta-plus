@@ -1,12 +1,12 @@
 from django.utils.translation import gettext_lazy as _
 from django_filters import ChoiceFilter
 from django_filters.views import FilterView
-from django_tables2 import tables, Column, SingleTableMixin, LazyPaginator
+from django_tables2 import tables, Column
 
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
-from apps.fiestatables.views.htmx import HtmxTableMixin
+from apps.fiestatables.views.tables import FiestaTableMixin
 from apps.sections.middleware.section_space import HttpRequest
 from apps.utils.breadcrumbs import with_breadcrumb
 
@@ -34,13 +34,10 @@ class RequestTable(tables.Table):
 
 
 @with_breadcrumb(_("Requests"))
-class RequestsEditorView(HtmxTableMixin, SingleTableMixin, FilterView):
+class RequestsEditorView(FiestaTableMixin, FilterView):
     request: HttpRequest
-    template_name = "fiestatables/page.html"
     table_class = RequestTable
     filterset_class = RequestFilter
-    paginate_by = 20
-    paginator_class = LazyPaginator
 
     def get_queryset(self):
         return BuddyRequest.objects.filter(

@@ -6,8 +6,8 @@
     <button
       type="submit"
       {# is submiting button, but before request, form is reseted #}
-      x-data @click="$store.tableFilter.reset($event.target)"
-      class="py-1.5 px-3 text-sm text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
-    >{% trans "reset filter" %}</button>
+      x-data @click="$store.tableControls.reset($event.target)"
+      class="Forms__button Forms__button--simple bg-amber-100"
+    >{% trans "reset" %}</button>
   {% endif %}
 {% endblock %}
