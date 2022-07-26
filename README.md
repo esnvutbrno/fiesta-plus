@@ -15,7 +15,7 @@ Buena Fiesta is based on Docker containers orchestrized by Docker Compose.
 
 ### Requirements
 
-For running the project, you need `docker-compose` with running Docker daemon.
+For running the project, you need `docker compose` plugin with running Docker daemon.
 
 ### Development
 
