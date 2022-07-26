@@ -1,6 +1,8 @@
 version: '3.3'
 services:
   web:
+    environment:
+      - PYTHONDEVMODE=1
     volumes:
       - ./fiesta/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
