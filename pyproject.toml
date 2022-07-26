@@ -5,7 +5,7 @@ description = "New generation of social network for helping international studen
 authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = "^3.10"
 django = "^4.0.6"
 psycopg2-binary = "^2.9.3"
 # to get AJAX commits
@@ -29,7 +29,7 @@ python-magic = "^0.4.25"
 django-configurations = { extras = ["cache", "database", "email", "search"], version = "^2.3.2" }
 django-tables2 = "^2.4.1"
 django-filter = "^21.1"
-tablib = "^3.2.0"
+tablib = {extras = ["xlsx"], version = "^3.2.1"}
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.17.0"
