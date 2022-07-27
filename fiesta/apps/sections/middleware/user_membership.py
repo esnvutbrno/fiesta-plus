@@ -39,6 +39,11 @@ class UserMembershipMiddleware:
 
     @classmethod
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
+        request.all_memberships = None
+
+        if request.user.is_authenticated:
+            return
+
         # to remove another query for relating section
         request.all_memberships = request.user.memberships.select_related("section")
 
