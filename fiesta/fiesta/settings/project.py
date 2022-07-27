@@ -68,6 +68,7 @@ class ProjectConfigMixin:
         # "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
         "allauth_cas",
+        "loginas",
     ]
 
     MIDDLEWARE = [

@@ -15,6 +15,8 @@ class AccountsConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(User)
 class UserAdmin(DjangoUserAdmin):
+    change_form_template = "loginas/change_form.html"
+
     fieldsets = (
         (
             None,

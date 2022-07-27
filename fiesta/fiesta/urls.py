@@ -30,6 +30,7 @@ urlpatterns = [
         TemplateView.as_view(template_name="fiesta/pages/team.html"),
         name="team",
     ),
+    path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
     path("docs/", include("apps.wiki.urls", namespace="wiki")),
     path("files/", include("apps.files.urls", namespace="files")),
