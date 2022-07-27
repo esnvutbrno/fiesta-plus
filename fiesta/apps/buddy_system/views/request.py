@@ -68,6 +68,8 @@ class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
 
     def get_form(self, form_class=None):
         form = super().get_form(form_class=form_class)
-        form.fields['description'].help_text = render_to_string("buddy_system/parts/request_description_help_text.html")
+        form.fields["description"].help_text = render_to_string(
+            "buddy_system/parts/request_description_help_text.html"
+        )
 
         return form

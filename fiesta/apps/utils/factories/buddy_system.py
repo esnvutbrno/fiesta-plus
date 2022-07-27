@@ -19,4 +19,4 @@ class BuddyRequestFactory(DjangoModelFactory):
     )
     state = BuddyRequest.State.CREATED
 
-    description = factory.Faker('text', max_nb_chars=600)
+    description = factory.Faker("text", max_nb_chars=600)

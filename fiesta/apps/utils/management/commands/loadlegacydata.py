@@ -71,11 +71,17 @@ def load_requests(*, cursor: CursorWrapper):
                 description=description,
                 matched_by=ID_TO_USER.get(matched_by_email),
                 matched_at=make_aware(matched_at) if matched_at else None,
-                state=BuddyRequest.State.MATCHED if matched_by_email else BuddyRequest.State.CREATED,
-            )
+                state=BuddyRequest.State.MATCHED
+                if matched_by_email
+                else BuddyRequest.State.CREATED,
+            ),
         )
 
-        secho("Processing {i: >4}: {desc}.".format(i=i, desc=description[:32].replace("\n", ' ')))
+        secho(
+            "Processing {i: >4}: {desc}.".format(
+                i=i, desc=description[:32].replace("\n", " ")
+            )
+        )
 
 
 def load_users(*, cursor: CursorWrapper):
@@ -127,20 +133,21 @@ def load_users(*, cursor: CursorWrapper):
             name=section_short,
             defaults=dict(
                 country=Country("CZ"),
-                space_slug=slugify(section_short.replace(' ', '')),
+                space_slug=slugify(section_short.replace(" ", "")),
             ),
         )
         SectionMembership.objects.update_or_create(
             section=section,
             user=user,
-            role=(highest_role :=
-                  SectionMembership.Role.ADMIN
-                  if "admin" in roles else
-                  SectionMembership.Role.EDITOR
-                  if "editor" in roles else
-                  SectionMembership.Role.MEMBER
-                  if "member" in roles else
-                  SectionMembership.Role.INTERNATIONAL),
+            role=(
+                highest_role := SectionMembership.Role.ADMIN
+                if "admin" in roles
+                else SectionMembership.Role.EDITOR
+                if "editor" in roles
+                else SectionMembership.Role.MEMBER
+                if "member" in roles
+                else SectionMembership.Role.INTERNATIONAL
+            ),
             # TODO: state
             state=SectionMembership.State.ACTIVE,
         )

@@ -54,7 +54,7 @@ def base_request_model_factory(related_base: str):
         )
 
         description = models.TextField(
-            verbose_name=_('description'),
+            verbose_name=_("description"),
         )
 
         @hook(BEFORE_SAVE, when="matched_by", was=None, is_not=None)
