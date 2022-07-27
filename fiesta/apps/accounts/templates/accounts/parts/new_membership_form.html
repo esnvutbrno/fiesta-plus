@@ -1,9 +1,8 @@
-<h1 class="text-center text-3xl title-font py-4">Request for New Membership</h1>
+<h1 class="text-center text-3xl title-font py-4">Request for New Section Membership</h1>
 <h2 class="text-center text-lg title-font pb-4">Who you are?</h2>
 
 <form
   method="POST"
-  action="{% url "accounts:membership-new" %}"
   id="membership-form"
   x-data="{roleInput: document.querySelector('#membership-form input[name=role]'), role: ''}"
   x-init="role = roleInput.value"

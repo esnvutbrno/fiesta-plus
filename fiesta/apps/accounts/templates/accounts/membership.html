@@ -9,8 +9,8 @@
 
 {% block main %}
 
-  {% if request.user.memberships.exists %}
-    {% include "accounts/parts/membership_list.html" with memberships=request.user.memberships.all %}
+  {% if request.all_memberships.exists %}
+    {% include "accounts/parts/membership_list.html" with memberships=request.all_memberships.all %}
   {% else %}
     <div class="max-w-md flex flex-col mx-auto">
       <span class="self-center py-4">

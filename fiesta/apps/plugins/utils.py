@@ -30,7 +30,7 @@ def all_plugins_as_mapping() -> dict[str, "PluginAppConfig"]:
 def target_plugin_app_from_resolver_match(
     match: ResolverMatch,
 ) -> PluginAppConfig | None:
-    if not match.app_name:
+    if not match or not match.app_name:
         # no app --> cannot resolve plugin
         return
 

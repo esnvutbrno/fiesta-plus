@@ -1,6 +1,6 @@
 <div
   x-data="{displayed: true, _timer: null}"
-  x-init="_timer = setTimeout(() => displayed = false, 4000)"
+  x-init="_timer = setTimeout(() => displayed = false, 10000)"
   x-show="displayed" x-transition
   @mouseover="clearTimeout(_timer)"
   class="flex items-center w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow

@@ -39,9 +39,8 @@
     </div>
     {% if request.membership %}
       <a
-        class="block py-2 px-4 text-gray-800
-                            hover:bg-gray-100
-                            dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+        class="block py-2 px-4 text-gray-800 hover:bg-gray-100
+              dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
         href="{% url "accounts:membership" %}"
       >
         <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
@@ -51,10 +50,13 @@
           {{ request.membership.section }}
         </span>
       </a>
+    {% elif request.all_memberships.exists %}
+      <a href="{% url "accounts:membership" %}"
+         class="block py-2 px-4 text-sm text-blue-500 hover:underline dark:text-blue-500"
+      >Memberships ({{ request.all_memberships.count }})</a>
     {% else %}
       <a href="{% url "accounts:membership-new" %}"
-         class="block py-2 px-4 text-sm text-primary
-                   hover:underline dark:text-blue-500"
+         class="block py-2 px-4 text-sm text-primary hover:underline dark:text-blue-500"
       >New membership</a>
     {% endif %}
 

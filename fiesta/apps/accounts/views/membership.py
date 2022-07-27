@@ -42,8 +42,17 @@ class NewSectionMembershipFormView(CreateView):
         form.instance.state = SectionMembership.State.INACTIVE
         return super().form_valid(form)
 
+    def get_form(self, form_class=None):
+        form: NewSectionMembershipForm = super().get_form(form_class=form_class)
+
+        if self.kwargs.get("section"):
+            form.fields["section"].disabled = True
+
+        return form
+
     def get_initial(self):
         return {
             "role": SectionMembership.Role.INTERNATIONAL,
             "user": self.request.user,
+            "section": self.kwargs.get("section"),
         }

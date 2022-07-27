@@ -327,6 +327,17 @@ packaging = ">=21.0"
 urlman = ">=1.2.0"
 
 [[package]]
+name = "django-model-path-converter"
+version = "0.1.0"
+description = "The Django Model Path Converter package dynamically creates custom path converters for you models."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+django = ">=2"
+
+[[package]]
 name = "django-polymorphic"
 version = "3.1.0"
 description = "Seamless polymorphic inheritance for Django models"
@@ -807,7 +818,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "fb8f3381e5db8c857575b174180122227c3e050007d5c1ab17ce63f6e5d7b55a"
+content-hash = "027483bbbf1266d6a88987e0835690240ebaa053bc6f77434044ff7ece625acc"
 
 [metadata.files]
 asgiref = []
@@ -863,6 +874,7 @@ django-htmx = []
 django-lifecycle = [
     {file = "django-lifecycle-0.9.6.tar.gz", hash = "sha256:0aeb3eb39eb921674e36882f2df6fddf0acb95192a7415167871e76ac0481284"},
 ]
+django-model-path-converter = []
 django-polymorphic = [
     {file = "django-polymorphic-3.1.0.tar.gz", hash = "sha256:d6955b5308bf6e41dcb22ba7c96f00b51dfa497a8a5ab1e9c06c7951bf417bf8"},
     {file = "django_polymorphic-3.1.0-py3-none-any.whl", hash = "sha256:08bc4f4f4a773a19b2deced5a56deddd1ef56ebd15207bf4052e2901c25ef57e"},
