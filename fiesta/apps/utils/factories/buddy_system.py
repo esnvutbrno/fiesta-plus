@@ -1,3 +1,4 @@
+import factory
 from factory import SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
@@ -17,3 +18,5 @@ class BuddyRequestFactory(DjangoModelFactory):
         Section.objects.all(),
     )
     state = BuddyRequest.State.CREATED
+
+    description = factory.Faker('text', max_nb_chars=600)
