@@ -1,5 +1,4 @@
 import './css/main.css';
-import 'flowbite';
 import Htmx from "htmx.org"
 import Alpine from 'alpinejs'
 import "./js/filter"
