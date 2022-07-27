@@ -41,7 +41,7 @@ class UserMembershipMiddleware:
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
         request.all_memberships = None
 
-        if request.user.is_authenticated:
+        if not request.user.is_authenticated:
             return
 
         # to remove another query for relating section
