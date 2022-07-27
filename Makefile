@@ -21,6 +21,10 @@ all: up
 pre-commit: ## Runs all included lints/checks/reformats
 	poetry run pre-commit run --all-files
 
+seed: DA_CMD = seed ## Seed database with fake data.
+seed: ARG = $(name)
+seed: da
+
 startplugin: DA_CMD = startplugin ## Create plugin in project with name=
 startplugin: ARG = $(name)
 startplugin: da

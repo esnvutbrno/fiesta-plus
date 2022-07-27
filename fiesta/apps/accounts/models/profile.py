@@ -19,8 +19,8 @@ user_profile_picture_storage = NamespacedFilesStorage("profile-picture")
 
 class UserProfileState(TextChoices):
     # CREATED = 'created', _('Created')
-    INCOMPLETE = "incomplete", _("Filled")
-    COMPLETE = "complete", _("Filled")
+    INCOMPLETE = "incomplete", _("Uncompleted")
+    COMPLETE = "complete", _("Completed")
 
 
 class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
