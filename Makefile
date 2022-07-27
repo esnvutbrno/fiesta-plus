@@ -38,6 +38,9 @@ check: da
 makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
 
+loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
+loadlegacydata: da
+
 graph_models: DA_CMD = $(GRAPH_MODELS_CMD)
 graph_models: da ## Plot all Django models into models.png
 	@mv ./fiesta/$(MODELS_PNG) .
