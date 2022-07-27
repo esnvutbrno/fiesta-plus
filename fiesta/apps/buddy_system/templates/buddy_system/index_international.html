@@ -1,0 +1,23 @@
+{% extends "fiesta/base.html" %}
+
+{% block main %}
+  <div class="prose prose-lg">
+    <h1>My requests</h1>
+
+    <table>
+      {% for request in requests %}
+        <tr>
+          <td>{{ request }}</td>
+          <td>{{ request.responsible_section }}</td>
+          <td>{{ request.created }}</td>
+          <td>{{ request.state }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td><a href="{% url "buddy_system:new-request" %}">new buddy request</a></td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+{% endblock %}

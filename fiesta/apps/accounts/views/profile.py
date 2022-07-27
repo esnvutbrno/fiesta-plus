@@ -1,6 +1,7 @@
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, UpdateView
 
@@ -58,7 +59,9 @@ class ProfileFinishFormView(
         return super().form_valid(form)
 
     def get_success_url(self):
-        return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME)
+        return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse(
+            "accounts:profile"
+        )
 
     def get_form_class(self):
         return UserProfileForm.for_user(user=self.request.user)
