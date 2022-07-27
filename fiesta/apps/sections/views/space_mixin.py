@@ -3,8 +3,12 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import urlencode
 
+from apps.sections.middleware.section_space import HttpRequest
+
 
 class EnsureInSectionSpaceViewMixin:
+    request: HttpRequest
+
     def dispatch(self, request, *args, **kwargs):
         if not self.request.in_space_of_section:
             return redirect(

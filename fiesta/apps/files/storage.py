@@ -23,11 +23,13 @@ class NamespacedFilesStorage(FileSystemStorage):
         return f"serve-{self.namespace}"
 
     def url(self, name):
+        """Application public URL."""
         return reverse(
             f"files:{self.url_name_suffix}", kwargs=dict(name=filepath_to_uri(name))
         )
 
     def serve_url(self, name):
+        """Inner URL for serving by webserver."""
         return urljoin(settings.MEDIA_URL, f"{self.namespace}/{filepath_to_uri(name)}")
 
     @staticmethod

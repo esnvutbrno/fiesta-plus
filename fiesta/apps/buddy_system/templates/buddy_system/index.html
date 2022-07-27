@@ -1,5 +1,17 @@
 {% extends "fiesta/base.html" %}
 
 {% block main %}
-  <h1>Buddy System Index</h1>
+  <div class="prose prose-lg">
+    <h1>Buddy System</h1>
+
+    <h2>{{ configuration.matching_policy_instance.title }}</h2>
+
+    <p class="lead">
+      {{ configuration.matching_policy_instance.description }}
+    </p>
+
+    {% if configuration.matching_policy_instance.can_member_match %}
+      <a href="{% url "buddy_system:matching-requests" %}">Go to request matching page</a>
+    {% endif %}
+  </div>
 {% endblock %}

@@ -14,8 +14,6 @@ class HttpRequest(HttpRequestOrig):
 
 
 class SectionSpaceMiddleware:
-    MEMBERSHIP_URL_NAME = "accounts:membership"
-
     def __init__(self, get_response):
         self.get_response = get_response
 
@@ -24,10 +22,14 @@ class SectionSpaceMiddleware:
         requested_host: str = request.get_host()
         site: Site = get_current_site(request=request)
 
-        # xxx or empty
+        # 'xxx' or empty string
         space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
         request.in_space_of_section = get_object_or_none(Section, space_slug=space_slug)
+
+        # TODO: check for existing section
+
+        # TODO: compare section space with active membership section
 
         return self.get_response(request)
 

@@ -1,6 +1,6 @@
 import typing
 
-from django.db.models import QuerySet
+from django.db.models import QuerySet, Q
 from django.utils.translation import gettext_lazy as _
 
 from apps.sections.models import SectionMembership
@@ -15,17 +15,29 @@ class MatchingPolicyProtocol(typing.Protocol):
     description: str
     can_member_match: bool
 
-    @staticmethod
     def limit_requests(
-        qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
+        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
     ) -> typing.Union[QuerySet["BuddyRequest"]]:
-        ...
+        # TODO: NotImplemented or base implementation?
+        return qs.filter(self._base_filter(membership=membership)).select_related(
+            "issuer"
+        )
 
     def on_created_request(
         self,
         request: "BuddyRequest",
     ) -> None:
         ...
+
+    @classmethod
+    def _base_filter(cls, membership: SectionMembership) -> Q:
+        from apps.buddy_system.models import BuddyRequest
+
+        return Q(
+            responsible_section=membership.section,
+            state=BuddyRequest.State.CREATED,
+            matched_by=None,  # to be sure
+        )
 
 
 class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
@@ -38,7 +50,7 @@ class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
 class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
     id = "manual-by-member"
     title = _("Manual by members")
-    description = _("Matching done manualy also by members.")
+    description = _("Matching is done manualy directly by members.")
     can_member_match = True
 
 
@@ -50,6 +62,17 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     )
     can_member_match = True
 
+    def limit_requests(
+        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
+    ) -> typing.Union[QuerySet["BuddyRequest"]]:
+        from apps.accounts.models import UserProfile
+
+        member_profile: UserProfile = membership.user.profile_or_none
+
+        return qs.filter(self._base_filter(membership=membership)).filter(
+            issuer__profile__guest_faculty=member_profile.home_faculty,
+        )
+
 
 class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty-limited"
@@ -58,6 +81,7 @@ class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
         "Matching done manualy by members themselfs, but limited to same faculty till"
         "the rolling limit - limitation is not enabled after reaching the rolling limit."
     )
+    can_member_match = True
 
     # same faculty for N buddies
     # after N matches (to rolling_limit), faculty is not limited

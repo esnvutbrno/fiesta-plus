@@ -90,7 +90,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     picture = models.ImageField(
         storage=user_profile_picture_storage,
         upload_to=user_profile_picture_storage.upload_to,
-        verbose_name=_("profile picture image"),
+        verbose_name=_("profile picture"),
         null=True,
         blank=True,
     )

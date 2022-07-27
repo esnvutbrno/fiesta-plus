@@ -11,6 +11,7 @@ from polymorphic.admin import (
 )
 
 from apps.plugins.models import BasePluginConfiguration, Plugin
+from apps.utils.utils import all_subclasses
 
 
 @admin.register(Plugin)
@@ -54,7 +55,8 @@ class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
         PolymorphicChildModelFilter,
     ]
 
-    child_models = BasePluginConfiguration.__subclasses__()
+    def get_child_models(self):
+        return tuple(all_subclasses(BasePluginConfiguration))
 
 
 class BaseChildConfigurationAdmin(PolymorphicChildModelAdmin):

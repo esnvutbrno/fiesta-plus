@@ -9,22 +9,29 @@
 
 
 {% block main %}
-  policy: <strong>{{ conf.matching_policy }}</strong>
-
-  can member match? <strong>{{ conf.matching_policy_instance.can_member_match|yesno }}</strong>
-
-  <ul class="flex flex-col gap-y-2">
-    {% for br in object_list %}
-      <li class="border-4 rounded-xl border-blue-500 p-4">
-        <div class="float-right">{{ br.created }}</div>
-        <pre class="whitespace-pre-line">
-          gender: {{ br.issuer.profile.gender }} display? {{ conf.display_issuer_gender|yesno }}
-          exch. faculty: {{ br.issuer.profile.guest_faculty }} display? {{ conf.display_issuer_faculty|yesno }}
-          country: {{ br.issuer.profile.nationality }} display? {{ conf.display_issuer_country|yesno }}
-          home university: {{ br.issuer.profile.home_university }} display? {{ conf.display_issuer_university|yesno }}
-        </pre>
-      </li>
-    {% endfor %}
-
-  </ul>
+  <div class="prose prose-lg max-w-none">
+    <table>
+      <tbody>
+      {% for br in object_list %}
+        <tr class="border-4 rounded-xl border-gray-200 p-4 hover:bg-gray-50">
+          <td class="flex flex-row items-center">
+            <img
+              src="{{ br.issuer.profile.picture.url }}"
+              alt="" class="rounded-full w-24 h-24 m-8"
+            >
+            <pre class="whitespace-pre-line">
+              gender: {{ br.issuer.profile.gender }} display? {{ configuration.display_issuer_gender|yesno }}
+              exch. faculty: {{ br.issuer.profile.guest_faculty }} display? {{ configuration.display_issuer_faculty|yesno }}
+              country: {{ br.issuer.profile.nationality }} display? {{ configuration.display_issuer_country|yesno }}
+              home university: {{ br.issuer.profile.home_university }} display? {{ configuration.display_issuer_university|yesno }}
+            </pre>
+          </td>
+          <td>
+            {{ br.responsible_section }} @ {{ br.created }}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}
