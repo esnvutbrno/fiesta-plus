@@ -61,6 +61,20 @@ class UserMembershipMiddleware:
             # additional checks needs to be in views itself
             return
 
+        if request.in_space_of_section and not membership:
+            # hohoo, whatcha doing here, go away
+            host = (
+                request.get_host()
+                .removeprefix(request.in_space_of_section.space_slug)
+                .removeprefix(".")
+            )
+            messages.warning(
+                request, _("You have no permission to access this section space.")
+            )
+            return HttpResponseRedirect(
+                f"{request.scheme}://{host}{reverse(cls.MEMBERSHIP_URL_NAME)}"
+            )
+
         if not cls.should_ignore_403(target_app, request.resolver_match):
             # target is plugin view, but user does not have any membership,
             # and we're not on membership page
