@@ -20,7 +20,10 @@ class MatchingPolicyProtocol(typing.Protocol):
     ) -> typing.Union[QuerySet["BuddyRequest"]]:
         # TODO: NotImplemented or base implementation?
         return qs.filter(self._base_filter(membership=membership)).select_related(
-            "issuer"
+            "issuer",
+            "issuer__profile",
+            "issuer__profile__guest_faculty",
+            "issuer__profile__home_university",
         )
 
     def on_created_request(
