@@ -1,12 +1,11 @@
 import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
 from django_filters import ChoiceFilter, DateRangeFilter
-from django_filters.views import FilterView
-from django_tables2 import SingleTableMixin, Column, LazyPaginator
+from django_tables2 import Column, LazyPaginator
 
 from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
-from apps.fiestatables.views.htmx import HtmxTableMixin
+from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.utils.breadcrumbs import with_breadcrumb
@@ -37,7 +36,7 @@ class MembershipTable(tables.Table):
 
 
 @with_breadcrumb(_("Section Members"))
-class SectionMembersView(HtmxTableMixin, SingleTableMixin, FilterView):
+class SectionMembersView(FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
     table_class = MembershipTable
