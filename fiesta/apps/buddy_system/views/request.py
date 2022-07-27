@@ -1,5 +1,6 @@
 from allauth.account.views import SignupView
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
 from django.views.generic import TemplateView, CreateView
@@ -64,3 +65,9 @@ class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
         form.instance.responsible_section = self.request.in_space_of_section
         form.instance.issuer = self.request.user
         return super().form_valid(form)
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class=form_class)
+        form.fields['description'].help_text = render_to_string("buddy_system/parts/request_description_help_text.html")
+
+        return form

@@ -6,13 +6,14 @@ from apps.fiestaforms.forms import BaseModelForm
 
 
 class NewRequestForm(BaseModelForm):
-    submit_text = _("Request for buddy")
+    submit_text = _("Send request for buddy")
 
     class Meta:
         model = BuddyRequest
         fields = (
             # TODO: add notes, interests, etc
             # TODO: and others by preference of responsible_section
+            "description",
             "responsible_section",
             "issuer",
         )

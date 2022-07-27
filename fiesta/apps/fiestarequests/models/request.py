@@ -53,6 +53,10 @@ def base_request_model_factory(related_base: str):
             blank=True,
         )
 
+        description = models.TextField(
+            verbose_name=_('description'),
+        )
+
         @hook(BEFORE_SAVE, when="matched_by", was=None, is_not=None)
         def set_matched_at(self):
             self.matched_at = now()
