@@ -1,11 +1,12 @@
 import magic
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
 from django.urls import path
 from django.urls.resolvers import RoutePattern
 from django.views import View
 
 from apps.files import logger
 from apps.files.storage import NamespacedFilesStorage
+from apps.plugins.middleware.plugin import HttpRequest
 
 
 class NamespacedFilesServeView(View):
@@ -17,7 +18,11 @@ class NamespacedFilesServeView(View):
     def get(self, request, name: str, *args, **kwargs) -> HttpResponse:
         if not self.storage.exists(name):
             logger.warning("File %s in namespace %s not found.", name, self.namespace)
-            raise Http404()
+            return HttpResponseNotFound()
+
+        if not self.has_permission(request, name):
+            logger.warning("Acces to %s denied for %s.", name, request.user)
+            return HttpResponseForbidden()
 
         return HttpResponse(
             headers={
@@ -27,12 +32,16 @@ class NamespacedFilesServeView(View):
             }
         )
 
+    def has_permission(self, request: HttpRequest, name: str) -> bool:
+        # for overriding purposes
+        return True
+
     @classmethod
-    def as_url(cls, storage: NamespacedFilesStorage) -> RoutePattern:
+    def as_url(cls, storage: NamespacedFilesStorage, url_name: str = None) -> RoutePattern:
         return path(
             f"serve/{storage.namespace}/<path:name>",
             cls.as_view(
                 storage=storage,
             ),
-            name=f"serve-{storage.namespace}",
+            name=url_name or f"serve-{storage.namespace}",
         )

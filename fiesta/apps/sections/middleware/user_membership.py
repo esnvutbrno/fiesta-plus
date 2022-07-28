@@ -89,6 +89,10 @@ class UserMembershipMiddleware:
                 messages.warning(request, _("Your membership is not active yet."))
             elif membership and membership.state == SectionMembership.State.SUSPENDED:
                 messages.warning(request, _("Your membership has been suspended."))
+            elif not request.in_space_of_section:
+                messages.warning(
+                    request, _("Please, select log into one of your memberships.")
+                )
             else:
                 messages.warning(
                     request, _("You don't have no active membership to view this page.")
@@ -113,8 +117,10 @@ class UserMembershipMiddleware:
                 )
 
             # no section space, so display all memberships
-
-            return HttpResponseRedirect(reverse(cls.MEMBERSHIP_URL_NAME))
+            return HttpResponseRedirect("?".join((
+                reverse(cls.MEMBERSHIP_URL_NAME),
+                urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
+            )))
 
     @classmethod
     def should_ignore_403(

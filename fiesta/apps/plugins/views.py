@@ -14,7 +14,7 @@ T = TypeVar("T", bound=BasePluginConfiguration)
 class PluginConfigurationViewMixin(Generic[T]):
     @property
     def configration(self: HasRequestProtocol) -> T:
-        return self.request.plugin.configuration
+        return self.request.plugin and self.request.plugin.configuration
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
