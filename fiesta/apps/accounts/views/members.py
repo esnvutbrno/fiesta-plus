@@ -20,23 +20,25 @@ def related_faculties(request: HttpRequest):
 
 class SectionMembershipFilter(BaseFilterSet):
     search = CharFilter(
-        method='filter_search',
-        label=_('Search'),
-        widget=TextInput(attrs={'placeholder': _('Hannah, Diego, Joe...')}),
+        method="filter_search",
+        label=_("Search"),
+        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
     )
-    user__profile__home_faculty = ModelChoiceFilter(queryset=related_faculties, label=_('Faculty'))
-    role = ChoiceFilter(choices=SectionMembership.Role.choices, label=_('Role'))
-    state = ChoiceFilter(choices=SectionMembership.State.choices, label=_('State'))
+    user__profile__home_faculty = ModelChoiceFilter(
+        queryset=related_faculties, label=_("Faculty")
+    )
+    role = ChoiceFilter(choices=SectionMembership.Role.choices, label=_("Role"))
+    state = ChoiceFilter(choices=SectionMembership.State.choices, label=_("State"))
 
     # created = DateRangeFilter()
-    created_when = ProperDateFromToRangeFilter(field_name="created", label=_('Joined'))
+    created_when = ProperDateFromToRangeFilter(field_name="created", label=_("Joined"))
 
     class Meta(BaseFilterSet.Meta):
         pass
 
     def filter_search(self, queryset, name, value):
         return queryset.annotate(
-            search=SearchVector('user__last_name', 'user__first_name', 'state', 'role')
+            search=SearchVector("user__last_name", "user__first_name", "state", "role")
         ).filter(search=value)
 
 
@@ -52,7 +54,12 @@ class SectionMembershipTable(tables.Table):
         model = SectionMembership
 
         fields = ("role", "state", "created")
-        sequence = ("user__get_full_name", "user__profile__picture", "user__profile__home_faculty", "...")
+        sequence = (
+            "user__get_full_name",
+            "user__profile__picture",
+            "user__profile__home_faculty",
+            "...",
+        )
 
 
 @with_breadcrumb(_("Section Members"))
@@ -66,12 +73,16 @@ class SectionMembersView(FiestaTableView):
     model = SectionMembership
 
     select_related = (
-        'user__profile',
-        'user__profile__home_faculty',
-        'user__profile__home_faculty__university',
+        "user__profile",
+        "user__profile__home_faculty",
+        "user__profile__home_faculty__university",
     )
 
     def get_queryset(self):
-        return super().get_queryset().filter(
-            section=self.request.membership.section,
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                section=self.request.membership.section,
+            )
         )

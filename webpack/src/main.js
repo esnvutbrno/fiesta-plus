@@ -6,7 +6,9 @@ import collapse from '@alpinejs/collapse'
 
 Alpine.plugin(collapse)
 
-window.htmx = Htmx
+htmx.config.defaultFocusScroll = false;
+
+window.htmx = htmx
 window.Alpine = Alpine
 
 
