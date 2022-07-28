@@ -24,15 +24,22 @@ class ProfileFinishFormView(
     PluginConfigurationViewMixin[AccountsConfiguration],
     UpdateView,
 ):
-    form_class = UserProfileForm
+    # form_class = UserProfileForm
     template_name = "accounts/user_profile/profile_finish.html"
     success_message = _("Your profile has been updated.")
+
+    def get_form_class(self):
+        return UserProfileForm.for_user(user=self.request.user)
 
     def get_object(self, queryset=None):
         try:
             return self.request.user.profile
         except UserProfile.DoesNotExist:
             return None
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -54,14 +61,7 @@ class ProfileFinishFormView(
             else ["accounts/user_profile/profile_finish.html"]
         )
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
     def get_success_url(self):
         return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse(
             "accounts:profile"
         )
-
-    def get_form_class(self):
-        return UserProfileForm.for_user(user=self.request.user)
