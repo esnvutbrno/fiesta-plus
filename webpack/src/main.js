@@ -1,7 +1,10 @@
 import './css/main.css';
-import Htmx from "htmx.org"
+import htmx from "htmx.org"
 import Alpine from 'alpinejs'
 import "./js/filter"
+import collapse from '@alpinejs/collapse'
+
+Alpine.plugin(collapse)
 
 window.htmx = Htmx
 window.Alpine = Alpine

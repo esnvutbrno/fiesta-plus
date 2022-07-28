@@ -8,12 +8,9 @@
 {% block breadcrumbs_right %}
   <button
     type="button"
-    class="
-      my-1 flex flex-row items-center font-medium text-sm
-      hover:text-blue-500
-    "
-    :class="{'text-blue-500': $store.tableControls.isFilterActive}"
-    x-data @click="$store.tableControls.toggle()"
+    class="btn btn-sm btn-link"
+    :class="$store.tableControls.isFilterActive ? 'text-warning' : 'text-gray-600'"
+    x-cloak x-data @click="$store.tableControls.toggle()"
   >
     <svg
       class="w-6 h-6 shrink-0"

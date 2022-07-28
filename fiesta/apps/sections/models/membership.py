@@ -35,7 +35,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     role = models.CharField(
         max_length=16,
         choices=Role.choices,
-        verbose_name=_("section role"),
+        verbose_name=_("role"),
     )
 
     class State(models.TextChoices):
@@ -47,12 +47,12 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         max_length=16,
         choices=State.choices,
         default=State.INACTIVE,
-        verbose_name=_("membership state"),
+        verbose_name=_("state"),
     )
 
     # TODO: add flag to signalize, if membership has been added from ESN Accounts
 
-    class Meta:
+    class Meta(BaseTimestampedModel.Meta):
         verbose_name = _("section membership")
         verbose_name_plural = _("section memberships")
         unique_together = ("user", "section")

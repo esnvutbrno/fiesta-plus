@@ -150,6 +150,9 @@ def load_users(*, cursor: CursorWrapper):
             ),
             # TODO: state
             state=SectionMembership.State.ACTIVE,
+            defaults=dict(
+                created=make_aware(registered) if registered else timezone.now()
+            )
         )
         university, _ = University.objects.update_or_create(
             abbr=uni_id, defaults=dict(name=uni_name, country=Country("CZ"))

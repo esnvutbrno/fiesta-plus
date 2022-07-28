@@ -32,5 +32,20 @@ class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
         )
 
 
-class FiestaTableView(FiestaTableMixin, FilterView):
+class PreprocessQuerySetMixin:
+    select_related = None
+    prefetch_related = None
+
+    def get_queryset(self, *args, **kwargs):
+        qs = super().get_queryset(*args, **kwargs)
+        if self.select_related is not None:
+            qs = qs.select_related(*self.select_related)
+
+        if self.prefetch_related is not None:
+            qs = qs.prefetch_related(*self.prefetch_related)
+
+        return qs
+
+
+class FiestaTableView(PreprocessQuerySetMixin, FiestaTableMixin, FilterView):
     pass

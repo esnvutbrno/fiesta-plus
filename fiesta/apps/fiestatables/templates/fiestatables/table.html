@@ -3,13 +3,13 @@
 <div
   hx-boost="true"
   hx-target="#table-{{ table.prefix|default:'default' }}"
-  hx-swap="outerHTML"
+  hx-swap="outerHTML focus-scroll:false"
   id="table-{{ table.prefix|default:'default' }}"
 >
   <div
-    x-data x-cloak
+    x-data x-cloak x-collapse
     x-show="$store.tableControls.shown"
-    class="flex flex-col lg:flex-row gap-2 mb-4"
+    class="flex flex-col lg:flex-row justify-between items-end gap-2 pb-4"
   >
     <form
       hx-get="{{ request.path }}"
@@ -23,7 +23,7 @@
       {{ filter.form }}
     </form>
     {% if view.export_formats %}
-      <div class="btn-group self-end" role="group">
+      <div class="btn-group self-end min-w-max" role="group">
         <a type="button" class="btn btn-sm btn-outline">
           <svg aria-hidden="true" class="w-4 h-4 fill-current" fill="currentColor" viewBox="0 0 20 20"
                xmlns="http://www.w3.org/2000/svg">
@@ -48,7 +48,6 @@
   </div>
 
   {# notify alpine store about activated filter #}
-  <script>
-      Alpine.store('tableControls').isFilterActive = {{ filter.form.is_bound|lower }};
-  </script>
+  {# cannot use <script> since we are in the middle of page #}
+  <div x-init="Alpine.store('tableControls').isFilterActive = {{ filter.form.is_bound|lower }}"></div>
 </div>

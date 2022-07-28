@@ -101,7 +101,7 @@
 }
 
 .Forms__form--basefilterform .Forms__select {
-    @apply select-sm;
+    @apply select-sm font-normal;
 }
 
 .Forms__form--basefilterform .Forms__input {
