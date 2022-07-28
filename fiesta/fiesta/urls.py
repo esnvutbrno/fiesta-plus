@@ -39,6 +39,7 @@ urlpatterns = [
     path("accounts/", include("apps.accounts.urls", namespace="accounts")),
     # handling authentication (including social auth)
     path("auth/", include("allauth.urls")),
+    path("auto-options/", include("django_select2.urls")),
 ]
 
 if settings.DEBUG:

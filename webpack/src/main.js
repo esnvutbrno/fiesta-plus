@@ -3,6 +3,7 @@ import htmx from "htmx.org"
 
 import Alpine from 'alpinejs'
 import "./js/filter"
+import "./js/model-select"
 import "./js/modal"
 import collapse from '@alpinejs/collapse'
 

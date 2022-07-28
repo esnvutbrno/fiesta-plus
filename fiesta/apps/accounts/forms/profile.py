@@ -5,10 +5,41 @@ from typing import Type
 from django.db.models import Field
 from django.forms import Field as FormField, modelform_factory
 from django.utils.translation import gettext_lazy as _
+from django_select2.forms import ModelSelect2Widget
 
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionsConfiguration
+
+
+class ChoicesJsWidgetMixin:
+    def build_attrs(self, base_attrs, extra_attrs=None):
+        """Add select2's tag attributes."""
+        attrs: dict = super().build_attrs(base_attrs, extra_attrs=extra_attrs)
+        default_attrs = {
+            "x-data": f"modelSelect($refs.{attrs.get('id')})",
+            "x-ref": attrs.get('id')
+        }
+        attrs.update(default_attrs)
+        return attrs
+
+    @property
+    def media(self):
+        return None
+
+
+class UniversityWidget(ChoicesJsWidgetMixin, ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+        "abbr__icontains",
+    ]
+
+
+class FacultyWidget(ChoicesJsWidgetMixin, ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+        "abbr__icontains",
+    ]
 
 
 class UserProfileForm(BaseModelForm):
@@ -68,6 +99,12 @@ class UserProfileForm(BaseModelForm):
             "guest_faculty",
             "picture",
         )
+
+        widgets = {
+            "home_university": UniversityWidget,
+            "home_faculty": FacultyWidget,
+            "guest_faculty": FacultyWidget,
+        }
 
 
 class UserProfileFinishForm(UserProfileForm):
