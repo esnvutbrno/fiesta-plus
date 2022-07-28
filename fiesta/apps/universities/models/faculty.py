@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.universities.models.managers import FacultyManager
 from apps.utils.models import BaseTimestampedModel
 
 
@@ -22,6 +23,8 @@ class Faculty(BaseTimestampedModel):
         verbose_name=_("related university"),
         db_index=True,
     )
+
+    objects = FacultyManager()
 
     class Meta:
         verbose_name = _("faculty")
