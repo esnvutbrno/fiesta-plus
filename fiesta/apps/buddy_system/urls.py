@@ -17,6 +17,7 @@ urlpatterns = [
     path("new-request", NewRequestView.as_view(), name="new-request"),
     path("requests", RequestsEditorView.as_view(), name="requests-editor"),
     path("matching-requests", MatchingRequestsView.as_view(), name="matching-requests"),
-
-    ProfilePictureServeView.as_url(user_profile_picture_storage, url_name='serve-issuer-profile-picture'),
+    ProfilePictureServeView.as_url(
+        user_profile_picture_storage, url_name="serve-issuer-profile-picture"
+    ),
 ]

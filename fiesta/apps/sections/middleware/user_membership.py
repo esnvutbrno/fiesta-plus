@@ -117,10 +117,14 @@ class UserMembershipMiddleware:
                 )
 
             # no section space, so display all memberships
-            return HttpResponseRedirect("?".join((
-                reverse(cls.MEMBERSHIP_URL_NAME),
-                urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
-            )))
+            return HttpResponseRedirect(
+                "?".join(
+                    (
+                        reverse(cls.MEMBERSHIP_URL_NAME),
+                        urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
+                    )
+                )
+            )
 
     @classmethod
     def should_ignore_403(

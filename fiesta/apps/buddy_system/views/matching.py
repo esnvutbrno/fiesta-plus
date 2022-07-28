@@ -29,12 +29,13 @@ class MatchingRequestsView(
 
 
 class ProfilePictureServeView(
-    PluginConfigurationViewMixin[BuddySystemConfiguration],
-    NamespacedFilesServeView
+    PluginConfigurationViewMixin[BuddySystemConfiguration], NamespacedFilesServeView
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
-        in_my_section = request.membership.section.buddy_system_requests.filter(issuer__profile__picture=name).exists()
+        in_my_section = request.membership.section.buddy_system_requests.filter(
+            issuer__profile__picture=name
+        ).exists()
 
         # does have the section enabled picture displaying?
         display = self.configration and self.configration.display_issuer_picture
