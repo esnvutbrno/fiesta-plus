@@ -7,7 +7,7 @@
       type="submit"
       {# is submiting button, but before request, form is reseted #}
       x-data @click="$store.tableControls.reset($event.target)"
-      class="Forms__button Forms__button--simple bg-amber-100"
+      class="btn btn-sm btn-warning self-end"
     >{% trans "reset" %}</button>
   {% endif %}
 {% endblock %}

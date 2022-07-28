@@ -7,31 +7,7 @@
 }
 
 .table-container table {
-    @apply min-w-full;
-}
-
-.table-container thead {
-    @apply bg-gray-100 dark:bg-gray-700;
-}
-
-.table-container thead th {
-    @apply py-3 px-4 text-xs font-medium tracking-tight text-left text-gray-700 uppercase dark:text-gray-400;
-}
-
-.table-container tbody tr {
-    @apply border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700;
-}
-
-.table-container tbody td {
-    @apply py-4 px-6 text-sm text-gray-500 whitespace-nowrap dark:text-gray-400;
-}
-
-.table-container tbody td:first-child {
-    @apply font-medium text-gray-900 whitespace-nowrap dark:text-white;
-}
-
-.table-container th.orderable {
-
+    @apply min-w-full table table-compact;
 }
 
 .table-container th.orderable a {
@@ -58,6 +34,8 @@
     mask: url('data:image/svg+xml; utf8, <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h9m5-4v12m0 0l-4-4m4 4l4-4" /></svg>');
 }
 
+
+/* TODO: refactor pagination to btn-group */
 .table-container ul.pagination {
     @apply inline-flex -space-x-px mx-auto py-4 relative;
 }

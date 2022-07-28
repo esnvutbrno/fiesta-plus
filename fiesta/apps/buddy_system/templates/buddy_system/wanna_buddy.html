@@ -9,22 +9,25 @@
 
 
 {% block main %}
-  <h1 class="text-6xl text-center my-6">Wanna Buddy?</h1>
-  <h2 class="text-xl text-center text-gray-500 my-4">How does it work?</h2>
+  <div class="prose prose-lg mx-auto">
+    <h1 class="text-center">Wanna Buddy?</h1>
+    <h2 class="text-center">How does it work?</h2>
+  </div>
 
   <section class="text-gray-600 body-font">
     <div class="max-w-2xl mx-auto flex flex-wrap">
-      <div class="flex relative pt-10 pb-20 sm:items-center md:w-2/3 mx-auto">
+      <div class="flex relative pt-10 pb-20 sm:items-center md:w-2/3 mx-auto group">
         <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
           <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
         </div>
-        <div
-          class="flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center bg-purple-500 text-white relative z-10 title-font font-medium text-sm">
-          1
-        </div>
+        <div class="badge badge-primary z-10 group-hover:badge-secondary">1</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
           <div
-            class="flex-shrink-0 w-24 h-24 bg-purple-100 text-purple-500 rounded-full inline-flex items-center justify-center">
+            class="
+              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
+              bg-primary-content text-primary transition-colors
+              group-hover:bg-secondary-content group-hover:text-secondary
+            ">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -32,24 +35,25 @@
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
-            <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Fiesta Profile</h2>
+            <h3 class="font-medium title-font text-gray-900 mb-1 text-xl">Profile in Buena Fiesta</h3>
             <p class="leading-relaxed">
               At first, you'll need to register here and fill information and facts about you.
             </p>
           </div>
         </div>
       </div>
-      <div class="flex relative pb-20 sm:items-center md:w-2/3 mx-auto">
+      <div class="flex relative pb-20 sm:items-center md:w-2/3 mx-auto group">
         <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
           <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
         </div>
-        <div
-          class="flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center bg-purple-500 text-white relative z-10 title-font font-medium text-sm">
-          2
-        </div>
+        <div class="badge badge-primary z-10 group-hover:badge-secondary">2</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
           <div
-            class="flex-shrink-0 w-24 h-24 bg-purple-100 text-purple-500 rounded-full inline-flex items-center justify-center">
+            class="
+              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
+              bg-primary-content text-primary transition-colors
+              group-hover:bg-secondary-content group-hover:text-secondary
+            ">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -57,24 +61,25 @@
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
-            <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Buddy Request</h2>
+            <h3 class="font-medium title-font text-gray-900 mb-1 text-xl">Buddy Request</h3>
             <p class="leading-relaxed">
               Create a buddy request, so buddies can see you and take you!
             </p>
           </div>
         </div>
       </div>
-      <div class="flex relative pb-20 sm:items-center md:w-2/3 mx-auto">
+      <div class="flex relative pb-20 sm:items-center md:w-2/3 mx-auto group">
         <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
           <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
         </div>
-        <div
-          class="flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center bg-purple-500 text-white relative z-10 title-font font-medium text-sm">
-          3
-        </div>
+        <div class="badge badge-primary z-10 group-hover:badge-secondary">3</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
           <div
-            class="flex-shrink-0 w-24 h-24 bg-purple-100 text-purple-500 rounded-full inline-flex items-center justify-center">
+            class="
+              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
+              bg-primary-content text-primary transition-colors
+              group-hover:bg-secondary-content group-hover:text-secondary
+            ">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -82,24 +87,25 @@
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
-            <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Buddies Magic</h2>
+            <h3 class="font-medium title-font text-gray-900 mb-1 text-xl">Buddies Magic</h3>
             <p class="leading-relaxed">
               One of our buddies will take your request and you'll be contacted!
             </p>
           </div>
         </div>
       </div>
-      <div class="flex relative pb-10 sm:items-center md:w-2/3 mx-auto">
+      <div class="flex relative pb-10 sm:items-center md:w-2/3 mx-auto group">
         <div class="h-full w-6 absolute inset-0 flex items-center justify-center">
           <div class="h-full w-1 bg-gray-200 pointer-events-none"></div>
         </div>
-        <div
-          class="flex-shrink-0 w-6 h-6 rounded-full mt-10 sm:mt-0 inline-flex items-center justify-center bg-purple-500 text-white relative z-10 title-font font-medium text-sm">
-          4
-        </div>
+        <div class="badge badge-primary z-10 group-hover:badge-secondary">4</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
           <div
-            class="flex-shrink-0 w-24 h-24 bg-purple-100 text-purple-500 rounded-full inline-flex items-center justify-center">
+            class="
+              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
+              bg-primary-content text-primary transition-colors
+              group-hover:bg-secondary-content group-hover:text-secondary
+            ">
             <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -107,7 +113,7 @@
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0">
-            <h2 class="font-medium title-font text-gray-900 mb-1 text-xl">Enjoy your connection</h2>
+            <h3 class="font-medium title-font text-gray-900 mb-1 text-xl">Enjoy your connection</h3>
             <p class="leading-relaxed">
               The best time to go on trip with your buddy, grab a beer or go for a run! Enjoy the time!
             </p>
@@ -121,8 +127,7 @@
     <a
       href="{{ continue_url }}"
       class="
-        text-white bg-purple-500 border-0 py-4 px-16
-        focus:outline-none hover:bg-purple-600 rounded text-xl mt-10 font-bold
+        btn btn-secondary btn-lg mt-4
       ">
       Let's get the party started!
     </a>

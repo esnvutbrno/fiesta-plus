@@ -6,31 +6,19 @@
 @layer components {
 
     .Forms__field {
-        @apply relative z-0 mb-3 w-full;
+        @apply form-control;
     }
 
     .Forms__field--buttons {
-        @apply flex justify-end items-center;
+        @apply flex flex-row justify-end items-center mt-4;
     }
 
     .Forms__button {
-        @apply font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center
-        inline-flex items-center
-        ;
-    }
-
-    .Forms__button--simple {
-        @apply p-1.5 px-3 text-gray-900 focus:outline-none
-        bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700
-        focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700
-        ;
+        @apply btn btn-secondary;
     }
 
     .Forms__button--submit {
-        @apply text-white bg-blue-700
-        hover:bg-blue-800
-        focus:ring-4 focus:ring-blue-300
-        dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800;
+        /*@apply ;*/
     }
 
     .Forms__error_text {
@@ -38,57 +26,72 @@
     }
 
     .Forms__input {
-        @apply bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-
-        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+        @apply input w-full input-bordered input-primary;
     }
 
-    .Forms__input[disabled] {
-        @apply
-        bg-gray-200 border-gray-300 text-gray-700
+    .Forms__textarea {
+        @apply textarea w-full textarea-bordered textarea-primary h-auto;
+    }
 
-        focus:ring-blue-500 focus:border-blue-500 cursor-not-allowed
-
-        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-500
-        dark:text-gray-500 dark:focus:ring-blue-500 dark:focus:border-blue-500
-        ;
+    .Forms__required-note {
+        @apply label-text-alt badge badge-outline;
     }
 
     .Forms__select {
-        @apply
-        bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-        focus:ring-blue-500 focus:border-blue-500
-        block w-full p-2.5
+        @apply select select-bordered select-primary w-full;
+    }
 
-        dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+    .Forms__label-widget {
+        @apply label;
     }
 
     .Forms__label {
-        @apply block mb-2 text-sm font-medium text-gray-900
-
-        dark:text-gray-400;
+        @apply label-text;
     }
 
     .Forms__help_text {
-        @apply mt-2 text-sm text-gray-500 dark:text-gray-400;
+        @apply label-text;
     }
 
     .Forms__field--error .Forms__input {
-        @apply bg-red-50 border border-red-500 text-red-900 placeholder-red-700
-        focus:ring-red-500 focus:border-red-500 dark:bg-red-100 dark:border-red-400;
+        @apply input-error;
+    }
+
+    .Forms__field--error .Forms__select {
+        @apply select-error;
     }
 
     .Forms__field--error .Forms__label {
         @apply text-red-700 dark:text-red-500;
     }
 
-
-    .Forms__label--file {
-        @apply block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300;
+    /* File input is completely diferent */
+    .Forms__field--file {
+        @apply relative;
     }
 
-    .Forms__file {
-        @apply block w-full p-0 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 cursor-pointer dark:text-gray-400 focus:outline-none focus:border-transparent dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
+    .Forms__field--file a {
+        @apply btn btn-primary btn-sm btn-link truncate text-ellipsis w-32;
+    }
+
+    .Forms__field--file .Forms__label-widget {
+        @apply absolute left-0 top-0 right-0 pointer-events-none;
+    }
+
+    .Forms__field--file .Forms__widget {
+        @apply flex flex-row justify-center items-center flex-wrap gap-x-4 text-sm pt-0.5;
+    }
+
+    .Forms__field--file .Forms__widget br {
+        @apply hidden;
+    }
+
+    .Forms__field--file .Forms__file {
+        @apply w-full mt-1 pl-0;
+    }
+
+    .Forms__field--file .Forms__file::file-selector-button {
+        @apply btn btn-link hover:bg-white hover:border-transparent;
     }
 }
 
@@ -97,19 +100,18 @@
     @apply flex flex-row space-x-2;
 }
 
-.Forms__form--basefilterform .Forms__select,
+.Forms__form--basefilterform .Forms__select {
+    @apply select-sm;
+}
+
 .Forms__form--basefilterform .Forms__input {
-    @apply p-1.5 text-gray-700;
+    @apply input-sm;
 }
 
-.Forms__form--basefilterform .Forms__button {
-    @apply p-1.5 px-3;
-}
-
-.Forms__form--basefilterform .Forms__field--buttons {
-    @apply self-end;
+.Forms__form--basefilterform .Forms__label-widget {
+    @apply pb-1;
 }
 
 .Forms__form--basefilterform .Forms__widget {
-    @apply flex flex-row items-center space-x-1.5;
+    @apply flex flex-row items-center space-x-0.5;
 }

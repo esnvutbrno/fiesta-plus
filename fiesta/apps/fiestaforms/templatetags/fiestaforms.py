@@ -9,13 +9,37 @@ register = template.Library()
 
 
 @register.filter
-def as_widget_field(bf: BoundField):
-    input_type = getattr(bf.field.widget, "input_type", "unknown")
-    return bf.as_widget(
-        attrs={
-            "class": f"peer Forms__{input_type} Forms__input",
-        }
+def bf_type(bf: BoundField) -> str:
+    return getattr(
+        bf.field.widget,
+        "input_type",
+        "textarea" if "Textarea" in bf.field.widget.__class__.__name__ else "unknown"
     )
+
+
+@register.filter
+def field_modifier(bf: BoundField):
+    # to notify tailwind
+    return dict(
+        select='Forms__field--select',
+        text='Forms__field--text',
+        file='Forms__field--file',
+        textarea='Forms__field--textarea',
+        unknown='Forms__field--unknown',
+    ).get(bf_type(bf))
+
+
+@register.filter
+def as_widget_field(bf: BoundField):
+    # to notify tailwind
+    ext_class = dict(
+        select='Forms__select',
+        text='Forms__text',
+        file='Forms__file',
+        textarea='Forms__textarea',
+        unknown='Forms__unknown',
+    )
+    return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})
 
 
 @register.filter
