@@ -1,4 +1,6 @@
 import hashlib
+import typing
+from typing import Callable
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -9,14 +11,23 @@ from django.utils.timezone import now
 
 from apps.utils.models import BaseModel
 
+if typing.TYPE_CHECKING:
+    from apps.sections.middleware.section_space import HttpRequest
+
 
 class NamespacedFilesStorage(FileSystemStorage):
     storages = []
 
-    def __init__(self, namespace: str):
+    def __init__(
+        self,
+        namespace: str,
+        *,
+        has_permission: Callable[['HttpRequest', str], bool] = None
+    ):
         self.namespace = namespace.strip("/")
         super().__init__(location=settings.MEDIA_ROOT / namespace)
         self.storages.append(self)
+        self.has_permission = has_permission or (lambda *_: True)
 
     @property
     def url_name_suffix(self):

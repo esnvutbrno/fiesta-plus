@@ -5,6 +5,8 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.utils.models import BaseTimestampedModel
+from apps.utils.models import BaseTimestampedModel
+from .managers import PluginManager
 from ..plugin import PluginAppConfig
 from ..utils import all_plugins_as_choices
 
@@ -52,6 +54,8 @@ class Plugin(BaseTimestampedModel):
         verbose_name=_("ESN section"),
         db_index=True,
     )
+
+    objects = PluginManager()
 
     class Meta:
         verbose_name = _("plugin")

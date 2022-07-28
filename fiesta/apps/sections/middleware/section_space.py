@@ -6,7 +6,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, HttpResponseNotFound
 
 from ..models import Section
-from ...utils.models.query import get_object_or_none
+from ...utils.models.query import get_single_object_or_none
 from ...utils.request import HttpRequest as BaseHttpRequest
 
 
@@ -26,14 +26,10 @@ class SectionSpaceMiddleware:
         # 'xxx' or empty string
         space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
-        request.in_space_of_section = None
+        in_space_of_section = get_single_object_or_none(Section, space_slug=space_slug)
 
         if not space_slug or space_slug == settings.ROOT_DOMAIN:
             return self.get_response(request)
-
-        in_space_of_section: Section | None = get_object_or_none(
-            Section, space_slug=space_slug
-        )
 
         if not in_space_of_section:
             return HttpResponseNotFound("Section space not found.")

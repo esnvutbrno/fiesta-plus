@@ -12,8 +12,8 @@ from apps.plugins.middleware.plugin import HttpRequest
 class NamespacedFilesServeView(View):
     mime = magic.Magic(mime=True)
 
+    # got from as_view() call in as_url()
     storage: NamespacedFilesStorage = None
-    namespace: str = None
 
     def get(self, request, name: str, *args, **kwargs) -> HttpResponse:
         if not self.storage.exists(name):
@@ -22,6 +22,10 @@ class NamespacedFilesServeView(View):
 
         if not self.has_permission(request, name):
             logger.warning("Acces to %s denied for %s.", name, request.user)
+            return HttpResponseForbidden()
+
+        if not self.storage.has_permission(request, name):
+            logger.warning("User %s does not have access to file %s.", request.user, name)
             return HttpResponseForbidden()
 
         return HttpResponse(
