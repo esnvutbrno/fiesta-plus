@@ -16,8 +16,8 @@ module.exports = {
         themes: [
             {
                 fiesta: {
-                    "primary": "#7b3ff4",
-                    "secondary": "#f43f5e",
+                    "primary": "#f43f5e",
+                    "secondary": "#7b3ff4",
                     "accent": "#FFBC0A",
                     "neutral": "#3D4451",
                     "base-100": "#FFFFFF",

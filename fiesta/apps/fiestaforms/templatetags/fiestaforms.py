@@ -24,6 +24,7 @@ def field_modifier(bf: BoundField):
         select="Forms__field--select",
         text="Forms__field--text",
         file="Forms__field--file",
+        checkbox="Forms__field--checkbox",
         textarea="Forms__field--textarea",
         unknown="Forms__field--unknown",
     ).get(bf_type(bf))
@@ -37,6 +38,7 @@ def as_widget_field(bf: BoundField):
         text="Forms__text",
         file="Forms__file",
         textarea="Forms__textarea",
+        checkbox="Forms__checkbox",
         unknown="Forms__unknown",
     )
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})

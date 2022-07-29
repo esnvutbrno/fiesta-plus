@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+{% load buddy_system %}
 {% load breadcrumbs %}
 {% load i18n %}
 
@@ -60,7 +61,14 @@
             {% endif %}
           </table>
           {# <p /> are added by filter #}
-          {{ br.description|linebreaks }}
+          {{ br.description|censore_description|linebreaks }}
+
+          <div class="flex flex-row flex-wrap justify-between">
+            {% for interest in br.get_interests_display %}
+              <span class="badge badge-outline mr-2 mb-2">{{ interest }}</span>
+            {% endfor %}
+          </div>
+
 
           <div class="card-actions justify-between items-end">
             <span class="badge badge-outline">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>

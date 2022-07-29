@@ -1,11 +1,12 @@
 from allauth.account.views import SignupView
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.template.loader import render_to_string
+from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, CreateView
 
-from apps.buddy_system.forms import NewRequestForm
+from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.sections.models import SectionMembership
 from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
 
@@ -48,9 +49,10 @@ class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
         return response
 
 
-class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
+class NewRequestView(EnsureInSectionSpaceViewMixin, SuccessMessageMixin, CreateView):
     template_name = "buddy_system/new_request.html"
-    form_class = NewRequestForm
+    form_class = NewBuddyRequestForm
+    success_message = _("Your buddy request has been succesfully created!")
 
     success_url = reverse_lazy("buddy_system:index")
 
@@ -65,11 +67,3 @@ class NewRequestView(EnsureInSectionSpaceViewMixin, CreateView):
         form.instance.responsible_section = self.request.in_space_of_section
         form.instance.issuer = self.request.user
         return super().form_valid(form)
-
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class=form_class)
-        form.fields["description"].help_text = render_to_string(
-            "buddy_system/parts/request_description_help_text.html"
-        )
-
-        return form

@@ -11,3 +11,18 @@
 [x-cloak] {
     display: none !important;
 }
+
+@layer components {
+    @keyframes FadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .card-appear {
+        animation: 200ms FadeIn ease-in-out;
+        /* TODO: make it fine */
+    }
+}
