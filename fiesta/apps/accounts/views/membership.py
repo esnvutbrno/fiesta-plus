@@ -1,10 +1,12 @@
 from django.forms import HiddenInput
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, TemplateView
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionMembership
+from apps.sections.views.space_mixin import EnsureNotInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import BreadcrumbItem
 
 
 class NewSectionMembershipForm(BaseModelForm):
@@ -26,12 +28,21 @@ class NewSectionMembershipForm(BaseModelForm):
 
 
 class MyMembershipsView(TemplateView):
-    template_name = "accounts/my_memberships.html"
+    template_name = "accounts/memberships/my_memberships.html"
 
 
-class NewSectionMembershipFormView(CreateView):
-    template_name = "accounts/new_membership.html"
+class NewSectionMembershipFormView(
+    EnsureNotInSectionSpaceViewMixin,
+    CreateView,
+):
+    template_name = "accounts/memberships/new_membership.html"
     form_class = NewSectionMembershipForm
+
+    extra_context = dict(
+        parent_breadcrumb=BreadcrumbItem(
+            _("My Memberships"), reverse_lazy("accounts:membership")
+        )
+    )
 
     def get_success_url(self):
         return reverse("accounts:membership")

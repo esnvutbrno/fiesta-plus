@@ -1,4 +1,5 @@
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import urlencode
@@ -18,6 +19,23 @@ class EnsureInSectionSpaceViewMixin:
                         urlencode({REDIRECT_FIELD_NAME: self.request.get_full_path()}),
                     )
                 )
+            )
+
+        return super().dispatch(request, *args, **kwargs)
+
+
+class EnsureNotInSectionSpaceViewMixin:
+    request: HttpRequest
+
+    def dispatch(self, request: HttpRequest, *args, **kwargs):
+        if self.request.in_space_of_section:
+            host = (
+                request.get_host()
+                .removeprefix(request.in_space_of_section.space_slug)
+                .removeprefix(".")
+            )
+            return HttpResponseRedirect(
+                f"{request.scheme}://{host}{request.get_full_path()}"
             )
 
         return super().dispatch(request, *args, **kwargs)

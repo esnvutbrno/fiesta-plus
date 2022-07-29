@@ -1,17 +1,10 @@
 {% load memberships %}
 {% load static %}
-<div class="p-4 max-w-lg mx-auto bg-white rounded-lg border shadow
-            sm:p-8 dark:bg-gray-800 dark:border-gray-700"
->
-  <div class="flex justify-between items-center mb-4">
-    <h2 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
-      My Memberships
-    </h2>
-    {#        <a href="#" class="text-sm font-medium text-blue-600 hover:underline dark:text-blue-500">#}
-    {#            View all#}
-    {#        </a>#}
-  </div>
-  <div class="flow-root">
+
+<div class="card card-bordered card-appear max-w-xl mx-auto shadow-xl">
+  <div class="card-body">
+    <div class="card-title">My Memberships</div>
+
     <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
       {% for membership in memberships %}
         <li class="py-3 sm:py-4">
@@ -65,10 +58,10 @@
         <h1 class="text-gray-900 text-lg font-medium">
           Your section is not here?
         </h1>
-        <a class="bg-primary text-white p-2 rounded inline-block"
+        <a class="btn btn-wide btn-primary"
            href="{% url "accounts:membership-new" %}"
         >
-          Ask for membership
+          Request new membership
         </a>
       </li>
     </ul>

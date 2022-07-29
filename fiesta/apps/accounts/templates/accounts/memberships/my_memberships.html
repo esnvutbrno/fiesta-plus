@@ -3,14 +3,14 @@
 {% load i18n %}
 
 {% block upper_head %}
-  {% trans "Memberships" as title %}
+  {% trans "My Memberships" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block main %}
 
   {% if request.all_memberships.exists %}
-    {% include "accounts/parts/membership_list.html" with memberships=request.all_memberships.all %}
+    {% include "accounts/memberships/membership_list.html" with memberships=request.all_memberships.all %}
   {% else %}
     <div class="max-w-md flex flex-col mx-auto">
       <span class="self-center py-4">
@@ -24,7 +24,7 @@
         <a class="bg-primary text-white p-2 rounded inline-block"
            href="{% url "accounts:membership-new" %}"
         >
-          Ask for membership
+          Request new membership
         </a>
       </div>
     </div>

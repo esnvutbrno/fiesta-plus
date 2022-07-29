@@ -29,6 +29,10 @@ startplugin: DA_CMD = startplugin ## Create plugin in project with name=
 startplugin: ARG = $(name)
 startplugin: da
 
+shell_plus: DA_CMD = shell_plus ## Starts django shell_plus
+shell_plus: ARG = $(name)
+shell_plus: da
+
 migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
 
