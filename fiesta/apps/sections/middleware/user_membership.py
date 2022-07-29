@@ -87,7 +87,7 @@ class UserMembershipMiddleware:
             # user in section space with inactive membership yet?
             if membership and membership.state == SectionMembership.State.INACTIVE:
                 messages.warning(request, _("Your membership is not active yet."))
-            elif membership and membership.state == SectionMembership.State.SUSPENDED:
+            elif membership and membership.state == SectionMembership.State.BANNED:
                 messages.warning(request, _("Your membership has been suspended."))
             elif not request.in_space_of_section:
                 messages.warning(

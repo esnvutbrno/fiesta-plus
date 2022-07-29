@@ -3,9 +3,9 @@ from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
 from django_filters import ChoiceFilter, CharFilter, ModelChoiceFilter
-from django_tables2 import Column, LazyPaginator
+from django_tables2 import Column
 
-from apps.fiestatables.columns import ImageColumn
+from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.user_membership import HttpRequest
@@ -27,7 +27,6 @@ class SectionMembershipFilter(BaseFilterSet):
     user__profile__home_faculty = ModelChoiceFilter(
         queryset=related_faculties, label=_("Faculty")
     )
-    role = ChoiceFilter(choices=SectionMembership.Role.choices, label=_("Role"))
     state = ChoiceFilter(choices=SectionMembership.State.choices, label=_("State"))
 
     # created = DateRangeFilter()
@@ -43,21 +42,33 @@ class SectionMembershipFilter(BaseFilterSet):
 
 
 class SectionMembershipTable(tables.Table):
-    user__get_full_name = Column(
-        order_by=("user__last_name", "user__first_name", "user__username")
+    user__full_name_official = Column(
+        verbose_name=_('Member'),
+        order_by=("user__last_name", "user__first_name", "user__username"),
+        linkify=("accounts:user-detail", dict(pk=tables.A("pk"), )),
+        attrs=dict(a={'hx-disable': True}),  # TODO: do it properly
     )
-    user__profile__home_faculty = Column()
-
     user__profile__picture = ImageColumn()
+    user__profile__home_faculty__abbr = Column(verbose_name=_('Faculty'))
+
+    state = LabeledChoicesColumn(
+        SectionMembership.State,
+        {
+            SectionMembership.State.INACTIVE: '❓',
+            SectionMembership.State.ACTIVE: '✅',
+            SectionMembership.State.BANNED: '⛔',
+        }
+    )
 
     class Meta:
         model = SectionMembership
 
-        fields = ("role", "state", "created")
+        fields = ("state", "created")
+
         sequence = (
-            "user__get_full_name",
+            "user__full_name_official",
             "user__profile__picture",
-            "user__profile__home_faculty",
+            "user__profile__home_faculty__abbr",
             "...",
         )
 
@@ -68,8 +79,6 @@ class SectionMembersView(FiestaTableView):
     template_name = "fiestatables/page.html"
     table_class = SectionMembershipTable
     filterset_class = SectionMembershipFilter
-    paginate_by = 20
-    paginator_class = LazyPaginator
     model = SectionMembership
 
     select_related = (
@@ -84,5 +93,6 @@ class SectionMembersView(FiestaTableView):
             .get_queryset()
             .filter(
                 section=self.request.membership.section,
+                role=SectionMembership.Role.MEMBER,
             )
         )

@@ -37,6 +37,14 @@ class User(AbstractUser):
         except UserProfile.DoesNotExist:
             ...
 
+    @property
+    def full_name(self):
+        return self.get_full_name()
+
+    @property
+    def full_name_official(self):
+        return f'{self.last_name} {self.first_name}'.strip()
+
     class Meta(AbstractUser.Meta):
         verbose_name = _("user")
         verbose_name_plural = _("users")

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseNotFound
 
 from ..models import Section
 from ...utils.models.query import get_object_or_none
@@ -27,7 +27,10 @@ class SectionSpaceMiddleware:
 
         request.in_space_of_section = get_object_or_none(Section, space_slug=space_slug)
 
-        # TODO: check for existing section
+        # TODO: detect active state of selected section
+
+        if space_slug and not request.in_space_of_section:
+            return HttpResponseNotFound('Section space not found.')
 
         return self.get_response(request)
 

@@ -41,7 +41,8 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     class State(models.TextChoices):
         INACTIVE = "inactive", _("Unconfirmed")
         ACTIVE = "active", _("Confirmed")
-        SUSPENDED = "suspended", _("Suspended")
+        # TODO: rename BANNED and add "PAUSED"
+        BANNED = "suspended", _("Suspended")
 
     state = models.CharField(
         max_length=16,

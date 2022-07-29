@@ -25,8 +25,8 @@ class NewSectionMembershipForm(BaseModelForm):
         }
 
 
-class MembershipView(TemplateView):
-    template_name = "accounts/membership.html"
+class MyMembershipsView(TemplateView):
+    template_name = "accounts/my_memberships.html"
 
 
 class NewSectionMembershipFormView(CreateView):

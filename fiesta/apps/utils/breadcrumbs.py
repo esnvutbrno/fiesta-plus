@@ -1,8 +1,9 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import Type, NamedTuple
+from typing import Type, NamedTuple, Callable
 
+from django.db.models import Model
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.encoding import force_str
@@ -56,7 +57,7 @@ def with_breadcrumb(title: str, *, url_name: str = None):
     return inner
 
 
-def with_object_breadcrumb(prefix: str = None):
+def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = None):
     """
     Class decorator to register breadcrumbs for detail views.
     Used like:
@@ -73,7 +74,7 @@ def with_object_breadcrumb(prefix: str = None):
             response = super(self.__class__, self).dispatch(request, *args, **kwargs)
 
             push_breadcrumb_item(
-                request=request, item=f"{prefix or _('Detail')}: {str(self.object)}"
+                request=request, item=f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
             )
             return response
 
