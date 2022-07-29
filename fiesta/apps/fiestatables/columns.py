@@ -14,7 +14,9 @@ class ImageColumn(tables.Column):
 
 
 class LabeledChoicesColumn(tables.Column):
-    def __init__(self, choices: Choices, labels_replacements: dict[str, str], *args, **kwargs):
+    def __init__(
+        self, choices: Choices, labels_replacements: dict[str, str], *args, **kwargs
+    ):
         self._choices: Choices = choices
         self._labels_replacements = labels_replacements
         super().__init__(*args, **kwargs)
@@ -24,7 +26,7 @@ class LabeledChoicesColumn(tables.Column):
         return format_html(
             '<span title="{}">{}</span>',
             label := self._choices(value).label,
-            self._labels_replacements.get(value) or label
+            self._labels_replacements.get(value) or label,
         )
 
     def value(self, record, value):

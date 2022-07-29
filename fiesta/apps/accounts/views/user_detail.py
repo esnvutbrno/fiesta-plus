@@ -8,10 +8,10 @@ from apps.sections.models import SectionMembership
 from apps.utils.breadcrumbs import with_object_breadcrumb
 
 
-@with_object_breadcrumb(getter=attrgetter('user.full_name'))
+@with_object_breadcrumb(getter=attrgetter("user.full_name"))
 class UserDetailView(
     PluginConfigurationViewMixin[AccountsConfiguration],
     DetailView,
 ):
     model = SectionMembership
-    template_name = 'accounts/user_detail/user_detail.html'
+    template_name = "accounts/user_detail/user_detail.html"

@@ -43,21 +43,26 @@ class SectionMembershipFilter(BaseFilterSet):
 
 class SectionMembershipTable(tables.Table):
     user__full_name_official = Column(
-        verbose_name=_('Member'),
+        verbose_name=_("Member"),
         order_by=("user__last_name", "user__first_name", "user__username"),
-        linkify=("accounts:user-detail", dict(pk=tables.A("pk"), )),
-        attrs=dict(a={'hx-disable': True}),  # TODO: do it properly
+        linkify=(
+            "accounts:user-detail",
+            dict(
+                pk=tables.A("pk"),
+            ),
+        ),
+        attrs=dict(a={"hx-disable": True}),  # TODO: do it properly
     )
     user__profile__picture = ImageColumn()
-    user__profile__home_faculty__abbr = Column(verbose_name=_('Faculty'))
+    user__profile__home_faculty__abbr = Column(verbose_name=_("Faculty"))
 
     state = LabeledChoicesColumn(
         SectionMembership.State,
         {
-            SectionMembership.State.INACTIVE: '❓',
-            SectionMembership.State.ACTIVE: '✅',
-            SectionMembership.State.BANNED: '⛔',
-        }
+            SectionMembership.State.INACTIVE: "❓",
+            SectionMembership.State.ACTIVE: "✅",
+            SectionMembership.State.BANNED: "⛔",
+        },
     )
 
     class Meta:

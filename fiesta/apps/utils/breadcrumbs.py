@@ -74,7 +74,8 @@ def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = 
             response = super(self.__class__, self).dispatch(request, *args, **kwargs)
 
             push_breadcrumb_item(
-                request=request, item=f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
+                request=request,
+                item=f"{prefix or _('Detail')}: {(getter or str)(self.object)}",
             )
             return response
 

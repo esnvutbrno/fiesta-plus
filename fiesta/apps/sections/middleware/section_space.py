@@ -30,7 +30,7 @@ class SectionSpaceMiddleware:
         # TODO: detect active state of selected section
 
         if space_slug and not request.in_space_of_section:
-            return HttpResponseNotFound('Section space not found.')
+            return HttpResponseNotFound("Section space not found.")
 
         return self.get_response(request)
 

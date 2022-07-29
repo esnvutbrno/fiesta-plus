@@ -4,7 +4,10 @@ from model_path_converter import register_model_converter
 
 from apps.accounts.views.index import IndexView
 from apps.accounts.views.members import SectionMembersView
-from apps.accounts.views.membership import MyMembershipsView, NewSectionMembershipFormView
+from apps.accounts.views.membership import (
+    MyMembershipsView,
+    NewSectionMembershipFormView,
+)
 from apps.accounts.views.profile import MyProfileView, ProfileFinishFormView
 from apps.accounts.views.user_detail import UserDetailView
 from apps.sections.models import Section
@@ -25,7 +28,6 @@ urlpatterns = [
     ),
     path("membership", MyMembershipsView.as_view(), name="membership"),
     path("section-members", SectionMembersView.as_view(), name="section-members"),
-
     path("user/<uuid:pk>", UserDetailView.as_view(), name="user-detail"),
     # path("", TemplateView.as_view(template_name="accounts/index.html")),
 ]
