@@ -10,7 +10,14 @@ from ..plugins.admin import BaseChildConfigurationAdmin
 
 @admin.register(AccountsConfiguration)
 class AccountsConfigurationAdmin(BaseChildConfigurationAdmin):
-    pass
+
+    list_editable = [
+        "required_nationality",
+        "required_gender",
+        "required_picture",
+    ]
+    list_display = BaseChildConfigurationAdmin.list_display + list_editable
+    save_on_top = True
 
 
 @admin.register(User)

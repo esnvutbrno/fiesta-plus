@@ -65,32 +65,49 @@
         @apply text-red-700 dark:text-red-500;
     }
 
-    /* File input is completely diferent */
-    .Forms__field--file {
-        @apply relative;
-    }
-
-    .Forms__field--file a {
-        @apply btn btn-primary btn-sm btn-link truncate text-ellipsis w-32;
-    }
-
-    .Forms__field--file .Forms__label-widget {
-        @apply absolute left-0 top-0 right-0 pointer-events-none;
-    }
-
+    /* FILE INPUT related styles */
     .Forms__field--file .Forms__widget {
-        @apply flex flex-row justify-center items-center flex-wrap gap-x-4 text-sm pt-0.5;
+        @apply flex flex-col;
     }
 
-    .Forms__field--file .Forms__widget br {
+    .Forms__file-state {
+        /* status located in right */
+        @apply
+        w-auto self-center border-secondary border-[1px] border-b-0 pl-4 rounded-t
+        flex flex-row items-center gap-x-2
+        ;
+
+        height: 2em;
+        margin-top: -2em;
+    }
+
+    .Forms__file-state a {
+        /* link to current file */
+        @apply btn btn-sm btn-link text-secondary max-w-[5rem] truncate;
+    }
+
+    .Forms__file-state input[type=checkbox] {
+        /* checkbox to delete file, hidden */
         @apply hidden;
     }
 
+    .Forms__file-state label {
+        /* clear btn */
+        @apply lowercase btn btn-sm btn-link text-gray-700 rounded-none rounded-tr-sm;
+    }
+
+    .Forms__file-state input[type=checkbox]:checked + label {
+        /* activate CLEAR btn */
+        @apply btn-secondary;
+    }
+
     .Forms__field--file .Forms__file {
-        @apply w-full mt-1 pl-0;
+        /* file input bordered cover */
+        @apply w-full pl-0;
     }
 
     .Forms__field--file .Forms__file::file-selector-button {
+        /* file selector button styled as part of input */
         @apply btn btn-link hover:bg-white hover:border-transparent;
     }
 
