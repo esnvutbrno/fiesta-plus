@@ -55,7 +55,7 @@
             {% endif %}
             {% if configuration.display_issuer_university %}
               <tr>
-                <td>university</td>
+                <td>from university</td>
                 <td>{{ br.issuer.profile.home_university }}</td>
               </tr>
             {% endif %}
@@ -63,14 +63,17 @@
           {# <p /> are added by filter #}
           {{ br.description|censore_description|linebreaks }}
 
+          <hr>
+
           <div class="flex flex-row flex-wrap justify-between">
             {% for interest in br.get_interests_display %}
               <span class="badge badge-outline mr-2 mb-2">{{ interest }}</span>
             {% endfor %}
           </div>
 
+          <hr>
 
-          <div class="card-actions justify-between items-end">
+          <div class="card-actions justify-between items-center">
             <span class="badge badge-outline">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
             <button class="btn btn-primary">Take buddy</button>
           </div>

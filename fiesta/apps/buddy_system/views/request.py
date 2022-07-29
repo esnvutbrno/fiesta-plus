@@ -50,7 +50,7 @@ class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
 
 
 class NewRequestView(EnsureInSectionSpaceViewMixin, SuccessMessageMixin, CreateView):
-    template_name = "buddy_system/new_request.html"
+    template_name = "buddy_system/new_buddy_request.html"
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been succesfully created!")
 

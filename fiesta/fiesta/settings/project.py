@@ -83,7 +83,7 @@ class ProjectConfigMixin:
         # "django.middleware.clickjacking.XFrameOptionsMiddleware",
         # 3rd party
         "django_htmx.middleware.HtmxMiddleware",
-        # custom Fiesta
+        # custom Fiesta, they're dependent on each other, so be careful
         "apps.sections.middleware.section_space.SectionSpaceMiddleware",
         "apps.sections.middleware.user_membership.UserMembershipMiddleware",
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",

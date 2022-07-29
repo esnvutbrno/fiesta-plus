@@ -4,13 +4,14 @@ from typing import Type
 
 from django.db.models import Field
 from django.forms import Field as FormField, modelform_factory
+from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import AccountsConfiguration, User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
 
 
 class UserProfileForm(BaseModelForm):
-    # title = _("Application Form")
+    submit_text = _("Finish Profile")
 
     FIELDS_TO_CONFIGURATION = {
         UserProfile.nationality: AccountsConfiguration.required_nationality,

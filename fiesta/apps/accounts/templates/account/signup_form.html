@@ -5,10 +5,10 @@
 
 {% url 'account_signup' as default_form_url %}
 
-<div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
+<div class="max-w-lg card card-bordered shadow-xl">
   <form
     method="POST" action="{{ form_url|default:default_form_url }}"
-    class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_classes }}"
+    class="card-body space-y-2 {{ form|get_form_classes }}"
   >
     {% csrf_token %}
     {% if redirect_field_value %}
@@ -16,7 +16,7 @@
     {% endif %}
 
     {% if not hide_title %}
-      <h3 class="text-xl font-medium text-gray-900 dark:text-white">Create Account</h3>
+      <h3 class="text-xl font-medium text-gray-900">Create Account</h3>
     {% endif %}
 
     {% include "account/parts/social_login_buttons.html" with process="Sign up" %}
@@ -27,21 +27,14 @@
     {% include "fiestaforms/parts/field.html" with bf=form.password1 errors=form.errors.password1 %}
     {% include "fiestaforms/parts/field.html" with bf=form.password2 errors=form.errors.password2 %}
 
-    <button
-      type="submit"
-      class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
-             font-medium rounded-lg text-sm px-5 py-2.5 text-center
-             dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+    <button type="submit" class="btn btn-block btn-primary">
       Sign up
     </button>
 
 
-    <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+    <div class="text-sm font-medium text-gray-500">
       Already registered?
-      <a
-        href="{{ login_url }}"
-        class="text-blue-700 hover:underline dark:text-blue-500"
-      >Log in</a>
+      <a href="{{ login_url }}" class="link link-primary link-hover">Log in</a>
     </div>
   </form>
 </div>

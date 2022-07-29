@@ -13,26 +13,18 @@
         hover:bg-gray-50
         md:hover:bg-transparent
         md:border-0
-        md:hover:text-blue-700
-        md:p-0
-        md:dark:hover:text-white
-        md:dark:hover:bg-transparent
-
-        dark:text-gray-400
-        dark:hover:bg-gray-700
-        dark:hover:text-white
-        dark:border-gray-700;
+        md:hover:text-primary
+        md:p-0;
     }
 
     .Menu__link--active {
         @apply
         text-white
-        bg-blue-700
+        bg-primary
         rounded
         md:bg-transparent
-        md:text-blue-700
-
-        dark:text-white;
+        md:text-primary
+        ;
     }
 
 }

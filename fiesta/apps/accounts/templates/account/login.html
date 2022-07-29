@@ -13,18 +13,19 @@
 
 {% block main_container %}
   <div class="max-w-3xl mx-auto my-auto w-full flex flex-col items-center">
-    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
+    <div class="card card-bordered shadow-xl max-w-lg">
       <form
         method="POST" action="{% url 'account_login' %}"
-        class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_classes }}"
-
+        class="card-body space-y-2 {{ form|get_form_classes }}"
       >
         {% csrf_token %}
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
         {% endif %}
 
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Log in</h3>
+        <h1 class="card-title">
+          Log in
+        </h1>
 
         {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
         {% include "fiestaforms/parts/field.html" with bf=form.login errors=form.errors.login %}
@@ -37,35 +38,28 @@
                      aria-describedby="{{ form.remember.name }}"
                      name="{{ form.remember.name }}"
                      type="checkbox"
-                     class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300 dark:bg-gray-600 dark:border-gray-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800"
+                     class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300"
               >
             </div>
             <div class="ml-3 text-sm">
-              <label for="{{ form.remember.name }}" class="font-medium text-gray-900 dark:text-gray-300">
+              <label for="{{ form.remember.name }}" class="font-medium text-gray-900">
                 Remember me
               </label>
             </div>
           </div>
-          <a
-            href="{% url 'account_reset_password' %}"
-            class="text-sm text-blue-700 hover:underline dark:text-blue-500"
-          >Lost Password?</a>
+          <a href="{% url 'account_reset_password' %}" class="link link-neutral link-hover">
+            Lost Password?
+          </a>
         </div>
-        <button type="submit"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
-                        font-medium rounded-lg text-sm px-5 py-2.5 text-center
-                        dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <button type="submit" class="btn btn-primary btn-block">
           Login to your account
         </button>
 
         {% include "account/parts/social_login_buttons.html" with process="Log in" %}
 
-        <div class="text-sm font-medium text-gray-500 dark:text-gray-300">
+        <div class="text-sm font-medium text-gray-500">
           Not registered?
-          <a
-            href="{{ signup_url }}"
-            class="text-blue-700 hover:underline dark:text-blue-500"
-          >Create account</a>
+          <a href="{{ signup_url }}" class="link link-hover link-primary">Create account</a>
         </div>
       </form>
     </div>

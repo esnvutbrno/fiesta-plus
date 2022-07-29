@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.core.exceptions import ImproperlyConfigured, PermissionDenied
+from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 
 from ..models import Plugin
@@ -17,11 +17,6 @@ class CurrentPluginMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: OrigHttpRequest) -> HttpResponse:
-        if not hasattr(request, "membership"):
-            raise ImproperlyConfigured(
-                "Missing request.membership, probably the "
-                '"apps.sections.middleware.user_membership.UserMembershipMiddleware" is not included'
-            )
         return self.get_response(request)
 
     def process_view(self, request: HttpRequest, view_func, view_args, view_kwargs):

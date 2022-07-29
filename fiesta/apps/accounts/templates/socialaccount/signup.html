@@ -14,16 +14,17 @@
 
 {% block main_container %}
   <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-lg">
+    <div class="card card-bordered shadow-xl max-w-lg">
       <form
         method="POST" action="{% url 'socialaccount_signup' %}"
-        class="px-6 pt-6 pb-4 space-y-4 lg:px-8 sm:pb-6 xl:pb-8 {{ form|get_form_classes }}"
+        class="card-body space-y-2 {{ form|get_form_classes }}"
       >
-
         {% csrf_token %}
-        <h3 class="text-xl font-medium text-gray-900 dark:text-white">Create Account</h3>
+        <h1 class="card-title">
+          Create Account
+        </h1>
 
-        <p class="text-gray-800 dark:text-gray-300">
+        <p class="text-gray-800">
           You are about to use
           your <strong class="font-semibold">{{ account.get_provider.name }}</strong>
           account to log in.
@@ -39,10 +40,7 @@
 
         {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
 
-        <button type="submit"
-                class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300
-                        font-medium rounded-lg text-sm px-5 py-2.5 text-center
-                        dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+        <button type="submit" class="btn btn-block btn-primary">
           Sign up
         </button>
       </form>

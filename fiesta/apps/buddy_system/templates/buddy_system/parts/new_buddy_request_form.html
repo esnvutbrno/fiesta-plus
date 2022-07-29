@@ -1,0 +1,13 @@
+<div class="card card-bordered shadow-xl max-w-2xl mx-auto">
+  <form
+    class="card-body"
+    method="POST"
+    action="{% url "buddy_system:new-request" %}"
+    id="new-request-form"
+  >
+    <h1 class="card-title">Request for Buddy</h1>
+    {% csrf_token %}
+
+    {{ form }}
+  </form>
+</div>

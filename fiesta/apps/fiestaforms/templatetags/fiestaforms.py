@@ -21,10 +21,12 @@ def bf_type(bf: BoundField) -> str:
 def field_modifier(bf: BoundField):
     # to notify tailwind
     return dict(
+        checkbox="Forms__field--checkbox",
+        email="Forms__field--email",
+        file="Forms__field--file",
+        password="Forms__field--password",
         select="Forms__field--select",
         text="Forms__field--text",
-        file="Forms__field--file",
-        checkbox="Forms__field--checkbox",
         textarea="Forms__field--textarea",
         unknown="Forms__field--unknown",
     ).get(bf_type(bf))
@@ -34,11 +36,13 @@ def field_modifier(bf: BoundField):
 def as_widget_field(bf: BoundField):
     # to notify tailwind
     ext_class = dict(
+        checkbox="Forms__checkbox",
+        email="Forms__email",
+        file="Forms__file",
+        password="Forms__password",
         select="Forms__select",
         text="Forms__text",
-        file="Forms__file",
         textarea="Forms__textarea",
-        checkbox="Forms__checkbox",
         unknown="Forms__unknown",
     )
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})

@@ -47,7 +47,7 @@ class ESNAccountsProvider(CASProvider):
         request: HttpRequest,
         sociallogin: "SocialLogin",
     ):
-        user: User = request.user
+        user: User = sociallogin.user
         sa: SocialAccount = sociallogin.account
         roles = sa.extra_data.get("roles", [])
         section_code = sa.extra_data.get("sc")

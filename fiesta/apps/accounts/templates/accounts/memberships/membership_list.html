@@ -5,7 +5,7 @@
   <div class="card-body">
     <div class="card-title">My Memberships</div>
 
-    <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
+    <ul role="list" class="divide-y divide-gray-200">
       {% for membership in memberships %}
         <li class="py-3 sm:py-4">
           <div class="flex items-center space-x-4">
@@ -23,7 +23,7 @@
                 <a
                   href="{{ activation_url }}"
                   type="button"
-                  class="py-2.5 px-5 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-green-200 hover:text-lime-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                  class="btn btn-outline btn-success">
                   log in
                 </a>
               {% endif %}
@@ -34,19 +34,19 @@
               </svg>
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+              <p class="text-sm font-medium text-gray-900 truncate">
                 {{ membership.section }}
               </p>
-              <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+              <p class="text-sm text-gray-500 truncate">
                 {{ membership.get_role_display }}
               </p>
             </div>
             <div class="inline-flex items-end flex-col">
-              <span class="text-sm font-semibold text-gray-900 dark:text-white">
+              <span class="text-sm font-semibold text-gray-900">
                 {{ membership.get_state_display }}
               </span>
               {% if membership.state == membership.State.INACTIVE %}
-                <span class="text-xs text-gray-600 dark:text-white">
+                <span class="text-xs text-gray-600">
                   waiting for confirmation
                 </span>
               {% endif %}

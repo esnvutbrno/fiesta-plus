@@ -33,7 +33,7 @@ class NewBuddyRequestForm(BaseModelForm):
         help_texts = {
             "description": lazy(
                 lambda: render_to_string(
-                    "buddy_system/parts/request_description_help_text.html"
+                    "buddy_system/parts/buddy_request_description_help.html"
                 ),
                 str,
             )
