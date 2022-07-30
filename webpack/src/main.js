@@ -1,7 +1,9 @@
 import './css/main.css';
 import htmx from "htmx.org"
+
 import Alpine from 'alpinejs'
 import "./js/filter"
+import "./js/modal"
 import collapse from '@alpinejs/collapse'
 
 Alpine.plugin(collapse)

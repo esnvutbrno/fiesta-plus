@@ -1,17 +1,12 @@
 from django.core.paginator import EmptyPage
 
+from apps.sections.middleware.user_membership import HttpRequest
+from apps.utils.views import AjaxViewMixin
 
-class HtmxTableMixin:  # (TemplateView):
-    htmx_template_name = "fiestatables/table.html"
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def get_template_names(self):
-        if self.request.htmx:
-            return [self.htmx_template_name]
-
-        return super().get_template_names()
+class HtmxTableMixin(AjaxViewMixin):  # (TemplateView):
+    request: HttpRequest
+    ajax_template_name = "fiestatables/table.html"
 
     def get_context_data(self, **kwargs):
         try:

@@ -1,0 +1,18 @@
+<div
+  x-data @click.self="$store.modal.close()"
+  x-cloak x-show="$store.modal.backdropShown" x-transition.opacity
+  class="modal modal-open"
+>
+  <div
+    x-show="$store.modal.contentShown" x-transition
+    class="modal-box max-w-2xl"
+    :id="$store.modal.elementId"
+  ></div>
+
+  <div
+    x-show="$store.modal.loadingShown" x-transition:leave.duration.75ms
+    class="modal-box"
+  >
+    <progress class="progress progress-primary w-full"></progress>
+  </div>
+</div>

@@ -1,6 +1,8 @@
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import DetailView
 from django_filters import ChoiceFilter
 from django_tables2 import tables, Column
+from django_tables2.utils import Accessor
 
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestatables.columns import ImageColumn
@@ -9,6 +11,7 @@ from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.permissions import UserIsPrivilegedInCurrentSectionMixin
 from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.views import AjaxViewMixin
 
 
 class RequestFilter(BaseFilterSet):
@@ -21,7 +24,9 @@ class RequestFilter(BaseFilterSet):
 
 class RequestTable(tables.Table):
     issuer__get_full_name = Column(
-        order_by=("issuer__last_name", "issuer__first_name", "issuer__username")
+        order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
+        attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
+        linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
     )
 
     issuer__profile__picture = ImageColumn()
@@ -31,6 +36,8 @@ class RequestTable(tables.Table):
         # TODO: dynamic by section preferences
         fields = ("issuer", "state", "created")
         sequence = ("issuer__get_full_name", "issuer__profile__picture", "...")
+
+        attrs = dict(tbody={"hx-disable": True})
 
 
 @with_breadcrumb(_("Buddy System"))
@@ -47,3 +54,14 @@ class RequestsEditorView(
         return BuddyRequest.objects.filter(
             responsible_section=self.request.in_space_of_section
         ).select_related("issuer__profile")
+
+
+class RequestEditorDetailView(
+    UserIsPrivilegedInCurrentSectionMixin,
+    AjaxViewMixin,
+    DetailView,
+):
+    template_name = "buddy_system/editor/detail.html"
+    ajax_template_name = "buddy_system/editor/detail_ajax.html"
+    request: HttpRequest
+    model = BuddyRequest
