@@ -19,6 +19,7 @@ server {
     listen 80;
     server_tokens off;
 
+
     client_max_body_size 32M;
 
     # wiki static are always served by nginx
@@ -37,12 +38,10 @@ server {
         proxy_pass https://github.githubassets.com/images/icons/$1;
     }
 
-    # regex magix to serve static by django in DEBUG:
+    # in dev, this STATIC_LOCATION_PATTERN is not reachable --> all static are served by django:
     # location ~ ^/@@@/(.*)$
-
-    # and by nginx otherwise:
+    # in prod, pattern matches all requests to static and they are served by nginx
     # location ~ ^/static/(.*)$
-
     location ~ ${STATIC_LOCATION_PATTERN} {
         root /;
         add_header Cache-Control "public, max-age=31536000";
@@ -58,6 +57,8 @@ server {
     }
 
     location / {
+        access_log /dev/null;
+
         proxy_pass http://web;
         # set only real Host, all other x- headers stay same from outer nginx
         proxy_set_header Host $http_host;

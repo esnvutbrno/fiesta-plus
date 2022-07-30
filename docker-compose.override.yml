@@ -1,8 +1,8 @@
 version: '3.3'
 services:
   web:
-    environment:
-      - PYTHONDEVMODE=1
+#    environment:
+#      - PYTHONDEVMODE=1
     volumes:
       - ./fiesta/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
@@ -19,6 +19,8 @@ services:
       - ./fiesta/:/usr/src/fiesta
 
   dockerproxy:
+    environment:
+      - DISABLE_ACCESS_LOGS=1
     volumes:
       - ./conf/certs:/etc/nginx/certs
 
