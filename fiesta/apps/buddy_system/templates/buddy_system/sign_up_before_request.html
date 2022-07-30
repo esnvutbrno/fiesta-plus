@@ -1,4 +1,4 @@
-{% extends "fiesta/base.html" %}
+{% extends "fiesta/base-variants/middle-card.html" %}
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
@@ -12,12 +12,9 @@
 
 {% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
 
-{% block main_container %}
+{% block card_body %}
+  {% url "buddy_system:sign-up-before-request" as form_url %}
+  {% trans "First step: please sign up" as card_title %}
 
-  <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-    <h1 class="text-4xl my-8 font-bold mx-auto">First step: please sign up</h1>
-
-    {% url "buddy_system:sign-up-before-request" as form_url %}
-    {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url hide_title=True form_url=form_url %}
-  </div>
-{% endblock main_container %}
+  {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url form_url=form_url card_title=card_title %}
+{% endblock %}

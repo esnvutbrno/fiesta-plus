@@ -4,20 +4,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import gettext_lazy as _
 
-from .models import AccountsConfiguration, User, UserProfile
-from ..plugins.admin import BaseChildConfigurationAdmin
-
-
-@admin.register(AccountsConfiguration)
-class AccountsConfigurationAdmin(BaseChildConfigurationAdmin):
-
-    list_editable = [
-        "required_nationality",
-        "required_gender",
-        "required_picture",
-    ]
-    list_display = BaseChildConfigurationAdmin.list_display + list_editable
-    save_on_top = True
+from .models import User, UserProfile
 
 
 @admin.register(User)

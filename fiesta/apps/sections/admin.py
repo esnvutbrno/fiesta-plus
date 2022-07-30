@@ -1,15 +1,18 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from polymorphic.admin import PolymorphicChildModelAdmin
 
-from apps.plugins.models import BasePluginConfiguration
 from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
+from ..plugins.admin import BaseChildConfigurationAdmin
 
 
 @admin.register(SectionsConfiguration)
-class SectionsConfigurationAdmin(PolymorphicChildModelAdmin):
-    base_model = BasePluginConfiguration
-    show_in_index = True
+class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
+    list_editable = [
+        "required_nationality",
+        "required_gender",
+        "required_picture",
+    ]
+    list_display = BaseChildConfigurationAdmin.list_display + list_editable
 
 
 @admin.register(Section)

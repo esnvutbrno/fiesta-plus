@@ -12,7 +12,6 @@ admin.site.index_title = _("Site administration")
 
 handler403 = "fiesta.views.handler_403"
 
-
 urlpatterns = [
     path(
         # url prefix to have same url for all plugin views
@@ -32,8 +31,13 @@ urlpatterns = [
     ),
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
+    # wiki is not plugin (yet)
     path("docs/", include("apps.wiki.urls", namespace="wiki")),
+    # for serving files
     path("files/", include("apps.files.urls", namespace="files")),
+    # handling users/profiles/memberships
+    path("accounts/", include("apps.accounts.urls", namespace="accounts")),
+    # handling authentication (including social auth)
     path("auth/", include("allauth.urls")),
 ]
 

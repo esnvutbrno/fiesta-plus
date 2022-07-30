@@ -46,7 +46,7 @@ class SectionMembershipTable(tables.Table):
         verbose_name=_("Member"),
         order_by=("user__last_name", "user__first_name", "user__username"),
         linkify=(
-            "accounts:user-detail",
+            "sections:membership-detail",
             dict(
                 pk=tables.A("pk"),
             ),

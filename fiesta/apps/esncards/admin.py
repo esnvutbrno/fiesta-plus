@@ -1,8 +1,8 @@
 from django.contrib import admin
 from polymorphic.admin import PolymorphicChildModelAdmin
 
-from .models import ESNcardApplication, ESNcardsConfiguration
 from apps.plugins.models import BasePluginConfiguration
+from .models import ESNcardApplication, ESNcardsConfiguration
 
 
 @admin.register(ESNcardsConfiguration)

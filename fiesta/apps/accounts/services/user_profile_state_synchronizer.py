@@ -1,9 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
 
-from apps.accounts.forms.profile_finish import UserProfileForm
-from apps.accounts.models import AccountsConfiguration, UserProfile
-from apps.sections.models import SectionMembership
+from apps.accounts.forms.profile import UserProfileForm
+from apps.accounts.models import UserProfile
+from apps.sections.models import SectionMembership, SectionsConfiguration
 
 
 class UserProfileStateSynchronizer:
@@ -52,7 +52,7 @@ class UserProfileStateSynchronizer:
         profile.save(update_fields=["state"], skip_hooks=True)
 
     @classmethod
-    def on_accounts_configuration_update(cls, conf: AccountsConfiguration):
+    def on_accounts_configuration_update(cls, conf: SectionsConfiguration):
         """
         After change of Accounts configuration, checks all COMPLETED profiles if they're fine for new configuration.
         If not, profile is set to UNCOMPLETED.

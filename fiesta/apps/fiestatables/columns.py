@@ -1,3 +1,5 @@
+from typing import Type
+
 import django_tables2 as tables
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile
@@ -15,9 +17,13 @@ class ImageColumn(tables.Column):
 
 class LabeledChoicesColumn(tables.Column):
     def __init__(
-        self, choices: Choices, labels_replacements: dict[str, str], *args, **kwargs
+        self,
+        choices: Type[Choices],
+        labels_replacements: dict[str, str],
+        *args,
+        **kwargs,
     ):
-        self._choices: Choices = choices
+        self._choices = choices
         self._labels_replacements = labels_replacements
         super().__init__(*args, **kwargs)
 

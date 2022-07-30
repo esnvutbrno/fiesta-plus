@@ -1,12 +1,14 @@
+from _operator import attrgetter
+
 from django.forms import HiddenInput
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import CreateView, TemplateView, DetailView
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionMembership
 from apps.sections.views.space_mixin import EnsureNotInSectionSpaceViewMixin
-from apps.utils.breadcrumbs import BreadcrumbItem
+from apps.utils.breadcrumbs import BreadcrumbItem, with_object_breadcrumb
 
 
 class NewSectionMembershipForm(BaseModelForm):
@@ -67,3 +69,9 @@ class NewSectionMembershipFormView(
             "user": self.request.user,
             "section": self.kwargs.get("section"),
         }
+
+
+@with_object_breadcrumb(getter=attrgetter("user.full_name"))
+class MembershipDetailView(DetailView):
+    model = SectionMembership
+    template_name = "accounts/user_detail/user_detail.html"

@@ -1,4 +1,4 @@
-{% extends "fiesta/base.html" %}
+{% extends "fiesta/base-variants/middle-card.html" %}
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
@@ -11,61 +11,55 @@
 
 {% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
 
-{% block main_container %}
-  <div class="max-w-3xl mx-auto my-auto w-full flex flex-col items-center">
-    <div class="card card-bordered shadow-xl max-w-lg">
-      <div class="card-body">
-        {# login form itself #}
-        <form
-          method="POST" action="{% url 'account_login' %}"
-          class="space-y-2 {{ form|get_form_classes }}"
-        >
-          {% csrf_token %}
-          {% if redirect_field_value %}
-            <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
-          {% endif %}
+{% block card_body %}
+  <h1 class="card-title">
+    Log in
+  </h1>
 
-          <h1 class="card-title">
-            Log in
-          </h1>
+  <form
+    method="POST" action="{% url 'account_login' %}"
+    class="space-y-4 {{ form|get_form_classes }}"
+  >
+    {% csrf_token %}
+    {% if redirect_field_value %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    {% endif %}
 
-          {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
-          {% include "fiestaforms/parts/field.html" with bf=form.login errors=form.errors.login %}
-          {% include "fiestaforms/parts/field.html" with bf=form.password errors=form.password.login %}
+    {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
+    {% include "fiestaforms/parts/field.html" with bf=form.login errors=form.errors.login %}
+    {% include "fiestaforms/parts/field.html" with bf=form.password errors=form.password.login %}
 
-          <div class="flex justify-between">
-            <div class="flex items-start">
-              <div class="flex items-center h-5">
-                <input id="{{ form.remember.name }}"
-                       aria-describedby="{{ form.remember.name }}"
-                       name="{{ form.remember.name }}"
-                       type="checkbox"
-                       class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300"
-                >
-              </div>
-              <div class="ml-3 text-sm">
-                <label for="{{ form.remember.name }}" class="font-medium text-gray-900">
-                  Remember me
-                </label>
-              </div>
-            </div>
-            <a href="{% url 'account_reset_password' %}" class="link link-neutral link-hover">
-              Lost Password?
-            </a>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Login to your account
-          </button>
-          {# social accounts logins do have their own forms, so it cannot be nested #}
-        </form>
-
-        {% include "account/parts/social_login_buttons.html" with process="Log in" %}
-
-        <div class="text-sm font-medium text-gray-500">
-          Not registered?
-          <a href="{{ signup_url }}" class="link link-hover link-primary">Create account</a>
+    <div class="flex justify-between">
+      <div class="flex items-start">
+        <div class="flex items-center h-5">
+          <input id="{{ form.remember.name }}"
+                 aria-describedby="{{ form.remember.name }}"
+                 name="{{ form.remember.name }}"
+                 type="checkbox"
+                 class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300"
+          >
+        </div>
+        <div class="ml-3 text-sm">
+          <label for="{{ form.remember.name }}" class="font-medium text-gray-900">
+            Remember me
+          </label>
         </div>
       </div>
+      <a href="{% url 'account_reset_password' %}" class="link link-neutral link-hover">
+        Lost Password?
+      </a>
     </div>
+    <button type="submit" class="btn btn-primary btn-block">
+      Login to your account
+    </button>
+    {# social accounts logins do have their own forms, so it cannot be nested #}
+  </form>
+
+  {% include "account/parts/social_login_buttons.html" with process="Log in" %}
+
+  <div class="text-sm font-medium text-gray-500">
+    Not registered?
+    <a href="{{ signup_url }}" class="link link-hover link-primary">Create account</a>
   </div>
-{% endblock main_container %}
+
+{% endblock %}

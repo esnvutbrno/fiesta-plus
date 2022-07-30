@@ -1,4 +1,4 @@
-{% extends "fiesta/base.html" %}
+{% extends "fiesta/base-variants/middle-card.html" %}
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
@@ -12,8 +12,6 @@
 
 {% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
 
-{% block main_container %}
-  <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-    {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url %}
-  </div>
-{% endblock main_container %}
+{% block card_body %}
+  {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url %}
+{% endblock %}

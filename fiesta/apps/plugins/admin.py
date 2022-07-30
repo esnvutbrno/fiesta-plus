@@ -63,6 +63,8 @@ class BaseChildConfigurationAdmin(PolymorphicChildModelAdmin):
     base_model = BasePluginConfiguration
     show_in_index = True
 
+    save_on_top = True
+
     list_display = ["name", "plugin__section", "plugin__state"]
     list_filter = ["plugin__section", "plugin__state"]
 

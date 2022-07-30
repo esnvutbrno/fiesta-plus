@@ -6,15 +6,16 @@ from django.db.models import Field
 from django.forms import Field as FormField, modelform_factory
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import AccountsConfiguration, User, UserProfile
+from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
+from apps.sections.models import SectionsConfiguration
 
 
 class UserProfileForm(BaseModelForm):
     FIELDS_TO_CONFIGURATION = {
-        UserProfile.nationality: AccountsConfiguration.required_nationality,
-        UserProfile.gender: AccountsConfiguration.required_gender,
-        UserProfile.picture: AccountsConfiguration.required_picture,
+        UserProfile.nationality: SectionsConfiguration.required_nationality,
+        UserProfile.gender: SectionsConfiguration.required_gender,
+        UserProfile.picture: SectionsConfiguration.required_picture,
     }
     _FIELD_NAMES_TO_CONFIGURATION = {
         f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()
@@ -30,7 +31,7 @@ class UserProfileForm(BaseModelForm):
         Fields and configuration are constructed from all AccountsConfigurations from
         all sections from all memberships of that specific user.
         """
-        confs = AccountsConfiguration.objects.filter(
+        confs = SectionsConfiguration.objects.filter(
             plugin__section__memberships__user=user,
             # TODO: check also Membership.state?
         )
