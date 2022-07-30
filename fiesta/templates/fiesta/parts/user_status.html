@@ -41,7 +41,7 @@
       <a
         class="block py-2 px-4 text-gray-800 hover:bg-gray-100
              "
-        href="{% url "accounts:membership" %}"
+        href="{% url "accounts:membership" %}?next={{ request.path }}"
       >
         <span class="block text-xs text-gray-500 truncate">
           {{ request.membership.get_role_display }}
@@ -51,11 +51,11 @@
         </span>
       </a>
     {% elif request.all_memberships.exists %}
-      <a href="{% url "accounts:membership" %}"
+      <a href="{% url "accounts:membership" %}?next={{ request.path }}"
          class="block py-2 px-4 text-sm text-blue-500 hover:underline"
       >Memberships ({{ request.all_memberships.count }})</a>
     {% else %}
-      <a href="{% url "accounts:membership-new" %}"
+      <a href="{% url "accounts:membership-new" %}?next={{ request.path }}"
          class="block py-2 px-4 text-sm text-primary hover:underline"
       >New membership</a>
     {% endif %}
