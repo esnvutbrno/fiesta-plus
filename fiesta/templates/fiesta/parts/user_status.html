@@ -2,7 +2,7 @@
 {% if request.user.is_authenticated %}
   <button type="button"
           class="flex mr-3 text-sm rounded-full md:mr-0
-            focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+            focus:ring-4 focus:ring-gray-300"
           aria-expanded="false"
           @click="user = !user"
   >
@@ -25,53 +25,53 @@
 
   <div class="z-30 my-4 text-base list-none bg-white rounded
                     divide-y divide-gray-100 shadow w-40
-                    dark:bg-gray-700 dark:divide-gray-600
+
                     absolute top-full -right-1/2 hidden"
        :class="{hidden: !user}"
   >
     <div class="py-3 px-4">
-      <span class="block text-sm text-gray-900 dark:text-white">
+      <span class="block text-sm text-gray-900">
         {{ request.user.get_full_name }}
       </span>
-      <span class="block text-sm font-medium text-gray-500 truncate dark:text-gray-400">
+      <span class="block text-sm font-medium text-gray-500 truncate">
         {{ request.user.username }}
       </span>
     </div>
     {% if request.membership %}
       <a
         class="block py-2 px-4 text-gray-800 hover:bg-gray-100
-              dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+             "
         href="{% url "accounts:membership" %}"
       >
-        <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
+        <span class="block text-xs text-gray-500 truncate">
           {{ request.membership.get_role_display }}
         </span>
-        <span class="block text-xs text-gray-500 truncate dark:text-gray-400">
+        <span class="block text-xs text-gray-500 truncate">
           {{ request.membership.section }}
         </span>
       </a>
     {% elif request.all_memberships.exists %}
       <a href="{% url "accounts:membership" %}"
-         class="block py-2 px-4 text-sm text-blue-500 hover:underline dark:text-blue-500"
+         class="block py-2 px-4 text-sm text-blue-500 hover:underline"
       >Memberships ({{ request.all_memberships.count }})</a>
     {% else %}
       <a href="{% url "accounts:membership-new" %}"
-         class="block py-2 px-4 text-sm text-primary hover:underline dark:text-blue-500"
+         class="block py-2 px-4 text-sm text-primary hover:underline"
       >New membership</a>
     {% endif %}
 
     <ul class="py-1">
       <li>
-        <a href="{% url "accounts:profile" %}"
-           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Profile</a>
+        <a href="{% url "accounts:my-profile" %}"
+           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
       </li>
       <li>
         <a href="#"
-           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Settings</a>
+           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
       </li>
       <li>
         <a href="#"
-           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Earnings</a>
+           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>
       </li>
       <li>
         <a
@@ -81,7 +81,7 @@
           hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'
           {% endif %}
           class="block py-2 px-4 text-sm text-gray-700
-                            hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            hover:bg-gray-100"
         >Sign out</a>
       </li>
     </ul>

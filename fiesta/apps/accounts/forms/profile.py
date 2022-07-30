@@ -11,8 +11,6 @@ from apps.fiestaforms.forms import BaseModelForm
 
 
 class UserProfileForm(BaseModelForm):
-    submit_text = _("Finish Profile")
-
     FIELDS_TO_CONFIGURATION = {
         UserProfile.nationality: AccountsConfiguration.required_nationality,
         UserProfile.gender: AccountsConfiguration.required_gender,
@@ -69,3 +67,7 @@ class UserProfileForm(BaseModelForm):
             "guest_faculty",
             "picture",
         )
+
+
+class UserProfileFinishForm(UserProfileForm):
+    submit_text = _("Finish Profile")

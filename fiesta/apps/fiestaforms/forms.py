@@ -9,7 +9,7 @@ class DateInput(DjDateInput):
 class BaseModelForm(ModelForm):
     template_name = "fiestaforms/classic.html"
     title: str
-    submit_text: str = _("Submit")
+    submit_text: str = _("Save")
 
     @property
     def base_form_class(self):

@@ -8,7 +8,7 @@ from apps.accounts.views.membership import (
     MyMembershipsView,
     NewSectionMembershipFormView,
 )
-from apps.accounts.views.profile import MyProfileView, ProfileFinishFormView
+from apps.accounts.views.profile import MyProfileDetailView, ProfileFinishFormView
 from apps.accounts.views.user_detail import UserDetailView
 from apps.sections.models import Section
 
@@ -16,8 +16,8 @@ register_model_converter(Section, field="space_slug", base=SlugConverter)
 
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
+    path("my-profile", MyProfileDetailView.as_view(), name="my-profile"),
     path("profile/finish", ProfileFinishFormView.as_view(), name="profile-finish"),
-    path("profile", MyProfileView.as_view(), name="profile"),
     path(
         "membership/new/<section:section>",
         NewSectionMembershipFormView.as_view(),

@@ -27,6 +27,9 @@ class Development(Base):
     DEBUG_PROPAGATE_EXCEPTIONS = False
     USE_WEBPACK_INTEGRITY = False
 
+    # https://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain
+    SESSION_COOKIE_DOMAIN = None  # ".localhost"
+
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 
     def INSTALLED_APPS(self):

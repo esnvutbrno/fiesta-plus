@@ -3,18 +3,25 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import UpdateView
 
-from apps.accounts.forms.profile_finish import UserProfileForm
-from apps.accounts.models import AccountsConfiguration, UserProfile
+from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
+from apps.accounts.models import AccountsConfiguration
 from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb
 
 
-@with_breadcrumb(_("My Profile"))
-class MyProfileView(TemplateView):
-    template_name = "accounts/user_profile/index.html"
+class MyProfileDetailView(UpdateView):
+    request: HttpRequest
+    template_name = "accounts/user_profile/update.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile_or_none
+
+    def get_form_class(self):
+        return UserProfileForm.for_user(user=self.request.user)
 
 
 @with_breadcrumb(_("Finish my profile"))
@@ -29,13 +36,10 @@ class ProfileFinishFormView(
     success_message = _("Your profile has been updated.")
 
     def get_form_class(self):
-        return UserProfileForm.for_user(user=self.request.user)
+        return UserProfileFinishForm.for_user(user=self.request.user)
 
     def get_object(self, queryset=None):
-        try:
-            return self.request.user.profile
-        except UserProfile.DoesNotExist:
-            return None
+        return self.request.user.profile_or_none
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -63,5 +67,5 @@ class ProfileFinishFormView(
 
     def get_success_url(self):
         return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse(
-            "accounts:profile"
+            "accounts:my-profile"
         )

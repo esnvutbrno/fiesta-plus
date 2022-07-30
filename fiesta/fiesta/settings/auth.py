@@ -53,6 +53,15 @@ class AuthConfigMixin:
             "VERSION": "v12.0",
         },
         "esnaccounts": {},
+        "google": {
+            "SCOPE": [
+                "profile",
+                "email",
+            ],
+            "AUTH_PARAMS": {
+                "access_type": "online",
+            },
+        },
     }
 
     # configuration for fiesta accounts

@@ -18,9 +18,14 @@ if typing.TYPE_CHECKING:
 
 
 class ESNAccountsAccount(ProviderAccount):
+    accounts: SocialAccount
+
     def get_avatar_url(self):
         sa: "SocialAccount" = self.account
         return sa.extra_data.get("picture")
+
+    def __str__(self):
+        return self.account.uid
 
 
 class ESNAccountsProvider(CASProvider):

@@ -1,44 +1,51 @@
-{% extends "fiesta/base.html" %}
+{% extends "accounts/user_profile/base.html" %}
 {% load breadcrumbs %}
 {% load i18n %}
 
 
 {% block upper_head %}
-  {% trans "Social connections" as title %}
+  {{ block.super }}
+  {% trans "Social Accounts" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block main %}
+{% block content %}
+  <div class="card-title">Social Accounts</div>
 
   {% if form.accounts %}
-    <p>{% blocktrans %}You log in to your account using any of the following third party
-      accounts:{% endblocktrans %}</p>
+    <strong>
+      Your active social accounts connections:
+    </strong>
 
+    <em>Check and submit, if you want to remove one of the connections.</em>
 
-    <form method="post" action="{% url 'socialaccount_connections' %}">
+    <form method="POST" action="{% url 'socialaccount_connections' %}" class="w-64 mx-auto">
       {% csrf_token %}
 
       <fieldset>
         {% if form.non_field_errors %}
-          <div id="errorMsg">{{ form.non_field_errors }}</div>
+          <div class="Forms__error_text">{{ form.non_field_errors }}</div>
         {% endif %}
 
         {% for base_account in form.accounts %}
           {% with base_account.get_provider_account as account %}
-            <div>
-              <label for="id_account_{{ base_account.id }}">
-                <input id="id_account_{{ base_account.id }}" type="radio" name="account"
-                       value="{{ base_account.id }}"/>
-                <span
-                  class="socialaccount_provider {{ base_account.provider }} {{ account.get_brand.id }}">{{ account.get_brand.name }}</span>
-                {{ account }}
+            <div class="form-control">
+              <label class="label cursor-pointer" for="id_account_{{ base_account.id }}">
+                <span class="label-text">{{ account.get_brand.name }}: {{ account }}</span>
+                <input
+                  id="id_account_{{ base_account.id }}"
+                  type="radio"
+                  name="account"
+                  class="radio checked:bg-error"
+                  value="{{ base_account.id }}"
+                />
               </label>
             </div>
           {% endwith %}
         {% endfor %}
 
-        <div>
-          <button type="submit">{% trans 'Remove' %}</button>
+        <div class="text-right">
+          <button type="submit" class="btn btn-primary btn-outline btn-block btn-sm">{% trans 'Remove' %}</button>
         </div>
 
       </fieldset>
@@ -46,14 +53,18 @@
     </form>
 
   {% else %}
-    <p>{% trans 'You currently have no social network accounts connected to this account.' %}</p>
+    <h2 class="alert alert-info">
+      {% trans 'You currently have no social network accounts connected to this account.' %}
+    </h2>
   {% endif %}
 
-  <h2>{% trans 'Add a 3rd Party Account' %}</h2>
+  <hr class="my-4">
 
-  <ul class="socialaccount_providers">
+  <strong>{% trans 'Add New Social Account Connection' %}:</strong>
+
+  <div class="btn-group justify-center">
     {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
-  </ul>
+  </div>
 
   {% include "socialaccount/snippets/login_extra.html" %}
-{% endblock main %}
+{% endblock %}
