@@ -3,8 +3,8 @@ from __future__ import annotations
 from typing import Iterable
 
 from django import template
-from django.http import HttpRequest
 
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.breadcrumbs import push_breadcrumb_item, BreadcrumbItem
 
 register = template.Library()
@@ -30,6 +30,15 @@ def breadcrumb_items(context: dict):
     ]
 
     return req.breadcrumbs
+
+
+@register.simple_tag(takes_context=True)
+def breadcrumb_push_current_plugin(context: dict):
+    request: HttpRequest = context["request"]
+
+    push_breadcrumb_item(request=request, item=request.plugin.app_config.verbose_name)
+
+    return ""
 
 
 @register.simple_tag(takes_context=True)
