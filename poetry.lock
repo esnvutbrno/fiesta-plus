@@ -118,11 +118,14 @@ python-versions = "*"
 
 [[package]]
 name = "dj-database-url"
-version = "0.5.0"
+version = "1.0.0"
 description = "Use Database URLs in your Django Application."
 category = "main"
 optional = false
 python-versions = "*"
+
+[package.dependencies]
+Django = ">3.2"
 
 [[package]]
 name = "dj-email-url"
@@ -195,7 +198,7 @@ tests = ["tox"]
 
 [package.source]
 type = "git"
-url = "https://github.com/thejoeejoee/django-allauth-cas.git"
+url = "https://github.com/thejoeejoee/django-allauth-cas"
 reference = "master"
 resolved_reference = "5db34b546eb32524a3a1a4b90f411e370ac7ad9b"
 
@@ -243,6 +246,17 @@ database = ["dj-database-url"]
 email = ["dj-email-url"]
 search = ["dj-search-url"]
 testing = ["django-cache-url (>=1.0.0)", "dj-database-url", "dj-email-url", "dj-search-url"]
+
+[[package]]
+name = "django-cors-headers"
+version = "3.13.0"
+description = "django-cors-headers is a Django application for handling the server headers required for Cross-Origin Resource Sharing (CORS)."
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+Django = ">=3.2"
 
 [[package]]
 name = "django-countries"
@@ -304,7 +318,7 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-htmx"
-version = "1.12.0"
+version = "1.12.1"
 description = "Extensions for using Django with htmx."
 category = "main"
 optional = false
@@ -441,7 +455,7 @@ python-dateutil = ">=2.4"
 name = "faker-education"
 version = "1.2"
 description = "Education Faker Community Provider"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
@@ -808,7 +822,7 @@ python-versions = "*"
 
 [[package]]
 name = "virtualenv"
-version = "20.16.0"
+version = "20.16.2"
 description = "Virtual Python Environment builder"
 category = "dev"
 optional = false
@@ -826,7 +840,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2b38be3d4db1d3a1a18d57a5274ebcd4b0c9a5650880fe70858ad185c9e73e65"
+content-hash = "f8ebffecc0b28ca240815c21d77e217976ab37ffe307e3cd17ce13fc17917f81"
 
 [metadata.files]
 asgiref = []
@@ -846,10 +860,7 @@ defusedxml = [
     {file = "defusedxml-0.7.1.tar.gz", hash = "sha256:1bb3032db185915b62d7c6209c5a8792be6a32ab2fedacc84e01b52c51aa3e69"},
 ]
 distlib = []
-dj-database-url = [
-    {file = "dj-database-url-0.5.0.tar.gz", hash = "sha256:4aeaeb1f573c74835b0686a2b46b85990571159ffc21aa57ecd4d1e1cb334163"},
-    {file = "dj_database_url-0.5.0-py2.py3-none-any.whl", hash = "sha256:851785365761ebe4994a921b433062309eb882fedd318e1b0fcecc607ed02da9"},
-]
+dj-database-url = []
 dj-email-url = [
     {file = "dj-email-url-1.0.5.tar.gz", hash = "sha256:ef36f8a324ec57cf3be5c7a7ef44ed6900ca0208624a918ab33adc1cf6427b39"},
     {file = "dj_email_url-1.0.5-py2.py3-none-any.whl", hash = "sha256:64257c4f9d8139a4af8e5267229d32260e433fbf257b0cf8fc855bb0cc39ca7d"},
@@ -871,6 +882,7 @@ django-configurations = [
     {file = "django-configurations-2.3.2.tar.gz", hash = "sha256:bd1a77a60735839b7d105912cc3977735fa005ea06544c632fbd322d1e021677"},
     {file = "django_configurations-2.3.2-py3-none-any.whl", hash = "sha256:c0363b0111df6536442186d0f23d12138390eaa9f4f97ce46950ee78856a46c9"},
 ]
+django-cors-headers = []
 django-countries = []
 django-debug-toolbar = []
 django-extensions = []

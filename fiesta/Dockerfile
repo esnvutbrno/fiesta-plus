@@ -1,27 +1,32 @@
 FROM python:3.10.5-alpine as builder
 
-RUN apk add --no-cache --virtual build-deps \
+# build deps
+RUN apk add --no-cache \
     build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
     postgresql-dev mariadb-dev libxml2-dev libxslt-dev \
     musl-dev rust cargo patchelf git jpeg-dev zlib-dev
 
+# final venv
+RUN python -m venv /venv
+# poetry to export & install
+RUN python -m pip install poetry
 COPY pyproject.toml poetry.lock ./
-
-RUN python -m pip install poetry && \
-    poetry config virtualenvs.create false && \
-    poetry install && \
-    apk del build-deps
-
+# no hashes since we use deps from .git urls
+RUN poetry export --without-hashes -o /tmp/requirements.txt
+# to speed up install process (whl are much smaller and quicker)
+RUN /venv/bin/pip install wheel
+RUN /venv/bin/pip install -r /tmp/requirements.txt
 
 # pull official base image
 FROM python:3.10.5-alpine
 
-COPY --from=builder /usr/local/lib/python3.10/site-packages /usr/local/lib/python3.10/site-packages
+COPY --from=builder /venv /venv
 
 # set work directory
 WORKDIR /usr/src/app
 
-# set environment variables
+ENV PATH="/venv/bin:${PATH}"
+ENV VIRTUAL_ENV="/venv"
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 # same for postgres container

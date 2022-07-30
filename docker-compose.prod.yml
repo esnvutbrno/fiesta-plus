@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   web:
-    command: './manage.py collectstatic --noinput && ./manage.py runserver 0.0.0.0:8000'
+    command: [ sh, "-c", "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000" ]
     environment:
       DJANGO_CONFIGURATION: Production
 
@@ -20,6 +20,9 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    # TODO: figure out before deployment, whereever/where should be certs stored
+    volumes:
+      - ./conf/certs:/etc/nginx/certs
 
   # remove profiles so production env does have filled elastic search
 #  elastic:
