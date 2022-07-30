@@ -1,4 +1,15 @@
 {% extends "fiesta/base-variants/center-card-lg.html" %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+
+{% block upper_head %}
+  {% trans "New Application" as title %}
+
+  {% breadcrumb_push_current_plugin %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
 
 {% block card_body %}
   <div class="card-title">ESNcard Application Form</div>

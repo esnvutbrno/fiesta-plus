@@ -9,11 +9,9 @@ from apps.esncards.models import ESNcardApplication
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.breadcrumbs import with_object_breadcrumb
 
 
-@with_breadcrumb(_("ESNcard"))
-@with_breadcrumb(_("New Application"))
 class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
     request: HttpRequest
     object: ESNcardApplication
@@ -75,7 +73,6 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
         return reverse("esncards:application_detail", kwargs=dict(pk=self.object.pk))
 
 
-@with_breadcrumb(_("ESNcard"))
 @with_object_breadcrumb()
 class ApplicationDetailView(DetailView):
     # TODO: check perms

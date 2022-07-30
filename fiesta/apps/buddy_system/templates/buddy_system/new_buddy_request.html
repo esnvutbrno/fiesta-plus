@@ -3,7 +3,9 @@
 {% load i18n %}
 
 {% block upper_head %}
-  {% trans "New Buddy Request" as title %}
+  {% trans "New Request for Buddy" as title %}
+
+  {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 

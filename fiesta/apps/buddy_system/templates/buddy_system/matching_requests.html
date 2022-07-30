@@ -4,9 +4,9 @@
 {% load i18n %}
 
 {% block upper_head %}
-  {% trans "Buddy System" as title %}
-  {% breadcrumb_push_item title %}
   {% trans "Matching" as title %}
+
+  {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 

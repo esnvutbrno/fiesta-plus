@@ -9,7 +9,7 @@ class ESNcardsConfig(PluginAppConfig):
 
     configuration_model = "esncards.ESNcardsConfiguration"
 
-    verbose_name = _("ESNcards")
+    verbose_name = _("ESNcard")
 
 
 __all__ = ["ESNcardsConfig"]
