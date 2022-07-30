@@ -266,22 +266,15 @@ test = ["pytest", "pytest-django", "pytest-cov", "djangorestframework", "graphen
 
 [[package]]
 name = "django-debug-toolbar"
-version = "3.2.4"
-description = ""
+version = "3.5.0"
+description = "A configurable set of panels that display various debug information about the current request/response."
 category = "main"
 optional = false
 python-versions = ">=3.7"
-develop = false
 
 [package.dependencies]
 Django = ">=3.2"
 sqlparse = ">=0.2.0"
-
-[package.source]
-type = "git"
-url = "https://github.com/jazzband/django-debug-toolbar"
-reference = "571b2400"
-resolved_reference = "571b2400508e2fa41244621e932eef5e8e6b76bb"
 
 [[package]]
 name = "django-extensions"
@@ -308,13 +301,20 @@ Django = ">=2.2"
 [[package]]
 name = "django-htmx"
 version = "1.12.1"
-description = "Extensions for using Django with htmx."
+description = ""
 category = "main"
 optional = false
 python-versions = ">=3.7"
+develop = false
 
 [package.dependencies]
 Django = ">=3.2"
+
+[package.source]
+type = "git"
+url = "https://github.com/thejoeejoee/django-htmx"
+reference = "patch-1"
+resolved_reference = "245f9a6a07cd81e9b1dee6772e68284aa7ad2f06"
 
 [[package]]
 name = "django-lifecycle"
@@ -375,18 +375,11 @@ tablib = ["tablib"]
 
 [[package]]
 name = "django-webpack-loader"
-version = "1.4.1"
+version = "1.6.0"
 description = "Transparently use webpack with django"
 category = "main"
 optional = false
 python-versions = "*"
-develop = false
-
-[package.source]
-type = "git"
-url = "https://github.com/thejoeejoee/django-webpack-loader"
-reference = "dc2b5cb"
-resolved_reference = "dc2b5cba5ae76500fa46094991f53cd20193341e"
 
 [[package]]
 name = "elasticsearch"
@@ -829,7 +822,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "f1a3d1a2f816927dcdc79d1fc1a382782450cc8cb2234306ebcf508feb6fbbf7"
+content-hash = "2803f8ec7f8744ec727a7fb803304a3ca30c21461aaaa042f114bd5e5f965e1b"
 
 [metadata.files]
 asgiref = []
