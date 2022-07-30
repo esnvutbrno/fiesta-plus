@@ -15,6 +15,9 @@ Object.assign(
         // https://github.com/esnvutbrno/buena-fiesta/issues/37
         integrity: true,
         integrityHashes: ['sha384'],
+        // to NOT include full url from PUBLIC_PATH (because of SRI on subdomains)
+        // TODO:for cache purpose would be better to tweak CORS to allow serving from topdomain on subdomains with SRI
+        publicPath: '',
     }
 )
 
