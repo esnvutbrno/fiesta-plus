@@ -1,4 +1,11 @@
 {% extends "fiesta/base.html" %}
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {% trans "My Requests" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
 
 {% block main %}
   <div class="prose prose-lg">

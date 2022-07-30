@@ -65,13 +65,15 @@
           {# <p /> are added by filter #}
           {{ br.description|censore_description|linebreaks }}
 
-          <hr>
+          {% if br.interests %}
+            <hr>
 
-          <div class="flex flex-row flex-wrap justify-between">
-            {% for interest in br.get_interests_display %}
-              <span class="badge badge-outline mr-2 mb-2">{{ interest }}</span>
-            {% endfor %}
-          </div>
+            <div class="flex flex-row flex-wrap justify-between">
+              {% for interest in br.get_interests_display %}
+                <span class="badge badge-outline mr-2 mb-2">{{ interest }}</span>
+              {% endfor %}
+            </div>
+          {% endif %}
 
           <hr>
 
