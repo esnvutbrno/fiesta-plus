@@ -40,9 +40,12 @@ class BuddyRequest(base_request_model_factory(related_base="buddy_system")):
             default=None,
         ),
         verbose_name=_("issuer interests"),
-        default=list,  # as callable to not share instance
+        default=list,  # as callable to not share instance,
     )
 
     class Meta:
         verbose_name = _("buddy request")
         verbose_name_plural = _("buddy requests")
+
+    def __str__(self):
+        return f"Buddy Request {self.issuer}: {self.get_state_display()}"

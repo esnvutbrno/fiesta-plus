@@ -38,3 +38,18 @@ class NewBuddyRequestForm(BaseModelForm):
                 str,
             )
         }
+
+
+class BuddyRequestEditorForm(BaseModelForm):
+    submit_text = _("Save")
+
+    class Meta:
+        model = BuddyRequest
+        fields = (
+            "state",
+            "description",
+            "interests",
+            "matched_by",
+            "matched_at",
+        )
+        field_classes = {"interests": ChoicedArrayField}

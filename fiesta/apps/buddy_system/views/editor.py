@@ -1,9 +1,12 @@
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DetailView
+from django.views.generic import UpdateView
 from django_filters import ChoiceFilter
 from django_tables2 import tables, Column
 from django_tables2.utils import Accessor
 
+from apps.buddy_system.forms import BuddyRequestEditorForm
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
@@ -58,10 +61,15 @@ class RequestsEditorView(
 
 class RequestEditorDetailView(
     UserIsPrivilegedInCurrentSectionMixin,
+    SuccessMessageMixin,
     AjaxViewMixin,
-    DetailView,
+    UpdateView,
 ):
     template_name = "buddy_system/editor/detail.html"
     ajax_template_name = "buddy_system/editor/detail_ajax.html"
     request: HttpRequest
     model = BuddyRequest
+    form_class = BuddyRequestEditorForm
+
+    success_url = reverse_lazy("buddy_system:requests-editor")
+    success_message = _("Buddy request has been updated.")

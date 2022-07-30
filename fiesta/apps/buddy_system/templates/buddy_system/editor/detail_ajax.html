@@ -1,3 +1,11 @@
-<div class="">
-  {{ object.issuer.full_name }}
-</div>
+<div class="card-title">{{ object }}</div>
+
+<form
+  method="POST"
+  action="{% url "buddy_system:editor-detail" object.pk %}"
+  id="request-detail-editor-form"
+>
+  {% csrf_token %}
+
+  {{ form }}
+</form>
