@@ -23,14 +23,12 @@ def breadcrumb_items(context: dict):
     except AttributeError:
         view_titles = ()
 
-    req.breadcrumbs = (
-        [
-            BreadcrumbItem(item, req.build_absolute_uri())
-            if isinstance(item, str)
-            else item
-            for item in filter(None, view_titles)
-        ],
-    )
+    req.breadcrumbs = [
+        BreadcrumbItem(item, req.build_absolute_uri())
+        if isinstance(item, str)
+        else item
+        for item in filter(None, view_titles)
+    ]
 
     return req.breadcrumbs
 
