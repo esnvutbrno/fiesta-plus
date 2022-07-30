@@ -8,12 +8,13 @@ from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm
 from apps.buddy_system.models import BuddyRequest
+from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.permissions import UserIsPrivilegedInCurrentSectionMixin
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
@@ -59,9 +60,12 @@ class RequestsEditorView(
         ).select_related("issuer__profile")
 
 
+@with_breadcrumb(_("Buddy System"))
+@with_object_breadcrumb()
 class RequestEditorDetailView(
     UserIsPrivilegedInCurrentSectionMixin,
     SuccessMessageMixin,
+    HtmxFormMixin,
     AjaxViewMixin,
     UpdateView,
 ):

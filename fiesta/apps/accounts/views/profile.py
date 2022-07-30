@@ -9,6 +9,7 @@ from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.views import AjaxViewMixin
 
 
 class MyProfileDetailView(UpdateView):
@@ -25,11 +26,14 @@ class MyProfileDetailView(UpdateView):
 @with_breadcrumb(_("Finish my profile"))
 class ProfileFinishFormView(
     HtmxFormMixin,
+    AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,
 ):
     # form_class = UserProfileForm
     template_name = "accounts/user_profile/profile_finish.html"
+    ajax_template_name = "accounts/user_profile/profile_form.html"
+
     success_message = _("Your profile has been updated.")
 
     def get_form_class(self):
@@ -53,14 +57,6 @@ class ProfileFinishFormView(
             }
         )
         return data
-
-    def get_template_names(self):
-        # TODO: mixin?
-        return (
-            ["accounts/user_profile/profile_finish_form.html"]
-            if self.request.htmx
-            else ["accounts/user_profile/profile_finish.html"]
-        )
 
     def get_success_url(self):
         return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse(
