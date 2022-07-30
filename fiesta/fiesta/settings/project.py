@@ -46,6 +46,7 @@ class ProjectConfigMixin:
         "django_htmx",
         "django_tables2",
         "django_filters",
+        "corsheaders",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
@@ -72,6 +73,7 @@ class ProjectConfigMixin:
     ]
 
     MIDDLEWARE = [
+        "corsheaders.middleware.CorsMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
         "django.middleware.common.CommonMiddleware",

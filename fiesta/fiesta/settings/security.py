@@ -13,3 +13,5 @@ class SecurityConfigMixin:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_HTTPONLY = True
+
+    CORS_ALLOWED_ORIGIN_REGEXES = [r"^https://.*\.localhost$"]
