@@ -32,10 +32,7 @@ mysqlclient = "^2.1.0"
 psycopg2-binary = "^2.9.3"
 python-magic = "^0.4.25"
 tablib = {extras = ["xlsx"], version = "^3.2.1"}
-factory-boy = "^3.2.1"
 faker_education = "^1.2"
-django-model-path-converter = "^0.1.0"
-django-loginas = "^0.3.10"
 django-select2 = "^7.10.0"
 django-debug-toolbar = "^3.5.0"
 

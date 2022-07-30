@@ -463,7 +463,7 @@ python-dateutil = ">=2.4"
 name = "faker-education"
 version = "1.2"
 description = "Education Faker Community Provider"
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -848,7 +848,7 @@ testing = ["coverage (>=4)", "coverage-enable-subprocess (>=1)", "flaky (>=3)", 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "03182383157096874bf89aa01f3c2395f7362fd384481204f0d4d54cae474a9d"
+content-hash = "1a7d6768431329ead4311d453859746dc0de98c635c8fa83ad9ffc2a74af2fed"
 
 [metadata.files]
 asgiref = []
