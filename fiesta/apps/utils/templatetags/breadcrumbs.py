@@ -23,27 +23,15 @@ def breadcrumb_items(context: dict):
     except AttributeError:
         view_titles = ()
 
-    req.breadcrumbs = list(
-        filter(
-            None,
-            [
-                # TODO: slash is not always the home page?
-                # BreadcrumbTitle(req.membership.section, "/")
-                # if req.membership
-                # else None,
-                # TODO: eg "Home > Docs" doesn't make sense
-                BreadcrumbItem(apps.verbose_name, f"/{apps.url_prefix}")
-                if (plugin := req.plugin) and (apps := plugin.app_config)
-                else None,
-            ]
-            + [
-                BreadcrumbItem(title, req.build_absolute_uri())
-                if isinstance(title, str)
-                else title
-                for title in view_titles
-            ],
-        )
+    req.breadcrumbs = (
+        [
+            BreadcrumbItem(item, req.build_absolute_uri())
+            if isinstance(item, str)
+            else item
+            for item in filter(None, view_titles)
+        ],
     )
+
     return req.breadcrumbs
 
 

@@ -66,6 +66,11 @@ class UserMembershipMiddleware:
             # additional checks needs to be in views itself
             return
 
+        if not request.in_space_of_section and not membership:
+            # no membership and no section space
+            # IDK :-D we gonna need tests for this
+            return
+
         if request.in_space_of_section and not membership:
             # hohoo, whatcha doing here, go away
             host = (
@@ -80,51 +85,60 @@ class UserMembershipMiddleware:
                 f"{request.scheme}://{host}{reverse(cls.MEMBERSHIP_URL_NAME)}"
             )
 
-        if not cls.should_ignore_403(target_app, request.resolver_match):
+        if cls.should_ignore_403(target_app, request.resolver_match):
             # target is plugin view, but user does not have any membership,
             # and we're not on membership page
+            return
 
-            # user in section space with inactive membership yet?
-            if membership and membership.state == SectionMembership.State.INACTIVE:
-                messages.warning(request, _("Your membership is not active yet."))
-            elif membership and membership.state == SectionMembership.State.BANNED:
-                messages.warning(request, _("Your membership has been suspended."))
-            elif not request.in_space_of_section:
-                messages.warning(
-                    request, _("Please, select log into one of your memberships.")
-                )
-            else:
-                messages.warning(
-                    request, _("You don't have no active membership to view this page.")
-                )
+        return cls.handle_redirect_to_membership_select(
+            request=request, membership=membership
+        )
 
-            if not membership and request.in_space_of_section:
-                # in specific section space, but no membership --> provide form
-                messages.warning(
-                    request,
-                    _("For this section you have no membership, you can ask for one."),
-                )
-                return HttpResponseRedirect(
-                    "?".join(
-                        (
-                            reverse(
-                                cls.MEMBERSHIP_NEW_URL_NAME,
-                                args=(request.in_space_of_section,),
-                            ),
-                            urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
-                        )
-                    )
-                )
+    @classmethod
+    def handle_redirect_to_membership_select(
+        cls, request: HttpRequest, membership: SectionMembership
+    ) -> HttpResponse:
+        # user in section space with inactive membership yet?
+        if membership and membership.state == SectionMembership.State.INACTIVE:
+            messages.warning(request, _("Your membership is not active yet."))
+        elif membership and membership.state == SectionMembership.State.BANNED:
+            messages.warning(request, _("Your membership has been suspended."))
+        elif not request.in_space_of_section:
+            messages.warning(
+                request, _("Please, select log into one of your memberships.")
+            )
+        else:
+            messages.warning(
+                request, _("You don't have no active membership to view this page.")
+            )
 
-            # no section space, so display all memberships
+        if not membership and request.in_space_of_section:
+            # in specific section space, but no membership --> provide form
+            messages.warning(
+                request,
+                _("For this section you have no membership, you can ask for one."),
+            )
             return HttpResponseRedirect(
                 "?".join(
                     (
-                        reverse(cls.MEMBERSHIP_URL_NAME),
+                        reverse(
+                            cls.MEMBERSHIP_NEW_URL_NAME,
+                            args=(request.in_space_of_section,),
+                        ),
                         urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
                     )
                 )
             )
+
+        # no section space, so display all memberships
+        return HttpResponseRedirect(
+            "?".join(
+                (
+                    reverse(cls.MEMBERSHIP_URL_NAME),
+                    urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),
+                )
+            )
+        )
 
     @classmethod
     def should_ignore_403(
