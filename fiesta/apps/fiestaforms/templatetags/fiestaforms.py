@@ -22,6 +22,7 @@ def field_modifier(bf: BoundField):
     # to notify tailwind
     return dict(
         checkbox="Forms__field--checkbox",
+        date="Forms__field--date",
         email="Forms__field--email",
         file="Forms__field--file",
         password="Forms__field--password",
@@ -43,6 +44,7 @@ def as_widget_field(bf: BoundField):
         select="Forms__select",
         text="Forms__text",
         textarea="Forms__textarea",
+        date="Forms__date",
         unknown="Forms__unknown",
     )
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})

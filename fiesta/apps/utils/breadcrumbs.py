@@ -7,6 +7,7 @@ from django.db.models import Model
 from django.http import HttpRequest
 from django.urls import reverse
 from django.utils.encoding import force_str
+from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 from django.views import View
 
@@ -41,6 +42,8 @@ def with_breadcrumb(title: str, *, url_name: str = None):
 
     @wraps(with_breadcrumb)
     def inner(view_klass: Type[View]):
+        old_dispatch = view_klass.dispatch
+
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
             _title_to_append = (
@@ -49,7 +52,7 @@ def with_breadcrumb(title: str, *, url_name: str = None):
 
             push_breadcrumb_item(request=request, item=_title_to_append)
 
-            return super(self.__class__, self).dispatch(request, *args, **kwargs)
+            return old_dispatch(self, request=request, *args, **kwargs)
 
         view_klass.dispatch = dispatch
         return view_klass
@@ -69,15 +72,18 @@ def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = 
 
     @wraps(with_breadcrumb)
     def inner(view_klass: Type[View]):
+        old_dispatch = view_klass.dispatch
+
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
-            response = super(self.__class__, self).dispatch(request, *args, **kwargs)
-
+            lazy_title = (
+                lambda: f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
+            )
             push_breadcrumb_item(
                 request=request,
-                item=f"{prefix or _('Detail')}: {(getter or str)(self.object)}",
+                item=lazy(lazy_title, str),
             )
-            return response
+            return old_dispatch(self, request=request, *args, **kwargs)
 
         view_klass.dispatch = dispatch
         return view_klass

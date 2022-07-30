@@ -1,5 +1,6 @@
 from _operator import attrgetter
 
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.forms import HiddenInput
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -34,6 +35,7 @@ class MyMembershipsView(TemplateView):
 
 
 class NewSectionMembershipFormView(
+    LoginRequiredMixin,
     EnsureNotInSectionSpaceViewMixin,
     CreateView,
 ):

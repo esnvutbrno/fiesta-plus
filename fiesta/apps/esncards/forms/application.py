@@ -6,10 +6,10 @@ from apps.fiestaforms.forms import BaseModelForm, DateInput
 
 
 class ESNcardApplicationForm(BaseModelForm):
-    title = _("Application Form")
-
     university_name = CharField(label=_("Studies at"), disabled=True)
     section_name = CharField(label=_("ESN section"), disabled=True)
+
+    submit_text = _("Submit application")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

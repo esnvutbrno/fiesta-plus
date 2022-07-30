@@ -8,7 +8,6 @@ class DateInput(DjDateInput):
 
 class BaseModelForm(ModelForm):
     template_name = "fiestaforms/classic.html"
-    title: str
     submit_text: str = _("Save")
 
     @property
@@ -18,7 +17,6 @@ class BaseModelForm(ModelForm):
 
 class BaseForm(Form):
     template_name = "fiestaforms/classic.html"
-    title: str
     submit_text: str = _("Submit")
 
     @property

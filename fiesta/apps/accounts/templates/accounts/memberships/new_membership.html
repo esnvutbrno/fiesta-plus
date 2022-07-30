@@ -1,4 +1,4 @@
-{% extends "fiesta/base.html" %}
+{% extends "fiesta/base-variants/center-card-lg.html" %}
 {% load breadcrumbs %}
 {% load i18n %}
 
@@ -8,6 +8,6 @@
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block main %}
+{% block card_body %}
   {% include "accounts/memberships/new_membership_form.html" %}
 {% endblock %}

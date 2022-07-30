@@ -4,7 +4,6 @@ from typing import Iterable
 
 from django import template
 from django.http import HttpRequest
-from django.utils.encoding import force_str
 
 from apps.utils.breadcrumbs import push_breadcrumb_item, BreadcrumbItem
 
@@ -44,4 +43,4 @@ def breadcrumb_push_item(context: dict, item: str):
 
 @register.filter
 def join_breadcrumbs(items: Iterable[BreadcrumbItem], sep=" · "):
-    return sep.join(map(force_str, map(str, items[::-1])))
+    return sep.join(map(lambda i: str(i() if callable(i) else i), items[::-1]))

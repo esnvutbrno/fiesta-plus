@@ -33,6 +33,7 @@ class RequestTable(tables.Table):
         sequence = ("issuer__get_full_name", "issuer__profile__picture", "...")
 
 
+@with_breadcrumb(_("Buddy System"))
 @with_breadcrumb(_("Requests"))
 class RequestsEditorView(
     UserIsPrivilegedInCurrentSectionMixin,

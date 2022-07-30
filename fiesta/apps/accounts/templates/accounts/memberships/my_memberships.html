@@ -1,4 +1,4 @@
-{% extends "fiesta/base.html" %}
+{% extends "fiesta/base-variants/center-card-lg.html" %}
 {% load breadcrumbs %}
 {% load i18n %}
 
@@ -7,8 +7,7 @@
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block main %}
-
+{% block card_body %}
   {% if request.all_memberships.exists %}
     {% include "accounts/memberships/membership_list.html" with memberships=request.all_memberships.all %}
   {% else %}
@@ -28,9 +27,5 @@
         </a>
       </div>
     </div>
-
-
   {% endif %}
-
-
 {% endblock %}
