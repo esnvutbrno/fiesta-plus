@@ -46,6 +46,7 @@ class ProjectConfigMixin:
         "django_htmx",
         "django_tables2",
         "django_filters",
+        "django_watchfiles",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",

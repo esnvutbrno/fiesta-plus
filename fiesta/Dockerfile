@@ -1,4 +1,4 @@
-FROM python:3.10.5-alpine as builder
+FROM python:3.10.5-alpine3.16 as builder
 
 # build deps
 RUN apk add --no-cache \
@@ -10,15 +10,15 @@ RUN apk add --no-cache \
 RUN python -m venv /venv
 # poetry to export & install
 RUN python -m pip install poetry
+# to speed up install process (whl are much smaller and quicker)
+RUN /venv/bin/pip install wheel
 COPY pyproject.toml poetry.lock ./
 # no hashes since we use deps from .git urls
 RUN poetry export --without-hashes -o /tmp/requirements.txt
-# to speed up install process (whl are much smaller and quicker)
-RUN /venv/bin/pip install wheel
 RUN /venv/bin/pip install -r /tmp/requirements.txt
 
 # pull official base image
-FROM python:3.10.5-alpine
+FROM python:3.10.5-alpine3.16
 
 COPY --from=builder /venv /venv
 
