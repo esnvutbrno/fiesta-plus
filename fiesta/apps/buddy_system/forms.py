@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import UserWidget
+from apps.fiestaforms.widgets.models import MembersFromSectionSpaceWidget
 from apps.utils.forms.array import ChoicedArrayField
 
 
@@ -47,12 +47,12 @@ class BuddyRequestEditorForm(BaseModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["issuer"].disabled = True
+        # self.fields["issuer"].disabled = True
 
     class Meta:
         model = BuddyRequest
         fields = (
-            "issuer",
+            # "issuer",
             "state",
             "description",
             "interests",
@@ -61,6 +61,6 @@ class BuddyRequestEditorForm(BaseModelForm):
         )
         field_classes = {"interests": ChoicedArrayField}
         widgets = {
-            "issuer": UserWidget,
-            "matched_by": UserWidget,
+            # "issuer": UserWidget,
+            "matched_by": MembersFromSectionSpaceWidget,
         }

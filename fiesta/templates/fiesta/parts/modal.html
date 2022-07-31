@@ -1,6 +1,7 @@
 <div
-  x-data @click.self="$store.modal.close()"
+  x-data
   x-cloak x-show="$store.modal.backdropShown" x-transition.opacity
+  @mousedown.self="$store.modal.close()"
   class="modal modal-open"
 >
   <div

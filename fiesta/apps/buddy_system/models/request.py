@@ -30,8 +30,10 @@ INTERESTS_CHOICES = {
     ("tik-tok", "🤡️️ TikTok scrolling"),
 }
 
+BaseRequestForBuddySystem = base_request_model_factory(related_base="buddy_system")
 
-class BuddyRequest(base_request_model_factory(related_base="buddy_system")):
+
+class BuddyRequest(BaseRequestForBuddySystem):
     interests = ArrayFieldWithDisplayableChoices(
         base_field=CharField(
             choices=INTERESTS_CHOICES,
@@ -43,7 +45,7 @@ class BuddyRequest(base_request_model_factory(related_base="buddy_system")):
         default=list,  # as callable to not share instance,
     )
 
-    class Meta:
+    class Meta(BaseRequestForBuddySystem.Meta):
         verbose_name = _("buddy request")
         verbose_name_plural = _("buddy requests")
 

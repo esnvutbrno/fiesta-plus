@@ -70,7 +70,7 @@ class RequestEditorDetailView(
     UpdateView,
 ):
     template_name = "buddy_system/editor/detail.html"
-    ajax_template_name = "buddy_system/editor/detail_ajax.html"
+    ajax_template_name = "buddy_system/editor/detail_form.html"
     request: HttpRequest
     model = BuddyRequest
     form_class = BuddyRequestEditorForm

@@ -5,13 +5,13 @@ import Alpine from 'alpinejs'
 import "./js/filter"
 import "./js/model-select"
 import "./js/modal"
-import collapse from '@alpinejs/collapse'
+import AlpineCollapse from '@alpinejs/collapse'
 
-Alpine.plugin(collapse)
-
-htmx.config.defaultFocusScroll = false;
+Alpine.plugin(AlpineCollapse)
 
 window.htmx = htmx
+htmx.config.defaultFocusScroll = false;
+
 window.Alpine = Alpine
 
 

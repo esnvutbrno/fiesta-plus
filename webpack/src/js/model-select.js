@@ -1,15 +1,35 @@
 import Alpine from "alpinejs";
 import Select from 'tom-select'
 
-Alpine.data('modelSelect', (selectEl) => ({
-    choices: null,
-    init() {
-        const url = selectEl.dataset['ajax-Url']
-        const field_id = selectEl.dataset.field_id
-        const minimumInputLength = selectEl.dataset.minimumInputLength
+Alpine.data('modelSelect', (el) => ({
+    select: null,
+    async init() {
+        if (this.select) {
+            this.select.destroy()
+        }
 
-        this.choices = new Select(
-            selectEl,
+        /*
+         * One big WTF, spent three hours on this:
+         * In situations, where HTMX is used and just made the swap,
+         * Alpine inits the component again with TomSelect constructor.
+         * Somehow, for the second time of init, the given element in TomSelect
+         * is directed to NEW element (which is kept shown), not the SELECT itself.
+         * So the wrong result is two shown elements on page (the should-be-masked one
+         * and the new inserted input by tomselect)
+         *
+         * I've tried Alpine.nextTick, alpine-moph, promise initialization, and nope :-(
+         */
+        setTimeout(() => {
+            this.select = this.initSelect(el)
+        }, 100)
+    },
+    initSelect(el) {
+        const url = el.dataset['ajax-Url']
+        const field_id = el.dataset.field_id
+        const minimumInputLength = el.dataset.minimumInputLength
+
+        return new Select(
+            el,
             {
                 // plugins: ['dropdown_input'],
                 valueField: 'id',
