@@ -1,3 +1,5 @@
+from typing import Type, Iterable, Collection, Sequence
+
 from django.contrib import admin
 from django.contrib.admin import display
 from django.contrib.contenttypes.models import ContentType
@@ -11,7 +13,7 @@ from polymorphic.admin import (
 )
 
 from apps.plugins.models import BasePluginConfiguration, Plugin
-from apps.utils.utils import all_subclasses
+from apps.utils.utils import all_subclasses, all_non_abstract_sub_models
 
 
 @admin.register(Plugin)
@@ -55,8 +57,8 @@ class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
         PolymorphicChildModelFilter,
     ]
 
-    def get_child_models(self):
-        return tuple(all_subclasses(BasePluginConfiguration))
+    def get_child_models(self) -> tuple[Type[BasePluginConfiguration]]:
+        return all_non_abstract_sub_models(BasePluginConfiguration)
 
 
 class BaseChildConfigurationAdmin(PolymorphicChildModelAdmin):
