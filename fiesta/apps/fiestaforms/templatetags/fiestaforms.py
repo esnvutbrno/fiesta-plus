@@ -20,33 +20,35 @@ def bf_type(bf: BoundField) -> str:
 @register.filter
 def field_modifier(bf: BoundField):
     # to notify tailwind
-    return dict(
-        checkbox="Forms__field--checkbox",
-        date="Forms__field--date",
-        email="Forms__field--email",
-        file="Forms__field--file",
-        password="Forms__field--password",
-        select="Forms__field--select",
-        text="Forms__field--text",
-        textarea="Forms__field--textarea",
-        unknown="Forms__field--unknown",
-    ).get(bf_type(bf))
+    return {
+        "checkbox": "Forms__field--checkbox",
+        "date": "Forms__field--date",
+        "datetime-local": "Forms__field--datetime-local",
+        "email": "Forms__field--email",
+        "file": "Forms__field--file",
+        "password": "Forms__field--password",
+        "select": "Forms__field--select",
+        "text": "Forms__field--text",
+        "textarea": "Forms__field--textarea",
+        "unknown": "Forms__field--unknown",
+    }.get(bf_type(bf))
 
 
 @register.filter
 def as_widget_field(bf: BoundField):
     # to notify tailwind
-    ext_class = dict(
-        checkbox="Forms__checkbox",
-        email="Forms__email",
-        file="Forms__file",
-        password="Forms__password",
-        select="Forms__select",
-        text="Forms__text",
-        textarea="Forms__textarea",
-        date="Forms__date",
-        unknown="Forms__unknown",
-    )
+    ext_class = {
+        "checkbox": "Forms__checkbox",
+        "email": "Forms__email",
+        "file": "Forms__file",
+        "password": "Forms__password",
+        "select": "Forms__select",
+        "text": "Forms__text",
+        "textarea": "Forms__textarea",
+        "date": "Forms__date",
+        "datetime-local": "Forms__datetime-local",
+        "unknown": "Forms__unknown",
+    }
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})
 
 

@@ -43,6 +43,7 @@ class BuddyRequest(BaseRequestForBuddySystem):
         ),
         verbose_name=_("issuer interests"),
         default=list,  # as callable to not share instance,
+        blank=True,
     )
 
     class Meta(BaseRequestForBuddySystem.Meta):

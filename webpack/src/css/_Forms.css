@@ -121,7 +121,7 @@
         @apply text-center
     }
 
-    /* checkbox list is on DIV with DIVs as children */
+    /* checkbox list */
     .Forms__checkbox:not(input) {
         @apply h-auto p-2 pb-0 flex flex-row flex-wrap justify-evenly;
     }
@@ -139,6 +139,14 @@
         whitespace-nowrap select-none cursor-pointer;
     }
 
+    .Forms__field--disabled .Forms__checkbox:not(input) {
+        @apply bg-base-200 border-base-200 !cursor-not-allowed [&_*]:!cursor-not-allowed;
+    }
+
+    .Forms__field--disabled .Forms__checkbox:not(input) label {
+        @apply opacity-70;
+    }
+
     .Forms__checkbox:not(input) input:checked + label {
         @apply badge-primary
     }
@@ -149,7 +157,7 @@
     }
 
     .Forms__field--select .ts-wrapper.disabled {
-        @apply bg-base-200 border-base-200;
+        @apply bg-base-200 border-base-200 !cursor-not-allowed [&_*]:!cursor-not-allowed;
     }
 
     .Forms__field--select .ts-control {

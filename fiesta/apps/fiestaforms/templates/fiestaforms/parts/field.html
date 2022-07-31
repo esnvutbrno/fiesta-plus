@@ -1,6 +1,11 @@
 {% load i18n %}
 {% load fiestaforms %}
-<div class="Forms__field{% if errors %} Forms__field--error{% endif %} {{ bf|field_modifier }}">
+<div class="
+  Forms__field
+  {% if errors %}Forms__field--error{% endif %}
+  {% if bf.field.disabled %}Forms__field--disabled{% endif %}
+  {{ bf|field_modifier }}
+">
 
   <div class="Forms__label-widget Forms__label-widget--top">
     {{ bf|as_label }}

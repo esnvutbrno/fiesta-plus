@@ -27,19 +27,37 @@ class RequestFilter(BaseFilterSet):
 
 
 class RequestTable(tables.Table):
-    issuer__get_full_name = Column(
+    issuer__full_name_official = Column(
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
         linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
+        verbose_name=_("Request from"),
     )
 
-    issuer__profile__picture = ImageColumn()
+    issuer__profile__picture = ImageColumn(verbose_name=_("Issuer"))
+
+    matched_by__full_name_official = Column(
+        order_by=(
+            "matched_by__last_name",
+            "matched_by__first_name",
+            "matched_by__username",
+        ),
+    )
+
+    matched_by__profile__picture = ImageColumn(verbose_name=_("Buddy"))
 
     class Meta:
         model = BuddyRequest
         # TODO: dynamic by section preferences
-        fields = ("issuer", "state", "created")
-        sequence = ("issuer__get_full_name", "issuer__profile__picture", "...")
+        fields = ("state", "created")
+        sequence = (
+            "issuer__full_name_official",
+            "issuer__profile__picture",
+            "state",
+            "matched_by__full_name_official",
+            "matched_by__profile__picture",
+            "...",
+        )
 
         attrs = dict(tbody={"hx-disable": True})
 

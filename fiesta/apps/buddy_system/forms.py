@@ -4,9 +4,10 @@ from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
 from apps.buddy_system.models import BuddyRequest
+from apps.fiestaforms.fields.array import ChoicedArrayField
+from apps.fiestaforms.fields.datetime import DateTimeLocalField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import MembersFromSectionSpaceWidget
-from apps.utils.forms.array import ChoicedArrayField
+from apps.fiestaforms.widgets.models import MembersFromSectionSpaceWidget, UserWidget
 
 
 class NewBuddyRequestForm(BaseModelForm):
@@ -47,20 +48,29 @@ class BuddyRequestEditorForm(BaseModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # self.fields["issuer"].disabled = True
+        self.fields["issuer"].disabled = True
+
+        if self.instance.state != BuddyRequest.State.CREATED:
+            self.fields["matched_by"].disabled = True
+            self.fields["matched_at"].disabled = True
+            self.fields["description"].disabled = True
+            self.fields["interests"].disabled = True
 
     class Meta:
         model = BuddyRequest
         fields = (
-            # "issuer",
+            "issuer",
             "state",
             "description",
             "interests",
             "matched_by",
             "matched_at",
         )
-        field_classes = {"interests": ChoicedArrayField}
+        field_classes = {
+            "interests": ChoicedArrayField,
+            "matched_at": DateTimeLocalField,
+        }
         widgets = {
-            # "issuer": UserWidget,
+            "issuer": UserWidget,
             "matched_by": MembersFromSectionSpaceWidget,
         }

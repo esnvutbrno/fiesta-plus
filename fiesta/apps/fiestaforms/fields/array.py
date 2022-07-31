@@ -6,7 +6,7 @@ class ChoicedArrayField(SimpleArrayField):
     widget_class = CheckboxSelectMultiple
 
     def prepare_value(self, value):
-        # skip mgic with delimiter, keep it as list
+        # skip magic with delimiter, keep it as list
         return value
 
     def __init__(self, base_field, *args, **kwargs):
