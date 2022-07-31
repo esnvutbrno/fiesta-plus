@@ -9,7 +9,7 @@
       <form
         method="POST"
         action="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-        class="btn btn-wide btn-secondary p-0 flex"
+        class="btn btn-sm btn-wide btn-secondary p-0 flex"
       >
         {% csrf_token %}
         <button
