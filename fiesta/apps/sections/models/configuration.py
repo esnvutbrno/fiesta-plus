@@ -34,8 +34,8 @@ class SectionsConfiguration(BasePluginConfiguration):
     )
 
     class Meta:
-        verbose_name = _("sections configuration")
-        verbose_name_plural = _("sections configurations")
+        verbose_name = _("section configuration")
+        verbose_name_plural = _("section configurations")
 
     @hook(AFTER_SAVE)
     def on_save(self):

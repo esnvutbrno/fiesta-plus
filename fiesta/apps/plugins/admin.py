@@ -1,10 +1,11 @@
-from typing import Type, Iterable, Collection, Sequence
+from typing import Type
 
 from django.contrib import admin
 from django.contrib.admin import display
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Prefetch, QuerySet
 from django.urls import reverse
-from django.utils.html import format_html
+from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext as _
 from polymorphic.admin import (
     PolymorphicChildModelAdmin,
@@ -13,7 +14,7 @@ from polymorphic.admin import (
 )
 
 from apps.plugins.models import BasePluginConfiguration, Plugin
-from apps.utils.utils import all_subclasses, all_non_abstract_sub_models
+from apps.utils.utils import all_non_abstract_sub_models
 
 
 @admin.register(Plugin)
@@ -50,35 +51,71 @@ class PluginAdmin(admin.ModelAdmin):
     # solution: https://github.com/django-polymorphic/django-polymorphic/issues/81#issuecomment-112152701
 
 
+def prefetch_for_base_configuration(qs: QuerySet):
+    plugins_qs = Plugin.objects.select_related("section")
+    return qs.prefetch_related(Prefetch("plugins", queryset=plugins_qs)).select_related(
+        "section",
+        "polymorphic_ctype",
+    )
+
+
+@display(description=_("Used in plugins"))
+def plugins__section(self, conf: BasePluginConfiguration):
+    return format_html_join(
+        ", ",
+        '<a href="{}">{}</a>',
+        (
+            (
+                reverse("admin:plugins_plugin_change", args=[p.id]),
+                f"{p.section} ({p.get_state_display()})",
+            )
+            for p in conf.plugins.all()
+        ),
+    )
+
+
 @admin.register(BasePluginConfiguration)
 class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
-    list_display = ["name", "polymorphic_ctype"]
+    list_display = [
+        "name",
+        "section",
+        "shared",
+        "plugins__section",
+        "polymorphic_ctype",
+    ]
     list_filter = [
         PolymorphicChildModelFilter,
+        "shared",
+        "section",
     ]
 
     def get_child_models(self) -> tuple[Type[BasePluginConfiguration]]:
         return all_non_abstract_sub_models(BasePluginConfiguration)
+
+    plugins__section = plugins__section
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        return prefetch_for_base_configuration(qs)
 
 
 class BaseChildConfigurationAdmin(PolymorphicChildModelAdmin):
     base_model = BasePluginConfiguration
     show_in_index = True
 
-    save_on_top = True
+    list_display = ["name", "plugins__section"]
+    list_filter = ["plugins__section"]
 
-    list_display = ["name", "plugin__section", "plugin__state"]
-    list_filter = ["plugin__section", "plugin__state"]
+    base_fieldsets = ((None, {"fields": ("name", "section", "shared")}),)
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
 
-        return qs.select_related("plugin", "plugin__section")
+        return prefetch_for_base_configuration(qs)
 
-    @display
-    def plugin__section(self, conf: BasePluginConfiguration):
-        return conf.plugin.section
+    @property
+    def extra_fieldset_title(self):
+        return _("Specific {}").format(self.model._meta.verbose_name)
 
-    @display
-    def plugin__state(self, conf: BasePluginConfiguration):
-        return conf.plugin.get_state_display()
+    plugins__section = plugins__section

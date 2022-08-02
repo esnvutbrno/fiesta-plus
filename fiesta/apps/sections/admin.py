@@ -21,7 +21,11 @@ class SectionAdmin(admin.ModelAdmin):
     list_filter = (("country", admin.AllValuesFieldListFilter),)
 
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("memberships")
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related("memberships", "universities")
+        )
 
     @admin.display(
         description=_("Universities"),

@@ -34,10 +34,10 @@ class Plugin(BaseTimestampedModel):
         help_text=_("Defines system application, which specific plugin represents."),
     )
 
-    configuration = models.OneToOneField(
+    configuration = models.ForeignKey(
         "plugins.BasePluginConfiguration",
         on_delete=models.RESTRICT,
-        related_name="plugin",
+        related_name="plugins",
         null=True,
         blank=True,
         db_index=True,
@@ -82,6 +82,22 @@ class Plugin(BaseTimestampedModel):
                     "configuration": _(
                         "Selected plugin does not correspond "
                         "to type of linked configuration."
+                    )
+                }
+            )
+
+        if not (
+            self.configuration.shared
+            or (
+                self.configuration.section
+                and self.configuration.section == self.section
+            )
+        ):
+            raise ValidationError(
+                {
+                    "configuration": _(
+                        "Selected configuration does not correspond to selected section, "
+                        "or configuration is not available for sharing."
                     )
                 }
             )
