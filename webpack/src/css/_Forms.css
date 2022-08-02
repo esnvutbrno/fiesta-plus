@@ -160,13 +160,19 @@
         @apply bg-base-200 border-base-200 !cursor-not-allowed [&_*]:!cursor-not-allowed;
     }
 
+    .Forms__field--select .ts-dropdown,
+    .Forms__field--select .ts-control,
+    .Forms__field--select .ts-control input {
+        @apply text-inherit;
+    }
+
     .Forms__field--select .ts-control {
         /* fight versus tom-select styles */
         @apply bg-transparent !border-none p-0 flex flex-row items-center;
     }
 
     .Forms__field--select .ts-control input {
-        @apply focus-visible:outline-0 min-w-[auto];
+        @apply focus-visible:outline-0 min-w-[auto]
     }
 
     .Forms__field--select .ts-control .item {

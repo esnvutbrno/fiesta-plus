@@ -1,6 +1,7 @@
 from _operator import attrgetter
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.forms import HiddenInput
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -13,8 +14,6 @@ from apps.utils.breadcrumbs import BreadcrumbItem, with_object_breadcrumb
 
 
 class NewSectionMembershipForm(BaseModelForm):
-    # TODO: clean role only to member/international
-
     submit_text = _("Request for membership")
 
     class Meta:
@@ -28,6 +27,16 @@ class NewSectionMembershipForm(BaseModelForm):
             "role": HiddenInput,
             "user": HiddenInput,
         }
+
+    def clean_role(self):
+        if (role := self.cleaned_data["role"]) not in (
+            SectionMembership.Role.MEMBER,
+            SectionMembership.Role.INTERNATIONAL,
+        ):
+            raise ValidationError(
+                _("You can request only for member or international role.")
+            )
+        return role
 
 
 class MyMembershipsView(TemplateView):

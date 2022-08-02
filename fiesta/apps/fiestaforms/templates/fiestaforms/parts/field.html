@@ -6,13 +6,13 @@
   {% if bf.field.disabled %}Forms__field--disabled{% endif %}
   {{ bf|field_modifier }}
 ">
-
   <div class="Forms__label-widget Forms__label-widget--top">
     {{ bf|as_label }}
     {% if bf.field.required and not bf.field.disabled %}
       <span class="Forms__required-note">{% trans "Required" %}</span>
     {% endif %}
   </div>
+
   <div class="Forms__widget">
     {{ bf|as_widget_field }}
   </div>
