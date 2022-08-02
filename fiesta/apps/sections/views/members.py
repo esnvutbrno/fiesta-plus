@@ -59,7 +59,7 @@ class SectionMembershipTable(tables.Table):
     state = LabeledChoicesColumn(
         SectionMembership.State,
         {
-            SectionMembership.State.INACTIVE: "❓",
+            SectionMembership.State.UNCONFIRMED: "❓",
             SectionMembership.State.ACTIVE: "✅",
             SectionMembership.State.BANNED: "⛔",
         },

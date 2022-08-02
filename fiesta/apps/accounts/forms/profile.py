@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.widgets.models import UniversityWidget, FacultyWidget
-from apps.sections.models import SectionsConfiguration
+from apps.sections.models import SectionsConfiguration, SectionMembership
 
 
 class UserProfileForm(BaseModelForm):
@@ -32,10 +32,19 @@ class UserProfileForm(BaseModelForm):
         Fields and configuration are constructed from all AccountsConfigurations from
         all sections from all memberships of that specific user.
         """
+        # all related configurations
         confs = SectionsConfiguration.objects.filter(
-            plugin__section__memberships__user=user,
-            # TODO: check also Membership.state?
+            # from all user's memberships sections
+            plugin__section__memberships__in=user.memberships.filter(
+                # with waiting for confirmation or already active membership
+                state__in=(
+                    SectionMembership.State.UNCONFIRMED,  # waiting for confirmation
+                    SectionMembership.State.ACTIVE,  # already active, need to have a valid profile
+                )
+            )
         )
+
+        # TODO: what to do, when no specific configuration is found?
 
         def callback(f: Field, **kwargs) -> FormField:
             if conf_field := cls._FIELD_NAMES_TO_CONFIGURATION.get(f.name):

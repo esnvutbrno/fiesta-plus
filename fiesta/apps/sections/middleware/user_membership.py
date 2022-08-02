@@ -99,7 +99,7 @@ class UserMembershipMiddleware:
         cls, request: HttpRequest, membership: SectionMembership
     ) -> HttpResponse:
         # user in section space with inactive membership yet?
-        if membership and membership.state == SectionMembership.State.INACTIVE:
+        if membership and membership.state == SectionMembership.State.UNCONFIRMED:
             messages.warning(request, _("Your membership is not active yet."))
         elif membership and membership.state == SectionMembership.State.BANNED:
             messages.warning(request, _("Your membership has been suspended."))

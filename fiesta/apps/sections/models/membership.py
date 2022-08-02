@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import AFTER_CREATE, LifecycleModelMixin, hook
+from django_lifecycle import AFTER_CREATE, LifecycleModelMixin, hook, AFTER_SAVE
 
 from apps.utils.models import BaseTimestampedModel
 
@@ -39,7 +39,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     )
 
     class State(models.TextChoices):
-        INACTIVE = "inactive", _("Unconfirmed")
+        UNCONFIRMED = "inactive", _("Unconfirmed")
         ACTIVE = "active", _("Confirmed")
         # TODO: rename BANNED and add "PAUSED"
         BANNED = "suspended", _("Suspended")
@@ -47,7 +47,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     state = models.CharField(
         max_length=16,
         choices=State.choices,
-        default=State.INACTIVE,
+        default=State.UNCONFIRMED,
         verbose_name=_("state"),
     )
 
@@ -78,8 +78,12 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         return Q(section=self.section, state__in=avaiable_states)
 
     @hook(AFTER_CREATE)
+    @hook(AFTER_SAVE, when_any=["role", "state"], has_changed=True)
     def update_user_profile_state(self):
         from apps.accounts.services import UserProfileStateSynchronizer
+
+        # revalidate user profile on change of membership --> e.g. if membership is revoked,
+        # the user profile is not validated by that section configuration any more
 
         UserProfileStateSynchronizer.on_membership_update(membership=self)
 

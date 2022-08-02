@@ -54,7 +54,7 @@ class NewSectionMembershipFormView(
     def form_valid(self, form):
         # override to be sure
         form.instance.user = self.request.user
-        form.instance.state = SectionMembership.State.INACTIVE
+        form.instance.state = SectionMembership.State.UNCONFIRMED
         return super().form_valid(form)
 
     def get_form(self, form_class=None):
