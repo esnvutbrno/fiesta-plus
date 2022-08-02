@@ -1,0 +1,20 @@
+{% extends "fiesta/base-variants/center-card-sm.html" %}
+{% load breadcrumbs %}
+
+{% load i18n %}
+
+{% block upper_head %}
+  {% trans "Login Cancelled" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block card_body %}
+  <h1 class="card-title">Login Cancelled</h1>
+
+  {% url 'account_login' as login_url %}
+
+  <div class="alert alert-warning block">
+    You decided to cancel logging in to our site using one of your existing accounts. If this was a mistake, please
+    proceed to <a class="link link-hover link-secondary inline-block" href="{{ login_url }}">sign in</a>.
+  </div>
+{% endblock %}
