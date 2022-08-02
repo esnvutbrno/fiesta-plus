@@ -4,7 +4,9 @@
 {% load render_bundle from webpack_loader %}
 {% load django_htmx %}
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth" data-theme="fiesta">
+<html {# not really sure about alpining all the body...  #}
+  lang="en" class="scroll-smooth"
+>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="initial-scale=1,width=device-width">
@@ -36,7 +38,7 @@
 >
 {% block body %}
   {% include "fiesta/parts/messages.html" %}
-  <div class="sticky top-0 bg-white z-20">
+  <div class="sticky top-0 z-20 bg-white dark:bg-base-300">
     <header class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto w-full px-4 sm:px-2">
       {% block header_container %}
         {% include "fiesta/parts/header.html" %}

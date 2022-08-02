@@ -2,12 +2,13 @@ import './css/main.css';
 import htmx from "htmx.org"
 
 import Alpine from 'alpinejs'
+import collapse from '@alpinejs/collapse'
 import "./js/filter"
 import "./js/model-select"
+import "./js/dark-mode"
 import "./js/modal"
-import AlpineCollapse from '@alpinejs/collapse'
 
-Alpine.plugin(AlpineCollapse)
+Alpine.plugin(collapse)
 
 window.htmx = htmx
 htmx.config.defaultFocusScroll = false;
