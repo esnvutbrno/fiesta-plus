@@ -45,6 +45,9 @@ makemigrations: da
 loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
 loadlegacydata: da
 
+test: DA_CMD = test --keepdb --parallel --verbosity 1 ## Runs django test cases.
+test: da
+
 graph_models: DA_CMD = $(GRAPH_MODELS_CMD)
 graph_models: da ## Plot all Django models into models.png
 	@mv ./fiesta/$(MODELS_PNG) .
