@@ -57,6 +57,8 @@ class Plugin(BaseTimestampedModel):
         verbose_name = _("plugin")
         verbose_name_plural = _("plugins")
 
+        unique_together = (("app_label", "section"),)
+
     def clean(self) -> None:
         super().clean()
 

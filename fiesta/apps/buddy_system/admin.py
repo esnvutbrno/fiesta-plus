@@ -7,7 +7,6 @@ from ..plugins.admin import BaseChildConfigurationAdmin
 
 @admin.register(BuddySystemConfiguration)
 class BuddySystemConfigurationAdmin(BaseChildConfigurationAdmin):
-    # TODO: parent admin doesn't work with inserted middle abstract class BaseRequestSystemConfiguration
     show_in_index = True
 
 

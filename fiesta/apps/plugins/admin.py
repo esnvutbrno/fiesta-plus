@@ -1,9 +1,11 @@
 from typing import Type
 
+from dal import autocomplete
 from django.contrib import admin
 from django.contrib.admin import display
 from django.contrib.contenttypes.models import ContentType
 from django.db.models import Prefetch, QuerySet
+from django.forms import ModelForm
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext as _
@@ -21,6 +23,24 @@ from apps.utils.utils import all_non_abstract_sub_models
 class PluginAdmin(admin.ModelAdmin):
     list_display = ["section", "app_label", "state", "configuration_edit", "modified"]
     list_filter = ["section", "app_label", "state"]
+
+    class form(ModelForm):
+        class Meta:
+            model = Plugin
+            fields = ("section", "app_label", "state", "configuration")
+            widgets = {
+                "app_label": autocomplete.ListSelect2(
+                    url="plugins:app-autocomplete",
+                    forward=("section",),
+                ),
+                "configuration": autocomplete.ModelSelect2(
+                    url="plugins:configuration-autocomplete",
+                    forward=(
+                        "section",
+                        "app_label",
+                    ),
+                ),
+            }
 
     @display(
         description=_("Configuration"),
@@ -41,10 +61,6 @@ class PluginAdmin(admin.ModelAdmin):
 
     def get_queryset(self, request):
         return super().get_queryset(request).select_related("configuration")
-
-    # TODO: make configuration form field dependent on selected configuration
-    # https://django-autocomplete-light.readthedocs.io/en/master/tutorial.html
-    # Filtering results based on the value of other fields in the form
 
     # TODO: relating to django-polymorphic docs, UUID PK should not work
     # but I haven't encoutered any issue with this, so idk

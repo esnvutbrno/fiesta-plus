@@ -231,6 +231,23 @@ python-versions = ">=3.6"
 django = "*"
 
 [[package]]
+name = "django-autocomplete-light"
+version = "3.9.4"
+description = "Fresh autocompletes for Django"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+six = "*"
+
+[package.extras]
+genericm2m = ["django-generic-m2m"]
+gfk = ["django-querysetsequence (>=0.11)"]
+nested = ["django-nested-admin (>=3.0.21)"]
+tags = ["django-taggit"]
+
+[[package]]
 name = "django-cache-url"
 version = "3.4.2"
 description = "Use Cache URLs in your Django application."
@@ -896,7 +913,7 @@ anyio = ">=3.0.0,<4"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2985fc1ca86ccd0c5fe73cd01397de90a400ce487641ce301a21742cb2369fef"
+content-hash = "2f82af2e5d7b48c0dc2c71c1ee8bfb605d2ca8192a232f070611956045f98fc0"
 
 [metadata.files]
 anyio = []
@@ -931,6 +948,7 @@ django-allauth = [
 ]
 django-allauth-cas = []
 django-appconf = []
+django-autocomplete-light = []
 django-cache-url = []
 django-click = [
     {file = "django-click-2.3.0.tar.gz", hash = "sha256:bffb0d10c3f3dfe3f5b116ce902c7a7a9aa4e9c046de95259dc044462eb746b4"},

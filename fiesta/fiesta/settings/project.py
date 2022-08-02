@@ -30,6 +30,9 @@ class ProjectConfigMixin:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     INSTALLED_APPS = [
+        # dj admin autocompletiting widgets, must be before admin
+        "dal",
+        "dal_select2",
         # Django native
         "django.contrib.admin",
         "django.contrib.auth",
@@ -46,7 +49,7 @@ class ProjectConfigMixin:
         "django_htmx",
         "django_tables2",
         "django_filters",
-        "django_watchfiles",
+        # "django_watchfiles",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",

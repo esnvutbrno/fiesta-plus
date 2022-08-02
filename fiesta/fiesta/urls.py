@@ -35,6 +35,8 @@ urlpatterns = [
     path("docs/", include("apps.wiki.urls", namespace="wiki")),
     # for serving files
     path("files/", include("apps.files.urls", namespace="files")),
+    # for plugins views (autocomplete etc)
+    path("plugins/", include("apps.plugins.urls", namespace="plugins")),
     # handling users/profiles/memberships
     path("accounts/", include("apps.accounts.urls", namespace="accounts")),
     # handling authentication (including social auth)
