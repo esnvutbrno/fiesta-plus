@@ -6,6 +6,9 @@ services:
     volumes:
       - ./fiesta/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
+    build:
+      args:
+        - POETRY_EXPORT_ARGS=--dev
 
   webserver:
     volumes:

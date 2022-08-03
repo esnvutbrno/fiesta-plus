@@ -22,7 +22,6 @@ pre-commit: ## Runs all included lints/checks/reformats
 	poetry run pre-commit run --all-files
 
 seed: DA_CMD = seed ## Seed database with fake data.
-seed: ARG = $(name)
 seed: da
 
 startplugin: DA_CMD = startplugin ## Create plugin in project with name=
@@ -30,11 +29,14 @@ startplugin: ARG = $(name)
 startplugin: da
 
 shell_plus: DA_CMD = shell_plus ## Starts django shell_plus
-shell_plus: ARG = $(name)
 shell_plus: da
 
 migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
+
+optimizemigration: DA_CMD = optimizemigration ## Optimize last migration by optimizemigration: app= migration=
+optimizemigration: ARG = $(name) $(migration)
+optimizemigration: da
 
 check: DA_CMD = check ## Runs all Django checks.
 check: da
@@ -55,7 +57,10 @@ graph_models: da ## Plot all Django models into models.png
 da: ## Invokes django-admin command stored in cmd=
 	$(DC) run $(DCRUNFLAGS) web "python manage.py $(DA_CMD) $(ARG)"
 
-build: ## Builds docker images.
+build: ## Builds docker images for development.
+	$(DC) build
+
+prodbuild: ## Builds docker images for production.
 	$(DC) build
 
 upb: ## Build and runs all needed docker containers in non-deamon mode

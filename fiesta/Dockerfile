@@ -1,5 +1,7 @@
 FROM python:3.10.5-alpine3.16 as builder
 
+ARG POETRY_EXPORT_ARGS
+
 # build deps
 RUN apk add --no-cache \
     build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
@@ -14,7 +16,7 @@ RUN python -m pip install poetry
 RUN /venv/bin/pip install wheel
 COPY pyproject.toml poetry.lock ./
 # no hashes since we use deps from .git urls
-RUN poetry export --without-hashes -o /tmp/requirements.txt
+RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.txt
 RUN /venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 # pull official base image

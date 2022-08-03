@@ -666,6 +666,17 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
+name = "pydot"
+version = "1.4.2"
+description = "Python interface to Graphviz's Dot"
+category = "dev"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[package.dependencies]
+pyparsing = ">=2.1.4"
+
+[[package]]
 name = "pydotplus"
 version = "2.0.2"
 description = "Python interface to Graphviz's Dot language"
@@ -913,7 +924,7 @@ anyio = ">=3.0.0,<4"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2c0eb07529d1d872af2097314cc30e8592d1ce90e9716a70be35ff7caf126ed9"
+content-hash = "3e1cd2298400804c40298dd9ecc0ec4402f0fb22c5bbf06a00dc652984493432"
 
 [metadata.files]
 anyio = []
@@ -1068,6 +1079,7 @@ pycparser = [
     {file = "pycparser-2.21-py2.py3-none-any.whl", hash = "sha256:8ee45429555515e1f6b185e78100aea234072576aa43ab53aefcae078162fca9"},
     {file = "pycparser-2.21.tar.gz", hash = "sha256:e644fdec12f7872f86c58ff790da456218b10f863970249516d60a5eaca77206"},
 ]
+pydot = []
 pydotplus = [
     {file = "pydotplus-2.0.2.tar.gz", hash = "sha256:91e85e9ee9b85d2391ead7d635e3d9c7f5f44fd60a60e59b13e2403fa66505c4"},
 ]
