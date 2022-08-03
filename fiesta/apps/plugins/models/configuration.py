@@ -31,17 +31,17 @@ class BasePluginConfiguration(LifecycleModelMixin, BasePolymorphicModel):
 
     shared = models.BooleanField(
         default=False,
-        verbose_name=_("is shared between sections"),
+        verbose_name=_("is available to share between sections"),
     )
 
     class Meta:
         verbose_name = _("base configuration")
-        verbose_name_plural = _("base configuration")
+        verbose_name_plural = _("base configurations")
 
     def __str__(self):
         return (
             f"{self.polymorphic_ctype.name if self.polymorphic_ctype else '---'}: "
-            f"{_('shared') if self.shared else ''}"
+            f"{_('🔗') if self.shared else ''}"
             f"{self.section if self.section else ''}" + f" ({self.name})"
             if self.name
             else ""

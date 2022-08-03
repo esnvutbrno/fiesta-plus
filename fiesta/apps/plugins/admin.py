@@ -8,6 +8,7 @@ from django.db.models import Prefetch, QuerySet
 from django.forms import ModelForm
 from django.urls import reverse
 from django.utils.html import format_html, format_html_join
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
 from polymorphic.admin import (
     PolymorphicChildModelAdmin,
@@ -78,14 +79,14 @@ def prefetch_for_base_configuration(qs: QuerySet):
 @display(description=_("Used in plugins"))
 def plugins__section(self, conf: BasePluginConfiguration):
     return format_html_join(
-        ", ",
+        mark_safe("<br> "),  # nosec
         '<a href="{}">{}</a>',
         (
             (
                 reverse("admin:plugins_plugin_change", args=[p.id]),
                 f"{p.section} ({p.get_state_display()})",
             )
-            for p in conf.plugins.all()
+            for p in conf.plugins.all().order_by("section")
         ),
     )
 
@@ -95,7 +96,7 @@ class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
     list_display = [
         "name",
         "section",
-        "shared",
+        "is_shared",
         "plugins__section",
         "polymorphic_ctype",
     ]
@@ -104,6 +105,10 @@ class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
         "shared",
         "section",
     ]
+
+    @display(ordering="shared")
+    def is_shared(self, obj):
+        return "🔗" if obj.shared else ""
 
     def get_child_models(self) -> tuple[Type[BasePluginConfiguration]]:
         return all_non_abstract_sub_models(BasePluginConfiguration)
