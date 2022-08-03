@@ -23,13 +23,27 @@ For running the project, you need `docker compose` plugin with running Docker da
 project, hit the `up` target: `make up`.
 
 ```
-check                Runs all included lints/checks/reformats
-migrate              Runs manage.py migrate for all apps
-makemigrations       Runs manage.py makemigrations for all apps
-up                   Runs all needed docker containers in non-deamon mode
-da                   Invokes django-admin command stored in CMD
-build                Builds docker images.
-help                 Shows help
+pre-commit                       Runs all included lints/checks/reformats
+seed                             Seed database with fake data.
+startplugin                      Create plugin in project with name=
+shell_plus                       Starts django shell_plus
+migrate                          Runs manage.py migrate for all apps
+check                            Runs all Django checks.
+makemigrations                   Runs manage.py makemigrations for all apps
+loadlegacydata                   Loads all data from legacydb run from ./legacy.sql.
+test                             Runs django test cases.
+graph_models                     Plot all Django models into models.png
+da                               Invokes django-admin command stored in cmd=
+build                            Builds docker images.
+upb                              Build and runs all needed docker containers in non-deamon mode
+upbd                             Build and runs all needed docker containers in detached mode
+upd                              Runs all needed docker containers in detached mode
+up                               Runs all needed docker containers
+produp                           Runs fiesta in production mode.
+help                             Shows help
+generate-localhost-certs         Generates self-signed localhost certs for working HTTPS.
+setup-elastic                    Starts elasticsearch standalone an generates keystore and passwords for all users.
+trust-localhost-ca               Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 ```
 
 ### Production
