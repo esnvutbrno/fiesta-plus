@@ -54,4 +54,4 @@ jobs:
           # TODO: tag
           # ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:${{ steps.vars.outputs.tag }},
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:latest
-          push: true
+          push: ${{ contains('refs/heads/develop refs/heads/main', github.ref) }}
