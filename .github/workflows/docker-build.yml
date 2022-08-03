@@ -47,7 +47,6 @@ jobs:
         id: build_and_push
         uses: docker/build-push-action@v2
         with:
-          # relative path to the place where source code with Dockerfile is located
           context: ${{ matrix.context }}
           file: ${{ matrix.file }}
           cache-from: type=gha
@@ -55,3 +54,4 @@ jobs:
           # TODO: tag
           # ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:${{ steps.vars.outputs.tag }},
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:latest
+          push: true
