@@ -2,9 +2,9 @@ name: Docker Images Build
 
 on:
   push:
-    branches: [ develop, feature/*, main ]
+    branches: [ develop, main ]
   pull_request:
-    branches: [ develop ]
+    branches: [ develop, main ]
 
 jobs:
   build-docker-images:
