@@ -1,4 +1,4 @@
-name: "TODOs to issue"
+name: "TODOs to Issue Export"
 on:
   push:
     branches:

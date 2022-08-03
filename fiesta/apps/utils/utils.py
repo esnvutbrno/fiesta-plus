@@ -1,6 +1,4 @@
-from typing import Type, Iterator, Generator, Generic, TypeVar
-
-from django.db.models import Model
+from typing import Type, Generator, TypeVar
 
 ClassType = TypeVar("ClassType", bound=Type)
 
@@ -14,6 +12,7 @@ def all_subclasses(cls: ClassType) -> Generator[ClassType, None, None]:
 def all_non_abstract_sub_models(model_klass: ClassType) -> tuple[ClassType, ...]:
     return tuple(
         filter(
-            lambda cls: not getattr(cls._meta, "abstract"), all_subclasses(model_klass)
+            lambda cls: not getattr(cls._meta, "abstract", None),
+            all_subclasses(model_klass),
         )
     )
