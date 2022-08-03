@@ -20,9 +20,6 @@ jobs:
           - image: webpack
             context: .
             file: webpack/Dockerfile
-          - image: webpack
-            context: .
-            file: webpack/Dockerfile
           - image: webserver
             context: nginx
             file: webserver/webserver.Dockerfile
