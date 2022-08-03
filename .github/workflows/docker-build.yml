@@ -57,5 +57,5 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           # TODO: tag
-          # ${{ secrets.DOCKER_HUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:${{ steps.vars.outputs.tag }},
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:latest
+          # ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:${{ steps.vars.outputs.tag }},
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:latest
