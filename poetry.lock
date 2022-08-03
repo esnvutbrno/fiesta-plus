@@ -165,14 +165,14 @@ tests = ["pytest"]
 
 [[package]]
 name = "django"
-version = "4.0.6"
+version = "4.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 
 [package.dependencies]
-asgiref = ">=3.4.1,<4"
+asgiref = ">=3.5.2,<4"
 sqlparse = ">=0.2.2"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -913,7 +913,7 @@ anyio = ">=3.0.0,<4"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "2f82af2e5d7b48c0dc2c71c1ee8bfb605d2ca8192a232f070611956045f98fc0"
+content-hash = "2c0eb07529d1d872af2097314cc30e8592d1ce90e9716a70be35ff7caf126ed9"
 
 [metadata.files]
 anyio = []
