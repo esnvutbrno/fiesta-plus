@@ -35,7 +35,7 @@ class UserProfileForm(BaseModelForm):
         # all related configurations
         confs = SectionsConfiguration.objects.filter(
             # from all user's memberships sections
-            plugin__section__memberships__in=user.memberships.filter(
+            plugins__section__memberships__in=user.memberships.filter(
                 # with waiting for confirmation or already active membership
                 state__in=(
                     SectionMembership.State.UNCONFIRMED,  # waiting for confirmation
