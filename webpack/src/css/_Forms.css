@@ -34,7 +34,7 @@
     }
 
     .Forms__required-note {
-        @apply label-text-alt badge badge-outline;
+        @apply label-text-alt badge badge-accent
     }
 
     /* standard select */

@@ -135,6 +135,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
             raise ValidationError(
                 {
                     "home_university": _(
+                        # TODO: weird, basically it's exactly one of these
                         "At least one from home university/faculty has to be set."
                     )
                 }
