@@ -15,7 +15,7 @@ RUN /venv/bin/pip install wheel
 COPY pyproject.toml poetry.lock ./
 # no hashes since we use deps from .git urls
 RUN poetry export --without-hashes -o /tmp/requirements.txt
-RUN /venv/bin/pip install -r /tmp/requirements.txt
+RUN /venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 # pull official base image
 FROM python:3.10.5-alpine3.16
