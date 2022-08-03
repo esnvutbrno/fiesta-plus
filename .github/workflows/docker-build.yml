@@ -12,7 +12,6 @@ jobs:
 
     strategy:
       matrix:
-        image: [ fiesta, webpack ]
         include:
           - image: web
             context: .
