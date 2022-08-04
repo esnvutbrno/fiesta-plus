@@ -57,7 +57,7 @@ class SignUpBeforeRequestView(
 
         if self.configuration.auto_approved_membership_for_international:
             state = SectionMembership.State.ACTIVE
-            messages.success(self.request, _("You are now a member of this section."))
+            messages.success(self.request, _("Your now connected to the section."))
         else:
             state = SectionMembership.State.UNCONFIRMED
             messages.info(
