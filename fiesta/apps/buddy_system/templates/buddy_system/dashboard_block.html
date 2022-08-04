@@ -1,0 +1,14 @@
+{% load buddy_system %}
+{% get_current_buddy_request_of_user as br %}
+<div class="stat">
+  <div class="stat-title">Buddy Request</div>
+{#  <div class="stat-figure text-secondary">#}
+{#    <div class="avatar online">#}
+{#      <div class="w-16 rounded-full">#}
+{#        <img src="https://placeimg.com/128/128/people"/>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+  <div class="stat-value">✅ {{ br.get_state_display }}</div>
+  <div class="stat-desc text-secondary">Waiting for buddy match with another {% get_buddy_requests_waiting_count %} requests</div>
+</div>

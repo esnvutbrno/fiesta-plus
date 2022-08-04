@@ -2,6 +2,9 @@ import re
 
 from django import template
 
+from apps.buddy_system.models import BuddyRequest
+from apps.plugins.middleware.plugin import HttpRequest
+
 register = template.Library()
 
 # I know, it's not the best regex for emails
@@ -22,3 +25,22 @@ CENSORE_REGEX = re.compile(
 @register.filter
 def censore_description(description: str) -> str:
     return CENSORE_REGEX.sub("---censored---", description)
+
+
+@register.simple_tag(takes_context=True)
+def get_current_buddy_request_of_user(context):
+    request: HttpRequest = context["request"]
+
+    # TODO: could be more then one?
+    return request.membership.user.buddy_system_issued_requests.filter(
+        responsible_section=request.membership.section,
+    ).first()
+
+
+@register.simple_tag(takes_context=True)
+def get_buddy_requests_waiting_count(context):
+    request: HttpRequest = context["request"]
+
+    return request.membership.section.buddy_system_requests.filter(
+        state=BuddyRequest.State.CREATED,
+    ).count()
