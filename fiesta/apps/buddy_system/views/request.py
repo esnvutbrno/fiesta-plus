@@ -1,13 +1,16 @@
 from allauth.account.views import SignupView
+from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db import transaction
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, CreateView
 
 from apps.buddy_system.forms import NewBuddyRequestForm
-from apps.sections.models import SectionMembership
+from apps.plugins.views import PluginConfigurationViewMixin
+from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
 
 
@@ -31,19 +34,45 @@ class WannaBuddyView(TemplateView):
         return data
 
 
-class SignUpBeforeRequestView(EnsureInSectionSpaceViewMixin, SignupView):
+class SignUpBeforeRequestView(
+    EnsureInSectionSpaceViewMixin,
+    PluginConfigurationViewMixin[SectionsConfiguration],
+    SignupView,
+):
     template_name = "buddy_system/sign_up_before_request.html"
 
     success_url = reverse_lazy("buddy_system:new-request")
 
+    @property
+    def configuration(self) -> SectionsConfiguration:
+        """We cannot use PluginConfigurationViewMixin, since memberships is not ready and request.plugin is
+        filled by middleware based on membership (and that's created in form_valid)."""
+        return SectionsConfiguration.objects.filter(
+            plugins__section=self.request.in_space_of_section
+        ).first()
+
+    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 
-        SectionMembership.objects.get_or_create(
+        if self.configuration.auto_approved_membership_for_international:
+            state = SectionMembership.State.ACTIVE
+            messages.success(self.request, _("You are now a member of this section."))
+        else:
+            state = SectionMembership.State.UNCONFIRMED
+            messages.info(
+                self.request,
+                _(
+                    "Your membership is now waiting for approval, "
+                    "you will be informed by e-mail."
+                ),
+            )
+
+        SectionMembership.objects.create(
             user=self.user,
             section=self.request.in_space_of_section,
             role=SectionMembership.Role.INTERNATIONAL,
-            state=SectionMembership.State.ACTIVE,
+            state=state,
         )
 
         return response
