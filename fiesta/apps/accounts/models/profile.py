@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import enum
 
+from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -96,6 +97,14 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     )
 
     # TODO: phone, profiles
+
+    phone_number = PhoneNumberField(
+        null=True,
+        blank=True,
+        verbose_name= ('phone number')
+    )
+
+
 
     @enum.unique
     class Preferences(enum.Flag):

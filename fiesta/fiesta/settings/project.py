@@ -35,6 +35,7 @@ class ProjectConfigMixin:
         "dal_select2",
         # Django native
         "django.contrib.admin",
+        "phonenumber_field",
         "django.contrib.auth",
         "django.contrib.contenttypes",
         "django.contrib.sessions",

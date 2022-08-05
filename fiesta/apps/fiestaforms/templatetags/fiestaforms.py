@@ -23,6 +23,7 @@ def field_modifier(bf: BoundField):
     return {
         "checkbox": "Forms__field--checkbox",
         "date": "Forms__field--date",
+        "tel": "Forms__field--tel",
         "datetime-local": "Forms__field--datetime-local",
         "email": "Forms__field--email",
         "file": "Forms__field--file",
@@ -40,6 +41,7 @@ def as_widget_field(bf: BoundField):
     ext_class = {
         "checkbox": "Forms__checkbox",
         "email": "Forms__email",
+        "tel": "Forms__tel",
         "file": "Forms__file",
         "password": "Forms__password",
         "select": "Forms__select",

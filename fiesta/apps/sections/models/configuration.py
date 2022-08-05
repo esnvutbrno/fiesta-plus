@@ -32,6 +32,13 @@ class SectionsConfiguration(BasePluginConfiguration):
         blank=True,
         help_text=FLAG_HELP_TEXT,
     )
+    required_phone_number = BooleanField(
+        verbose_name=_("required phone number"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
 
     class Meta:
         verbose_name = _("section configuration")

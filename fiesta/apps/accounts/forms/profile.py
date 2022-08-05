@@ -17,6 +17,7 @@ class UserProfileForm(BaseModelForm):
         UserProfile.nationality: SectionsConfiguration.required_nationality,
         UserProfile.gender: SectionsConfiguration.required_gender,
         UserProfile.picture: SectionsConfiguration.required_picture,
+        UserProfile.phone_number: SectionsConfiguration.required_phone_number,
     }
     _FIELD_NAMES_TO_CONFIGURATION = {
         f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()
