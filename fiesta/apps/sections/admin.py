@@ -11,6 +11,7 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
         "required_nationality",
         "required_gender",
         "required_picture",
+        "auto_approved_membership_for_international",
     ]
     list_display = BaseChildConfigurationAdmin.list_display + list_editable
 

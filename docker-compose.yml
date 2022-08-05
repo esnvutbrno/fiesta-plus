@@ -39,6 +39,8 @@ services:
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
+    depends_on:
+      - web
     volumes:
       - web_static_files:/var/static
       - web_media_files:/var/media

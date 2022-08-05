@@ -19,10 +19,10 @@ class MatchingRequestsView(
     model = BuddyRequest
 
     def has_permission(self):
-        return self.configration.matching_policy_instance.can_member_match
+        return self.configuration.matching_policy_instance.can_member_match
 
     def get_queryset(self):
-        return self.configration.matching_policy_instance.limit_requests(
+        return self.configuration.matching_policy_instance.limit_requests(
             qs=BuddyRequest.objects.get_queryset(),
             membership=self.request.membership,
         )
@@ -38,6 +38,6 @@ class ProfilePictureServeView(
         ).exists()
 
         # does have the section enabled picture displaying?
-        display = self.configration and self.configration.display_issuer_picture
+        display = self.configuration and self.configuration.display_issuer_picture
 
         return in_my_section and display

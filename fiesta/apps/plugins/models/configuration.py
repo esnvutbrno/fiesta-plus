@@ -24,6 +24,7 @@ class BasePluginConfiguration(LifecycleModelMixin, BasePolymorphicModel):
         "sections.Section",
         null=True,
         blank=True,
+        related_name="configurations",
         verbose_name=_("owner section"),
         on_delete=models.RESTRICT,
         db_index=True,

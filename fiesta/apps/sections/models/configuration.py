@@ -40,6 +40,15 @@ class SectionsConfiguration(BasePluginConfiguration):
         help_text=FLAG_HELP_TEXT,
     )
 
+    auto_approved_membership_for_international = BooleanField(
+        verbose_name=_("auto approved membership for international"),
+        default=True,
+        help_text=_(
+            "Decides, wheever is membership requested by user automatically approved for international"
+            "users (e.g. during registration process or requested by membership form."
+        ),
+    )
+
     class Meta:
         verbose_name = _("section configuration")
         verbose_name_plural = _("section configurations")
