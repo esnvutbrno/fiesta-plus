@@ -142,3 +142,7 @@ conf/certs/
 
 # local generated elastic settings
 conf/elastic
+
+# IDE config
+.idea/
+
