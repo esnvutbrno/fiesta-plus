@@ -99,12 +99,8 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     # TODO: phone, profiles
 
     phone_number = PhoneNumberField(
-        null=True,
-        blank=True,
-        verbose_name= ('phone number')
+        null=True, blank=True, verbose_name=("phone number")
     )
-
-
 
     @enum.unique
     class Preferences(enum.Flag):
