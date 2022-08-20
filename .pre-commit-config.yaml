@@ -37,7 +37,7 @@ repos:
   # linter & complexity analyzer
   # not used the default, since it doesn't currently support pyproject.toml
   - repo: https://github.com/csachs/pyproject-flake8
-    rev: v0.0.1a4
+    rev: v0.0.1a5
     hooks:
       - id: pyproject-flake8
         name: Code & complexity linting by flake8
