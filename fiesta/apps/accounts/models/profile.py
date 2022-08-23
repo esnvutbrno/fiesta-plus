@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import enum
 
-from phonenumber_field.modelfields import PhoneNumberField
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -10,6 +9,7 @@ from django.db.models import CharField, CheckConstraint, TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
+from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
@@ -96,10 +96,10 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         blank=True,
     )
 
-    # TODO: phone, profiles
+    # TODO: social network profiles
 
     phone_number = PhoneNumberField(
-        null=True, blank=True, verbose_name=("phone number")
+        null=True, blank=True, verbose_name=_("phone number")
     )
 
     @enum.unique

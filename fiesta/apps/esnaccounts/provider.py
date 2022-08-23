@@ -73,7 +73,7 @@ class ESNAccountsProvider(CASProvider):
             defaults=dict(
                 # we trust ESN Acccounts, so directly active membership
                 # TODO: should be as AccountsConfiguration attribute, so section can select
-                #  if they want trust
+                #  if they want to trust
                 state=SectionMembership.State.ACTIVE,
                 # TODO: check all possible for ESN Accounts roles
                 role=SectionMembership.Role.EDITOR

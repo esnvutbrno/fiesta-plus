@@ -18,7 +18,6 @@ class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
     export_formats = (TableExport.CSV, TableExport.JSON, TableExport.XLSX)
 
     def get_export_filename(self, export_format):
-        # TODO: get QS and rename the output
         export_name = self.export_name
 
         data: QuerySet | list = self.get_table_data()
