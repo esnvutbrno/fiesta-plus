@@ -7,6 +7,7 @@ from allauth.socialaccount.providers.base import ProviderAccount
 from allauth_cas.providers import CASProvider
 from django.core.files.base import ContentFile
 from django.http import HttpRequest
+from django.utils.text import slugify
 
 from apps.accounts.models import User, UserProfile
 from apps.accounts.models.profile import user_profile_picture_storage
@@ -68,6 +69,7 @@ class ESNAccountsProvider(CASProvider):
                     code=section_code,
                     # TODO: definitely not, user nationality != section assignment
                     country=user_nationality,
+                    space_slug=slugify(section_name).lower().replace('-', '')
                 ),
             )[0],
             defaults=dict(
