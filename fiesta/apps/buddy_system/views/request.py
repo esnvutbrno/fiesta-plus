@@ -81,7 +81,7 @@ class SignUpBeforeRequestView(
 class NewRequestView(EnsureInSectionSpaceViewMixin, SuccessMessageMixin, CreateView):
     template_name = "buddy_system/new_buddy_request.html"
     form_class = NewBuddyRequestForm
-    success_message = _("Your buddy request has been succesfully created!")
+    success_message = _("Your buddy request has been successfully created!")
 
     success_url = reverse_lazy("buddy_system:index")
 

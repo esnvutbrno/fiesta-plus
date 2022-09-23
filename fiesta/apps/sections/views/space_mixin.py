@@ -8,6 +8,7 @@ from apps.sections.middleware.section_space import HttpRequest
 
 
 class EnsureInSectionSpaceViewMixin:
+    """Ensures that we're currently in section space (so on <section>.tld)."""
     request: HttpRequest
 
     def dispatch(self, request, *args, **kwargs):
