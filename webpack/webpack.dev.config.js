@@ -30,7 +30,7 @@ config.devServer = {
     port: PORT,
     allowedHosts: ['.localhost'],
     client: {
-        webSocketURL: 'wss://webpack.localhost/ws',
+        webSocketURL: 'wss://webpack.local/ws',
     },
     hot: true,
     historyApiFallback: true,

@@ -21,7 +21,7 @@ class ProjectConfigMixin:
 
     USE_TZ = True
 
-    ALLOWED_HOSTS: list[str] = [".localhost", "127.0.0.1"]
+    ALLOWED_HOSTS: list[str] = [".localhost", ".local", "127.0.0.1"]
 
     WSGI_APPLICATION = "fiesta.wsgi.application"
 
@@ -50,7 +50,7 @@ class ProjectConfigMixin:
         "django_htmx",
         "django_tables2",
         "django_filters",
-        # "django_watchfiles",
+        "django_watchfiles",
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",

@@ -14,7 +14,7 @@ services:
     command: yarn build
     environment:
       NODE_ENV: production
-      PUBLIC_PATH: https://fiesta.localhost/static/
+      PUBLIC_PATH: https://fiesta.local/static/
 
   dockerproxy:
     ports:

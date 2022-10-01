@@ -84,10 +84,10 @@ help: ## Shows help
 
 generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
 generate-localhost-certs: \
-	conf/certs/fiesta.localhost.crt \
-	conf/certs/*.fiesta.localhost.crt \
+	conf/certs/fiesta.local.crt \
+	conf/certs/*.fiesta.local.crt \
 	conf/certs/web.localhost.crt \
-	conf/certs/webpack.localhost.crt \
+	conf/certs/webpack.local.crt \
 	conf/certs/kibana.localhost.crt \
 	conf/certs/elastic.crt
 

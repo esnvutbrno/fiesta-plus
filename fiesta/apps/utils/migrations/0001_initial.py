@@ -6,7 +6,7 @@ def forward(apps, schema_editor):
     db_alias = schema_editor.connection.alias
     s, created = Site.objects.using(db_alias).get_or_create(pk=1)
     s.name = 'Fiesta'
-    s.domain = 'fiesta.localhost'
+    s.domain = 'fiesta.local'
     s.save()
 
 
