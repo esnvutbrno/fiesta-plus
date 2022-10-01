@@ -1,4 +1,4 @@
-DC = docker compose
+DC = docker compose -f docker-compose.yml -f docker-compose.override.yml
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 

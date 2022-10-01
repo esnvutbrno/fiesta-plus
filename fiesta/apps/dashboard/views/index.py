@@ -10,13 +10,13 @@ class DashboardIndexView(TemplateView):
         context = super().get_context_data(**kwargs)
         from django.apps import apps
 
-        context["blocks"] = [
-            path.as_posix()
-            for path in (
-                (Path(app.path) / "templates" / app.label / "dashboard_block.html")
+        context["blocks"] = {
+            app.label: path.as_posix()
+            for app, path in (
+                (app, (Path(app.path) / "templates" / app.label / "dashboard_block.html"))
                 for app in apps.get_app_configs()
             )
             if path.exists()
-        ]
+        }
 
         return context
