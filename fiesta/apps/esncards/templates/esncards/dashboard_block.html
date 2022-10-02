@@ -1,14 +1,47 @@
+{% load humanize %}
 {% load esncards %}
 {% get_current_esncard_application_of_user as application %}
-<div class="stat">
-  <div class="stat-title">ESNcard Application</div>
-{#  <div class="stat-figure text-secondary">#}
-{#    <div class="avatar online">#}
-{#      <div class="w-16 rounded-full">#}
-{#        <img src="https://placeimg.com/128/128/people"/>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-  <div class="stat-value">✅ {{ application.get_state_display }}</div>
-{#  <div class="stat-desc text-secondary">Waiting </div>#}
+<div class="stat bg-gray-200">
+    <div class="Dashboard__tile__title text-gray-800">ESNcard Application</div>
+
+    {% if application %}
+        <div class="stat-figure text-secondary">
+            <div class="avatar">
+                <div class="w-16 rounded-full">
+                    <img
+                            src="{{ application.holder_photo.url }}"
+                            width="{{ application.holder_photo.width }}"
+                            height="{{ application.holder_photo.height }}"
+                            alt="Submitted holder photo"
+                    />
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if not application %}
+        <div class="Dashboard__tile__value text-secondary">✖️ Not created</div>
+        <div class="Dashboard__tile__desc text-right">
+            <a href="{% url "esncards:application_create_form" %}" class="btn btn-lg btn-secondary">
+                apply for ESNcard
+            </a>
+        </div>
+    {% elif application.state == application.State.CREATED %}
+        <div class="Dashboard__tile__value text-secondary">waiting</div>
+        <div class="Dashboard__tile__desc text-gray-800">
+            Application is waiting to be confirmed.
+        </div>
+    {% elif application.state == application.State.ACCEPTED %}
+        <div class="Dashboard__tile__value text-secondary">{{ application.get_state_display }}</div>
+        <div class="Dashboard__tile__desc text-gray-800">
+            Expected to be ready in {{ application.to_be_ready_at|timeuntil }}.
+        </div>
+    {% elif application.state == application.State.READY %}
+        <div class="Dashboard__tile__value text-secondary">✅ Ready for pickup</div>
+        <div class="Dashboard__tile__desc text-gray-800">
+            Your card is ready for pickup.
+        </div>
+    {% elif application.state == application.State.ISSUED %}
+    {% endif %}
+    {# TODO: other states #}
 </div>

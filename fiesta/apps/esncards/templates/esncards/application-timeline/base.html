@@ -3,10 +3,10 @@
 {% load utils %}
 
 <li class="mb-10 ml-6">
-  {% get_user_picture_url user as picture_url %}
+  {% get_user_picture user as picture_url %}
   <span
     class="flex absolute -left-3 justify-center items-center w-6 h-6 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900 bg-cover bg-center"
-    style='background-image: url("{{ picture_url }}")'
+    style='background-image: url("{{ picture_url.url }}")'
   ></span>
 
   <div class="p-4 bg-white rounded-lg border border-gray-200 shadow-sm dark:bg-gray-700 dark:border-gray-600

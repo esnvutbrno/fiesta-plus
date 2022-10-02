@@ -7,11 +7,11 @@
           @click="user = !user"
   >
     <span class="sr-only">Open user menu</span>
-    {% get_user_picture_url request.user as picture_url %}
-    {% if picture_url %}
+    {% get_user_picture request.user as picture %}
+    {% if picture %}
       <div
         class="w-10 h-10 rounded-full bg-cover bg-center"
-        style='background-image: url("{{ picture_url }}")'
+        style='background-image: url("{{ picture.url }}")'
       ></div>
     {% else %}
       <svg xmlns="http://www.w3.org/2000/svg"
@@ -24,9 +24,8 @@
   </button>
 
   <div class="z-30 my-4 text-base list-none bg-white rounded
-                    divide-y divide-gray-100 shadow w-40
-
-                    absolute top-full -right-1/2 hidden"
+              divide-y divide-gray-100 shadow w-40
+              absolute top-full -right-1/2 hidden"
        :class="{hidden: !user}"
   >
     <div class="py-3 px-4">

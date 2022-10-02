@@ -1,0 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .Dashboard__tile {
+        @apply stats shadow-xl min-w-[50%]
+    }
+    .Dashboard__tile__title {
+        @apply stat-title text-2xl text-white
+    }
+
+    .Dashboard__tile__value {
+        @apply stat-value text-6xl my-4 text-white
+    }
+
+    .Dashboard__tile__desc {
+        @apply stat-desc text-white text-xl
+    }
+
+}

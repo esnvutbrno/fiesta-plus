@@ -38,9 +38,10 @@ def get_current_buddy_request_of_user(context):
 
 
 @register.simple_tag(takes_context=True)
-def get_buddy_requests_waiting_count(context):
+def get_waiting_buddy_requests_placed_before(context, br: BuddyRequest):
     request: HttpRequest = context["request"]
 
     return request.membership.section.buddy_system_requests.filter(
         state=BuddyRequest.State.CREATED,
+        created__lt=br.created,
     ).count()

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import TypedDict
 
 from django.contrib.auth import get_user_model
@@ -112,6 +112,10 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
 
     def __str__(self):
         return _("ESNcard Application: {}").format(self.get_state_display())
+
+    @property
+    def to_be_ready_at(self):
+        return self.created + timedelta(days=10)
 
 
 __all__ = ["ESNcardApplication"]

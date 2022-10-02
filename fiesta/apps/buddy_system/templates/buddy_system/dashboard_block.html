@@ -1,14 +1,38 @@
+{% load user_profile %}
 {% load buddy_system %}
 {% get_current_buddy_request_of_user as br %}
-<div class="stat shadow">
-  <div class="stat-title">Buddy request</div>
-{#  <div class="stat-figure text-secondary">#}
-{#    <div class="avatar online">#}
-{#      <div class="w-16 rounded-full">#}
-{#        <img src="https://placeimg.com/128/128/people"/>#}
-{#      </div>#}
-{#    </div>#}
-{#  </div>#}
-  <div class="stat-value">✅ {{ br.get_state_display }}</div>
-  <div class="stat-desc text-secondary">Waiting for buddy match with another {% get_buddy_requests_waiting_count %} requests</div>
+<div class="stat shadow-2xl bg-primary">
+    <div class="Dashboard__tile__title">Buddy System</div>
+    {% if not br %}
+        <div class="Dashboard__tile__value">✖️ Not created</div>
+        <div class="Dashboard__tile__desc text-right">
+            <a href="{% url "buddy_system:new-request" %}" class="btn btn-lg btn-secondary">create buddy request</a>
+        </div>
+    {% elif br.state == br.State.CREATED %}
+        <div class="Dashboard__tile__value">⌛ Waiting for match</div>
+        {% get_waiting_buddy_requests_placed_before br as waiting_total %}
+        <div class="Dashboard__tile__desc">
+            There is {{ waiting_total }} waiting request{{ waiting_total|pluralize }} before yours.
+        </div>
+    {% elif br.state == br.State.MATCHED %}
+        {% get_user_picture br.matched_by as buddy_picture %}
+        {% if buddy_picture %}
+        <div class="stat-figure text-secondary">
+            <div class="avatar">
+                <div class="w-16 rounded-full">
+                    <img
+                            src="{{ buddy_picture.url }}"
+                            width="{{ buddy_picture.width }}"
+                            height="{{ buddy_picture.height }}"
+                            alt="Matched buddy picture"
+                    />
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        <div class="Dashboard__tile__value">✅ Matched</div>
+        <div class="Dashboard__tile__desc">
+            It's a match!
+        </div>
+    {% endif %}
 </div>

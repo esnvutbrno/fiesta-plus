@@ -39,7 +39,7 @@ class UserAdmin(DjangoUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "nationality", "gender")
+    list_display = ("user", "nationality", "gender", "picture")
     list_filter = (
         "user__memberships__section",
         "gender",
