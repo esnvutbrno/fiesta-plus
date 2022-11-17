@@ -1,4 +1,4 @@
-FROM python:3.10.5-alpine3.16 as builder
+FROM python:alpine as builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -20,7 +20,7 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN /venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 # pull official base image
-FROM python:3.10.5-alpine3.16
+FROM python:alpine
 
 COPY --from=builder /venv /venv
 
