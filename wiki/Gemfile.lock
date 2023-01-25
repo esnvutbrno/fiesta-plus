@@ -10,7 +10,7 @@ GEM
     asciidoctor (2.0.17)
     builder (3.2.4)
     charlock_holmes (0.7.7)
-    commonmarker (0.23.4)
+    commonmarker (0.23.7)
     concurrent-ruby (1.1.9)
     crass (1.0.6)
     creole (0.3.8)
@@ -106,7 +106,7 @@ PLATFORMS
 DEPENDENCIES
   RedCloth
   asciidoctor (~> 2.0.5)
-  commonmarker (~> 0.23.4)
+  commonmarker (~> 0.23.7)
   creole (~> 0.3.6)
   elasticsearch (~> 7.17.0)
   facets (~> 3.1)
