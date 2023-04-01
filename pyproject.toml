@@ -6,7 +6,7 @@ authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-django = "^4.1.7"
+Django = "^4.1.7"
 
 Pillow = "^9.0.1"
 bcrypt = "^3.2.0"
@@ -37,7 +37,6 @@ django-select2 = "^7.10.0"
 django-debug-toolbar = "^3.5.0"
 django-watchfiles = "^0.0.1"
 django-autocomplete-light = "^3.9.4"
-Django = "4.1.0"
 django-phonenumber-field = {extras = ["phonenumberslite"], version = "^6.3.0"}
 
 [tool.poetry.dev-dependencies]
