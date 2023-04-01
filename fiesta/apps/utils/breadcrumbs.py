@@ -52,7 +52,7 @@ def with_breadcrumb(title: str, *, url_name: str = None):
 
             push_breadcrumb_item(request=request, item=_title_to_append)
 
-            return old_dispatch(self, request=request, *args, **kwargs)
+            return old_dispatch(self, *args, request=request, **kwargs)
 
         view_klass.dispatch = dispatch
         return view_klass
@@ -83,7 +83,7 @@ def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = 
                 request=request,
                 item=lazy(lazy_title, str),
             )
-            return old_dispatch(self, request=request, *args, **kwargs)
+            return old_dispatch(self, *args, request=request, **kwargs)
 
         view_klass.dispatch = dispatch
         return view_klass

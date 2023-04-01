@@ -18,7 +18,7 @@ class Q(DjQ):
 
 def get_object_or_none(klass, *args, **kwargs):
     try:
-        return get_object_or_404(klass=klass, *args, **kwargs)
+        return get_object_or_404(*args, klass=klass, **kwargs)
     except (Http404, ValidationError):
         return None
 
