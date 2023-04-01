@@ -69,7 +69,7 @@ class ESNAccountsProvider(CASProvider):
                     code=section_code,
                     # TODO: definitely not, user nationality != section assignment
                     country=user_nationality,
-                    space_slug=slugify(section_name).lower().replace('-', '')
+                    space_slug=slugify(section_name).lower().replace("-", ""),
                 ),
             )[0],
             defaults=dict(
