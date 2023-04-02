@@ -5,12 +5,13 @@ from apps.accounts.views.membership import (
     MyMembershipsView,
     NewSectionMembershipFormView,
 )
-from apps.accounts.views.profile import MyProfileDetailView, ProfileFinishFormView
+from apps.accounts.views.profile import MyProfileUpdateView, ProfileFinishFormView, MyProfileDetailView
 
 app_name = "accounts"
 urlpatterns = [
     path("", IndexView.as_view(), name="index"),
     path("my-profile", MyProfileDetailView.as_view(), name="my-profile"),
+    path("my-profile/update", MyProfileUpdateView.as_view(), name="my-profile-update"),
     path("profile/finish", ProfileFinishFormView.as_view(), name="profile-finish"),
     path(
         "membership/new/<section:section>",

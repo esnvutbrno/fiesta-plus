@@ -3,7 +3,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import UpdateView
+from django.views.generic import DetailView, UpdateView
 
 from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
 from apps.fiestaforms.views.htmx import HtmxFormMixin
@@ -12,7 +12,15 @@ from apps.utils.breadcrumbs import with_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
-class MyProfileDetailView(UpdateView):
+class MyProfileDetailView(DetailView):
+    request: HttpRequest
+    template_name = "accounts/user_profile/detail.html"
+
+    def get_object(self, queryset=None):
+        return self.request.user.profile_or_none
+
+
+class MyProfileUpdateView(UpdateView):
     request: HttpRequest
     template_name = "accounts/user_profile/update.html"
 

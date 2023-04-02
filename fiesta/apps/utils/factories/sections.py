@@ -17,8 +17,8 @@ class SectionFactory(DjangoModelFactory):
     name = FuzzyChoice(
         (
             "ESN VUT Brno",
-            "ESN MUNI",  # 'ESN VSB TUO',
-            "ISC CTU",  # 'ESN MENDELU',  'ESN Zlin'
+            "ESN MUNI",  'ESN VSB TUO',
+            "ISC CTU",  'ESN MENDELU',  'ESN Zlin'
         )
     )
 

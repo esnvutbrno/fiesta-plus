@@ -5,11 +5,17 @@
 
 {% block upper_head %}
   {{ block.super }}
-  {% trans "Update My Profile" as title %}
+  {% trans "My Profile" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block content %}
-  {% include "accounts/user_profile/profile_form.html" %}
+  <h1 class="card-title">{% trans "My Profile" %}</h1>
 
+  <table>
+  <tr>
+    <td></td>
+    <td>{{ object }}</td>
+  </tr>
+  </table>
 {% endblock content %}

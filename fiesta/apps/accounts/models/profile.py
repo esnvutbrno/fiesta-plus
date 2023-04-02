@@ -155,7 +155,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     def __str__(self):
         return (
             f"{self.user} {self.nationality} "
-            f"{self.home_university or self.home_faculty.university} "
+            f"{self.home_university or (self.home_faculty.university if self.home_faculty else None) or ''} "
         )
 
 
