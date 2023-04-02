@@ -611,22 +611,18 @@ Django = ">=2.2"
 
 [[package]]
 name = "django-htmx"
-version = "1.12.1"
-description = ""
+version = "1.14.0"
+description = "Extensions for using Django with htmx."
 category = "main"
 optional = false
 python-versions = ">=3.7"
-files = []
-develop = false
+files = [
+    {file = "django_htmx-1.14.0-py3-none-any.whl", hash = "sha256:393e2a4a963aff691b3973c898dbca1363139d7c7bf2e8cc4c605e2ad808a779"},
+    {file = "django_htmx-1.14.0.tar.gz", hash = "sha256:b689a8d6f7052a96a373411ec55ba81c1ddffb4d66b1f5ab4d6e3d28420842fd"},
+]
 
 [package.dependencies]
 Django = ">=3.2"
-
-[package.source]
-type = "git"
-url = "https://github.com/thejoeejoee/django-htmx"
-reference = "patch-1"
-resolved_reference = "245f9a6a07cd81e9b1dee6772e68284aa7ad2f06"
 
 [[package]]
 name = "django-lifecycle"
@@ -828,14 +824,14 @@ doc = ["Sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "18.3.1"
+version = "18.3.2"
 description = "Faker is a Python package that generates fake data for you."
 category = "main"
 optional = false
 python-versions = ">=3.7"
 files = [
-    {file = "Faker-18.3.1-py3-none-any.whl", hash = "sha256:4c98c42984db54be2246d40e6407cd983db7b1511a70eaff64c3f383a51bace6"},
-    {file = "Faker-18.3.1.tar.gz", hash = "sha256:9bd71833146b844d848791b79720c7806108130c9603c7074123b3f77b4e97a1"},
+    {file = "Faker-18.3.2-py3-none-any.whl", hash = "sha256:f3299679a6b23409cfe69774bbd1148324a05bd38bda041da6c302e618d7d4a0"},
+    {file = "Faker-18.3.2.tar.gz", hash = "sha256:a000bba893ea502cea66d06acf14e01655a2289e4904de80faf9dbe880fa1a39"},
 ]
 
 [package.dependencies]
@@ -1693,4 +1689,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ccd86d45f6b1aceef56fe97ae202ec93929f14201e6e917d7ddbfadb41b81599"
+content-hash = "872ba1cc948105e6c0d63722e21b42b6f82dd0dcfcfa30277d803190edcedf86"

@@ -18,8 +18,7 @@ django-configurations = { extras = ["cache", "database", "email", "search"], ver
 django-countries = "^7.2.1"
 django-extensions = "^3.1.5"
 django-filter = "^21.1"
-# to support debug_propagate_exceptions
-django-htmx = { git = "https://github.com/thejoeejoee/django-htmx", branch = "patch-1" }
+django-htmx = "^1.14.0"
 django-lifecycle = "^1.0.0"
 django-loginas = "^0.3.10"
 django-model-path-converter = "^0.1.0"
