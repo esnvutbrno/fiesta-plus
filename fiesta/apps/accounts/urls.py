@@ -5,7 +5,11 @@ from apps.accounts.views.membership import (
     MyMembershipsView,
     NewSectionMembershipFormView,
 )
-from apps.accounts.views.profile import MyProfileUpdateView, ProfileFinishFormView, MyProfileDetailView
+from apps.accounts.views.profile import (
+    MyProfileUpdateView,
+    ProfileFinishFormView,
+    MyProfileDetailView,
+)
 
 app_name = "accounts"
 urlpatterns = [
