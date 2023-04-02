@@ -17,7 +17,7 @@
     "alpinejs": "^3.9.0",
     "autoprefixer": "^10.4.8",
     "css-loader": "^6.6.0",
-    "daisyui": "^2.22.0",
+    "daisyui": "^2.51.3",
     "htmx.org": "^1.6.1",
     "mini-css-extract-plugin": "^2.5.3",
     "postcss": "^8.4.6",
