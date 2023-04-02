@@ -4,19 +4,29 @@
 
 
 @layer components {
+    .Dashboard__tiles {
+        @apply stats w-full
+    }
     .Dashboard__tile {
-        @apply stats shadow-xl min-w-[50%]
+        @apply stat shadow-xl
+    }
+    .Dashboard__tile--dark {
+        @apply text-white
     }
     .Dashboard__tile__title {
-        @apply stat-title text-2xl text-white
+        @apply stat-title text-2xl
     }
 
     .Dashboard__tile__value {
-        @apply stat-value text-6xl my-4 text-white
+        @apply stat-value text-6xl my-4
     }
 
     .Dashboard__tile__desc {
-        @apply stat-desc text-white text-xl
+        @apply stat-desc text-xl
+    }
+
+    .Dashboard__tile__actions {
+        @apply text-xl mt-2
     }
 
 }

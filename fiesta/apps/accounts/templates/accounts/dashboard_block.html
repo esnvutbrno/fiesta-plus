@@ -1,0 +1,23 @@
+{% load user_profile %}
+
+<div class="Dashboard__tiles">
+  <div class="Dashboard__tile shadow-2xl bg-gray-200 aspect-square">
+    <div class="Dashboard__tile__title">My Profile</div>
+
+    <div class="flex justify-center items-center my-4">
+      {# TODO: compute completness #}
+      {# TODO: interpolate to color #}
+      <div class="radial-progress text-lime-400" style="--value:70; --size:20rem; --thickness: 2rem;">
+        <div class=" text-black flex flex-col items-center">
+          <span class="text-7xl font-bold">70%</span>
+          <span class="text">complete</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="Dashboard__tile__actions text-right">
+      <a href="" class="btn btn-lg">fill profile</a>
+    </div>
+
+  </div>
+</div>
