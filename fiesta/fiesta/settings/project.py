@@ -21,16 +21,19 @@ class ProjectConfigMixin:
 
     USE_TZ = True
 
-    ALLOWED_HOSTS: list[str] = [".localhost", ".local", "127.0.0.1"]
-
     WSGI_APPLICATION = "fiesta.wsgi.application"
 
     ROOT_URLCONF = "fiesta.urls"
 
+    ROOT_DOMAIN = "xxx"  # TODO: fill from environ
+
+    def ALLOWED_HOSTS(self):
+        return [f".{self.ROOT_DOMAIN}"]
+
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     INSTALLED_APPS = [
-        # dj admin autocompletiting widgets, must be before admin
+        # dj admin autocompletion widgets, must be before admin
         "dal",
         "dal_select2",
         # Django native

@@ -2,14 +2,14 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const BundleTracker = require('webpack-bundle-tracker');
 const path = require('path');
 
-const publicPath = process.env.PUBLIC_PATH;
-const buildDir = process.env.BUILD_DIR;
+const PUBLIC_PATH = process.env.PUBLIC_PATH;
+const BUILD_DIR = process.env.BUILD_DIR;
 
-if (!publicPath) throw Error('Missing PUBLIC_PATH in env.');
-if (!buildDir) throw Error('Missing BUILD_DIR in env.');
+if (!PUBLIC_PATH) throw Error('Missing PUBLIC_PATH in env.');
+if (!BUILD_DIR) throw Error('Missing BUILD_DIR in env.');
 
-console.log(`BUILD_DIR=${buildDir}`)
-console.log(`PUBLIC_PATH=${publicPath}`)
+console.log(`BUILD_DIR=${BUILD_DIR}`)
+console.log(`PUBLIC_PATH=${PUBLIC_PATH}`)
 
 module.exports = {
     mode: 'production',
@@ -19,8 +19,8 @@ module.exports = {
         ],
     },
     output: {
-        publicPath,
-        path: buildDir,
+        publicPath: PUBLIC_PATH,
+        path: BUILD_DIR,
         filename: '[name].[chunkhash:8].js',
     },
     module: {
@@ -70,9 +70,9 @@ module.exports = {
     },
     plugins: [
         new BundleTracker({
-            path: buildDir,
+            path: BUILD_DIR,
             // https://github.com/django-webpack/webpack-bundle-tracker/issues/108
-            filename: path.join(buildDir, 'webpack-stats.json'),
+            filename: path.join(BUILD_DIR, 'webpack-stats.json'),
         }),
         new MiniCssExtractPlugin({
             filename: '[name].[chunkhash:8].css',

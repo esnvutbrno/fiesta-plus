@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, HttpResponseNotFound
@@ -29,7 +30,7 @@ class SectionSpaceMiddleware:
 
         # TODO: detect active state of selected section
 
-        if space_slug and space_slug != "localhost" and not request.in_space_of_section:
+        if space_slug and space_slug != settings.ROOT_DOMAIN and not request.in_space_of_section:
             return HttpResponseNotFound("Section space not found.")
 
         return self.get_response(request)

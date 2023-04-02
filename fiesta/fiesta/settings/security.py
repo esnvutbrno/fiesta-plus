@@ -2,13 +2,17 @@ from configurations.values import SecretValue
 
 
 class SecurityConfigMixin:
+    ROOT_DOMAIN: str  # inherited from another mixin
+
     SECRET_KEY = SecretValue()
 
     SECURE_PROXY_SSL_HEADER = "HTTP_X_FORWARDED_SSL", "on"
-    CSRF_TRUSTED_ORIGINS = ["https://*.localhost"]
 
-    # TODO: set before deployment!
-    SESSION_COOKIE_DOMAIN = ".fiesta.final.domain"
+    def CSRF_TRUSTED_ORIGINS(self):
+        return [f"https://*.{self.ROOT_DOMAIN}"]
+
+    def SESSION_COOKIE_DOMAIN(self):
+        return f".{self.ROOT_DOMAIN}"
 
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SECURE = True

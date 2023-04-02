@@ -25,12 +25,12 @@ class Base(
 class Development(Base):
     DEBUG = True
     DEBUG_PROPAGATE_EXCEPTIONS = False
-    USE_WEBPACK_INTEGRITY = False
 
-    # https://stackoverflow.com/questions/1134290/cookies-on-localhost-with-explicit-domain
-    SESSION_COOKIE_DOMAIN = None  # ".localhost"
+    ROOT_DOMAIN = "fiesta.test"
 
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
+
+    USE_WEBPACK_INTEGRITY = False
 
     def INSTALLED_APPS(self):
         return super().INSTALLED_APPS + ["debug_toolbar"]

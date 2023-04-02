@@ -82,14 +82,14 @@ produp:
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
-generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
+generate-localhost-certs: ## Generates self-signed *.fiesta.test certs for working HTTPS.
 generate-localhost-certs: \
-	conf/certs/fiesta.local.crt \
-	conf/certs/*.fiesta.local.crt \
-	conf/certs/web.localhost.crt \
-	conf/certs/webpack.local.crt \
-	conf/certs/kibana.localhost.crt \
-	conf/certs/elastic.crt
+	conf/certs/fiesta.test.crt \
+	conf/certs/*.fiesta.test.crt \
+	conf/certs/web.fiesta.test.crt \
+	conf/certs/webpack.fiesta.test.crt \
+	conf/certs/kibana.fiesta.test.crt \
+	conf/certs/elastic.fiesta.test.crt
 
 
 # based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile
