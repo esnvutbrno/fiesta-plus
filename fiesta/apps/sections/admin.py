@@ -18,8 +18,8 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "space_slug", "all_universities")
-    list_filter = (("country", admin.AllValuesFieldListFilter),)
+    list_display = ("name", "country", "space_slug", "all_universities", "system_state")
+    list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
     def get_queryset(self, request):
         return (
@@ -39,7 +39,7 @@ class SectionAdmin(admin.ModelAdmin):
         extra = 1
 
     # TODO: Listing all memberships in section admin
-    #  is kinda slow, so usega of some paginated would be usefull
+    #  is kinda slow, so usage of some paginated would be useful
     class SectionMembershipInline(admin.TabularInline):
         model = SectionMembership
         autocomplete_fields = ("user",)

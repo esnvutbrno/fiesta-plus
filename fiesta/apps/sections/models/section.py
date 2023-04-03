@@ -1,5 +1,6 @@
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
+from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
@@ -41,6 +42,19 @@ class Section(BaseTimestampedModel):
         help_text=_("Slug used for defining section spaces as URL subdomains."),
         unique=True,
         validators=[validate_plain_slug_lowercase],
+    )
+
+    class SystemState(TextChoices):
+        ENABLED = "enabled", _("Enabled")
+        PAUSED = "paused", _("Paused")
+        DISABLED = "disabled", _("Disabled")
+
+    system_state = models.CharField(
+        max_length=16,
+        choices=SystemState.choices,
+        default=SystemState.DISABLED,
+        verbose_name=_("state in this system"),
+        help_text=_("Marks state of the section in context of usage of this system."),
     )
 
     class Meta:
