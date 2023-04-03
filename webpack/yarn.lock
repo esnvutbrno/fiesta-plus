@@ -1609,10 +1609,10 @@ html-entities@^2.3.2:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.3.3.tgz#117d7626bece327fc8baace8868fa6f5ef856e46"
   integrity sha512-DV5Ln36z34NNTDgnz0EWGBLZENelNAtkiFA4kyNOG2tDI6Mz1uSWiq1wAKdyjnJwyDiDO7Fa2SO1CTxPXL8VxA==
 
-htmx.org@^1.6.1:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/htmx.org/-/htmx.org-1.8.0.tgz#f3a2f681f3e2b6357b5a29bba24a2572a8e48fd3"
-  integrity sha512-xdR2PeSmhftFhUKn/5DYDFRVF8DagJR9d7y3AK+gQzoAQ+08r+0shaCTo1HdXKGKhRfX/uL3rqj4ZwCBNf8tLw==
+htmx.org@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/htmx.org/-/htmx.org-1.8.6.tgz#15d99db91ecd825d46dd15687643f980a63ed229"
+  integrity sha512-88U8qwaIs4sZjzZvHgAX62B6qZoEdQNSYCRHARtYhSrk+iCUd3al8/0CrLwD8Tephsoodsf0gN9NbRrrmlJIfw==
 
 http-deceiver@^1.2.7:
   version "1.2.7"
