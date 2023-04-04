@@ -2,14 +2,16 @@ import re
 
 from django import template
 
-from apps.buddy_system.models import BuddyRequest
+from apps.buddy_system.apps import BuddySystemConfig
+from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
+from apps.plugins.models import Plugin
 
 register = template.Library()
 
 # I know, it's not the best regex for emails
 # [\w.] as [a-zA-Z0-9_.]
-CENSORE_REGEX = re.compile(
+CENSOR_REGEX = re.compile(
     # emails
     r"^$|\S+@\S+\.\S+"
     # instagram username
@@ -23,18 +25,33 @@ CENSORE_REGEX = re.compile(
 
 
 @register.filter
-def censore_description(description: str) -> str:
-    return CENSORE_REGEX.sub("---censored---", description)
+def censor_description(description: str) -> str:
+    return CENSOR_REGEX.sub("---censored---", description)
 
 
 @register.simple_tag(takes_context=True)
 def get_current_buddy_request_of_user(context):
     request: HttpRequest = context["request"]
 
-    # TODO: could be more then one?
     return request.membership.user.buddy_system_issued_requests.filter(
         responsible_section=request.membership.section,
-    ).first()
+    ).get()  # TODO: could be more then one?
+
+
+@register.simple_tag(takes_context=True)
+def get_waiting_requests_to_match(context):
+    request: HttpRequest = context["request"]
+
+    buddy_system_plugin: Plugin = request.membership.section.plugins.get(
+        app_label=BuddySystemConfig.get_loaded_app().label
+    )
+
+    configuration: BuddySystemConfiguration = buddy_system_plugin.configuration
+
+    return configuration.matching_policy_instance.limit_requests(
+        qs=BuddyRequest.objects.filter(responsible_section=request.membership.section),
+        membership=request.membership,
+    )
 
 
 @register.simple_tag(takes_context=True)

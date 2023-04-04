@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.urls import reverse
 from django.utils.http import urlencode
 
-from apps.sections.middleware.section_space import HttpRequest
+from apps.plugins.middleware.plugin import HttpRequest
 
 
 class EnsureInSectionSpaceViewMixin:

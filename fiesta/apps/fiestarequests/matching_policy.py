@@ -46,14 +46,14 @@ class MatchingPolicyProtocol(typing.Protocol):
 class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
     id = "manual-by-editor"
     title = _("Manual by editors")
-    description = _("Matching done manualy only by editors.")
+    description = _("Matching is done manually only by editors.")
     can_member_match = False
 
 
 class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
     id = "manual-by-member"
     title = _("Manual by members")
-    description = _("Matching is done manualy directly by members.")
+    description = _("Matching is done manually directly by members.")
     can_member_match = True
 
 
@@ -61,7 +61,7 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
     title = _("Limited by faculty")
     description = _(
-        "Matching done manualy by members themselfs, but limited to the same faculty."
+        "Matching is done manually by members themselves, but limited to the same faculty."
     )
     can_member_match = True
 
@@ -79,10 +79,10 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
 
 class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty-limited"
-    title = _("Limited by faculty till limit")
+    title = _("Limited by faculty with limit")
     description = _(
-        "Matching done manualy by members themselfs, but limited to same faculty till"
-        "the rolling limit - limitation is not enabled after reaching the rolling limit."
+        "Matching is done manually by members themselves, but limited to same faculty till"
+        "the rolling limit - limitation is not enabled after reaching the limit."
     )
     can_member_match = True
 

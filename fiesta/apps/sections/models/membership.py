@@ -32,6 +32,10 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         def is_privileged(self):
             return self in (self.__class__.EDITOR, self.__class__.ADMIN)
 
+        @property
+        def is_international(self):
+            return self == self.__class__.INTERNATIONAL
+
     role = models.CharField(
         max_length=16,
         choices=Role.choices,

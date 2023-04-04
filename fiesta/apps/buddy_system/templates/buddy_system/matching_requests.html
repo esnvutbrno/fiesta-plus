@@ -4,7 +4,7 @@
 {% load i18n %}
 
 {% block upper_head %}
-  {% trans "Matching" as title %}
+  {% trans "Waiting requests" as title %}
 
   {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
@@ -78,7 +78,7 @@
           <hr>
 
           <div class="card-actions justify-between items-center">
-            <span class="badge badge-outline">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
+            <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
             <button class="btn btn-primary">Take buddy</button>
           </div>
         </div>
