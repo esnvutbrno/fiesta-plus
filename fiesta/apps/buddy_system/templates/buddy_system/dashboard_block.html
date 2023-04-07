@@ -17,7 +17,7 @@
         <div class="Dashboard__tile__value">⌛ Waiting for match</div>
         {% get_waiting_buddy_requests_placed_before br as waiting_total %}
         <div class="Dashboard__tile__desc">
-          There is {{ waiting_total }} waiting request{{ waiting_total|pluralize }} before yours.
+          There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
         </div>
       {% elif br.state == br.State.MATCHED %}
         {% get_user_picture br.matched_by as buddy_picture %}
@@ -44,7 +44,7 @@
         {% get_waiting_requests_to_match as waiting_brs %}
         <div class="Dashboard__tile__value">
           {% with waiting_brs.count as count %}
-          <span>{{ count }}</span> waiting request{{ waiting_total|pluralize }}
+          <span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}
           {% endwith %}
         </div>
         <div class="Dashboard__tile__actions text-right">

@@ -1,4 +1,5 @@
 import datetime
+import typing
 from operator import attrgetter
 from pathlib import Path
 from typing import Reversible
@@ -29,3 +30,18 @@ def date_from_unix(n: int) -> datetime.datetime:
 @register.filter
 def map_attrgetter(iterable: Reversible, attr: str):
     return map(attrgetter(attr), iterable)
+
+
+@register.simple_tag
+def interpolate_to_list(value: float, *values: typing.Any):
+    return values[int(min(1, max(0, value)) * len(values))]
+
+
+@register.filter
+def multiply(first, second):
+    return first * second
+
+
+@register.filter(name="int")
+def int_(value):
+    return int(value)
