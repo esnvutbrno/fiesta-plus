@@ -63,7 +63,7 @@
             {% endif %}
           </table>
           {# <p /> are added by filter #}
-          {{ br.description|censore_description|linebreaks }}
+          {{ br.description|censor_description|linebreaks }}
 
           {% if br.interests %}
             <hr>

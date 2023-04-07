@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 
 from apps.plugins.models import Plugin
 from apps.plugins.plugin import PluginAppConfig
-from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
 class DashboardIndexView(EnsureInSectionSpaceViewMixin, TemplateView):
