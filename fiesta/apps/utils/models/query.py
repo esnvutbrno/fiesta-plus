@@ -1,15 +1,14 @@
 from django.core.exceptions import ValidationError
-from django.db.models import Q as DjQ
 from typing import Union, Type
 
-from django.db.models import Q as DjQ, QuerySet, Model
+from django.db.models import Q as DjangoQ, QuerySet, Model
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 
 
-class Q(DjQ):
+class Q(DjangoQ):
     # https://stackoverflow.com/a/21220712/15995797
-    def __xor__(self, other: DjQ) -> "Q":
+    def __xor__(self, other: DjangoQ) -> "Q":
         not_self = self.__invert__()
         not_other = other.__invert__()
 
@@ -21,7 +20,7 @@ class Q(DjQ):
 
 def get_single_object_or_none(klass: Union[QuerySet, Type[Model]], *args, **kwargs):
     try:
-        return get_object_or_404(klass=klass, *args, **kwargs)
+        return get_object_or_404(*args, klass=klass, **kwargs)
     except (Http404, klass.MultipleObjectsReturned, ValidationError):
         return None
 

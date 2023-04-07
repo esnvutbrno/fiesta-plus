@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import typing
 from functools import lru_cache
-from typing import Type
 
 from django.urls import ResolverMatch
 
@@ -14,7 +13,9 @@ def all_plugin_apps() -> tuple["PluginAppConfig", ...]:
     """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
     from django.apps import apps
 
-    return tuple(filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs()))
+    return tuple(
+        filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs())
+    )
 
 
 @lru_cache
