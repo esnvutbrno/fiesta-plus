@@ -1,19 +1,27 @@
 {% extends "fiesta/base.html" %}
+{% load static %}
 
 {% block main %}
-  <div class="flex flex-col sm:flex-row sm:items-center items-start mx-auto py-24">
-    <h1 class="flex-grow sm:pr-16 text-2xl font-medium title-font text-gray-900">
-      Discounts at local partners, <br>
-      bonuses from global players, <br>
-      and cheaper ESN events?
-    </h1>
-    <a class="flex-shrink-0 text-white bg-primary border-0 py-2 px-8 focus:outline-none
-            hover:bg-rose-700 transition rounded text-lg mt-10 sm:mt-0"
-       href="{% url "esncards:application_create_form" %}"
-    >
-      Apply for ESNcard
-    </a>
-  </div>
+  <section class="bg-white dark:bg-gray-900">
+    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12">
+      <div class="mr-auto place-self-center lg:col-span-7">
+        <h1 class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl xl:text-6xl dark:text-white">
+          ESNcard, Your Access to Infinity
+        </h1>
+        <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">
+          ESNcard is a valuable tool that gives you access to an infinite range of discounts and opportunities for
+          travel, accommodation, entertainment, and cultural activities, as well as a vibrant community of international
+          students.
+        </p>
+        <a href="{% url "esncards:application_create_form" %}" class="btn btn-primary btn-lg">
+          Apply for ESNcard
+        </a>
+      </div>
+      <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
+        <img src="{% static "esncards/savings.svg" %}" alt="mockup">
+      </div>
+    </div>
+  </section>
 
   {% if applications.exists %}
     <div class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto">

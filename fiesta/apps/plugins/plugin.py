@@ -11,7 +11,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     """
     Base app config for all pluginable applications.
 
-    Optinonaly defines model of configuration, which has to inherit from BasePluginConfiguration -- in that case,
+    Optionally defines model of configuration, which has to inherit from BasePluginConfiguration -- in that case,
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
