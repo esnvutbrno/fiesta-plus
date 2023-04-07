@@ -16,18 +16,20 @@ if typing.TYPE_CHECKING:
 
 
 class NamespacedFilesStorage(FileSystemStorage):
+    """Django file storage, but supports namespaces and perms check (with cooperation with NamespacedFilesServeView)."""
+
     storages = []
 
     def __init__(
         self,
         namespace: str,
         *,
-        has_permission: Callable[['HttpRequest', str], bool] = None
+        has_permission: Callable[["HttpRequest", str], bool] = (lambda *_: True),
     ):
         self.namespace = namespace.strip("/")
         super().__init__(location=settings.MEDIA_ROOT / namespace)
         self.storages.append(self)
-        self.has_permission = has_permission or (lambda *_: True)
+        self.has_permission = has_permission
 
     @property
     def url_name_suffix(self):

@@ -17,15 +17,19 @@ class NamespacedFilesServeView(View):
 
     def get(self, request, name: str, *args, **kwargs) -> HttpResponse:
         if not self.storage.exists(name):
-            logger.warning("File %s in namespace %s not found.", name, self.namespace)
+            logger.warning(
+                "File %s in namespace %s not found.", name, self.storage.namespace
+            )
             return HttpResponseNotFound()
 
         if not self.has_permission(request, name):
-            logger.warning("Acces to %s denied for %s.", name, request.user)
+            logger.warning("Access to %s denied for %s.", name, request.user)
             return HttpResponseForbidden()
 
         if not self.storage.has_permission(request, name):
-            logger.warning("User %s does not have access to file %s.", request.user, name)
+            logger.warning(
+                "User %s does not have access to file %s.", request.user, name
+            )
             return HttpResponseForbidden()
 
         return HttpResponse(
