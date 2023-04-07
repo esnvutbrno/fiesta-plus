@@ -74,10 +74,9 @@ upd: DC_CMD = up --detach
 upd: dc ## Runs all needed docker containers in detached mode
 
 up: DC_CMD = up
-up: up ## Runs all needed docker containers
+up: dc ## Runs all needed docker containers
 
-produp: export DJANGO_CONFIGURATION = LocalProduction ## Runs fiesta in production mode.
-produp:
+produp: ## Runs fiesta in (local)production mode.
 	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
 
 help: ## Shows help

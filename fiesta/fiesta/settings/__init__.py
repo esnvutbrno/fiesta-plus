@@ -44,6 +44,8 @@ class Development(Base):
 class LocalProduction(Base):
     DEBUG = False
 
+    ROOT_DOMAIN = "fiesta.test"
+
 
 class Production(Base):
     DEBUG = False
