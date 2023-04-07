@@ -15,7 +15,7 @@ from apps.sections.views.mixins.membership import EnsureInternationalMembershipV
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class WannaBuddyView(TemplateView):
+class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):
     template_name = "buddy_system/wanna_buddy.html"
 
     def get_context_data(self, **kwargs):
@@ -30,7 +30,8 @@ class WannaBuddyView(TemplateView):
                         ),
                     )
                 )
-                # TODO: depends, if member or international is here
+                if self.request.membership.is_international
+                else reverse("buddy_system:matching-requests")
             }
         )
         return data
