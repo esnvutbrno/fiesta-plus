@@ -26,18 +26,19 @@ class SectionSpaceMiddleware:
         # 'xxx' or empty string
         space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
-        in_space_of_section = get_single_object_or_none(Section, space_slug=space_slug)
+        request.in_space_of_section = get_single_object_or_none(
+            Section, space_slug=space_slug
+        )
 
         if not space_slug or space_slug == settings.ROOT_DOMAIN:
             return self.get_response(request)
 
-        if not in_space_of_section:
+        if not request.in_space_of_section:
             return HttpResponseNotFound("Section space not found.")
 
-        if in_space_of_section.system_state != Section.SystemState.ENABLED:
+        if request.in_space_of_section.system_state != Section.SystemState.ENABLED:
             return HttpResponseNotFound("Section is not enabled.")
 
-        request.in_space_of_section = in_space_of_section
         return self.get_response(request)
 
 

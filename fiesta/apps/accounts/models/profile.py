@@ -12,11 +12,7 @@ from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
 from phonenumber_field.modelfields import PhoneNumberField
 
-from apps.accounts.apps import AccountsConfig
-from apps.accounts.models import AccountsConfiguration
 from apps.files.storage import NamespacedFilesStorage
-from apps.plugins.models import Plugin
-from apps.plugins.utils import all_plugins_mapped_to_class
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import Q
 
@@ -24,27 +20,24 @@ if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
 
 
-def has_permission(request: 'HttpRequest', name: str) -> bool:
+def has_permission_for_profile_picture_view(request: "HttpRequest", name: str) -> bool:
     if not (membership := request.membership):
-        # usually not logged (or w/o membership)
+        # not logged, not in section space or without membership
         return False
 
-    target_plugin: Plugin | None = membership.section.plugins.get_by_app_config_or_none(
-        all_plugins_mapped_to_class().get(AccountsConfig)
-    )
+    if membership.is_privileged:
+        return True
 
-    if not target_plugin:
-        ...  # ????
+    if not (profile := request.user.profile_or_none):  # type: UserProfile
         return False
 
-    conf: AccountsConfiguration = target_plugin.configuration
-
-    return conf
+    return profile.picture.name == name
 
 
+# storage used for profile pictures, serving directly only for privileged and for user itself
 user_profile_picture_storage = NamespacedFilesStorage(
     "profile-picture",
-    has_permission=has_permission,
+    has_permission=has_permission_for_profile_picture_view,
 )
 
 
@@ -158,7 +151,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
             CheckConstraint(
                 # home university XOR home faculty
                 check=Q(state=UserProfileState.INCOMPLETE.value)
-                      | (Q(home_university=None) ^ Q(home_faculty=None)),
+                | (Q(home_university=None) ^ Q(home_faculty=None)),
                 name="home_university_or_faculty",
             ),
         )
