@@ -1,4 +1,4 @@
-DC = docker compose -f docker-compose.yml -f docker-compose.override.yml
+DC = docker compose
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 
@@ -61,23 +61,20 @@ da: ## Invokes django-admin command stored in cmd=
 dc: ## Invokes docker compose command stored in cmd=
 	$(DC) $(DC_CMD)
 
-build: ## Builds docker images for development.
-	$(DC) build
+build: DC_CMD = build
+build: dc ## Builds docker images for development.
 
-prodbuild: ## Builds docker images for production.
-	$(DC) build
+upb: DC_CMD = up --build
+upb: dc ## Build and runs all needed docker containers in non-deamon mode
 
-upb: ## Build and runs all needed docker containers in non-deamon mode
-	$(DC) up --build
+uppd: DC_CMD = up --build --detach
+upbd: dc ## Build and runs all needed docker containers in detached mode
 
-upbd: ## Build and runs all needed docker containers in detached mode
-	$(DC) up --build --detach
+upd: DC_CMD = up --detach
+upd: dc ## Runs all needed docker containers in detached mode
 
-upd: ## Runs all needed docker containers in detached mode
-	$(DC) up --detach
-
-up: ## Runs all needed docker containers
-	$(DC) up
+up: DC_CMD = up
+up: up ## Runs all needed docker containers
 
 produp: export DJANGO_CONFIGURATION = LocalProduction ## Runs fiesta in production mode.
 produp:
