@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from datetime import datetime, timedelta
 from typing import TypedDict
 
@@ -12,11 +13,37 @@ from django_countries.fields import CountryField
 from django_lifecycle import BEFORE_CREATE, BEFORE_SAVE, LifecycleModelMixin, hook
 
 from apps.files.storage import NamespacedFilesStorage
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import get_single_object_or_none
 
+logger = logging.getLogger(__name__)
+
+
+def has_permission_to_view_holder_photo(request: HttpRequest, name: str) -> bool:
+    if not request.membership:
+        return False
+
+    application: ESNcardApplication = get_single_object_or_none(
+        ESNcardApplication, holder_photo=name
+    )
+
+    if not application:
+        logger.warning("Photo exists %s in storage, but no related application.", name)
+        return False
+
+    if application.section != request.membership.section:
+        return False
+
+    if request.membership.is_privileged:
+        return True
+
+    return application.user == request.user
+
+
 esncard_application_picture_storage = NamespacedFilesStorage(
-    "esncard-application-picture"
+    "esncard-application-picture",
+    has_permission=has_permission_to_view_holder_photo,
 )
 
 
