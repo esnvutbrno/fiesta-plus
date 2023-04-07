@@ -6,7 +6,7 @@ authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-Django = "^4.1.7"
+Django = "^4.2"
 
 Pillow = "^9.0.1"
 bcrypt = "^3.2.0"
@@ -14,7 +14,7 @@ django-allauth = "^0.47.0"
 # support for dj4.0
 django-allauth-cas = { git = "https://github.com/thejoeejoee/django-allauth-cas", branch = "master" }
 django-click = "^2.3.0"
-django-configurations = { extras = ["cache", "database", "email", "search"], version = "^2.3.2" }
+django-configurations = { extras = ["cache", "database", "email", "search"], version = "^2.4.1" }
 django-countries = "^7.2.1"
 django-extensions = "^3.1.5"
 django-filter = "^21.1"

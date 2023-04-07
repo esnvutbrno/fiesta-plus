@@ -32,7 +32,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("user"),
     )
 
-    # ### FIELDS, which are conditionaly REQUIRED ###
+    # ### FIELDS, which are conditionally REQUIRED ###
     # see AccountsConfiguration
 
     nationality = CountryField(

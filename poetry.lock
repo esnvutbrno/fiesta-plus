@@ -363,62 +363,20 @@ files = [
 ]
 
 [[package]]
-name = "dj-database-url"
-version = "1.3.0"
-description = "Use Database URLs in your Django Application."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "dj-database-url-1.3.0.tar.gz", hash = "sha256:87be5f7c4c83d9b3d8ce94b834f96cea14b3986f3629aac097afdd9318d7b098"},
-    {file = "dj_database_url-1.3.0-py3-none-any.whl", hash = "sha256:80a115bd7675c9fe14a900b2f8b5c8b1822b5a279b333bf9b2804de681656c7c"},
-]
-
-[package.dependencies]
-Django = ">=3.2"
-typing-extensions = ">=3.10.0.0"
-
-[[package]]
-name = "dj-email-url"
-version = "1.0.6"
-description = "Use an URL to configure email backend settings in your Django Application."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "dj-email-url-1.0.6.tar.gz", hash = "sha256:55ffe3329e48f54f8a75aa36ece08f365e09d61f8a209773ef09a1d4760e699a"},
-    {file = "dj_email_url-1.0.6-py2.py3-none-any.whl", hash = "sha256:cbd08327fbb08b104eac160fb4703f375532e4c0243eb230f5b960daee7a96db"},
-]
-
-[[package]]
-name = "dj-search-url"
-version = "0.1"
-description = "Use Search URLs in your Django Haystack Application."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "dj-search-url-0.1.tar.gz", hash = "sha256:424d1a5852500b3c118abfdd0e30b3e0016fe68e7ed27b8553a67afa20d4fb40"},
-]
-
-[package.extras]
-tests = ["pytest"]
-
-[[package]]
 name = "django"
-version = "4.1.7"
+version = "4.2"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 category = "main"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "Django-4.1.7-py3-none-any.whl", hash = "sha256:f2f431e75adc40039ace496ad3b9f17227022e8b11566f4b363da44c7e44761e"},
-    {file = "Django-4.1.7.tar.gz", hash = "sha256:44f714b81c5f190d9d2ddad01a532fe502fa01c4cb8faf1d081f4264ed15dcd8"},
+    {file = "Django-4.2-py3-none-any.whl", hash = "sha256:ad33ed68db9398f5dfb33282704925bce044bef4261cd4fb59e4e7f9ae505a78"},
+    {file = "Django-4.2.tar.gz", hash = "sha256:c36e2ab12824e2ac36afa8b2515a70c53c7742f0d6eaefa7311ec379558db997"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.5.2,<4"
-sqlparse = ">=0.2.2"
+asgiref = ">=3.6.0,<4"
+sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
 [package.extras]
@@ -504,18 +462,6 @@ nested = ["django-nested-admin (>=3.0.21)"]
 tags = ["django-taggit"]
 
 [[package]]
-name = "django-cache-url"
-version = "3.4.4"
-description = "Use Cache URLs in your Django application."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "django-cache-url-3.4.4.tar.gz", hash = "sha256:ef2cfacea361ee22e9b67d6ca941db22e0a9eaf892b67ca71cad52c62a17fd36"},
-    {file = "django_cache_url-3.4.4-py2.py3-none-any.whl", hash = "sha256:5ca4760b4580b80e41279bc60d1e5c16a822e4e462265faab0a330701bb0ef9a"},
-]
-
-[[package]]
 name = "django-click"
 version = "2.3.0"
 description = "Build Django management commands using the click CLI package."
@@ -536,22 +482,18 @@ test = ["coverage (<5)", "pytest", "pytest-cov", "pytest-django", "pytest-flake8
 
 [[package]]
 name = "django-configurations"
-version = "2.4"
+version = "2.4.1"
 description = "A helper for organizing Django settings."
 category = "main"
 optional = false
 python-versions = ">=3.7, <4.0"
 files = [
-    {file = "django-configurations-2.4.tar.gz", hash = "sha256:22b9964e6b657dafc7a35410a115d20f1451149a82737adc6c331ec365888196"},
-    {file = "django_configurations-2.4-py3-none-any.whl", hash = "sha256:d10bac11d71e29e8ea89548e2d5d2e91e1595667b3859989f50727dcbe7a8c80"},
+    {file = "django-configurations-2.4.1.tar.gz", hash = "sha256:a6c25c143834e67b20d34751512d08b3290684f25098ee212b1ee36804a59085"},
+    {file = "django_configurations-2.4.1-py3-none-any.whl", hash = "sha256:8bf8866ae29db89ecf93a7743450b5d8974073cf7c194fd98764fd16deac218d"},
 ]
 
 [package.dependencies]
-dj-database-url = {version = "*", optional = true, markers = "extra == \"database\""}
-dj-email-url = {version = "*", optional = true, markers = "extra == \"email\""}
-dj-search-url = {version = "*", optional = true, markers = "extra == \"search\""}
 django = ">=3.2"
-django-cache-url = {version = "*", optional = true, markers = "extra == \"cache\""}
 
 [package.extras]
 cache = ["django-cache-url"]
@@ -1721,4 +1663,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "caf5320718ebc2927bc3dbe655acb909c4af0795460313b852c00a53a08f8569"
+content-hash = "3ae6aea0550419d49b1051ad820d85d5562586ae9d4aa24d5ceb6624f4ddeb24"
