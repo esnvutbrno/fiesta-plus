@@ -27,6 +27,8 @@ class EnsureInSectionSpaceViewMixin:
 
 
 class EnsureNotInSectionSpaceViewMixin:
+    """Ensures we're not in section space, otherwise redirects to same page but outside section space."""
+
     request: HttpRequest
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):

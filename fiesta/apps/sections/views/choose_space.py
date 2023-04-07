@@ -2,13 +2,26 @@ from collections import namedtuple
 
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
+from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
 from apps.sections.models import Section
 
+from apps.plugins.middleware.plugin import HttpRequest
+
 
 class ChooseSpaceView(TemplateView):
+    request: HttpRequest
+
     template_name = "sections/choose_space.html"
+
+    def get(self, request, *args, **kwargs):
+        # maybe we are here accidentally
+        next_url = get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or ""
+        if next_url and self.request.in_space_of_section:
+            return HttpResponseRedirect(self.request.build_absolute_uri(next_url))
+
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
