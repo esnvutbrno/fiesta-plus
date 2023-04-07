@@ -21,11 +21,7 @@ if typing.TYPE_CHECKING:
 
 
 def has_permission_for_profile_picture_view(request: "HttpRequest", name: str) -> bool:
-    if not (membership := request.membership):
-        # not logged, not in section space or without membership
-        return False
-
-    if membership.is_privileged:
+    if (membership := request.membership) and membership.is_privileged:
         return True
 
     if not (profile := request.user.profile_or_none):  # type: UserProfile
