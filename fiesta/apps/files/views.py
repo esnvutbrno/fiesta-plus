@@ -26,12 +26,6 @@ class NamespacedFilesServeView(View):
             logger.warning("Access to %s denied for %s.", name, request.user)
             return HttpResponseForbidden()
 
-        if not self.storage.has_permission(request, name):
-            logger.warning(
-                "User %s does not have access to file %s.", request.user, name
-            )
-            return HttpResponseForbidden()
-
         return HttpResponse(
             headers={
                 "Content-Disposition": f'filename="{name}"',
@@ -42,7 +36,7 @@ class NamespacedFilesServeView(View):
 
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # for overriding purposes
-        return True
+        return self.storage.has_permission(request, name)
 
     @classmethod
     def as_url(

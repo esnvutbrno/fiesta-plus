@@ -24,7 +24,7 @@ class NamespacedFilesStorage(FileSystemStorage):
         self,
         namespace: str,
         *,
-        has_permission: Callable[["HttpRequest", str], bool] = (lambda *_: True),
+        has_permission: Callable[["HttpRequest", str], bool] = (lambda *_: False),
     ):
         self.namespace = namespace.strip("/")
         super().__init__(location=settings.MEDIA_ROOT / namespace)
