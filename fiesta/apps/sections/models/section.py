@@ -60,7 +60,7 @@ class Section(BaseTimestampedModel):
     class Meta:
         verbose_name = _("ESN section")
         verbose_name_plural = _("ESN sections")
-        ordering = ("country", "name")
+        ordering = ("name",)
 
     def __str__(self):
         return self.name

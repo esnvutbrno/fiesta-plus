@@ -16,10 +16,18 @@ class ChooseSpaceView(TemplateView):
     template_name = "sections/choose_space.html"
 
     def get(self, request, *args, **kwargs):
-        # maybe we are here accidentally
+        # maybe we are already in section space accidentally
         next_url = get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or ""
-        if next_url and self.request.in_space_of_section:
+
+        if self.request.in_space_of_section:
             return HttpResponseRedirect(self.request.build_absolute_uri(next_url))
+
+        if self.request.all_memberships.count() == 1:
+            only_section: Section = self.request.all_memberships.get().section
+
+            return HttpResponseRedirect(
+                only_section.section_url(self.request) + next_url
+            )
 
         return super().get(request, *args, **kwargs)
 
