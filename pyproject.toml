@@ -5,7 +5,7 @@ description = "New generation of social network for helping international studen
 authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 Django = "^4.1.7"
 
 Pillow = "^9.0.1"
