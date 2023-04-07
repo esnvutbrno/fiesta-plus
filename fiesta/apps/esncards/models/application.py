@@ -13,7 +13,7 @@ from django_lifecycle import BEFORE_CREATE, BEFORE_SAVE, LifecycleModelMixin, ho
 
 from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
-from apps.utils.models.query import get_object_or_none
+from apps.utils.models.query import get_single_object_or_none
 
 esncard_application_picture_storage = NamespacedFilesStorage(
     "esncard-application-picture"
@@ -89,7 +89,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
 
         @property
         def user(self):
-            return get_object_or_none(get_user_model(), pk=self.user_id)
+            return get_single_object_or_none(get_user_model(), pk=self.user_id)
 
     class Meta:
         verbose_name = _("ESNcard application")

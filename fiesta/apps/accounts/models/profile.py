@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import enum
+import typing
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -15,7 +16,29 @@ from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.query import Q
 
-user_profile_picture_storage = NamespacedFilesStorage("profile-picture")
+if typing.TYPE_CHECKING:
+    from apps.plugins.middleware.plugin import HttpRequest
+
+
+def has_permission_for_profile_picture_view(request: "HttpRequest", name: str) -> bool:
+    if not (membership := request.membership):
+        # not logged, not in section space or without membership
+        return False
+
+    if membership.is_privileged:
+        return True
+
+    if not (profile := request.user.profile_or_none):  # type: UserProfile
+        return False
+
+    return profile.picture.name == name
+
+
+# storage used for profile pictures, serving directly only for privileged and for user itself
+user_profile_picture_storage = NamespacedFilesStorage(
+    "profile-picture",
+    has_permission=has_permission_for_profile_picture_view,
+)
 
 
 class UserProfileState(TextChoices):

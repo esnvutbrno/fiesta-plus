@@ -109,5 +109,10 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         """Is local student in this membership == not international."""
         return not SectionMembership.Role(self.role).is_international
 
+    @property
+    def is_privileged(self):
+        """Is privileged == has some higher perms for section."""
+        return SectionMembership.Role(self.role).is_privileged
+
 
 __all__ = ["SectionMembership"]
