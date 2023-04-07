@@ -7,6 +7,7 @@ DJANGO_ADMIN =  $(WEB_CMD) python manage.py
 
 cmd ?= help
 DA_CMD = $(cmd)
+DC_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
@@ -56,6 +57,9 @@ graph_models: da ## Plot all Django models into models.png
 
 da: ## Invokes django-admin command stored in cmd=
 	$(DC) run $(DCRUNFLAGS) web "python manage.py $(DA_CMD) $(ARG)"
+
+dc: ## Invokes docker compose command stored in cmd=
+	$(DC) $(DC_CMD)
 
 build: ## Builds docker images for development.
 	$(DC) build
