@@ -33,6 +33,14 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
             return self in (self.__class__.EDITOR, self.__class__.ADMIN)
 
         @property
+        def is_local(self):
+            return self in (
+                self.__class__.MEMBER,
+                self.__class__.EDITOR,
+                self.__class__.ADMIN,
+            )
+
+        @property
         def is_international(self):
             return self == self.__class__.INTERNATIONAL
 
@@ -73,13 +81,13 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         # on context of Queryset[Plugin]
         from apps.plugins.models import Plugin
 
-        avaiable_states = (
+        available_states = (
             (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY)
             if self.Role(self.role).is_privileged
             else (Plugin.State.ENABLED,)
         )
 
-        return Q(section=self.section, state__in=avaiable_states)
+        return Q(section=self.section, state__in=available_states)
 
     @hook(AFTER_CREATE)
     @hook(AFTER_SAVE, when_any=["role", "state"], has_changed=True)
@@ -87,9 +95,19 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         from apps.accounts.services import UserProfileStateSynchronizer
 
         # revalidate user profile on change of membership --> e.g. if membership is revoked,
-        # the user profile is not validated by that section configuration any more
+        # the user profile is not validated by that section configuration anymore
 
         UserProfileStateSynchronizer.on_membership_update(membership=self)
+
+    @property
+    def is_international(self):
+        """Is international student in this specific membership."""
+        return SectionMembership.Role(self.role).is_international
+
+    @property
+    def is_local(self):
+        """Is local student in this membership == not international."""
+        return not SectionMembership.Role(self.role).is_international
 
 
 __all__ = ["SectionMembership"]

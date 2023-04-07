@@ -11,7 +11,8 @@ from django.views.generic import TemplateView, CreateView
 from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
-from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
+from apps.sections.views.mixins.membership import EnsureInternationalMembershipViewMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
 class WannaBuddyView(TemplateView):
@@ -29,6 +30,7 @@ class WannaBuddyView(TemplateView):
                         ),
                     )
                 )
+                # TODO: depends, if member or international is here
             }
         )
         return data
@@ -78,7 +80,12 @@ class SignUpBeforeRequestView(
         return response
 
 
-class NewRequestView(EnsureInSectionSpaceViewMixin, SuccessMessageMixin, CreateView):
+class NewRequestView(
+    EnsureInSectionSpaceViewMixin,
+    EnsureInternationalMembershipViewMixin,
+    SuccessMessageMixin,
+    CreateView,
+):
     template_name = "buddy_system/new_buddy_request.html"
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been successfully created!")

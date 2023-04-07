@@ -9,7 +9,7 @@ from django.views.generic import CreateView, TemplateView, DetailView
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionMembership
-from apps.sections.views.space_mixin import EnsureNotInSectionSpaceViewMixin
+from apps.sections.views.mixins.section_space import EnsureNotInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import BreadcrumbItem, with_object_breadcrumb
 
 

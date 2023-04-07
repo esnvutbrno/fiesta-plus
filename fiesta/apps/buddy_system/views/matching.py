@@ -5,11 +5,13 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.files.views import NamespacedFilesServeView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
-from apps.sections.views.space_mixin import EnsureInSectionSpaceViewMixin
+from apps.sections.views.mixins.membership import EnsureLocalMembershipViewMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
 class MatchingRequestsView(
     EnsureInSectionSpaceViewMixin,
+    EnsureLocalMembershipViewMixin,
     PermissionRequiredMixin,
     PluginConfigurationViewMixin[BuddySystemConfiguration],
     ListView,
@@ -29,7 +31,8 @@ class MatchingRequestsView(
 
 
 class ProfilePictureServeView(
-    PluginConfigurationViewMixin[BuddySystemConfiguration], NamespacedFilesServeView
+    PluginConfigurationViewMixin[BuddySystemConfiguration],
+    NamespacedFilesServeView,
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
