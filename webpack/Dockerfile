@@ -1,7 +1,7 @@
 # context is root of project, since we need access to Django app source files
-FROM node:17.9.0-slim
+FROM node:18.15.0-slim
 
-RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential
+RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /usr/src/app
 
