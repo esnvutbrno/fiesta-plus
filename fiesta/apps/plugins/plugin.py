@@ -2,7 +2,7 @@ from abc import ABCMeta
 from importlib import import_module
 from typing import Iterable, Optional
 
-from django.apps import AppConfig, apps
+from django.apps import AppConfig
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, reverse
 
@@ -48,13 +48,6 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     def url_prefix(self) -> str:
         """Defines prefix, under which are all urls included."""
         return self.label.replace("_", "-") + "/"
-
-    @classmethod
-    def get_loaded_app(cls) -> AppConfig | None:
-        """Gets corresponding AppConfig instance loaded in Django."""
-        return next(
-            (app for app in apps.get_app_configs() if isinstance(app, cls)), None
-        )
 
 
 __all__ = ["PluginAppConfig"]

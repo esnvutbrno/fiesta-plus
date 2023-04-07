@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import typing
 from functools import lru_cache
 
 from django.urls import ResolverMatch
@@ -25,6 +26,13 @@ def all_plugins_as_choices() -> list[tuple[str, str]]:
 @lru_cache
 def all_plugins_as_mapping() -> dict[str, "PluginAppConfig"]:
     return {a.label: a for a in all_plugin_apps()}
+
+
+@lru_cache
+def all_plugins_mapped_to_class() -> (
+    dict[typing.Type["PluginAppConfig"], "PluginAppConfig"]
+):
+    return {a.__class__: a for a in all_plugin_apps()}
 
 
 def target_plugin_app_from_resolver_match(

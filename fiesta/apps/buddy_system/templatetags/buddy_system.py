@@ -6,6 +6,7 @@ from apps.buddy_system.apps import BuddySystemConfig
 from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
+from apps.plugins.utils import all_plugins_mapped_to_class
 
 register = template.Library()
 
@@ -43,7 +44,7 @@ def get_waiting_requests_to_match(context):
     request: HttpRequest = context["request"]
 
     buddy_system_plugin: Plugin = request.membership.section.plugins.get(
-        app_label=BuddySystemConfig.get_loaded_app().label
+        app_label=all_plugins_mapped_to_class().get(BuddySystemConfig).label
     )
 
     configuration: BuddySystemConfiguration = buddy_system_plugin.configuration
