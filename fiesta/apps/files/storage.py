@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import hashlib
 import typing
 from typing import Callable
@@ -24,7 +26,7 @@ class NamespacedFilesStorage(FileSystemStorage):
         self,
         namespace: str,
         *,
-        has_permission: Callable[["HttpRequest", str], bool] = (lambda *_: False),
+        has_permission: Callable[[HttpRequest, str], bool] = (lambda *_: False),
     ):
         self.namespace = namespace.strip("/")
         super().__init__(location=settings.MEDIA_ROOT / namespace)

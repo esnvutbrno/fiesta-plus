@@ -4,4 +4,4 @@ from django.db.models import Manager
 
 
 class PluginManager(Manager):
-    ...
+    pass
