@@ -1,17 +1,17 @@
 {% load user_profile %}
 {% if request.user.is_authenticated %}
-  <button type="button"
-          class="flex mr-3 text-sm rounded-full md:mr-0
-            focus:ring-4 focus:ring-gray-300"
-          aria-expanded="false"
-          @click="user = !user"
+  <button
+      type="button"
+      class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
+      aria-expanded="false"
+      @click="user = !user"
   >
     <span class="sr-only">Open user menu</span>
     {% get_user_picture request.user as picture %}
     {% if picture %}
       <div
-        class="w-10 h-10 rounded-full bg-cover bg-center"
-        style='background-image: url("{{ picture.url }}")'
+          class="w-10 h-10 rounded-full bg-cover bg-center"
+          style='background-image: url("{{ picture.url }}")'
       ></div>
     {% else %}
       <svg xmlns="http://www.w3.org/2000/svg"
@@ -23,24 +23,28 @@
     {% endif %}
   </button>
 
-  <div class="z-30 my-4 text-base list-none bg-white rounded
-              divide-y divide-gray-100 shadow w-40
-              absolute top-full -right-1/2 hidden"
-       :class="{hidden: !user}"
+  <div
+      class="
+        z-30 my-4 text-base list-none bg-white rounded
+        divide-y divide-gray-100 shadow w-40
+        absolute top-full -right-1/2 hidden"
+        :class="{hidden: !user}"
   >
-    <div class="py-3 px-4">
+    <a
+        class="block py-2 px-4 text-gray-800 hover:bg-gray-100"
+        href="{% url "accounts:my-profile" %}"
+    >
       <span class="block text-sm text-gray-900">
         {{ request.user.get_full_name }}
       </span>
       <span class="block text-sm font-medium text-gray-500 truncate">
         {{ request.user.username }}
       </span>
-    </div>
+    </a>
     {% if request.membership %}
       <a
-        class="block py-2 px-4 text-gray-800 hover:bg-gray-100
-             "
-        href="{% url "accounts:membership" %}?next={{ request.path }}"
+          class="block py-2 px-4 text-gray-800 hover:bg-gray-100"
+          href="{% url "accounts:membership" %}?next={{ request.path }}"
       >
         <span class="block text-xs text-gray-500 truncate">
           {{ request.membership.get_role_display }}
@@ -61,10 +65,6 @@
 
     <ul class="py-1">
       <li>
-        <a href="{% url "accounts:my-profile" %}"
-           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
-      </li>
-      <li>
         <a href="#"
            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
       </li>
@@ -74,13 +74,12 @@
       </li>
       <li>
         <a
-          href="{% url 'account_logout' %}"
-          hx-post="{% url 'account_logout' %}"
-          {% if redirect_field_value %}
-          hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'
-          {% endif %}
-          class="block py-2 px-4 text-sm text-gray-700
-                            hover:bg-gray-100"
+            href="{% url 'account_logout' %}"
+            hx-post="{% url 'account_logout' %}"
+            {% if redirect_field_value %}
+            hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'
+            {% endif %}
+            class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100"
         >Sign out</a>
       </li>
     </ul>
