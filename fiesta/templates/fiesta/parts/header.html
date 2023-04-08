@@ -50,14 +50,19 @@
       {% active_plugins_as_navigation_items as items %}
 
       <div
-        x-show="menu"
-        class="w-full md:flex md:w-auto md:order-1 justify-between items-center"
+          x-show="menu"
+          class="w-full md:flex md:w-auto md:order-1 justify-between items-center"
       >
         <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
-          <li>
-{#            TODO: documentation content and ES deploy#}
-{#            <a class="Menu__link" href="{% url "wiki:index" %}">Docs</a>#}
-          </li>
+          {% if request.membership.is_privileged %}
+            <li>
+              <a class="Menu__link" href="{% url "sections:section-members" %}">{% trans "Members" %}</a>
+            </li>
+          {% endif %}
+          {#          <li>#}
+          {#            TODO: documentation content and ES deploy#}
+          {#            <a class="Menu__link" href="{% url "wiki:index" %}">Docs</a>#}
+          {#          </li>#}
           {% for item in items %}
             <li>
               {% if item.active %}

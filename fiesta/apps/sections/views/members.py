@@ -78,7 +78,8 @@ class SectionMembershipTable(tables.Table):
         )
 
 
-@with_breadcrumb(_("Section Members"))
+@with_breadcrumb(_("Section"))
+@with_breadcrumb(_("Members"))
 class SectionMembersView(FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
@@ -98,6 +99,10 @@ class SectionMembersView(FiestaTableView):
             .get_queryset()
             .filter(
                 section=self.request.membership.section,
-                role=SectionMembership.Role.MEMBER,
+                role__in=(
+                    SectionMembership.Role.MEMBER,
+                    SectionMembership.Role.EDITOR,
+                    SectionMembership.Role.ADMIN,
+                ),
             )
         )
