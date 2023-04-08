@@ -9,7 +9,7 @@ from factory.fuzzy import FuzzyChoice
 from apps.sections.models import SectionMembership, Section
 
 
-class SectionFactory(DjangoModelFactory):
+class KnownSectionFactory(DjangoModelFactory):
     class Meta:
         model = Section
         django_get_or_create = ("name",)
@@ -30,7 +30,7 @@ class SectionFactory(DjangoModelFactory):
     country = FuzzyChoice(COUNTRIES.items(), getter=itemgetter(0))
 
 
-class SectionMembershipFactory(DjangoModelFactory):
+class SectionMembershipWithUserFactory(DjangoModelFactory):
     class Meta:
         model = SectionMembership
 
@@ -38,7 +38,7 @@ class SectionMembershipFactory(DjangoModelFactory):
         "apps.utils.factories.accounts.UserFactory",
     )
     section = SubFactory(
-        "apps.utils.factories.sections.SectionFactory",
+        "apps.utils.factories.sections.KnownSectionFactory",
     )
     role = FuzzyChoice(
         (SectionMembership.Role.MEMBER, SectionMembership.Role.INTERNATIONAL)

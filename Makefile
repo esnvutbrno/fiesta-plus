@@ -1,6 +1,6 @@
 DC = docker compose
-DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
+DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 
 WEB_CMD = $(DC) run $(DCRUNFLAGS) web
 DJANGO_ADMIN =  $(WEB_CMD) python manage.py
@@ -24,6 +24,9 @@ pre-commit: ## Runs all included lints/checks/reformats
 
 seed: DA_CMD = seed ## Seed database with fake data.
 seed: da
+
+clean_unlinked: DA_CMD = clean_unlinked ## Cleans all unlinked data from database.
+clean_unlinked: da
 
 startplugin: DA_CMD = startplugin ## Create plugin in project with name=
 startplugin: ARG = $(name)
@@ -56,7 +59,7 @@ graph_models: da ## Plot all Django models into models.png
 	@mv ./fiesta/$(MODELS_PNG) .
 
 da: ## Invokes django-admin command stored in cmd=
-	$(DC) run $(DCRUNFLAGS) web "python manage.py $(DA_CMD) $(ARG)"
+	$(DC) run web "python manage.py $(DA_CMD) $(ARG)"
 
 dc: ## Invokes docker compose command stored in cmd=
 	$(DC) $(DC_CMD)

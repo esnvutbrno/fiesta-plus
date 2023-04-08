@@ -1,7 +1,7 @@
 import djclick as click
+from click import secho
 
-from apps.utils.factories.buddy_system import BuddyRequestFactory
-from apps.utils.factories.sections import SectionMembershipFactory
+from apps.utils.factories.buddy_system import BuddyRequestWithKnownUserFactory
 
 
 @click.command()
@@ -10,5 +10,5 @@ def seed():
     import factory
 
     factory.Faker.add_provider(SchoolProvider)
-    SectionMembershipFactory.create_batch(15)
-    BuddyRequestFactory.create_batch(15)
+    # pprint.pprint(SectionMembershipWithUserFactory.create_batch(15))
+    secho(BuddyRequestWithKnownUserFactory.create_batch(15))

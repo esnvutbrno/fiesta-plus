@@ -4,16 +4,19 @@ from django.test import TestCase
 from apps.accounts.models import UserProfile
 from apps.sections.models import SectionMembership
 from apps.utils.factories.accounts import UserFactory, UserProfileFactory
-from apps.utils.factories.sections import SectionFactory, SectionMembershipFactory
+from apps.utils.factories.sections import (
+    KnownSectionFactory,
+    SectionMembershipWithUserFactory,
+)
 
 
 class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
     def setUp(self):
         self.user = UserFactory(profile=None)
         self.profile: UserProfile = UserProfileFactory(user=self.user)
-        self.sections = SectionFactory.build_batch(2)
+        self.sections = KnownSectionFactory.build_batch(2)
 
-        self.memberships = SectionMembershipFactory.build_batch(
+        self.memberships = SectionMembershipWithUserFactory.build_batch(
             2,
             section=factory.Iterator(self.sections, cycle=False),
             user=self.user,

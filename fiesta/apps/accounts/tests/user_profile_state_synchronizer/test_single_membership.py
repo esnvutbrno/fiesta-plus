@@ -5,15 +5,18 @@ from apps.accounts.services import UserProfileStateSynchronizer
 from apps.plugins.models import Plugin
 from apps.sections.models import SectionsConfiguration, SectionMembership
 from apps.utils.factories.accounts import UserFactory, UserProfileFactory
-from apps.utils.factories.sections import SectionFactory, SectionMembershipFactory
+from apps.utils.factories.sections import (
+    KnownSectionFactory,
+    SectionMembershipWithUserFactory,
+)
 
 
 class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
     def setUp(self):
         self.user = UserFactory(profile=None)
         self.profile: UserProfile = UserProfileFactory(user=self.user)
-        self.section = SectionFactory()
-        self.membership = SectionMembershipFactory(
+        self.section = KnownSectionFactory()
+        self.membership = SectionMembershipWithUserFactory(
             section=self.section,
             user=self.user,
             role=SectionMembership.Role.MEMBER,
