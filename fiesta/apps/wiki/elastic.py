@@ -108,7 +108,7 @@ class WikiElastic:
             return hits[0]["_source"]
 
 
-class LocalCATrustedTransportion(Transport):
+class LocalCATrustedTransportation(Transport):
     # TODO: really here?
     class CATrustedConnection(Urllib3HttpConnection):
         def __init__(self, *args, **kwargs) -> None:
@@ -120,7 +120,7 @@ class LocalCATrustedTransportion(Transport):
 
 es = Elasticsearch(
     hosts=["https://elastic:elastic@elastic:9200"],
-    transport_class=LocalCATrustedTransportion,
+    transport_class=LocalCATrustedTransportation,
 )
 
 wiki_elastic = WikiElastic(client=es)
