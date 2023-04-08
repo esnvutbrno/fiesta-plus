@@ -59,7 +59,7 @@ class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
 
 class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
-    title = _("Limited by faculty")
+    title = _("Restricted to same faculty")
     description = _(
         "Matching is done manually by members themselves, but limited to the same faculty."
     )
@@ -79,7 +79,7 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
 
 class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty-limited"
-    title = _("Limited by faculty with limit")
+    title = _("Restricted to same faculty with limit")
     description = _(
         "Matching is done manually by members themselves, but limited to same faculty till"
         "the rolling limit - limitation is not enabled after reaching the limit."
