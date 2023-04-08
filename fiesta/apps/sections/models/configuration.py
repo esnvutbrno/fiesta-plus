@@ -5,8 +5,7 @@ from django_lifecycle import AFTER_SAVE, hook
 from apps.plugins.models import BasePluginConfiguration
 
 FLAG_HELP_TEXT = _(
-    "Flag if field is needed to fill in user profile: "
-    "True=is required, False=is optional, None=not available"
+    "Flag if field is needed to fill in user profile: True=is required, False=is optional, None=not available"
 )
 
 
@@ -44,8 +43,8 @@ class SectionsConfiguration(BasePluginConfiguration):
         verbose_name=_("auto approved membership for international"),
         default=True,
         help_text=_(
-            "Decides, wheever is membership requested by user automatically approved for international"
-            "users (e.g. during registration process or requested by membership form."
+            "Decides, whenever is membership requested by user automatically approved for international users (e.g."
+            " during registration process or requested by membership form)."
         ),
     )
 

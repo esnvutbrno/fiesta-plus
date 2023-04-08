@@ -83,7 +83,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
 
         available_states = (
             (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY)
-            if self.Role(self.role).is_privileged
+            if self.is_privileged
             else (Plugin.State.ENABLED,)
         )
 
