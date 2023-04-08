@@ -13,7 +13,7 @@ from apps.fiestatables.columns import ImageColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
-from apps.sections.views.permissions import UserIsPrivilegedInCurrentSectionMixin
+from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
@@ -65,7 +65,7 @@ class RequestTable(tables.Table):
 @with_breadcrumb(_("Buddy System"))
 @with_breadcrumb(_("Requests"))
 class RequestsEditorView(
-    UserIsPrivilegedInCurrentSectionMixin,
+    EnsurePrivilegedUserViewMixin,
     FiestaTableView,
 ):
     request: HttpRequest
@@ -81,7 +81,7 @@ class RequestsEditorView(
 @with_breadcrumb(_("Buddy System"))
 @with_object_breadcrumb()
 class RequestEditorDetailView(
-    UserIsPrivilegedInCurrentSectionMixin,
+    EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,
     AjaxViewMixin,

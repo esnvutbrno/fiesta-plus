@@ -5,13 +5,13 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.files.views import NamespacedFilesServeView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
-from apps.sections.views.mixins.membership import EnsureLocalMembershipViewMixin
+from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
 class MatchingRequestsView(
     EnsureInSectionSpaceViewMixin,
-    EnsureLocalMembershipViewMixin,
+    EnsureLocalUserViewMixin,
     PermissionRequiredMixin,
     PluginConfigurationViewMixin[BuddySystemConfiguration],
     ListView,

@@ -12,13 +12,15 @@
 {% endblock head_title %}
 
 {% block main_container %}
-  <div class="md:max-w-4xl mx-auto mb-auto w-full flex flex-col
-              justify-start md:justify-around items-center grow
+  <div class="
+    md:max-w-4xl mx-auto mb-auto w-full flex flex-col
+    justify-start md:justify-around items-center grow
+  ">
+    <main class="
+      p-3 w-full flex flex-col md:flex-row
+      justify-start md:justify-between items-center
+      md:pb-40
     ">
-    <main class="p-3 w-full flex flex-col md:flex-row
-                 justify-start md:justify-between items-center
-                 md:pb-40
-        ">
       <div class="sm:w-1/2 m-8 text-center relative">
         <span class="
             inline-block relative p-2
@@ -42,13 +44,16 @@
 
             {% endblock %}
             <pre class="
-                            text-xs text-gray-500 font-mono font-normal break-all
-                            whitespace-pre-line pt-6 absolute top-full
-                        ">
-                            {{ request.build_absolute_uri }}
-                            {% now "c" %}
-                            {{ exception }}
-                        </pre>
+              text-xs text-gray-500 font-mono font-normal break-all
+              whitespace-pre-line pt-6 absolute top-full
+            ">
+              {{ request.build_absolute_uri }}
+              {{ request.in_space_of_section }}
+              {{ request.plugin }}
+              {{ request.membership }}
+              {% now "c" %}
+              {{ exception }}
+            </pre>
           </div>
         {% endblock %}
       </div>

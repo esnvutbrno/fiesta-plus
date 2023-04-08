@@ -11,7 +11,7 @@ from django.views.generic import TemplateView, CreateView
 from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
-from apps.sections.views.mixins.membership import EnsureInternationalMembershipViewMixin
+from apps.sections.views.mixins.membership import EnsureInternationalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
@@ -83,7 +83,7 @@ class SignUpBeforeRequestView(
 
 class NewRequestView(
     EnsureInSectionSpaceViewMixin,
-    EnsureInternationalMembershipViewMixin,
+    EnsureInternationalUserViewMixin,
     SuccessMessageMixin,
     CreateView,
 ):
