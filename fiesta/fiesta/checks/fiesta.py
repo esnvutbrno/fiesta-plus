@@ -19,6 +19,8 @@ def check_app(app: AppConfig):
         len(app.name.rpartition(".")[-1]) > 4
         and not app.name.endswith("s")
         and "_system" not in app.name
+        and "public" not in app.name
+        and "dashboard" not in app.name
     ):
         yield django.core.checks.Warning(
             "App name is singular",

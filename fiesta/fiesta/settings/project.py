@@ -64,6 +64,7 @@ class ProjectConfigMixin:
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
         "apps.plugins.apps.PluginsConfig",
+        "apps.public.apps.PublicConfig",
         "apps.sections.apps.SectionsConfig",
         "apps.universities.apps.UniversitiesConfig",
         "apps.utils.apps.UtilsConfig",

@@ -16,5 +16,6 @@ def section_membership_activation_url(context, section_membership: SectionMember
 
     return section_membership.section.section_url(request) + (
         get_next_redirect_url(request=request, redirect_field_name=REDIRECT_FIELD_NAME)
+        # TODO: default homepage for section? since public on / is not available in section space
         or ""
     )

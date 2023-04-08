@@ -3,17 +3,17 @@
 {% load i18n %}
 {% load plugins %}
 <nav
-  class="navbar px-0"
-  x-data="{menu: true, user: false}"
-  {# TODO: cannot be so general #}
-  {# hx-boost="true" #}
+    class="navbar px-0"
+    x-data="{menu: true, user: false}"
+    {# TODO: cannot be so general #}
+    {# hx-boost="true" #}
 >
   <div class="container flex flex-wrap justify-between items-center mx-auto">
-    <a href="{% url "home" %}" class="flex">
+    <a href="{% url "public:home" %}" class="flex">
       <svg class="mr-3 h-10" width="48" height="60" viewBox="0 0 48 60">
         <use href="{% static "logo.svg" %}#logo"></use>
       </svg>
-      {% if not request.plugin %}
+      {% if not request.in_space_of_section %}
         <span class="self-center text-lg font-semibold whitespace-nowrap">
           Buena Fiesta
         </span>
