@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import typing
 from abc import ABCMeta
 from collections.abc import Iterable
 from importlib import import_module
@@ -7,6 +8,11 @@ from importlib import import_module
 from django.apps import AppConfig
 from django.contrib.auth.decorators import login_required
 from django.urls import URLPattern, reverse
+
+from apps.utils.templatetags.navigation import NavigationItemSpec
+
+if typing.TYPE_CHECKING:
+    from apps.plugins.middleware.plugin import HttpRequest
 
 
 class PluginAppConfig(AppConfig, metaclass=ABCMeta):
@@ -21,11 +27,9 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     configuration_model: str | None = None
 
-    include_in_top_navigation: bool = True
+    login_required = True
 
     login_not_required_urls: list[str] = []
-
-    login_required = True
 
     membership_not_required_urls: list[str] = []
 
@@ -60,6 +64,14 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     def url_prefix(self) -> str:
         """Defines prefix, under which are all urls included."""
         return self.label.replace("_", "-") + "/"
+
+    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
+        return NavigationItemSpec(
+            self.verbose_name,
+            f"/{self.url_prefix}",
+            [],
+            self.label == (request.plugin and request.plugin.app_label),
+        )
 
 
 __all__ = ["PluginAppConfig"]

@@ -26,7 +26,7 @@ class ChooseSpaceView(TemplateView):
         if self.request.all_memberships.count() == 1:
             only_section: Section = self.request.all_memberships.get().section
 
-            return HttpResponseRedirect(only_section.section_url(self.request) + next_url)
+            return HttpResponseRedirect(only_section.section_base_url(self.request) + next_url)
 
         return super().get(request, *args, **kwargs)
 
@@ -39,7 +39,7 @@ class ChooseSpaceView(TemplateView):
         data.update(
             {
                 "sections": [
-                    SectionSpec(s.name, s.section_url(self.request) + next_url)
+                    SectionSpec(s.name, s.section_base_url(self.request) + next_url)
                     # TODO: limit to current membership
                     for s in Section.objects.all()
                 ]

@@ -9,7 +9,7 @@ class PublicHomepageView(EnsureNotInSectionSpaceViewMixin, TemplateView):
     template_name = "public/pages/public.html"
 
     def get_redirect_url(self):
-        return self.request.in_space_of_section.section_home_url(self.request) or super().get_redirect_url()
+        return self.request.in_space_of_section.section_home_url(self.request.membership) or super().get_redirect_url()
 
 
 class PublicTeamView(EnsureNotInSectionSpaceViewMixin, TemplateView):

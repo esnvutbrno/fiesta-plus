@@ -17,6 +17,7 @@ from apps.utils.models.validators import validate_plain_slug_lowercase
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.sections.models import SectionMembership
 
 
 class Section(BaseTimestampedModel):
@@ -74,18 +75,18 @@ class Section(BaseTimestampedModel):
     def __str__(self):
         return self.name
 
-    def section_url(self, request: HttpRequest):
+    def section_base_url(self, request: HttpRequest):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
 
-    def section_home_url(self, request: HttpRequest) -> str | None:
+    def section_home_url(self, for_membership: SectionMembership = None) -> str | None:
         from apps.plugins.models import Plugin
 
         enabled_plugins = self.plugins.filter(
             state__in=(
                 (Plugin.State.ENABLED,)
-                + ((Plugin.State.PRIVILEGED_ONLY,) if request.membership and request.membership.is_privileged else ())
+                + ((Plugin.State.PRIVILEGED_ONLY,) if for_membership and for_membership.is_privileged else ())
             ),
         ).values_list(
             "app_label",
@@ -97,11 +98,12 @@ class Section(BaseTimestampedModel):
 
         target_app: PluginAppConfig | None = None
 
-        if request.membership and dashboard_app and dashboard_app.label in enabled_plugins:
+        if for_membership and dashboard_app and dashboard_app.label in enabled_plugins:
             target_app = dashboard_app
-        elif pages_app and pages_app.label in enabled_plugins:
+        elif not for_membership and pages_app and pages_app.label in enabled_plugins:
             target_app = pages_app
 
+        # TODO: what to do if user is logged and dashboard is not available?
         return f"/{target_app.url_prefix}" if target_app else None
 
 

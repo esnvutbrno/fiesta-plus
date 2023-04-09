@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import typing
+
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.db.models.query import QuerySet
@@ -8,10 +10,12 @@ from django.urls import ResolverMatch, reverse
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 
-from ...plugins.plugin import PluginAppConfig
 from ...plugins.utils import target_plugin_app_from_resolver_match
 from ...sections.middleware.section_space import HttpRequest as BaseHttpRequest
 from ..models import SectionMembership
+
+if typing.TYPE_CHECKING:
+    from ...plugins.plugin import PluginAppConfig
 
 
 class HttpRequest(BaseHttpRequest):

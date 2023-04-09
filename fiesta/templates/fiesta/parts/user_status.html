@@ -44,6 +44,7 @@
     {% if request.membership %}
       <a
           class="block py-2 px-4 text-gray-800 hover:bg-gray-100"
+          {# TODO: next= params are probably not needed #}
           href="{% url "accounts:membership" %}?next={{ request.path }}"
       >
         <span class="block text-xs text-gray-500 truncate">

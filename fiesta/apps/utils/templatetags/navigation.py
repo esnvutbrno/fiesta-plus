@@ -4,11 +4,10 @@ import typing
 
 from django import template
 from django.urls import reverse
-from django.utils.translation import gettext as _
 
-from apps.plugins.middleware.plugin import HttpRequest
-from apps.plugins.models import Plugin
-from apps.sections.models import SectionMembership
+if typing.TYPE_CHECKING:
+    from apps.plugins.middleware.plugin import HttpRequest
+    from apps.sections.models import SectionMembership
 
 register = template.Library()
 
@@ -25,7 +24,6 @@ class NavigationItemSpec(typing.NamedTuple):
 def get_navigation_items(context):
     request: HttpRequest = context["request"]
 
-    current_plugin: Plugin | None = request.plugin
     membership: SectionMembership | None = request.membership
 
     items = []
@@ -33,31 +31,11 @@ def get_navigation_items(context):
     if not membership:
         return items
 
-    if membership.is_privileged:
-        # TODO: define these urls elsewhere
-        items.append(
-            NavigationItemSpec(
-                _("Members"),
-                reverse("sections:section-members"),
-                [],
-                request.resolver_match and request.resolver_match.route.replace("/", ":") == "sections:section-members",
-            )
-        )
-
     items.extend(
         [
-            NavigationItemSpec(
-                apps.verbose_name,
-                f"/{apps.url_prefix}",
-                [
-                    # apps.reverse(pattern.name)
-                    # for pattern in apps.urlpatterns
-                    # if pattern.name
-                ],
-                active=plugin == current_plugin,
-            )
+            nav_item
             for plugin in membership.section.plugins.filter(membership.available_plugins_filter)  # type: Plugin
-            if (apps := plugin.app_config) and apps.include_in_top_navigation  # type: PluginAppConfig
+            if (apps := plugin.app_config) and (nav_item := apps.as_navigation_item(request))  # type: PluginAppConfig
         ]
     )
 
@@ -69,6 +47,6 @@ def get_home_url(context):
     request: HttpRequest = context["request"]
 
     if request.in_space_of_section:
-        return request.in_space_of_section.section_home_url(request)
+        return request.in_space_of_section.section_home_url(request.membership)
 
     return reverse("public:home")
