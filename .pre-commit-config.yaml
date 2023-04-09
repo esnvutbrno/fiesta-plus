@@ -25,14 +25,6 @@ repos:
       - id: isort
         args: [ "--profile", "black", "--filter-files" ]
 
-  # uncompromise python formatter
-  - repo: https://github.com/psf/black
-    rev: 23.3.0
-    hooks:
-      - id: black
-        name: format by black
-        exclude: ^.*\b(migrations)\b.*$
-
   # security linter on
   - repo: https://github.com/pycqa/bandit
     rev: 1.7.5
@@ -48,6 +40,14 @@ repos:
       - id: ruff
         name: lint by Ruff
         args: [ --fix, --exit-non-zero-on-fix ]
+
+  # uncompromise python formatter
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        name: format by black
+        exclude: ^.*\b(migrations)\b.*$
 
   - repo: https://github.com/ecugol/pre-commit-hooks-django
     rev: v0.4.0  # Use the ref you want to point at
