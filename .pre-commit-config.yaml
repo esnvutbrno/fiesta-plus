@@ -62,5 +62,6 @@ ci:
   autoupdate_branch: develop
   autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
   autoupdate_schedule: weekly
-  skip: [ ]
+  skip:
+    - check-untracked-migrations  # no git there on CI
   submodules: false
