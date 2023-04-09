@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from configurations import Configuration
 
 from .auth import AuthConfigMixin

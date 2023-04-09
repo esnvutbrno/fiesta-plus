@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import typing
 
 from django.db.models import Q, QuerySet
@@ -15,7 +17,7 @@ class MatchingPolicyProtocol(typing.Protocol):
     description: str
     can_member_match: bool
 
-    def limit_requests(self, qs: QuerySet["BuddyRequest"], membership: SectionMembership) -> QuerySet["BuddyRequest"]:
+    def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         # TODO: NotImplemented or base implementation?
         return qs.filter(self._base_filter(membership=membership)).select_related(
             "issuer",
@@ -26,7 +28,7 @@ class MatchingPolicyProtocol(typing.Protocol):
 
     def on_created_request(
         self,
-        request: "BuddyRequest",
+        request: BuddyRequest,
     ) -> None:
         ...
 
@@ -61,7 +63,7 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     description = _("Matching is done manually by members themselves, but limited to the same faculty.")
     can_member_match = True
 
-    def limit_requests(self, qs: QuerySet["BuddyRequest"], membership: SectionMembership) -> QuerySet["BuddyRequest"]:
+    def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         from apps.accounts.models import UserProfile
 
         member_profile: UserProfile = membership.user.profile_or_none

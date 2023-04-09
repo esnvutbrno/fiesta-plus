@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
 from django_filters import DateFromToRangeFilter, FilterSet

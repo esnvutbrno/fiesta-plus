@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from apps.files.storage import NamespacedFilesStorage
 from apps.files.views import NamespacedFilesServeView
 

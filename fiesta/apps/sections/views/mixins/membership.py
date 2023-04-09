@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.utils.translation import gettext as _

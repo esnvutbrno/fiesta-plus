@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import django_tables2 as tables
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.apps import apps
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ValidationError

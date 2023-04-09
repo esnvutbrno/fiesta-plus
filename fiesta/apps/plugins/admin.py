@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from dal import autocomplete
 from django.contrib import admin
 from django.contrib.admin import display

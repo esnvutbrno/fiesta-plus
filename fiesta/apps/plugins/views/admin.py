@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from _operator import attrgetter
 from dal import autocomplete
 from django.apps import apps

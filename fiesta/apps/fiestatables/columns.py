@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import django_tables2 as tables
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile

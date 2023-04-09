@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from allauth.account.views import SignupView
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME

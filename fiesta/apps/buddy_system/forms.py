@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.forms import BooleanField, HiddenInput
 from django.template.loader import render_to_string
 from django.utils.functional import lazy

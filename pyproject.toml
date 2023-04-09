@@ -79,8 +79,7 @@ exclude = '''
 
 [tool.ruff]
 # see https://beta.ruff.rs/docs/rules/
-#"I002"
-extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B"]
+extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B", "I002"]
 line-length = 120
 target-version = "py311"
 ignore = ["E731"]
@@ -88,6 +87,9 @@ ignore = ["E731"]
 exclude = [
     "migrations",
 ]
+
+[tool.ruff.isort]
+required-imports = ["from __future__ import annotations"]
 
 
 [tool.vulture]

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.http import HttpRequest

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import bcrypt
 from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
 

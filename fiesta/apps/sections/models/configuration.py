@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models import BooleanField
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_SAVE, hook

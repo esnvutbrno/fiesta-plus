@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import magic
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.urls import path

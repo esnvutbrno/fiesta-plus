@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from operator import itemgetter
 
 from django.utils.text import slugify

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models import CharField
 from django.utils.translation import gettext_lazy as _
 

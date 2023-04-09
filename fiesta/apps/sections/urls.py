@@ -1,4 +1,6 @@
 # Define your urls here
+from __future__ import annotations
+
 from django.urls import path
 from django.urls.converters import SlugConverter
 from model_path_converter import register_model_converter

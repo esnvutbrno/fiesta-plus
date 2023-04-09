@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from allauth_cas.views import CASAdapter, CASCallbackView, CASLoginView, CASLogoutView
 
 from .provider import ESNAccountsProvider

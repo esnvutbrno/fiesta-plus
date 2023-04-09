@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.urls import path
 
 from apps.plugins.views.admin import AppAutocomplete, ConfigurationAutocomplete

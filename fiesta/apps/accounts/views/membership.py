@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from _operator import attrgetter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError

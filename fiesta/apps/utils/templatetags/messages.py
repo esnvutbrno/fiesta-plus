@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django import template
 from django.contrib.messages.storage.base import Message
 from django.template import loader

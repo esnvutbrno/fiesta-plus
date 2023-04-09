@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.postgres.fields import ArrayField
 from django.utils.encoding import force_str
 from django.utils.hashable import make_hashable

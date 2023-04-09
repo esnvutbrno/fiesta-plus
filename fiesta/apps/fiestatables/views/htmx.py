@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.core.paginator import EmptyPage
 
 from apps.sections.middleware.user_membership import HttpRequest

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from collections import namedtuple
 
 from allauth.account.utils import get_next_redirect_url

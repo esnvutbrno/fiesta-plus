@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from typing import Generic, Protocol, TypeVar
 
 from apps.plugins.middleware.plugin import HttpRequest

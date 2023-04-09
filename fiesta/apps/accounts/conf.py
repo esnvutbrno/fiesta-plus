@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 INTERESTS_CHOICES = (
     ("music", "🎶 Music"),
     ("photo", "📸 Photography"),

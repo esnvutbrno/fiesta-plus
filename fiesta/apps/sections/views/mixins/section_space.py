@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect

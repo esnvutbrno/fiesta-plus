@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import factory
 from django_countries import countries
 from factory import fuzzy

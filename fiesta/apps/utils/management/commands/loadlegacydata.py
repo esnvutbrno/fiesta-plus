@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import djclick as click
 from click import secho
 from django.db import connections, transaction

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models.fields.files import FieldFile
 
 from apps.files.storage import NamespacedFilesStorage

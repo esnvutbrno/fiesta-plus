@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from allauth.account import signals
 from allauth.socialaccount import signals as signals_social
 from allauth.socialaccount.models import SocialLogin

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _

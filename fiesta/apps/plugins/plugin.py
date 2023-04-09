@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from abc import ABCMeta
 from collections.abc import Iterable
 from importlib import import_module

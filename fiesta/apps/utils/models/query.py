@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.core.exceptions import ValidationError
 from django.db.models import Model, Q as DjangoQ, QuerySet
 from django.http import Http404
@@ -6,7 +8,7 @@ from django.shortcuts import get_object_or_404
 
 class Q(DjangoQ):
     # https://stackoverflow.com/a/21220712/15995797
-    def __xor__(self, other: DjangoQ) -> "Q":
+    def __xor__(self, other: DjangoQ) -> Q:
         not_self = self.__invert__()
         not_other = other.__invert__()
 
