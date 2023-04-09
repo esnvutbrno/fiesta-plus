@@ -6,14 +6,15 @@ from ..accounts.models.profile import user_profile_picture_storage
 from .views import BuddySystemIndexView
 from .views.editor import RequestEditorDetailView, RequestsEditorView
 from .views.matching import MatchingRequestsView, ProfilePictureServeView, TakeBuddyRequestView
-from .views.request import NewRequestView, SignUpBeforeRequestView, WannaBuddyView
+from .views.request import BuddySystemEntrance, NewRequestView, SignUpBeforeEntranceView, WannaBuddyView
 
 urlpatterns = [
     path("", BuddySystemIndexView.as_view(), name="index"),
     path("wanna-buddy", WannaBuddyView.as_view(), name="wanna-buddy"),
+    path("entrance", BuddySystemEntrance.as_view(), name="entrance"),
     path(
         "sign-up-before-request",
-        SignUpBeforeRequestView.as_view(),
+        SignUpBeforeEntranceView.as_view(),
         name="sign-up-before-request",
     ),
     path("new-request", NewRequestView.as_view(), name="new-request"),

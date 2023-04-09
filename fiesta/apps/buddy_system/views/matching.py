@@ -54,7 +54,7 @@ class TakeBuddyRequestView(
             membership=self.request.membership,
         )
 
-    def post(self, request, __: uuid.UUID):
+    def post(self, request, pk: uuid.UUID):
         BuddyRequest.objects.match_by(
             request=self.get_object(),
             matcher=self.request.user,

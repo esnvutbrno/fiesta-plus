@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
@@ -17,6 +18,17 @@ from apps.sections.views.mixins.membership import EnsureInternationalUserViewMix
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
+class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, TemplateView):
+    def get(self, request, *args, **kwargs):
+        if self.request.membership.is_international:
+            return HttpResponseRedirect(reverse("buddy_system:new-request"))
+
+        if self.request.membership.is_local:
+            return HttpResponseRedirect(reverse("buddy_system:matching-requests"))
+
+        raise Http404(_("Nothing to see here"))
+
+
 class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):
     template_name = "buddy_system/wanna_buddy.html"
 
@@ -24,32 +36,34 @@ class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "continue_url": "?".join(
-                    (
-                        reverse("buddy_system:sign-up-before-request"),
-                        urlencode({REDIRECT_FIELD_NAME: reverse("buddy_system:new-request")}),
+                "continue_url": (
+                    "?".join(
+                        (
+                            reverse("buddy_system:sign-up-before-request"),
+                            urlencode({REDIRECT_FIELD_NAME: reverse("buddy_system:entrance")}),
+                        )
                     )
+                    if not self.request.membership
+                    else reverse("buddy_system:entrance")
                 )
-                if self.request.membership.is_international
-                else reverse("buddy_system:matching-requests")
             }
         )
         return data
 
 
-class SignUpBeforeRequestView(
+class SignUpBeforeEntranceView(
     EnsureInSectionSpaceViewMixin,
     PluginConfigurationViewMixin[SectionsConfiguration],
     SignupView,
 ):
-    template_name = "buddy_system/sign_up_before_request.html"
+    template_name = "buddy_system/sign_up_before_entrance.html"
 
-    success_url = reverse_lazy("buddy_system:new-request")
+    success_url = reverse_lazy("buddy_system:entrance")
 
     @property
     def configuration(self) -> SectionsConfiguration:
         """We cannot use PluginConfigurationViewMixin, since memberships is not ready and request.plugin is
-        filled by middleware based on membership (and that's created in form_valid)."""
+        filled by middleware based on membership (and that's created in form_valid, so too late)."""
         return SectionsConfiguration.objects.filter(plugins__section=self.request.in_space_of_section).first()
 
     @transaction.atomic
@@ -63,7 +77,7 @@ class SignUpBeforeRequestView(
             state = SectionMembership.State.UNCONFIRMED
             messages.info(
                 self.request,
-                _("Your membership is now waiting for approval, " "you will be informed by e-mail."),
+                _("Your membership is now waiting for approval, you will be informed by e-mail."),
             )
 
         SectionMembership.objects.create(
