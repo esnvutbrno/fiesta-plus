@@ -1,8 +1,8 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 
 
 @admin.register(SectionsConfiguration)
@@ -11,6 +11,7 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
         "required_nationality",
         "required_gender",
         "required_picture",
+        "required_interests",
         "auto_approved_membership_for_international",
     ]
     list_display = BaseChildConfigurationAdmin.list_display + list_editable
@@ -22,11 +23,7 @@ class SectionAdmin(admin.ModelAdmin):
     list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
     def get_queryset(self, request):
-        return (
-            super()
-            .get_queryset(request)
-            .prefetch_related("memberships", "universities")
-        )
+        return super().get_queryset(request).prefetch_related("memberships", "universities")
 
     @admin.display(
         description=_("Universities"),
@@ -46,12 +43,7 @@ class SectionAdmin(admin.ModelAdmin):
         extra = 1
 
         def get_queryset(self, request):
-            return (
-                super()
-                .get_queryset(request)
-                .select_related("section", "user")
-                .order_by("-role", "user__username")
-            )
+            return super().get_queryset(request).select_related("section", "user").order_by("-role", "user__username")
 
     inlines = (
         # SectionMembershipInline,

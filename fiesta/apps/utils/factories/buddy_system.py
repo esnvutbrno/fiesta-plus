@@ -6,9 +6,9 @@ from factory import SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyAttribute, FuzzyChoice
 
+from apps.accounts.conf import INTERESTS_CHOICES
 from apps.accounts.models import User
 from apps.buddy_system.models import BuddyRequest
-from apps.buddy_system.models.request import INTERESTS_CHOICES
 from apps.sections.models import Section
 
 

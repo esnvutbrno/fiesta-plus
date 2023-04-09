@@ -12,8 +12,10 @@ from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
 from phonenumber_field.modelfields import PhoneNumberField
 
+from apps.accounts.conf import INTERESTS_CHOICES
 from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
+from apps.utils.models.fields import ArrayFieldWithDisplayableChoices
 from apps.utils.models.query import Q
 
 if typing.TYPE_CHECKING:
@@ -52,7 +54,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     )
 
     # ### FIELDS, which are conditionally REQUIRED ###
-    # see AccountsConfiguration
+    # see SectionsConfiguration
 
     nationality = CountryField(
         verbose_name=_("nationality"),
@@ -115,11 +117,21 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         blank=True,
     )
 
+    interests = ArrayFieldWithDisplayableChoices(
+        base_field=CharField(
+            choices=INTERESTS_CHOICES,
+            max_length=24,
+            # inner field could be empty (default to remove empty option in .choices)
+            default=None,
+        ),
+        verbose_name=_("issuer interests"),
+        default=list,  # as callable to not share instance,
+        blank=True,
+    )
+
     # TODO: social network profiles
 
-    phone_number = PhoneNumberField(
-        null=True, blank=True, verbose_name=_("phone number")
-    )
+    phone_number = PhoneNumberField(null=True, blank=True, verbose_name=_("phone number"))
 
     @enum.unique
     class Preferences(enum.Flag):
@@ -127,9 +139,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         # TODO: push notifications & emails
 
     # TODO: define formfield/widget to handle flagging
-    preferences = models.PositiveSmallIntegerField(
-        default=0, verbose_name=_("user preferences as flags")
-    )
+    preferences = models.PositiveSmallIntegerField(default=0, verbose_name=_("user preferences as flags"))
 
     State = UserProfileState
 
@@ -146,8 +156,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         constraints = (
             CheckConstraint(
                 # home university XOR home faculty
-                check=Q(state=UserProfileState.INCOMPLETE.value)
-                | (Q(home_university=None) ^ Q(home_faculty=None)),
+                check=Q(state=UserProfileState.INCOMPLETE.value) | (Q(home_university=None) ^ Q(home_faculty=None)),
                 name="home_university_or_faculty",
             ),
         )

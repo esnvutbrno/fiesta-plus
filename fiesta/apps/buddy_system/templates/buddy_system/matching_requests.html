@@ -79,7 +79,10 @@
 
           <div class="card-actions justify-between items-center">
             <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
-            <button class="btn btn-primary">Take buddy</button>
+            <form action="{% url "buddy_system:take-buddy-request" br.pk %}" method="POST" hx-boost="true">
+              {% csrf_token %}
+              <button class="btn btn-primary" type="submit">Take buddy</button>
+            </form>
           </div>
         </div>
       </div>

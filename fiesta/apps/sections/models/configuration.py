@@ -38,6 +38,13 @@ class SectionsConfiguration(BasePluginConfiguration):
         blank=True,
         help_text=FLAG_HELP_TEXT,
     )
+    required_interests = BooleanField(
+        verbose_name=_("required interests"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
 
     auto_approved_membership_for_international = BooleanField(
         verbose_name=_("auto approved membership for international"),
