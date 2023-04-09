@@ -1,4 +1,4 @@
-INTERESTS_CHOICES = {
+INTERESTS_CHOICES = (
     ("music", "🎶 Music"),
     ("photo", "📸 Photography"),
     ("IT", "🧑‍💻 IT"),
@@ -61,4 +61,4 @@ INTERESTS_CHOICES = {
     ("table_tennis", "🏓 Table Tennis"),
     ("badminton", "🏸 Badminton"),
     ("cricket", "🏏 Cricket"),
-}
+)
