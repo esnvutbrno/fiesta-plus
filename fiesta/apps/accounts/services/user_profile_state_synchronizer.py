@@ -71,7 +71,7 @@ class UserProfileStateSynchronizer:
             # membership could be created for user without profile (usually the first one membership)
             profile: UserProfile = membership.user.profile
         except UserProfile.DoesNotExist:
-            return
+            return None
 
         return cls.on_user_profile_update(profile=profile)
 

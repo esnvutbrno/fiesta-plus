@@ -56,14 +56,12 @@ class UserProfileForm(BaseModelForm):
             if any(conf_field.__get__(c) is not None for c in confs)
         )
 
-        form_klass = modelform_factory(
+        return modelform_factory(
             model=UserProfile,
             form=cls,
             fields=cls.Meta.fields + fields_to_include,
             formfield_callback=callback,
         )
-
-        return form_klass
 
     class Meta:
         model = UserProfile

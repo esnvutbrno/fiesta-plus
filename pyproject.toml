@@ -78,7 +78,8 @@ exclude = '''
 '''
 
 [tool.ruff]
-extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM"]
+# see https://beta.ruff.rs/docs/rules/
+extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B"]
 line-length = 120
 target-version = "py311"
 ignore = ["E731"]

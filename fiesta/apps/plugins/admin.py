@@ -43,7 +43,7 @@ class PluginAdmin(admin.ModelAdmin):
     )
     def configuration_edit(self, obj: Plugin):
         if not obj.configuration:
-            return
+            return None
         ct: ContentType = obj.configuration.polymorphic_ctype
 
         return format_html(

@@ -35,7 +35,7 @@ def target_plugin_app_from_resolver_match(
 ) -> PluginAppConfig | None:
     if not match or not match.app_name:
         # no app --> cannot resolve plugin
-        return
+        return None
 
     # TODO: resolver.app_name is full-dotted path
     # Plugin.app_label is just ending section

@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models import TextChoices
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import BEFORE_CREATE, BEFORE_SAVE, LifecycleModelMixin, hook
@@ -129,7 +130,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     def on_state_change(self):
         self.history.append(
             self.HistoryRecord(
-                timestamp=datetime.now(),
+                timestamp=timezone.now(),
                 initial_state=self.initial_value("state"),
                 final_state=self.state,
             )

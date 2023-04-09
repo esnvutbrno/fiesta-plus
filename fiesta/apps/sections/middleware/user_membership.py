@@ -42,7 +42,7 @@ class UserMembershipMiddleware:
         request.all_memberships = None
 
         if not request.user.is_authenticated:
-            return
+            return None
 
         # to remove another query for relating section
         request.all_memberships = request.user.memberships.select_related("section")
@@ -59,17 +59,17 @@ class UserMembershipMiddleware:
         if membership and membership.state == SectionMembership.State.ACTIVE:
             # everything alright! :clap-clap
             request.membership = membership
-            return
+            return None
 
         if not target_app:
             # target apps are not plugin, so probably public
             # additional checks needs to be in views itself
-            return
+            return None
 
         if not request.in_space_of_section and not membership:
             # no membership and no section space
             # IDK :-D we gonna need tests for this
-            return
+            return None
 
         if request.in_space_of_section and not membership:
             # hohoo, whatcha doing here, go away
@@ -80,7 +80,7 @@ class UserMembershipMiddleware:
         if cls.should_ignore_403(target_app, request.resolver_match):
             # target is plugin view, but user does not have any membership,
             # and we're not on membership page
-            return
+            return None
 
         return cls.handle_redirect_to_membership_select(request=request, membership=membership)
 

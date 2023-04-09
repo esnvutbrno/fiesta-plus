@@ -78,11 +78,15 @@ class ESNAccountsProvider(CASProvider):
                 #  if they want to trust
                 state=SectionMembership.State.ACTIVE,
                 # TODO: check all possible for ESN Accounts roles
-                role=SectionMembership.Role.EDITOR
-                if cls.EDITOR_ROLE in roles
-                else SectionMembership.Role.MEMBER
-                if cls.MEMBER_ROLE in roles
-                else SectionMembership.Role.INTERNATIONAL,
+                role=(
+                    SectionMembership.Role.EDITOR
+                    if cls.EDITOR_ROLE in roles
+                    else (
+                        SectionMembership.Role.MEMBER
+                        if cls.MEMBER_ROLE in roles
+                        else SectionMembership.Role.INTERNATIONAL
+                    )
+                ),
             ),
         )
 

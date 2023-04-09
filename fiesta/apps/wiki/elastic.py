@@ -106,6 +106,7 @@ class WikiElastic:
 
         if hits:
             return hits[0]["_source"]
+        return None
 
 
 class LocalCATrustedTransportation(Transport):

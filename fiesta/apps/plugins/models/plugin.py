@@ -68,9 +68,11 @@ class Plugin(BaseTimestampedModel):
         if not self.configuration and not self.app_config.configuration_model:
             # not needed and not filled
             return
-        elif self.configuration and not self.app_config.configuration_model:
+
+        if self.configuration and not self.app_config.configuration_model:
             raise ValidationError({"configuration": _("Selected plugin does not support configuration.")})
-        elif self.app_config.configuration_model and not self.configuration:
+
+        if self.app_config.configuration_model and not self.configuration:
             raise ValidationError(
                 {"configuration": _("Selected plugin does requires configuration.")},
                 code="required",
@@ -79,7 +81,7 @@ class Plugin(BaseTimestampedModel):
         expected_content_type = ContentType.objects.get_for_model(apps.get_model(self.app_config.configuration_model))
         if self.configuration.polymorphic_ctype != expected_content_type:
             raise ValidationError(
-                {"configuration": _("Selected plugin does not correspond " "to type of linked configuration.")}
+                {"configuration": _("Selected plugin does not correspond to type of linked configuration.")}
             )
 
         if not (

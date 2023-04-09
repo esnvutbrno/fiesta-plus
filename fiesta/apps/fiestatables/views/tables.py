@@ -1,7 +1,7 @@
 import contextlib
-from datetime import datetime
 
 from django.db.models import QuerySet
+from django.utils import timezone
 from django.utils.text import slugify
 from django_filters.views import FilterView
 from django_tables2 import LazyPaginator, SingleTableMixin
@@ -25,7 +25,7 @@ class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
         with contextlib.suppress(AttributeError, TypeError):
             export_name = slugify(data.model._meta.verbose_name_plural.lower())
 
-        return f"{(datetime.now().isoformat('_', 'seconds')).replace(':', '-')}" f"_{export_name}.{export_format}"
+        return f"{(timezone.now().isoformat('_', 'seconds')).replace(':', '-')}_{export_name}.{export_format}"
 
 
 class PreprocessQuerySetMixin:
