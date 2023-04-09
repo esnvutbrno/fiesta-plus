@@ -14,12 +14,15 @@
 {% block main %}
   <div class="gap-x-4 columns-3">
     {% for br in object_list %}
-      <div class="card card-bordered shadow h-fit break-inside-avoid-column mb-4">
+      <div
+          class="card card-bordered shadow h-fit break-inside-avoid-column mb-4 static"
+      >
         <figure>
           {% if configuration.display_issuer_picture and br.issuer.profile.picture %}
             <img
               src="{% url "buddy_system:serve-issuer-profile-picture" br.issuer.profile.picture %}"
-              alt="" class="rounded-full w-24 h-24 m-4"
+              alt=""
+              class="rounded-full w-24 h-24 m-4"
             >
           {% else %}
             <svg version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -78,10 +81,19 @@
           <hr>
 
           <div class="card-actions justify-between items-center">
-            <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
-            <form action="{% url "buddy_system:take-buddy-request" br.pk %}" method="POST" hx-boost="true">
+            {% if configuration.display_request_creation_date %}
+                <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
+            {% endif %}
+            <form
+                action="{% url "buddy_system:take-buddy-request" br.pk %}"
+                method="POST"
+                hx-confirm="{% trans "You sure?" %}"
+                hx-boost="true"
+            >
               {% csrf_token %}
-              <button class="btn btn-primary" type="submit">Take buddy</button>
+              <button class="btn btn-primary" type="submit">
+                {% trans "Take Buddy" %}
+              </button>
             </form>
           </div>
         </div>

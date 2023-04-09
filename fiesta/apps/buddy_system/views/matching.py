@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.utils.translation import gettext as _
 from django.views.generic import ListView
 from django.views.generic.detail import BaseDetailView
 from django_htmx.http import HttpResponseClientRedirect
@@ -51,9 +52,14 @@ class TakeBuddyRequestView(
             membership=self.request.membership,
         )
 
-    def post(self, request, pk: uuid.UUID):
-        print(self.get_object())
-        messages.success(request, "yeeeh")
+    def post(self, request, __: uuid.UUID):
+        BuddyRequest.objects.match_by(
+            request=self.get_object(),
+            matcher=self.request.user,
+        )
+
+        messages.success(request, _("Request successfully matched!"))
+        # TODO: target URL?
         return HttpResponseClientRedirect("/")
 
 

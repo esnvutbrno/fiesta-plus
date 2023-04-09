@@ -1,3 +1,7 @@
+from __future__ import annotations
+
+import typing
+
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.db.models import TextChoices
@@ -6,6 +10,9 @@ from django_countries.fields import CountryField
 
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.validators import validate_plain_slug_lowercase
+
+if typing.TYPE_CHECKING:
+    from apps.plugins.middleware.plugin import HttpRequest
 
 
 class Section(BaseTimestampedModel):
@@ -63,7 +70,7 @@ class Section(BaseTimestampedModel):
     def __str__(self):
         return self.name
 
-    def section_url(self, request):
+    def section_url(self, request: HttpRequest):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
