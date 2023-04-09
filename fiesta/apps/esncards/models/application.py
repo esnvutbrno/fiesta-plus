@@ -24,9 +24,7 @@ def has_permission_to_view_holder_photo(request: HttpRequest, name: str) -> bool
     if not request.membership:
         return False
 
-    application: ESNcardApplication = get_single_object_or_none(
-        ESNcardApplication, holder_photo=name
-    )
+    application: ESNcardApplication = get_single_object_or_none(ESNcardApplication, holder_photo=name)
 
     if not application:
         logger.warning("Photo exists %s in storage, but no related application.", name)
@@ -103,7 +101,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("state"),
     )
 
-    history: list["HistoryRecord"] = models.JSONField(
+    history: list[HistoryRecord] = models.JSONField(
         default=list,
         encoder=DjangoJSONEncoder,
     )

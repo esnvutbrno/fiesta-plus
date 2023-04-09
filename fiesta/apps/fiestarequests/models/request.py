@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import TextChoices
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import LifecycleModelMixin, hook, BEFORE_SAVE
+from django_lifecycle import BEFORE_SAVE, LifecycleModelMixin, hook
 
 from apps.utils.models import BaseTimestampedModel
 

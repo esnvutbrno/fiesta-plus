@@ -1,4 +1,4 @@
-from typing import Protocol, TypeVar, Generic
+from typing import Generic, Protocol, TypeVar
 
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import BasePluginConfiguration

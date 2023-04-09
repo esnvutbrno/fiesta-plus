@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from .models import BuddySystemConfiguration, BuddyRequest
 from ..fiestarequests.admin import BaseRequestAdmin
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import BuddyRequest, BuddySystemConfiguration
 
 
 @admin.register(BuddySystemConfiguration)

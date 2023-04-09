@@ -5,9 +5,9 @@ from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.http import HttpResponse, HttpResponseNotFound
 
-from ..models import Section
 from ...utils.models.query import get_single_object_or_none
 from ...utils.request import HttpRequest as BaseHttpRequest
+from ..models import Section
 
 
 class HttpRequest(BaseHttpRequest):
@@ -26,9 +26,7 @@ class SectionSpaceMiddleware:
         # 'xxx' or empty string
         space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
-        request.in_space_of_section = get_single_object_or_none(
-            Section, space_slug=space_slug
-        )
+        request.in_space_of_section = get_single_object_or_none(Section, space_slug=space_slug)
 
         if not space_slug or space_slug == settings.ROOT_DOMAIN:
             return self.get_response(request)

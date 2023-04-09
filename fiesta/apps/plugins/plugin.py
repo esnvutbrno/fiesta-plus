@@ -1,6 +1,6 @@
 from abc import ABCMeta
+from collections.abc import Iterable
 from importlib import import_module
-from typing import Iterable, Optional
 
 from django.apps import AppConfig
 from django.contrib.auth.decorators import login_required
@@ -17,7 +17,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     verbose_name: str
 
-    configuration_model: Optional[str] = None
+    configuration_model: str | None = None
 
     login_not_required_urls: list[str] = []
 

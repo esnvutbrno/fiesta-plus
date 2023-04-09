@@ -59,14 +59,10 @@ class ProfileFinishFormView(
         data.update(
             {
                 "redirect_field_name": REDIRECT_FIELD_NAME,
-                "redirect_field_value": get_next_redirect_url(
-                    self.request, REDIRECT_FIELD_NAME
-                ),
+                "redirect_field_value": get_next_redirect_url(self.request, REDIRECT_FIELD_NAME),
             }
         )
         return data
 
     def get_success_url(self):
-        return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse(
-            "accounts:my-profile"
-        )
+        return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse("accounts:my-profile")

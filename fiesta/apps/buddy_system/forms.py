@@ -1,4 +1,4 @@
-from django.forms import HiddenInput, BooleanField
+from django.forms import BooleanField, HiddenInput
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
@@ -34,9 +34,7 @@ class NewBuddyRequestForm(BaseModelForm):
         }
         help_texts = {
             "description": lazy(
-                lambda: render_to_string(
-                    "buddy_system/parts/buddy_request_description_help.html"
-                ),
+                lambda: render_to_string("buddy_system/parts/buddy_request_description_help.html"),
                 str,
             )
         }

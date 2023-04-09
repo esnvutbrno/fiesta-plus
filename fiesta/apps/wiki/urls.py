@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import WikiView, SearchWikiView
+from .views import SearchWikiView, WikiView
 
 app_name = "wiki"
 urlpatterns = [

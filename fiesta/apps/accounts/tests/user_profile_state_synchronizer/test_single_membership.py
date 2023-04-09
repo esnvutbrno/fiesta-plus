@@ -3,12 +3,9 @@ from django.test import TestCase
 from apps.accounts.models import UserProfile
 from apps.accounts.services import UserProfileStateSynchronizer
 from apps.plugins.models import Plugin
-from apps.sections.models import SectionsConfiguration, SectionMembership
+from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.utils.factories.accounts import UserFactory, UserProfileFactory
-from apps.utils.factories.sections import (
-    KnownSectionFactory,
-    SectionMembershipWithUserFactory,
-)
+from apps.utils.factories.sections import KnownSectionFactory, SectionMembershipWithUserFactory
 
 
 class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
@@ -23,10 +20,8 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
             state=SectionMembership.State.ACTIVE,
         )
 
-        self.configuration: SectionsConfiguration = (
-            SectionsConfiguration.objects.create(
-                name="Test configuration",
-            )
+        self.configuration: SectionsConfiguration = SectionsConfiguration.objects.create(
+            name="Test configuration",
         )
         self.plugin = Plugin.objects.create(
             state=Plugin.State.ENABLED,

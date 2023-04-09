@@ -1,4 +1,4 @@
-from django.forms import DateInput as DjDateInput, ModelForm, Form
+from django.forms import DateInput as DjDateInput, Form, ModelForm
 from django.utils.translation import gettext_lazy as _
 
 

@@ -4,10 +4,7 @@ from django.test import TestCase
 from apps.accounts.models import UserProfile
 from apps.sections.models import SectionMembership
 from apps.utils.factories.accounts import UserFactory, UserProfileFactory
-from apps.utils.factories.sections import (
-    KnownSectionFactory,
-    SectionMembershipWithUserFactory,
-)
+from apps.utils.factories.sections import KnownSectionFactory, SectionMembershipWithUserFactory
 
 
 class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):

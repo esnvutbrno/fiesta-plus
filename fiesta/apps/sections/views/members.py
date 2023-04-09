@@ -2,7 +2,7 @@ import django_tables2 as tables
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
 from django.utils.translation import gettext_lazy as _
-from django_filters import ChoiceFilter, CharFilter, ModelChoiceFilter
+from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column
 
 from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn
@@ -24,9 +24,7 @@ class SectionMembershipFilter(BaseFilterSet):
         label=_("Search"),
         widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
     )
-    user__profile__home_faculty = ModelChoiceFilter(
-        queryset=related_faculties, label=_("Faculty")
-    )
+    user__profile__home_faculty = ModelChoiceFilter(queryset=related_faculties, label=_("Faculty"))
     state = ChoiceFilter(choices=SectionMembership.State.choices, label=_("State"))
 
     # created = DateRangeFilter()
@@ -36,9 +34,9 @@ class SectionMembershipFilter(BaseFilterSet):
         pass
 
     def filter_search(self, queryset, name, value):
-        return queryset.annotate(
-            search=SearchVector("user__last_name", "user__first_name", "state", "role")
-        ).filter(search=value)
+        return queryset.annotate(search=SearchVector("user__last_name", "user__first_name", "state", "role")).filter(
+            search=value
+        )
 
 
 class SectionMembershipTable(tables.Table):

@@ -27,9 +27,7 @@ class UserProfileStateSynchronizer:
         form_class = UserProfileForm.for_user(user=profile.user)
         form = form_class(
             instance=profile,
-            data=model_to_dict(
-                profile, form_class._meta.fields, form_class._meta.exclude
-            ),
+            data=model_to_dict(profile, form_class._meta.fields, form_class._meta.exclude),
         )
 
         # make the form bounded, so it thinks it¨s connected to data

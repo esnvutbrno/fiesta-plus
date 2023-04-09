@@ -1,6 +1,6 @@
 import typing
 
-from django.db.models import QuerySet, Q
+from django.db.models import Q, QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from apps.sections.models import SectionMembership
@@ -15,9 +15,7 @@ class MatchingPolicyProtocol(typing.Protocol):
     description: str
     can_member_match: bool
 
-    def limit_requests(
-        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
-    ) -> typing.Union[QuerySet["BuddyRequest"]]:
+    def limit_requests(self, qs: QuerySet["BuddyRequest"], membership: SectionMembership) -> QuerySet["BuddyRequest"]:
         # TODO: NotImplemented or base implementation?
         return qs.filter(self._base_filter(membership=membership)).select_related(
             "issuer",
@@ -60,14 +58,10 @@ class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
 class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
     title = _("Restricted to same faculty")
-    description = _(
-        "Matching is done manually by members themselves, but limited to the same faculty."
-    )
+    description = _("Matching is done manually by members themselves, but limited to the same faculty.")
     can_member_match = True
 
-    def limit_requests(
-        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
-    ) -> typing.Union[QuerySet["BuddyRequest"]]:
+    def limit_requests(self, qs: QuerySet["BuddyRequest"], membership: SectionMembership) -> QuerySet["BuddyRequest"]:
         from apps.accounts.models import UserProfile
 
         member_profile: UserProfile = membership.user.profile_or_none
@@ -110,9 +104,7 @@ class MatchingPoliciesRegister:
 
     CHOICES = [(p.id, p.title) for p in AVAILABLE_POLICIES]
 
-    DESCRIPTION = " <br />".join(
-        f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES
-    )
+    DESCRIPTION = " <br />".join(f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES)
 
     _ID_TO_POLICY = {p.id: p() for p in AVAILABLE_POLICIES}
 

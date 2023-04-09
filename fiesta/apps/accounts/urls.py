@@ -1,15 +1,8 @@
 from django.urls import path
 
 from apps.accounts.views.index import IndexView
-from apps.accounts.views.membership import (
-    MyMembershipsView,
-    NewSectionMembershipFormView,
-)
-from apps.accounts.views.profile import (
-    MyProfileUpdateView,
-    ProfileFinishFormView,
-    MyProfileDetailView,
-)
+from apps.accounts.views.membership import MyMembershipsView, NewSectionMembershipFormView
+from apps.accounts.views.profile import MyProfileDetailView, MyProfileUpdateView, ProfileFinishFormView
 
 app_name = "accounts"
 urlpatterns = [
@@ -22,9 +15,7 @@ urlpatterns = [
         NewSectionMembershipFormView.as_view(),
         name="membership-new",
     ),
-    path(
-        "membership/new", NewSectionMembershipFormView.as_view(), name="membership-new"
-    ),
+    path("membership/new", NewSectionMembershipFormView.as_view(), name="membership-new"),
     path("membership", MyMembershipsView.as_view(), name="membership"),
     # path("", TemplateView.as_view(template_name="accounts/index.html")),
 ]

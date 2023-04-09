@@ -95,10 +95,7 @@ def check_model(model):
 
                 else:
                     value = verbose_name.value.args[0].s  # type: ignore
-                    if not all(
-                        w.islower() or w.isupper() or w.isdigit()
-                        for w in value.split(" ")
-                    ):
+                    if not all(w.islower() or w.isupper() or w.isdigit() for w in value.split(" ")):
                         yield django.core.checks.Warning(
                             "Words in verbose name must be all upper case or all lower case",
                             hint='Change verbose name to "{}".'.format(value.lower()),
@@ -108,9 +105,7 @@ def check_model(model):
 
             help_text = get_argument(node, "help_text")
             if help_text is not None:
-                if not is_gettext_node(help_text.value) and not is_constant_node(
-                    help_text.value
-                ):
+                if not is_gettext_node(help_text.value) and not is_constant_node(help_text.value):
                     yield django.core.checks.Warning(
                         "Help text should use gettext",
                         hint="Use gettext on the help text.",
@@ -167,9 +162,7 @@ def check_model(model):
         elif not is_gettext_node(verbose_name.value):
             yield django.core.checks.Warning(
                 "Verbose name in class Meta should use gettext",
-                hint='Use gettext on the verbose_name of class Meta "{}".'.format(
-                    model._meta.model_name
-                ),
+                hint='Use gettext on the verbose_name of class Meta "{}".'.format(model._meta.model_name),
                 obj=model,
                 id="H002",
             )
@@ -185,9 +178,7 @@ def check_model(model):
         elif not is_gettext_node(verbose_name_plural.value):
             yield django.core.checks.Warning(
                 "Verbose name plural in class Meta should use gettext",
-                hint='Use gettext on the verbose_name_plural of class Meta "{}".'.format(
-                    model._meta.model_name
-                ),
+                hint='Use gettext on the verbose_name_plural of class Meta "{}".'.format(model._meta.model_name),
                 obj=model,
                 id="H002",
             )

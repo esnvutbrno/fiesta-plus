@@ -2,11 +2,11 @@ from operator import itemgetter
 from random import choice
 
 import factory
-from PIL.ImageColor import colormap
 from django.core.files.base import ContentFile
 from django_countries.data import COUNTRIES
 from factory import fuzzy
 from factory.django import DjangoModelFactory, ImageField
+from PIL.ImageColor import colormap
 
 from apps.accounts.models import User, UserProfile
 
@@ -23,9 +23,7 @@ class UserFactory(DjangoModelFactory):
     is_superuser = False
     is_staff = False
 
-    profile = factory.RelatedFactory(
-        "apps.utils.factories.accounts.UserProfileFactory", factory_related_name="user"
-    )
+    profile = factory.RelatedFactory("apps.utils.factories.accounts.UserProfileFactory", factory_related_name="user")
 
     state = User.State.ACTIVE
 
@@ -50,9 +48,7 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
 
     picture = factory.LazyAttribute(
         lambda _: ContentFile(
-            ImageField()._make_data(
-                {"width": 200, "height": 200, "color": choice(tuple(colormap.keys()))}
-            ),
+            ImageField()._make_data({"width": 200, "height": 200, "color": choice(tuple(colormap.keys()))}),
             name=ImageField.DEFAULT_FILENAME,
         )
     )

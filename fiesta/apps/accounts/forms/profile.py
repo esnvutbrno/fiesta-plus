@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from typing import Type
-
 from django.db.models import Field
 from django.forms import Field as FormField, modelform_factory
 from django.utils.translation import gettext_lazy as _
@@ -27,7 +25,7 @@ class UserProfileForm(BaseModelForm):
     def for_user(
         cls,
         user: User,
-    ) -> Type[UserProfileForm]:
+    ) -> type[UserProfileForm]:
         """
         Creates the profile form class for specific user.
         Fields and configuration are constructed from all SectionsConfiguration from

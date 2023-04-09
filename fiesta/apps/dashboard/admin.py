@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from apps.plugins.models import BasePluginConfiguration
-from .models import DashboardConfiguration
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import DashboardConfiguration
+from apps.plugins.models import BasePluginConfiguration
 
 
 @admin.register(DashboardConfiguration)

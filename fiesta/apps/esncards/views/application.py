@@ -3,7 +3,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView
 
-from apps.accounts.models import UserProfile, User
+from apps.accounts.models import User, UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
 from apps.fiestaforms.views.htmx import HtmxFormMixin
@@ -63,11 +63,7 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
         return resp
 
     def get_template_names(self):
-        return (
-            ["esncards/application_create_form.html"]
-            if self.request.htmx
-            else ["esncards/application_create.html"]
-        )
+        return ["esncards/application_create_form.html"] if self.request.htmx else ["esncards/application_create.html"]
 
     def get_success_url(self):
         return reverse("esncards:application_detail", kwargs=dict(pk=self.object.pk))

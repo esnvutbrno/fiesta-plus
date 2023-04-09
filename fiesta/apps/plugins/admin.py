@@ -1,5 +1,3 @@
-from typing import Type
-
 from dal import autocomplete
 from django.contrib import admin
 from django.contrib.admin import display
@@ -10,11 +8,7 @@ from django.urls import reverse
 from django.utils.html import format_html, format_html_join
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext as _
-from polymorphic.admin import (
-    PolymorphicChildModelAdmin,
-    PolymorphicChildModelFilter,
-    PolymorphicParentModelAdmin,
-)
+from polymorphic.admin import PolymorphicChildModelAdmin, PolymorphicChildModelFilter, PolymorphicParentModelAdmin
 
 from apps.plugins.models import BasePluginConfiguration, Plugin
 from apps.utils.utils import all_non_abstract_sub_models
@@ -54,9 +48,7 @@ class PluginAdmin(admin.ModelAdmin):
 
         return format_html(
             '<a href="{link}">{obj}</a>',
-            link=reverse(
-                f"admin:{ct.app_label}_{ct.model}_change", args=[obj.configuration_id]
-            ),
+            link=reverse(f"admin:{ct.app_label}_{ct.model}_change", args=[obj.configuration_id]),
             obj=str(obj.configuration),
         )
 
@@ -110,7 +102,7 @@ class BasePluginConfigurationAdmin(PolymorphicParentModelAdmin):
     def is_shared(self, obj):
         return "🔗" if obj.shared else ""
 
-    def get_child_models(self) -> tuple[Type[BasePluginConfiguration]]:
+    def get_child_models(self) -> tuple[type[BasePluginConfiguration]]:
         return all_non_abstract_sub_models(BasePluginConfiguration)
 
     plugins__section = plugins__section

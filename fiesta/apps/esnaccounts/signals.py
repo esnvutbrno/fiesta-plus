@@ -19,12 +19,6 @@ def on_social_account_change(
         )
 
 
-signals_social.social_account_added.connect(
-    on_social_account_change, dispatch_uid="update_section_membership"
-)
-signals_social.social_account_updated.connect(
-    on_social_account_change, dispatch_uid="update_section_membership"
-)
-signals.user_signed_up.connect(
-    on_social_account_change, dispatch_uid="update_section_membership"
-)
+signals_social.social_account_added.connect(on_social_account_change, dispatch_uid="update_section_membership")
+signals_social.social_account_updated.connect(on_social_account_change, dispatch_uid="update_section_membership")
+signals.user_signed_up.connect(on_social_account_change, dispatch_uid="update_section_membership")

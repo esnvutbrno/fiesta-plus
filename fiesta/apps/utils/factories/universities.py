@@ -14,8 +14,6 @@ class UniversityFactory(DjangoModelFactory):
         model = University
 
     name = factory.Faker("school_name")
-    abbr = factory.LazyAttribute(
-        lambda u: "".join((bit[0] if bit else "") for bit in u.name.split(" "))
-    )
+    abbr = factory.LazyAttribute(lambda u: "".join((bit[0] if bit else "") for bit in u.name.split(" ")))
 
     country = fuzzy.FuzzyChoice(countries.countries.items(), getter=lambda c: c[0])

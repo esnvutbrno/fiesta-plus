@@ -5,9 +5,8 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 
-from apps.sections.models import Section
-
 from apps.plugins.middleware.plugin import HttpRequest
+from apps.sections.models import Section
 
 
 class ChooseSpaceView(TemplateView):
@@ -25,9 +24,7 @@ class ChooseSpaceView(TemplateView):
         if self.request.all_memberships.count() == 1:
             only_section: Section = self.request.all_memberships.get().section
 
-            return HttpResponseRedirect(
-                only_section.section_url(self.request) + next_url
-            )
+            return HttpResponseRedirect(only_section.section_url(self.request) + next_url)
 
         return super().get(request, *args, **kwargs)
 

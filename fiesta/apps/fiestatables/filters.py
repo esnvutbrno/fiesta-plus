@@ -1,6 +1,6 @@
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
-from django_filters import FilterSet, DateFromToRangeFilter
+from django_filters import DateFromToRangeFilter, FilterSet
 from django_tables2 import Column
 
 from apps.fiestaforms.forms import DateInput

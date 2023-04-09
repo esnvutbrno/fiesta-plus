@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import typing
-from typing import Callable
+from collections.abc import Callable
 from urllib.parse import urljoin
 
 from django.conf import settings
@@ -39,9 +39,7 @@ class NamespacedFilesStorage(FileSystemStorage):
 
     def url(self, name):
         """Application public URL."""
-        return reverse(
-            f"files:{self.url_name_suffix}", kwargs=dict(name=filepath_to_uri(name))
-        )
+        return reverse(f"files:{self.url_name_suffix}", kwargs=dict(name=filepath_to_uri(name)))
 
     def serve_url(self, name):
         """Inner URL for serving by webserver."""

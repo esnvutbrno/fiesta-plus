@@ -28,9 +28,7 @@ class Section(BaseTimestampedModel):
 
     code = models.SlugField(
         verbose_name=_("code"),
-        help_text=_(
-            "Official code used in ESN world, especially in ESN Accounts database."
-        ),
+        help_text=_("Official code used in ESN world, especially in ESN Accounts database."),
         # TODO: remove blankness after proper migration from ESN accounts
         null=True,
         blank=True,

@@ -4,10 +4,10 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from apps.utils.models import BaseTimestampedModel
-from .managers import PluginManager
 from ..plugin import PluginAppConfig
 from ..utils import all_plugins_as_choices
+from .managers import PluginManager
+from apps.utils.models import BaseTimestampedModel
 
 
 class Plugin(BaseTimestampedModel):
@@ -69,34 +69,21 @@ class Plugin(BaseTimestampedModel):
             # not needed and not filled
             return
         elif self.configuration and not self.app_config.configuration_model:
-            raise ValidationError(
-                {"configuration": _("Selected plugin does not support configuration.")}
-            )
+            raise ValidationError({"configuration": _("Selected plugin does not support configuration.")})
         elif self.app_config.configuration_model and not self.configuration:
             raise ValidationError(
                 {"configuration": _("Selected plugin does requires configuration.")},
                 code="required",
             )
 
-        expected_content_type = ContentType.objects.get_for_model(
-            apps.get_model(self.app_config.configuration_model)
-        )
+        expected_content_type = ContentType.objects.get_for_model(apps.get_model(self.app_config.configuration_model))
         if self.configuration.polymorphic_ctype != expected_content_type:
             raise ValidationError(
-                {
-                    "configuration": _(
-                        "Selected plugin does not correspond "
-                        "to type of linked configuration."
-                    )
-                }
+                {"configuration": _("Selected plugin does not correspond " "to type of linked configuration.")}
             )
 
         if not (
-            self.configuration.shared
-            or (
-                self.configuration.section
-                and self.configuration.section == self.section
-            )
+            self.configuration.shared or (self.configuration.section and self.configuration.section == self.section)
         ):
             raise ValidationError(
                 {

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import typing
 from functools import lru_cache
 
 from django.urls import ResolverMatch
@@ -9,13 +8,11 @@ from apps.plugins.plugin import PluginAppConfig
 
 
 @lru_cache
-def all_plugin_apps() -> tuple["PluginAppConfig", ...]:
+def all_plugin_apps() -> tuple[PluginAppConfig, ...]:
     """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
     from django.apps import apps
 
-    return tuple(
-        filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs())
-    )
+    return tuple(filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs()))
 
 
 @lru_cache
@@ -24,14 +21,12 @@ def all_plugins_as_choices() -> list[tuple[str, str]]:
 
 
 @lru_cache
-def all_plugins_mapped_to_label() -> dict[str, "PluginAppConfig"]:
+def all_plugins_mapped_to_label() -> dict[str, PluginAppConfig]:
     return {a.label: a for a in all_plugin_apps()}
 
 
 @lru_cache
-def all_plugins_mapped_to_class() -> (
-    dict[typing.Type["PluginAppConfig"], "PluginAppConfig"]
-):
+def all_plugins_mapped_to_class() -> dict[type[PluginAppConfig], PluginAppConfig]:
     return {a.__class__: a for a in all_plugin_apps()}
 
 

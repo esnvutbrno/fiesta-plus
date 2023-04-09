@@ -3,10 +3,10 @@ from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, CreateView
+from django.views.generic import CreateView, TemplateView
 
 from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.plugins.views import PluginConfigurationViewMixin
@@ -25,9 +25,7 @@ class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):
                 "continue_url": "?".join(
                     (
                         reverse("buddy_system:sign-up-before-request"),
-                        urlencode(
-                            {REDIRECT_FIELD_NAME: reverse("buddy_system:new-request")}
-                        ),
+                        urlencode({REDIRECT_FIELD_NAME: reverse("buddy_system:new-request")}),
                     )
                 )
                 if self.request.membership.is_international
@@ -50,9 +48,7 @@ class SignUpBeforeRequestView(
     def configuration(self) -> SectionsConfiguration:
         """We cannot use PluginConfigurationViewMixin, since memberships is not ready and request.plugin is
         filled by middleware based on membership (and that's created in form_valid)."""
-        return SectionsConfiguration.objects.filter(
-            plugins__section=self.request.in_space_of_section
-        ).first()
+        return SectionsConfiguration.objects.filter(plugins__section=self.request.in_space_of_section).first()
 
     @transaction.atomic
     def form_valid(self, form):
@@ -65,10 +61,7 @@ class SignUpBeforeRequestView(
             state = SectionMembership.State.UNCONFIRMED
             messages.info(
                 self.request,
-                _(
-                    "Your membership is now waiting for approval, "
-                    "you will be informed by e-mail."
-                ),
+                _("Your membership is now waiting for approval, " "you will be informed by e-mail."),
             )
 
         SectionMembership.objects.create(

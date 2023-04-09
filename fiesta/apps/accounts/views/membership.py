@@ -1,11 +1,10 @@
 from _operator import attrgetter
-
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms import HiddenInput
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, TemplateView, DetailView
+from django.views.generic import CreateView, DetailView, TemplateView
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionMembership
@@ -33,9 +32,7 @@ class NewSectionMembershipForm(BaseModelForm):
             SectionMembership.Role.MEMBER,
             SectionMembership.Role.INTERNATIONAL,
         ):
-            raise ValidationError(
-                _("You can request only for member or international role.")
-            )
+            raise ValidationError(_("You can request only for member or international role."))
         return role
 
 
@@ -51,11 +48,7 @@ class NewSectionMembershipFormView(
     template_name = "accounts/memberships/new_membership.html"
     form_class = NewSectionMembershipForm
 
-    extra_context = dict(
-        parent_breadcrumb=BreadcrumbItem(
-            _("My Memberships"), reverse_lazy("accounts:membership")
-        )
-    )
+    extra_context = dict(parent_breadcrumb=BreadcrumbItem(_("My Memberships"), reverse_lazy("accounts:membership")))
 
     def get_success_url(self):
         return reverse("accounts:membership")

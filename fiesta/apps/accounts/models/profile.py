@@ -22,7 +22,7 @@ if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
 
 
-def has_permission_for_profile_picture_view(request: "HttpRequest", name: str) -> bool:
+def has_permission_for_profile_picture_view(request: HttpRequest, name: str) -> bool:
     if (membership := request.membership) and membership.is_privileged:
         return True
 
@@ -71,7 +71,6 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     gender = CharField(
         verbose_name=_("gender"),
         blank=True,
-        null=True,
         choices=Gender.choices,
         max_length=16,
     )

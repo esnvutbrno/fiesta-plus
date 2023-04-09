@@ -33,13 +33,7 @@ class EnsureNotInSectionSpaceViewMixin:
 
     def dispatch(self, request: HttpRequest, *args, **kwargs):
         if self.request.in_space_of_section:
-            host = (
-                request.get_host()
-                .removeprefix(request.in_space_of_section.space_slug)
-                .removeprefix(".")
-            )
-            return HttpResponseRedirect(
-                f"{request.scheme}://{host}{request.get_full_path()}"
-            )
+            host = request.get_host().removeprefix(request.in_space_of_section.space_slug).removeprefix(".")
+            return HttpResponseRedirect(f"{request.scheme}://{host}{request.get_full_path()}")
 
         return super().dispatch(request, *args, **kwargs)

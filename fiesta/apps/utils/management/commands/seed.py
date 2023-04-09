@@ -6,8 +6,8 @@ from apps.utils.factories.buddy_system import BuddyRequestWithKnownUserFactory
 
 @click.command()
 def seed():
-    from faker_education import SchoolProvider
     import factory
+    from faker_education import SchoolProvider
 
     factory.Faker.add_provider(SchoolProvider)
     # pprint.pprint(SectionMembershipWithUserFactory.create_batch(15))

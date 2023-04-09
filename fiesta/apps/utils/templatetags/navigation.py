@@ -1,15 +1,14 @@
 from __future__ import annotations
 
 import typing
+
 from django import template
 from django.urls import reverse
+from django.utils.translation import gettext as _
 
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
 from apps.sections.models import SectionMembership
-
-from django.utils.translation import gettext as _
-
 
 register = template.Library()
 
@@ -41,9 +40,7 @@ def get_navigation_items(context):
                 _("Members"),
                 reverse("sections:section-members"),
                 [],
-                request.resolver_match
-                and request.resolver_match.route.replace("/", ":")
-                == "sections:section-members",
+                request.resolver_match and request.resolver_match.route.replace("/", ":") == "sections:section-members",
             )
         )
 
@@ -59,9 +56,7 @@ def get_navigation_items(context):
                 ],
                 active=plugin == current_plugin,
             )
-            for plugin in membership.section.plugins.filter(
-                membership.available_plugins_filter
-            )  # type: Plugin
+            for plugin in membership.section.plugins.filter(membership.available_plugins_filter)  # type: Plugin
             if (apps := plugin.app_config)
         ]
     )

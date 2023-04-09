@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from typing import Iterable
+from collections.abc import Iterable
 
 from django import template
 
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.utils.breadcrumbs import push_breadcrumb_item, BreadcrumbItem
+from apps.utils.breadcrumbs import BreadcrumbItem, push_breadcrumb_item
 
 register = template.Library()
 
@@ -23,9 +23,7 @@ def breadcrumb_items(context: dict):
         view_titles = ()
 
     req.breadcrumbs = [
-        BreadcrumbItem(item, req.build_absolute_uri())
-        if isinstance(item, str)
-        else item
+        BreadcrumbItem(item, req.build_absolute_uri()) if isinstance(item, str) else item
         for item in filter(None, view_titles)
     ]
 

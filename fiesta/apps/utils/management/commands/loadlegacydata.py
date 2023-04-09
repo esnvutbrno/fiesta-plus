@@ -60,9 +60,7 @@ def load_requests(*, cursor: CursorWrapper):
             matched_at,
         ) = row
 
-        responsible_section = Section.objects.filter(
-            universities__abbr=issuer_university
-        ).first()
+        responsible_section = Section.objects.filter(universities__abbr=issuer_university).first()
 
         BuddyRequest.objects.update_or_create(
             issuer=ID_TO_USER[issuer_email],
@@ -71,17 +69,11 @@ def load_requests(*, cursor: CursorWrapper):
                 description=description,
                 matched_by=ID_TO_USER.get(matched_by_email),
                 matched_at=make_aware(matched_at) if matched_at else None,
-                state=BuddyRequest.State.MATCHED
-                if matched_by_email
-                else BuddyRequest.State.CREATED,
+                state=BuddyRequest.State.MATCHED if matched_by_email else BuddyRequest.State.CREATED,
             ),
         )
 
-        secho(
-            "Processing {i: >4}: {desc}.".format(
-                i=i, desc=description[:32].replace("\n", " ")
-            )
-        )
+        secho("Processing {i: >4}: {desc}.".format(i=i, desc=description[:32].replace("\n", " ")))
 
 
 def load_users(*, cursor: CursorWrapper):
@@ -150,9 +142,7 @@ def load_users(*, cursor: CursorWrapper):
             ),
             # TODO: state
             state=SectionMembership.State.ACTIVE,
-            defaults=dict(
-                created=make_aware(registered) if registered else timezone.now()
-            ),
+            defaults=dict(created=make_aware(registered) if registered else timezone.now()),
         )
         university, _ = University.objects.update_or_create(
             abbr=uni_id, defaults=dict(name=uni_name, country=Country("CZ"))

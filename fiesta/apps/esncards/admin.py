@@ -1,8 +1,8 @@
 from django.contrib import admin
 
-from apps.plugins.models import BasePluginConfiguration
-from .models import ESNcardApplication, ESNcardsConfiguration
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import ESNcardApplication, ESNcardsConfiguration
+from apps.plugins.models import BasePluginConfiguration
 
 
 @admin.register(ESNcardsConfiguration)

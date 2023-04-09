@@ -1,5 +1,4 @@
 import bcrypt
-
 from django.contrib.auth.hashers import BCryptSHA256PasswordHasher
 
 

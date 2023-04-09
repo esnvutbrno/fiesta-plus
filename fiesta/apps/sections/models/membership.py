@@ -1,7 +1,7 @@
 from django.db import models
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import AFTER_CREATE, LifecycleModelMixin, hook, AFTER_SAVE
+from django_lifecycle import AFTER_CREATE, AFTER_SAVE, LifecycleModelMixin, hook
 
 from apps.utils.models import BaseTimestampedModel
 
@@ -82,9 +82,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         from apps.plugins.models import Plugin
 
         available_states = (
-            (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY)
-            if self.is_privileged
-            else (Plugin.State.ENABLED,)
+            (Plugin.State.ENABLED, Plugin.State.PRIVILEGED_ONLY) if self.is_privileged else (Plugin.State.ENABLED,)
         )
 
         return Q(section=self.section, state__in=available_states)

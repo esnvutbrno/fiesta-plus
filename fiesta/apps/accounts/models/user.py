@@ -29,7 +29,7 @@ class User(AbstractUser):
     modified = ModificationDateTimeField(verbose_name=_("modified"))
 
     @property
-    def profile_or_none(self) -> typing.Optional["UserProfile"]:
+    def profile_or_none(self) -> UserProfile | None:
         from apps.accounts.models import UserProfile
 
         try:

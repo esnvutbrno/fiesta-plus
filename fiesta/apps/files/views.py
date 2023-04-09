@@ -1,5 +1,5 @@
 import magic
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseForbidden
+from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.urls import path
 from django.urls.resolvers import RoutePattern
 from django.views import View
@@ -17,9 +17,7 @@ class NamespacedFilesServeView(View):
 
     def get(self, request, name: str, *args, **kwargs) -> HttpResponse:
         if not self.storage.exists(name):
-            logger.warning(
-                "File %s in namespace %s not found.", name, self.storage.namespace
-            )
+            logger.warning("File %s in namespace %s not found.", name, self.storage.namespace)
             return HttpResponseNotFound()
 
         if not self.has_permission(request, name):
@@ -39,9 +37,7 @@ class NamespacedFilesServeView(View):
         return self.storage.has_permission(request, name)
 
     @classmethod
-    def as_url(
-        cls, storage: NamespacedFilesStorage, url_name: str = None
-    ) -> RoutePattern:
+    def as_url(cls, storage: NamespacedFilesStorage, url_name: str = None) -> RoutePattern:
         return path(
             f"serve/{storage.namespace}/<path:name>",
             cls.as_view(

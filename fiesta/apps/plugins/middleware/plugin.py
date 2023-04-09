@@ -3,9 +3,9 @@ from __future__ import annotations
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 
+from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 from ..models import Plugin
 from ..utils import target_plugin_app_from_resolver_match
-from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 
 
 class HttpRequest(OrigHttpRequest):
@@ -29,11 +29,7 @@ class CurrentPluginMiddleware:
             # additional permission should solve each view
             return
 
-        if (
-            request.user.is_anonymous
-            and request.resolver_match.url_name
-            not in target_app.login_not_required_urls
-        ):
+        if request.user.is_anonymous and request.resolver_match.url_name not in target_app.login_not_required_urls:
             # target is plugin view, but request by anonymous user
             # our 403 handler makes the job = redirection to login page
             raise PermissionDenied

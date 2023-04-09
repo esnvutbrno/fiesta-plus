@@ -1,8 +1,8 @@
 import datetime
 import typing
+from collections.abc import Reversible
 from operator import attrgetter
 from pathlib import Path
-from typing import Reversible
 
 from django import template
 from django.template.defaultfilters import stringfilter

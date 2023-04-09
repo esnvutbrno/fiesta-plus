@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 from django_filters import ChoiceFilter
-from django_tables2 import tables, Column
+from django_tables2 import Column, tables
 from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm
@@ -73,9 +73,9 @@ class RequestsEditorView(
     filterset_class = RequestFilter
 
     def get_queryset(self):
-        return BuddyRequest.objects.filter(
-            responsible_section=self.request.in_space_of_section
-        ).select_related("issuer__profile")
+        return BuddyRequest.objects.filter(responsible_section=self.request.in_space_of_section).select_related(
+            "issuer__profile"
+        )
 
 
 @with_breadcrumb(_("Buddy System"))

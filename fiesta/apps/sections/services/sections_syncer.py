@@ -2,10 +2,9 @@ import re
 import typing
 from typing import TypedDict
 
-from django.utils.text import slugify
-
 import requests
 from click import secho
+from django.utils.text import slugify
 
 from apps.sections.models import Section, SectionUniversity
 from apps.universities.models import University

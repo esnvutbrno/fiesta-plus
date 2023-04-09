@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from ._utils import PathValue, BaseConfigurationProtocol
+from ._utils import BaseConfigurationProtocol, PathValue
 
 
 class FilesConfigMixin(BaseConfigurationProtocol):

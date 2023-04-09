@@ -86,9 +86,7 @@ class WikiElastic:
             },
         )
         return [
-            SearchPage(
-                source=hit["_source"], highlight=hit["highlight"], score=hit["_score"]
-            )
+            SearchPage(source=hit["_source"], highlight=hit["highlight"], score=hit["_score"])
             for hit in results["hits"]["hits"]
         ]
 
@@ -102,7 +100,9 @@ class WikiElastic:
                     "file.keyword": f"{base}{file_name}.",
                 }
             ),
-        )["hits"]["hits"]
+        )[
+            "hits"
+        ]["hits"]
 
         if hits:
             return hits[0]["_source"]
