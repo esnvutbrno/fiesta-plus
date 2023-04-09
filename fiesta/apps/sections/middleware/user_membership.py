@@ -18,7 +18,7 @@ class HttpRequest(BaseHttpRequest):
     # single one active membership or None
     membership: SectionMembership | None
     # all users memberships (including inactive)
-    all_memberships: QuerySet[SectionMembership] | None
+    all_memberships: QuerySet[SectionMembership]
 
 
 class UserMembershipMiddleware:
@@ -39,7 +39,7 @@ class UserMembershipMiddleware:
 
     @classmethod
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
-        request.all_memberships = None
+        request.all_memberships = SectionMembership.objects.none()
 
         if not request.user.is_authenticated:
             return None
@@ -127,9 +127,11 @@ class UserMembershipMiddleware:
     @classmethod
     def should_ignore_403(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
         """Checks if specific request for specific plugin should be excluded from existing membership check."""
-        anonymnous_allowed = resolver_match.url_name in target_app.login_not_required_urls
+        anonymous_allowed = (
+            resolver_match.url_name in target_app.login_not_required_urls or not target_app.login_required
+        )
 
-        return cls.is_membership_view(resolver_match=resolver_match) or anonymnous_allowed
+        return cls.is_membership_view(resolver_match=resolver_match) or anonymous_allowed
 
     @classmethod
     def is_membership_view(cls, resolver_match: ResolverMatch):

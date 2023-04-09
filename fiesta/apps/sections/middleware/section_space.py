@@ -26,7 +26,11 @@ class SectionSpaceMiddleware:
         # 'xxx' or empty string
         space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
 
-        request.in_space_of_section = get_single_object_or_none(Section, space_slug=space_slug)
+        request.in_space_of_section = get_single_object_or_none(
+            # optimization
+            Section.objects.get_queryset().prefetch_related("plugins"),
+            space_slug=space_slug,
+        )
 
         if not space_slug or space_slug == settings.ROOT_DOMAIN:
             return self.get_response(request)

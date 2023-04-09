@@ -14,7 +14,7 @@ django-allauth = "^0.47.0"
 # support for dj4.0
 django-allauth-cas = { git = "https://github.com/thejoeejoee/django-allauth-cas", branch = "master" }
 django-click = "^2.3.0"
-django-configurations = { extras = ["cache", "database", "email", "search"], version = "^2.4.1" }
+django-configurations = { extras = ["cache", "database", "email" ], version = "^2.4.1" }
 django-countries = "^7.2.1"
 django-extensions = "^3.1.5"
 django-filter = "^21.1"
@@ -39,6 +39,8 @@ django-autocomplete-light = "^3.9.4"
 django-phonenumber-field = { extras = ["phonenumberslite"], version = "^6.3.0" }
 requests = "^2.28.2"
 beautifulsoup4 = "^4.12.1"
+django-editorjs = "^0.2.1"
+django-editorjs-fields = "^0.2.7"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.17.0"

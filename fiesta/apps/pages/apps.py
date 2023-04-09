@@ -12,5 +12,14 @@ class PagesConfig(PluginAppConfig):
 
     configuration_model = "pages.PagesConfiguration"
 
+    include_in_top_navigation = False
+
+    # login not required by default
+    login_required = False
+
+    @property
+    def url_prefix(self) -> str:
+        return "_/"
+
 
 __all__ = ["PagesConfig"]

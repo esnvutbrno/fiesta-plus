@@ -21,11 +21,13 @@ services:
       VIRTUAL_PORT: 8000
 
   db:
-    image: postgres:12.0-alpine
+    image: postgres:15-alpine3.17
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres15_data:/var/lib/postgresql/data/
     ports:
       - "127.0.0.1:15432:5432"
+    expose:
+      - 5432
     environment:
       POSTGRES_USER: fiesta
       POSTGRES_PASSWORD: fiesta
@@ -135,7 +137,7 @@ services:
       - wiki/.env.base
 
 volumes:
-  postgres_data:
+  postgres15_data:
   elastic_data:
   legacydb_data:
   webpack_build:

@@ -65,6 +65,7 @@ class ProjectConfigMixin:
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
+        "apps.pages.apps.PagesConfig",
         "apps.plugins.apps.PluginsConfig",
         "apps.public.apps.PublicConfig",
         "apps.sections.apps.SectionsConfig",
@@ -80,7 +81,10 @@ class ProjectConfigMixin:
         # "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
         "allauth_cas",
+        # superuser can log in as any user
         "loginas",
+        # editorjs integration
+        "django_editorjs_fields",
     ]
 
     MIDDLEWARE = [

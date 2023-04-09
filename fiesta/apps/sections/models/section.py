@@ -8,6 +8,10 @@ from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
+from apps.dashboard.apps import DashboardConfig
+from apps.pages.apps import PagesConfig
+from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.utils import all_plugins_mapped_to_class
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.validators import validate_plain_slug_lowercase
 
@@ -74,6 +78,26 @@ class Section(BaseTimestampedModel):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
+
+    def section_home_url(self, request: HttpRequest) -> str | None:
+        from apps.plugins.models import Plugin
+
+        enabled_plugins = self.plugins.filter(
+            state__in=(Plugin.State.ENABLED,),
+        ).values_list("app_label", flat=True)
+
+        pages_app = all_plugins_mapped_to_class().get(PagesConfig)
+        dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
+
+        target_app: PluginAppConfig | None = None
+
+        if request.membership:
+            if dashboard_app and dashboard_app.label in enabled_plugins:
+                target_app = dashboard_app
+        elif pages_app and pages_app.label in enabled_plugins:
+            target_app = pages_app
+
+        return "/" + target_app.url_prefix if target_app else None
 
 
 class SectionUniversity(BaseTimestampedModel):

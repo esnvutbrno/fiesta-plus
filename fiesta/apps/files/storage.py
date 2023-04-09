@@ -11,10 +11,9 @@ from django.urls import reverse
 from django.utils.encoding import filepath_to_uri
 from django.utils.timezone import now
 
-from apps.utils.models import BaseModel
-
 if typing.TYPE_CHECKING:
     from apps.sections.middleware.section_space import HttpRequest
+    from apps.utils.models import BaseModel
 
 
 class NamespacedFilesStorage(FileSystemStorage):

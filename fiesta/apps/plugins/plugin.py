@@ -21,7 +21,11 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     configuration_model: str | None = None
 
+    include_in_top_navigation: bool = True
+
     login_not_required_urls: list[str] = []
+
+    login_required = True
 
     membership_not_required_urls: list[str] = []
 
@@ -32,18 +36,24 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     @property
     def urlpatterns(self) -> Iterable[URLPattern]:
         urls: list[URLPattern] = import_module(f"{self.name}.urls").urlpatterns
-        return tuple(
-            map(
-                lambda p: p
-                if p.name in self.login_not_required_urls
-                else URLPattern(
-                    pattern=p.pattern,
-                    callback=login_required(p.callback),
-                    default_args=p.default_args,
-                    name=p.name,
-                ),
-                urls,
+        return (
+            tuple(
+                map(
+                    lambda p: (
+                        p
+                        if p.name in self.login_not_required_urls
+                        else URLPattern(
+                            pattern=p.pattern,
+                            callback=login_required(p.callback),
+                            default_args=p.default_args,
+                            name=p.name,
+                        )
+                    ),
+                    urls,
+                )
             )
+            if self.login_required
+            else urls
         )
 
     @property

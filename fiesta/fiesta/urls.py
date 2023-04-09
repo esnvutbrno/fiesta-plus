@@ -36,6 +36,8 @@ urlpatterns = [
     # handling authentication (including social auth)
     path("auth/", include("allauth.urls")),
     path("auto-options/", include("django_select2.urls")),
+    # editorjs
+    path("ejs/", include("django_editorjs_fields.urls")),
 ]
 
 if settings.DEBUG:

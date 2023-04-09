@@ -19,9 +19,11 @@ class Q(DjangoQ):
 
 
 def get_single_object_or_none(klass: QuerySet | type[Model], *args, **kwargs):
+    model_klass = getattr(klass, "model", klass)
+
     try:
         return get_object_or_404(*args, klass=klass, **kwargs)
-    except (Http404, klass.MultipleObjectsReturned, ValidationError):
+    except (Http404, model_klass.MultipleObjectsReturned, ValidationError):
         return None
 
 

@@ -29,7 +29,10 @@ class CurrentPluginMiddleware:
             # additional permission should solve each view
             return
 
-        if request.user.is_anonymous and request.resolver_match.url_name not in target_app.login_not_required_urls:
+        anonymous_allowed = (
+            request.resolver_match.url_name in target_app.login_not_required_urls or not target_app.login_required
+        )
+        if request.user.is_anonymous and not anonymous_allowed:
             # target is plugin view, but request by anonymous user
             # our 403 handler makes the job = redirection to login page
             raise PermissionDenied

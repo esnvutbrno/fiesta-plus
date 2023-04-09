@@ -57,8 +57,18 @@ def get_navigation_items(context):
                 active=plugin == current_plugin,
             )
             for plugin in membership.section.plugins.filter(membership.available_plugins_filter)  # type: Plugin
-            if (apps := plugin.app_config)
+            if (apps := plugin.app_config) and apps.include_in_top_navigation  # type: PluginAppConfig
         ]
     )
 
     return items
+
+
+@register.simple_tag(takes_context=True)
+def get_home_url(context):
+    request: HttpRequest = context["request"]
+
+    if request.in_space_of_section:
+        return request.in_space_of_section.section_home_url(request)
+
+    return reverse("public:home")
