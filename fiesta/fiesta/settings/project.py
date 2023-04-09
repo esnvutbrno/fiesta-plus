@@ -30,7 +30,10 @@ class ProjectConfigMixin:
     ROOT_DOMAIN = "xxx"  # TODO: fill from environ
 
     def ALLOWED_HOSTS(self):
-        return [f".{self.ROOT_DOMAIN}"]
+        return [
+            f".{self.ROOT_DOMAIN}",  # main access
+            "localhost",  # wagtail preview
+        ]
 
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
@@ -80,7 +83,22 @@ class ProjectConfigMixin:
         # "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
         "allauth_cas",
+        # superuser log in anywhere
         "loginas",
+        # wagtail CMS
+        "wagtail.contrib.forms",
+        "wagtail.contrib.redirects",
+        "wagtail.embeds",
+        "wagtail.sites",
+        "wagtail.users",
+        "wagtail.snippets",
+        "wagtail.documents",
+        "wagtail.images",
+        "wagtail.search",
+        "wagtail.admin",
+        "wagtail",
+        "modelcluster",
+        "taggit",
     ]
 
     MIDDLEWARE = [
@@ -100,4 +118,6 @@ class ProjectConfigMixin:
         "apps.sections.middleware.user_membership.UserMembershipMiddleware",
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",
+        #     wagtail
+        "wagtail.contrib.redirects.middleware.RedirectMiddleware",
     ]

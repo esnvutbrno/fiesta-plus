@@ -9,6 +9,7 @@ from .logging import LoggingConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
 from .templates import TemplatesConfigMixin
+from .wagtail import WagtailConfigMixin
 
 
 class Base(
@@ -19,6 +20,7 @@ class Base(
     LoggingConfigMixin,
     SecurityConfigMixin,
     TemplatesConfigMixin,
+    WagtailConfigMixin,
     Configuration,
 ):
     ...

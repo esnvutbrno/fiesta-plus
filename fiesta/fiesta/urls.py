@@ -4,6 +4,9 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
+from wagtail import urls as wagtail_urls
+from wagtail.admin import urls as wagtailadmin_urls
+from wagtail.documents import urls as wagtaildocs_urls
 
 from apps.plugins.utils import all_plugin_apps
 
@@ -36,6 +39,10 @@ urlpatterns = [
     # handling authentication (including social auth)
     path("auth/", include("allauth.urls")),
     path("auto-options/", include("django_select2.urls")),
+    # wagtail related
+    path("cms/", include(wagtailadmin_urls)),
+    path("documents/", include(wagtaildocs_urls)),  # TODO: needed?
+    path("pages/", include(wagtail_urls)),
 ]
 
 if settings.DEBUG:
