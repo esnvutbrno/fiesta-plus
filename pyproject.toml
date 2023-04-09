@@ -50,24 +50,45 @@ pydot = "^1.4.2"
 requires = ["poetry>=0.12"]
 build-backend = "poetry.masonry.api"
 
-[tool.flake8]
-max-line-length = 120
-extend-ignore = "C408,C417"
-max-complexity = 10
-
 [tool.isort]
 profile = 'black'
-lines_between_types = 1
+lines_between_types = 0
 combine_as_imports = true
 line_length = 120
 known_first_party = ["fiesta", "apps"]
 known_local_folder = ["apps"]
+known_third_party = ["django"]
+skip = ["migrations"]
 
 [tool.black]
+line-length = 120
+target-version = ['py311']
 exclude = '''
-(
-  /(
-    | .+/migrations
-  )/
-)
+/(
+    \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | migrations
+  | build
+  | dist
+)/
 '''
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+ignore = ["E731"]
+
+exclude = [
+    "migrations",
+]
+
+
+[tool.vulture]
+paths = ["fiesta"]
+exclude = ["settings"]
+min_confidence = 80
+make_whitelist = true

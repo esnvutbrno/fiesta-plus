@@ -17,13 +17,20 @@ repos:
       - id: debug-statements
       - id: end-of-file-fixer
       - id: trailing-whitespace
+      - id: detect-private-key
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0
+    hooks:
+      - id: isort
+        args: [ "--profile", "black", "--filter-files" ]
 
   # uncompromise python formatter
   - repo: https://github.com/psf/black
     rev: 23.3.0
     hooks:
       - id: black
-        name: Code formatter black
+        name: format by black
         exclude: ^.*\b(migrations)\b.*$
 
   # security linter on
@@ -31,29 +38,22 @@ repos:
     rev: 1.7.5
     hooks:
       - id: bandit
-        name: Security check by bandit
+        name: check security by Bandit
         args: [ '-iii', '-ll' ]
 
-  # linter & complexity analyzer
-  # not used the default, since it doesn't currently support pyproject.toml
-  - repo: https://github.com/csachs/pyproject-flake8
-    rev: v6.0.0.post1
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    # Ruff version.
+    rev: 'v0.0.261'
     hooks:
-      - id: pyproject-flake8
-        name: Code & complexity linting by flake8
-        exclude: '.*/migrations/.*'
-        additional_dependencies: [
-          "flake8-bugbear",
-          "flake8-comprehensions",
-          "flake8-print",
-          "flake8-simplify",
-        ]
+      - id: ruff
+        name: lint by Ruff
+        args: [ --fix, --exit-non-zero-on-fix ]
 
-#  - repo: https://github.com/pycqa/isort
-#    rev: 5.10.1
-#    hooks:
-#      - id: isort
-#        name: Sort all imports by isort
+  - repo: https://github.com/ecugol/pre-commit-hooks-django
+    rev: v0.4.0  # Use the ref you want to point at
+    hooks:
+      - id: check-untracked-migrations
+        name: check no untracked files
 
 ci:
   autofix_commit_msg: |
