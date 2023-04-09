@@ -123,7 +123,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
             # inner field could be empty (default to remove empty option in .choices)
             default=None,
         ),
-        verbose_name=_("issuer interests"),
+        verbose_name=_("interests"),
         default=list,  # as callable to not share instance,
         blank=True,
     )

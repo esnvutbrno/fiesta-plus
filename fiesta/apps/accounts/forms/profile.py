@@ -83,7 +83,6 @@ class UserProfileForm(BaseModelForm):
             "home_university": UniversityWidget,
             "home_faculty": FacultyWidget,
             "guest_faculty": FacultyWidget,
-            "interests": ChoicedArrayField,
         }
 
 
