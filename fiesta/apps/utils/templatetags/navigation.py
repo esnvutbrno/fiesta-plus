@@ -15,8 +15,8 @@ register = template.Library()
 
 class NavigationItemSpec(typing.NamedTuple):
     title: str
-    index_url: str
-    urls: list[str]
+    url: str
+    children: list[NavigationItemSpec] = []
 
     active: bool = False
 

@@ -83,21 +83,26 @@ class Section(BaseTimestampedModel):
         from apps.plugins.models import Plugin
 
         enabled_plugins = self.plugins.filter(
-            state__in=(Plugin.State.ENABLED,),
-        ).values_list("app_label", flat=True)
+            state__in=(
+                (Plugin.State.ENABLED,)
+                + ((Plugin.State.PRIVILEGED_ONLY,) if request.membership and request.membership.is_privileged else ())
+            ),
+        ).values_list(
+            "app_label",
+            flat=True,
+        )
 
         pages_app = all_plugins_mapped_to_class().get(PagesConfig)
         dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
 
         target_app: PluginAppConfig | None = None
 
-        if request.membership:
-            if dashboard_app and dashboard_app.label in enabled_plugins:
-                target_app = dashboard_app
+        if request.membership and dashboard_app and dashboard_app.label in enabled_plugins:
+            target_app = dashboard_app
         elif pages_app and pages_app.label in enabled_plugins:
             target_app = pages_app
 
-        return "/" + target_app.url_prefix if target_app else None
+        return f"/{target_app.url_prefix}" if target_app else None
 
 
 class SectionUniversity(BaseTimestampedModel):

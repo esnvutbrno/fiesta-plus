@@ -1,5 +1,5 @@
 from __future__ import annotations
 
-from .index import PagesIndexView
+from .index import SinglePageView
 
-__all__ = ["PagesIndexView"]
+__all__ = ["SinglePageView"]

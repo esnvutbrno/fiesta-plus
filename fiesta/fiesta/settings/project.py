@@ -85,6 +85,7 @@ class ProjectConfigMixin:
         "loginas",
         # editorjs integration
         "django_editorjs_fields",
+        "mptt",
     ]
 
     MIDDLEWARE = [

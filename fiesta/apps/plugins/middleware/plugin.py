@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.core.exceptions import PermissionDenied
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 
 from ...sections.middleware.user_membership import HttpRequest as OrigHttpRequest
 from ..models import Plugin
@@ -35,20 +35,28 @@ class CurrentPluginMiddleware:
         if request.user.is_anonymous and not anonymous_allowed:
             # target is plugin view, but request by anonymous user
             # our 403 handler makes the job = redirection to login page
-            raise PermissionDenied
+            raise PermissionDenied("Not allowed for anonymous.")
 
         if not request.membership:
             return
 
         try:
-            plugin = request.membership.section.plugins.get(
+            plugin: Plugin | None = request.membership.section.plugins.get(
                 app_label=target_app.label,
                 section_id=request.membership.section_id,
             )
-        except Plugin.DoesNotExist:
-            return
+        except Plugin.DoesNotExist as e:
+            raise Http404("Plugin is not loaded for selected section.") from e
 
         request.plugin = plugin
+
+        match request.plugin.state:
+            case Plugin.State.ENABLED:
+                return
+            case Plugin.State.PRIVILEGED_ONLY if request.membership.is_privileged:
+                return
+
+        raise PermissionDenied("Plugin is not enabled.")
         # TODO: check, if plugin is enabled, perms and all the stuff
 
 

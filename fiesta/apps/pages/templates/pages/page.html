@@ -1,0 +1,37 @@
+{% extends "fiesta/base.html" %}
+{% load editorjs %}
+{% load pages %}
+
+{% block header_container %}
+  <nav
+      class="navbar px-0"
+      x-data="{menu: true, user: false}"
+      {# TODO: cannot be so general #}
+      {# hx-boost="true" #}
+  >
+    <div class="container flex flex-wrap justify-between items-center mx-auto">
+      {% include "fiesta/parts/logo.html" %}
+
+      <div class="flex items-center md:order-2 relative">
+        {% include "fiesta/parts/theme_switch.html" %}
+{#        {% include "fiesta/parts/user_status.html" %}#}
+        {% include "fiesta/parts/navigation_toggle.html" %}
+      </div>
+
+    {% get_navigation_items_for_pages as items %}
+
+    {% include "fiesta/parts/navigation_items.html" with item=items %}
+
+    </div>
+  </nav>
+{% endblock %}
+
+{% block main %}
+  <div class="prose prose-lg mx-auto">
+    {% if not page.default %}
+      <h1>{{ page.title }}</h1>
+    {% endif %}
+
+    {{ page.content | editorjs }}
+  </div>
+{% endblock %}

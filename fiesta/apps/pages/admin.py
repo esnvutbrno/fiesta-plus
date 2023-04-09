@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.contrib import admin
+from mptt.admin import MPTTModelAdmin
 
 from ..plugins.admin import BaseChildConfigurationAdmin
 from .models import PagesConfiguration
@@ -15,5 +16,6 @@ class PagesConfigurationAdmin(BaseChildConfigurationAdmin):
 
 
 @admin.register(Page)
-class PagesAdmin(admin.ModelAdmin):
-    ...
+class PagesAdmin(MPTTModelAdmin):
+    list_display = ["title", "default", "section"]
+    list_filter = ["section"]

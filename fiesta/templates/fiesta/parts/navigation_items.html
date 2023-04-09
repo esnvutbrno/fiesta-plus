@@ -1,0 +1,24 @@
+<div
+    x-show="menu"
+    class="w-full md:flex md:w-auto md:order-1 justify-between items-center"
+>
+  <ul class="flex flex-col mt-4 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium">
+    {#          <li>#}
+    {#            TODO: documentation content and ES deploy#}
+    {#            <a class="Menu__link" href="{% url "wiki:index" %}">Docs</a>#}
+    {#          </li>#}
+    {% for item in items %}
+      <li>
+        {% if item.active %}
+          <a href="{{ item.url }}"
+             class="Menu__link Menu__link--active"
+             aria-current="page">{{ item.title }}</a>
+        {% else %}
+          <a href="{{ item.url }}" class="Menu__link">
+            {{ item.title }}
+          </a>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</div>
