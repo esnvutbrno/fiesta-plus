@@ -36,23 +36,33 @@
                 w-full   md:w-44
                 dark:bg-gray-700 dark:divide-gray-600
               ">
+          {% if item.url %}
+            <div class="py-1">
+              <a href="{{ item.url }}"
+                 class="
+                  block px-4 py-2 text-sm text-gray-700
+                  {% if item.active%}text-primary dark:text-white{% endif %}
+                  hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white
+                 ">
+                {{ item.title }}
+              </a>
+            </div>
+          {% endif %}
             <ul class="py-2 text-sm text-gray-700 dark:text-gray-400 md:block flex flex-row flex-wrap">
               {% for child in item.children %}
               <li class="w-1/2 md:w-full">
                 <a
                     href="{{ child.url }}"
-                    class="block px-4 py-2 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                    class="
+                      block px-4 py-2 hover:text-primary hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white
+                      {% if child.active %}text-primary dark:text-white{% endif %}
+                    "
                 >
                   {{ child.title }}
                 </a>
               </li>
               {% endfor %}
             </ul>
-{#            <div class="py-1">#}
-{#              <a href="#"#}
-{#                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-400 dark:hover:text-white">Sign#}
-{#                out</a>#}
-{#            </div>#}
           </div>
         {% elif item.active %}
           <a href="{{ item.url }}"

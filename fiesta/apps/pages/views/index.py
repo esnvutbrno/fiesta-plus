@@ -9,8 +9,12 @@ from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMix
 class SinglePageView(EnsureInSectionSpaceViewMixin, DetailView):
     template_name = "pages/page.html"
 
+    query_pk_and_slug = True
+
+    slug_field = "slug_path"
+
     def get_queryset(self):
-        return self.request.in_space_of_section.pages.filter(parent__isnull=True)
+        return self.request.in_space_of_section.pages
 
 
 class DefaultPageView(EnsureInSectionSpaceViewMixin, DetailView):

@@ -17,5 +17,5 @@ class PagesConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(Page)
 class PagesAdmin(MPTTModelAdmin):
-    list_display = ["title", "default", "section"]
+    list_display = ["title", "default", "slug_path", "section"]
     list_filter = ["section"]

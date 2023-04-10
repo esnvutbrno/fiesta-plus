@@ -1,14 +1,15 @@
 from __future__ import annotations
 
+from operator import attrgetter
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Max
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_editorjs_fields import EditorJsJSONField
-from django_extensions.db.fields import AutoSlugField
 from mptt.models import TreeForeignKey
 
 from apps.plugins.middleware.plugin import HttpRequest
@@ -16,12 +17,16 @@ from apps.utils.models.base import BaseTreeModel
 
 
 class Page(BaseTreeModel):
+    LEVEL_SLUG_DIVIDER = "/"
+
     parent = TreeForeignKey(
         "self",
         on_delete=models.CASCADE,
         null=True,
         blank=True,
         related_name="children",
+        db_index=True,
+        verbose_name=_("parent page"),
     )
 
     section = models.ForeignKey(
@@ -36,9 +41,11 @@ class Page(BaseTreeModel):
         max_length=128,
         verbose_name=_("page title"),
     )
-    slug = AutoSlugField(
-        populate_from="title",
+    slug = models.SlugField(
         verbose_name=_("url slug"),
+    )
+    slug_path = models.CharField(
+        max_length=128, editable=False, null=False, default="", verbose_name=_("path from slugs in page tree")
     )
     content = EditorJsJSONField(
         verbose_name=_("content"),
@@ -67,6 +74,8 @@ class Page(BaseTreeModel):
         )
         constraints = [
             models.UniqueConstraint("section", "default", name="pages_default_section_page_unique"),
+            # TODO: probably not needed
+            models.UniqueConstraint("section", "slug", name="pages_slug_section_page_unique"),
         ]
 
     class MPTTMeta:
@@ -77,7 +86,7 @@ class Page(BaseTreeModel):
         return f"{self.title}"
 
     def page_url(self, request: HttpRequest) -> str:
-        return reverse("pages:single-page", kwargs=dict(slug=self.slug))
+        return reverse("pages:single-page", kwargs=dict(slug=self.slug_path))
 
 
 @receiver(pre_save, sender=Page)
@@ -86,3 +95,11 @@ def set_order(sender, instance: Page, **kwargs):
         instance.order = (
             Page.objects.filter(section=instance.section).aggregate(Max("order")).get("order__max") or 0 + 1
         )
+
+
+@receiver(post_save, sender=Page)
+def save_slug(sender, instance: Page, **kwargs):
+    current_path = Page.LEVEL_SLUG_DIVIDER.join(map(attrgetter("slug"), instance.get_ancestors(include_self=True)))
+    if current_path != instance.slug_path:
+        instance.slug_path = current_path
+        instance.save(update_fields=["slug_path"])

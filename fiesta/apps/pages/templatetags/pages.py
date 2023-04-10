@@ -21,12 +21,12 @@ def get_navigation_items_for_pages(context: dict):
                     sub.title,
                     sub_url,
                     [],
-                    request.path == sub_url,
+                    request.path.startswith(sub_url),
                 )
                 for sub in p.get_descendants()
-                if (sub_url := p.page_url(request))
+                if (sub_url := sub.page_url(request))
             ],
-            request.path == url,
+            request.path.startswith(url),
         )
         for p in request.in_space_of_section.pages.filter(level=0).exclude(default=True)
         if (url := p.page_url(request))
