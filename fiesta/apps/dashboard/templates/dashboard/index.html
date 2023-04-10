@@ -57,21 +57,21 @@
   {##}
   {#    #}
   {#  </div>#}
-  <div class="w-full flex flex-col gap-y-4 mt-6">
+  <div class="w-full flex flex-col gap-y-4 mt-2">
     {% if blocks.buddy_system %}
-      <div class="w-4/5 self-start">
+      <div class="w-full md:w-4/5 self-start">
           {% include blocks.buddy_system with request=request %}
       </div>
     {% endif %}
 
-    <div class="flex flex-row w-full justify-between gap-x-4">
+    <div class="flex flex-col md:flex-row w-full justify-between gap-x-4 gap-y-4">
       {% if blocks.accounts %}
-      <div class="w-2/5">
+      <div class="w-full md:w-2/5">
           {% include blocks.accounts with request=request %}
       </div>
       {% endif %}
       {% if blocks.esncards %}
-      <div class="w-3/5">
+      <div class="w-full md:w-3/5">
           {% include blocks.esncards with request=request %}
       </div>
       {% endif %}

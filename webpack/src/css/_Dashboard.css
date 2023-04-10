@@ -18,7 +18,7 @@
     }
 
     .Dashboard__tile__value {
-        @apply stat-value text-6xl my-4
+        @apply stat-value text-4xl md:text-6xl my-4
     }
 
     .Dashboard__tile__desc {
