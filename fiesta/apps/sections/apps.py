@@ -26,7 +26,19 @@ class SectionsConfig(PluginAppConfig):
 
     def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
         if request.membership.is_privileged:
-            return super().as_navigation_item(request)._replace(url=reverse("sections:section-members"))
+            return (
+                super()
+                .as_navigation_item(request)
+                ._replace(
+                    url="",
+                    children=[
+                        NavigationItemSpec(
+                            _("Members"),
+                            reverse("sections:section-members"),
+                        )
+                    ],
+                )
+            )
         return None
 
 

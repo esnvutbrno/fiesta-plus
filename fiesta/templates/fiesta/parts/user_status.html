@@ -5,6 +5,7 @@
       class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
       aria-expanded="false"
       @click="user = !user"
+      @click.outside="user = false"
   >
     <span class="sr-only">Open user menu</span>
     {% get_user_picture request.user as picture %}
