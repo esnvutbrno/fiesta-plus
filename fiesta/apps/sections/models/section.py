@@ -14,6 +14,7 @@ from apps.pages.apps import PagesConfig
 from apps.plugins.models import Plugin
 from apps.plugins.plugin import PluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_class
+from apps.sections.models.managers.section import SectionsManager
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.validators import validate_plain_slug_lowercase
 
@@ -23,6 +24,8 @@ if typing.TYPE_CHECKING:
 
 
 class Section(BaseTimestampedModel):
+    objects = SectionsManager()
+
     name = models.CharField(
         max_length=64,
         unique=True,

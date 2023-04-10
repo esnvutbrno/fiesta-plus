@@ -49,11 +49,11 @@ class UserMembershipMiddleware:
             return None
 
         # to remove another query for relating section
-        request.all_memberships = request.user.memberships.select_related("section")
+        request.all_memberships = request.user.memberships.prefetch_plugins().select_related("section")
 
         target_app = target_plugin_app_from_resolver_match(request.resolver_match)
 
-        membership = (
+        membership: SectionMembership = (
             # (section+user) are unique together, so .first() to get only one or None
             request.all_memberships.filter(
                 section=request.in_space_of_section,

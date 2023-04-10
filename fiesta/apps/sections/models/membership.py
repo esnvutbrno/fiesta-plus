@@ -5,10 +5,13 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_CREATE, AFTER_SAVE, LifecycleModelMixin, hook
 
+from apps.sections.models.managers.membership import SectionMembershipsManager
 from apps.utils.models import BaseTimestampedModel
 
 
 class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
+    objects = SectionMembershipsManager()
+
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.RESTRICT,

@@ -12,6 +12,7 @@ from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
+from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.universities.models import Faculty
 from apps.utils.breadcrumbs import with_breadcrumb
 
@@ -80,7 +81,7 @@ class SectionMembershipTable(tables.Table):
 
 @with_breadcrumb(_("Section"))
 @with_breadcrumb(_("Members"))
-class SectionMembersView(FiestaTableView):
+class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
     table_class = SectionMembershipTable
