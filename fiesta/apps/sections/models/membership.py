@@ -33,6 +33,9 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         EDITOR = "editor", _("Editor")
         ADMIN = "admin", _("Admin")
 
+        # TODO: think about
+        ALUMNI = "alumni", _("Alumni")
+
         @property
         def is_privileged(self):
             return self in (self.__class__.EDITOR, self.__class__.ADMIN)

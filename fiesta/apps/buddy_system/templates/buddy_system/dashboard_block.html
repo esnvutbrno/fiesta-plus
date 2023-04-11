@@ -1,55 +1,49 @@
 {% load buddy_system %}
 {% load i18n %}
 {% load user_profile %}
-
-
 <div class="Dashboard__tiles">
-  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
-    <div class="Dashboard__tile__title">Buddy System</div>
-    {% if request.membership.role.is_international %}
-      {% get_current_buddy_request_of_user as br %}
-      {% if not br %}
-        <div class="Dashboard__tile__value">✖️ Not requested yet</div>
-        <div class="Dashboard__tile__actions text-right">
-          <a href="{% url "buddy_system:new-request" %}" class="btn btn-lg btn-outline">create buddy request</a>
-        </div>
-      {% elif br.state == br.State.CREATED %}
-        <div class="Dashboard__tile__value">⌛ Waiting for match</div>
-        {% get_waiting_buddy_requests_placed_before br as waiting_total %}
-        <div class="Dashboard__tile__desc">
-          There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
-        </div>
-      {% elif br.state == br.State.MATCHED %}
-        {% get_user_picture br.matched_by as buddy_picture %}
-        {% if buddy_picture %}
-          <div class="stat-figure text-secondary">
-            <div class="avatar">
-              <div class="w-16 rounded-full">
-                <img
-                    src="{{ buddy_picture.url }}"
-                    width="{{ buddy_picture.width }}"
-                    height="{{ buddy_picture.height }}"
-                    alt="Matched buddy picture"
-                />
-              </div>
+    <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
+        <div class="Dashboard__tile__title">Buddy System</div>
+        {% if request.membership.is_international %}
+            {% get_current_buddy_request_of_user as br %}
+            {% if not br %}
+                <div class="Dashboard__tile__value">✖️ Not requested yet</div>
+                <div class="Dashboard__tile__actions text-right">
+                    <a href="{% url "buddy_system:new-request" %}"
+                       class="btn btn-lg btn-outline">create buddy request</a>
+                </div>
+            {% elif br.state == br.State.CREATED %}
+                <div class="Dashboard__tile__value">⌛ Waiting for match</div>
+                {% get_waiting_buddy_requests_placed_before br as waiting_total %}
+                <div class="Dashboard__tile__desc">
+                    There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+                </div>
+            {% elif br.state == br.State.MATCHED %}
+                {% get_user_picture br.matched_by as buddy_picture %}
+                {% if buddy_picture %}
+                    <div class="stat-figure text-secondary">
+                        <div class="avatar">
+                            <div class="w-16 rounded-full">
+                                <img src="{{ buddy_picture.url }}"
+                                     width="{{ buddy_picture.width }}"
+                                     height="{{ buddy_picture.height }}"
+                                     alt="Matched buddy picture"/>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <div class="Dashboard__tile__value">✅ Matched</div>
+                <div class="Dashboard__tile__desc">It's a match!</div>
+            {% endif %}
+        {% else %}
+            {% get_waiting_requests_to_match as waiting_brs %}
+            <div class="Dashboard__tile__value">
+                {% with waiting_brs.count as count %}<span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}{% endwith %}
             </div>
-          </div>
+            <div class="Dashboard__tile__actions text-right">
+                <a href="{% url "buddy_system:matching-requests" %}"
+                   class="btn btn-lg btn-outline">show waiting requests</a>
+            </div>
         {% endif %}
-        <div class="Dashboard__tile__value">✅ Matched</div>
-        <div class="Dashboard__tile__desc">
-          It's a match!
-        </div>
-      {% endif %}
-    {% else %}
-        {% get_waiting_requests_to_match as waiting_brs %}
-        <div class="Dashboard__tile__value">
-          {% with waiting_brs.count as count %}
-          <span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}
-          {% endwith %}
-        </div>
-        <div class="Dashboard__tile__actions text-right">
-          <a href="{% url "buddy_system:matching-requests" %}" class="btn btn-lg btn-outline">show waiting requests</a>
-        </div>
-    {% endif %}
-  </div>
+    </div>
 </div>
