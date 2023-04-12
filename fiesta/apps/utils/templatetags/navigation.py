@@ -4,19 +4,19 @@ import typing
 
 from django import template
 from django.urls import reverse
-from django.utils.translation import gettext as _
 
-from apps.plugins.middleware.plugin import HttpRequest
-from apps.plugins.models import Plugin
-from apps.sections.models import SectionMembership
+if typing.TYPE_CHECKING:
+    from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models import Plugin
+    from apps.sections.models import Section, SectionMembership
 
 register = template.Library()
 
 
 class NavigationItemSpec(typing.NamedTuple):
     title: str
-    index_url: str
-    urls: list[str]
+    url: str
+    children: list[NavigationItemSpec] = []
 
     active: bool = False
 
@@ -25,40 +25,34 @@ class NavigationItemSpec(typing.NamedTuple):
 def get_navigation_items(context):
     request: HttpRequest = context["request"]
 
-    current_plugin: Plugin | None = request.plugin
     membership: SectionMembership | None = request.membership
+    section: Section | None = request.in_space_of_section
 
     items = []
 
     if not membership:
         return items
 
-    if membership.is_privileged:
-        # TODO: define these urls elsewhere
-        items.append(
-            NavigationItemSpec(
-                _("Members"),
-                reverse("sections:section-members"),
-                [],
-                request.resolver_match and request.resolver_match.route.replace("/", ":") == "sections:section-members",
-            )
-        )
+    plugins: list[Plugin] = (
+        section.enabled_plugins_for_privileged if membership.is_privileged else section.enabled_plugins
+    )
 
     items.extend(
         [
-            NavigationItemSpec(
-                apps.verbose_name,
-                f"/{apps.url_prefix}",
-                [
-                    # apps.reverse(pattern.name)
-                    # for pattern in apps.urlpatterns
-                    # if pattern.name
-                ],
-                active=plugin == current_plugin,
-            )
-            for plugin in membership.section.plugins.filter(membership.available_plugins_filter)  # type: Plugin
-            if (apps := plugin.app_config)
+            nav_item
+            for plugin in plugins  # type: Plugin
+            if (apps := plugin.app_config) and (nav_item := apps.as_navigation_item(request))  # type: PluginAppConfig
         ]
     )
 
     return items
+
+
+@register.simple_tag(takes_context=True)
+def get_home_url(context):
+    request: HttpRequest = context["request"]
+
+    if request.in_space_of_section:
+        return request.in_space_of_section.section_home_url(request.membership)
+
+    return reverse("public:home")

@@ -82,6 +82,15 @@ up: dc ## Runs all needed docker containers
 produp: ## Runs fiesta in (local)production mode.
 	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
 
+psql: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta"
+psql: dc  ## Runs psql shell in database
+
+dumpdb: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta pg_dump --host db --user fiesta" > dump-`date +%Y-%m-%d-%H:%M:%S`.sql
+dumpdb: dc ## Dumps database to .sql
+
+loaddb: DC_CMD = run -T --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta" < $(dump)
+loaddb: dc ## Loads database from dump=
+
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 

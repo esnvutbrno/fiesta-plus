@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 import typing
+from operator import attrgetter
 from pathlib import Path
 
 from django.apps import AppConfig
 from django.views.generic import TemplateView
 
-from apps.plugins.models import Plugin
 from apps.plugins.plugin import PluginAppConfig
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
@@ -34,10 +34,7 @@ class DashboardIndexView(EnsureInSectionSpaceViewMixin, TemplateView):
     def _select_apps_for_dashboard(self) -> typing.Generator[AppConfig, None, None]:
         from django.apps import apps
 
-        enabled_plugins_apps = self.request.in_space_of_section.plugins.filter(
-            state=Plugin.State.ENABLED,
-            # TODO: only by state? maybe the R/O or editor is needed
-        ).values_list("app_label", flat=True)
+        enabled_plugins_apps = tuple(map(attrgetter("app_label"), self.request.in_space_of_section.enabled_plugins))
 
         for app in apps.get_app_configs():
             if not isinstance(app, PluginAppConfig):

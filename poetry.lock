@@ -391,20 +391,6 @@ files = [
 ]
 
 [[package]]
-name = "dj-search-url"
-version = "0.1"
-description = "Use Search URLs in your Django Haystack Application."
-category = "main"
-optional = false
-python-versions = "*"
-files = [
-    {file = "dj-search-url-0.1.tar.gz", hash = "sha256:424d1a5852500b3c118abfdd0e30b3e0016fe68e7ed27b8553a67afa20d4fb40"},
-]
-
-[package.extras]
-tests = ["pytest"]
-
-[[package]]
 name = "django"
 version = "4.2"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
@@ -549,7 +535,6 @@ files = [
 [package.dependencies]
 dj-database-url = {version = "*", optional = true, markers = "extra == \"database\""}
 dj-email-url = {version = "*", optional = true, markers = "extra == \"email\""}
-dj-search-url = {version = "*", optional = true, markers = "extra == \"search\""}
 django = ">=3.2"
 django-cache-url = {version = "*", optional = true, markers = "extra == \"cache\""}
 
@@ -599,6 +584,30 @@ django = ">=3.2.4"
 sqlparse = ">=0.2"
 
 [[package]]
+name = "django-editorjs"
+version = "0.2.1"
+description = "Django plugin for using Editor.js in admin"
+category = "main"
+optional = false
+python-versions = ">=3.4,<4.0"
+files = [
+    {file = "django-editorjs-0.2.1.tar.gz", hash = "sha256:806faafdd6fffab10e174e21843c6df359ea4b6a849a73ba25de356daecd6a60"},
+    {file = "django_editorjs-0.2.1-py3-none-any.whl", hash = "sha256:fe01810d50c9d304799871c6f3d82c1bc8513e2dd13edb3eaef99e566069dc7c"},
+]
+
+[[package]]
+name = "django-editorjs-fields"
+version = "0.2.7"
+description = "Django plugin for using Editor.js"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+files = [
+    {file = "django-editorjs-fields-0.2.7.tar.gz", hash = "sha256:f31d8db403c2a0b0e8a24b320c826a76861b92853f8a911695114dc74344e8aa"},
+    {file = "django_editorjs_fields-0.2.7-py3-none-any.whl", hash = "sha256:2f3f139330ec1a024ed15ad9bd00deb123141eeabca7a3dd4ab8bbb1756ba991"},
+]
+
+[[package]]
 name = "django-extensions"
 version = "3.2.1"
 description = "Extensions for Django"
@@ -644,6 +653,24 @@ files = [
 Django = ">=3.2"
 
 [[package]]
+name = "django-js-asset"
+version = "2.0.0"
+description = "script tag with additional attributes for django.forms.Media"
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "django_js_asset-2.0.0-py3-none-any.whl", hash = "sha256:86f9f300d682537ddaf0487dc2ab356581b8f50c069bdba91d334a46e449f923"},
+    {file = "django_js_asset-2.0.0.tar.gz", hash = "sha256:adc1ee1efa853fad42054b540c02205344bb406c9bddf87c9e5377a41b7db90f"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
+
+[package.extras]
+tests = ["coverage"]
+
+[[package]]
 name = "django-lifecycle"
 version = "1.0.0"
 description = "Declarative model lifecycle hooks."
@@ -685,6 +712,24 @@ files = [
 
 [package.dependencies]
 django = ">=2"
+
+[[package]]
+name = "django-mptt"
+version = "0.14.0"
+description = "Utilities for implementing Modified Preorder Tree Traversal with your Django Models and working with trees of Model instances."
+category = "main"
+optional = false
+python-versions = ">=3.6"
+files = [
+    {file = "django-mptt-0.14.0.tar.gz", hash = "sha256:2c92a2b1614c53086278795ccf50580cf1f9b8564f3ff03055dd62bab5987711"},
+    {file = "django_mptt-0.14.0-py3-none-any.whl", hash = "sha256:d9a87433ab0e4f35247c6f6d5a93ace6990860a4ba8796f815d185f773b9acfc"},
+]
+
+[package.dependencies]
+django-js-asset = "*"
+
+[package.extras]
+tests = ["coverage", "mock-django"]
 
 [[package]]
 name = "django-phonenumber-field"
@@ -1712,4 +1757,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "a7615a47725725b56c600ef1eee6733eaa95a248a3ef9d7ee3542b79b108b955"
+content-hash = "83611ad8e7c853d6ae04679d2b9d3f78f07537e6286555e9933270664543d282"

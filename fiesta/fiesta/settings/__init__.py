@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from configurations import Configuration
 
+from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
 from .db import DatabaseConfigMixin
 from .files import FilesConfigMixin
@@ -19,6 +20,7 @@ class Base(
     LoggingConfigMixin,
     SecurityConfigMixin,
     TemplatesConfigMixin,
+    AdminConfigMixin,
     Configuration,
 ):
     ...

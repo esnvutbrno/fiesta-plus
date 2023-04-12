@@ -2,20 +2,30 @@ from __future__ import annotations
 
 import typing
 
+from _operator import attrgetter
 from django.contrib.sites.shortcuts import get_current_site
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
+from apps.dashboard.apps import DashboardConfig
+from apps.pages.apps import PagesConfig
+from apps.plugins.models import Plugin
+from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.utils import all_plugins_mapped_to_class
+from apps.sections.models.managers.section import SectionsManager
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.validators import validate_plain_slug_lowercase
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.sections.models import SectionMembership
 
 
 class Section(BaseTimestampedModel):
+    objects = SectionsManager()
+
     name = models.CharField(
         max_length=64,
         unique=True,
@@ -47,6 +57,7 @@ class Section(BaseTimestampedModel):
         help_text=_("Slug used for defining section spaces as URL subdomains."),
         unique=True,
         validators=[validate_plain_slug_lowercase],
+        db_index=True,
     )
 
     class SystemState(TextChoices):
@@ -70,10 +81,38 @@ class Section(BaseTimestampedModel):
     def __str__(self):
         return self.name
 
-    def section_url(self, request: HttpRequest):
+    def section_base_url(self, request: HttpRequest):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
+
+    def section_home_url(self, for_membership: SectionMembership = None) -> str | None:
+        plugins = (
+            self.enabled_plugins_for_privileged
+            if for_membership and for_membership.is_privileged
+            else self.enabled_plugins
+        )
+
+        available_plugins = tuple(map(attrgetter("app_label"), plugins))
+
+        pages_app = all_plugins_mapped_to_class().get(PagesConfig)
+        dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
+
+        target_app: PluginAppConfig | None = None
+
+        if for_membership and dashboard_app and dashboard_app.label in available_plugins:
+            target_app = dashboard_app
+        elif not for_membership and pages_app and pages_app.label in available_plugins:
+            target_app = pages_app
+
+        # TODO: what to do if user is logged and dashboard is not available?
+        return f"/{target_app.url_prefix}" if target_app else None
+
+    # prefetched for request.in_space_of_section
+    enabled_plugins: list[Plugin]
+
+    # prefetched for request.in_space_of_section
+    enabled_plugins_for_privileged: list[Plugin]
 
 
 class SectionUniversity(BaseTimestampedModel):

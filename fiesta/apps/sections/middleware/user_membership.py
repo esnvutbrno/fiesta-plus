@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import typing
+
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.db.models.query import QuerySet
@@ -8,17 +10,19 @@ from django.urls import ResolverMatch, reverse
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 
-from ...plugins.plugin import PluginAppConfig
 from ...plugins.utils import target_plugin_app_from_resolver_match
 from ...sections.middleware.section_space import HttpRequest as BaseHttpRequest
 from ..models import SectionMembership
+
+if typing.TYPE_CHECKING:
+    from ...plugins.plugin import PluginAppConfig
 
 
 class HttpRequest(BaseHttpRequest):
     # single one active membership or None
     membership: SectionMembership | None
     # all users memberships (including inactive)
-    all_memberships: QuerySet[SectionMembership] | None
+    all_memberships: QuerySet[SectionMembership]
 
 
 class UserMembershipMiddleware:
@@ -39,17 +43,17 @@ class UserMembershipMiddleware:
 
     @classmethod
     def process_view(cls, request: HttpRequest, view_func, view_args, view_kwargs):
-        request.all_memberships = None
+        request.all_memberships = SectionMembership.objects.none()
 
         if not request.user.is_authenticated:
             return None
 
         # to remove another query for relating section
-        request.all_memberships = request.user.memberships.select_related("section")
+        request.all_memberships = request.user.memberships.prefetch_plugins().select_related("section")
 
         target_app = target_plugin_app_from_resolver_match(request.resolver_match)
 
-        membership = (
+        membership: SectionMembership = (
             # (section+user) are unique together, so .first() to get only one or None
             request.all_memberships.filter(
                 section=request.in_space_of_section,
@@ -127,9 +131,11 @@ class UserMembershipMiddleware:
     @classmethod
     def should_ignore_403(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
         """Checks if specific request for specific plugin should be excluded from existing membership check."""
-        anonymnous_allowed = resolver_match.url_name in target_app.login_not_required_urls
+        anonymous_allowed = (
+            resolver_match.url_name in target_app.login_not_required_urls or not target_app.login_required
+        )
 
-        return cls.is_membership_view(resolver_match=resolver_match) or anonymnous_allowed
+        return cls.is_membership_view(resolver_match=resolver_match) or anonymous_allowed
 
     @classmethod
     def is_membership_view(cls, resolver_match: ResolverMatch):

@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import UUIDField
 from django.utils.translation import gettext_lazy as _
 from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
+from mptt.models import MPTTModel
 from polymorphic.models import PolymorphicModel
 
 
@@ -43,4 +44,15 @@ class BasePolymorphicModel(PolymorphicModel):
         ordering = ("-modified", "-created")
 
 
-__all__ = ["BaseModel", "BasePolymorphicModel", "BaseTimestampedModel"]
+class BaseTreeModel(MPTTModel):
+    """Base model for tree usages."""
+
+    id = UUIDField(primary_key=True, default=uuid4, editable=False)
+    created = CreationDateTimeField(_("created"))
+    modified = ModificationDateTimeField(_("modified"))
+
+    class Meta:
+        abstract = True
+
+
+__all__ = ["BaseModel", "BasePolymorphicModel", "BaseTimestampedModel", "BaseTreeModel"]

@@ -1,0 +1,18 @@
+{% load navigation %}
+{% load static %}
+
+<a href="{% get_home_url %}" class="flex">
+  <svg class="mr-3 h-10" width="48" height="60" viewBox="0 0 48 60">
+    <use href="{% static "logo.svg" %}#logo"></use>
+  </svg>
+  {% if not request.in_space_of_section %}
+    <span class="self-center text-lg font-semibold whitespace-nowrap">
+      Buena Fiesta
+    </span>
+  {% endif %}
+  {% if request.in_space_of_section %}
+    <span class="self-center text-lg font-semibold whitespace-nowrap ml-3">
+      {{ request.in_space_of_section }}
+    </span>
+  {% endif %}
+</a>
