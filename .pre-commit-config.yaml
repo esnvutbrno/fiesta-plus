@@ -53,7 +53,7 @@ repos:
     rev: 'v1.19.17'  # replace with the latest tag on GitHub
     hooks:
       - id: djlint-django
-        entry: djlint --profile=django --reformat
+        entry: djlint  --reformat
 
   - repo: https://github.com/ecugol/pre-commit-hooks-django
     rev: v0.4.0  # Use the ref you want to point at

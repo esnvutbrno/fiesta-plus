@@ -14,7 +14,7 @@ django-allauth = "^0.47.0"
 # support for dj4.0
 django-allauth-cas = { git = "https://github.com/thejoeejoee/django-allauth-cas", branch = "master" }
 django-click = "^2.3.0"
-django-configurations = { extras = ["cache", "database", "email" ], version = "^2.4.1" }
+django-configurations = { extras = ["cache", "database", "email"], version = "^2.4.1" }
 django-countries = "^7.2.1"
 django-extensions = "^3.1.5"
 django-filter = "^21.1"
@@ -100,3 +100,11 @@ paths = ["fiesta"]
 exclude = ["settings"]
 min_confidence = 80
 make_whitelist = true
+
+[tool.djlint]
+profile = "django"
+reformat = true
+ignore = ["H017"]
+indent = 2
+blank_line_after_tag = "extends"
+blank_line_before_tag = "block"
