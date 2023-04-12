@@ -1,13 +1,21 @@
 {% load i18n %}
 {% if widget.is_initial %}
   <p class="Forms__file-state">
-    {{ widget.initial_text }} <a href="{{ widget.value.url }}" target="_blank" rel="nofollow,noreferer" title="{% trans "Open current file" %}">{{ widget.value }}</a>
+    {{ widget.initial_text }} <a href="{{ widget.value.url }}"
+    target="_blank"
+    rel="nofollow,noreferer"
+    title="{% trans "Open current file" %}">{{ widget.value }}</a>
     {% if not widget.required %}
       <span class="Forms__file-clear">
-        <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+        <input type="checkbox"
+               name="{{ widget.checkbox_name }}"
+               id="{{ widget.checkbox_id }}"
+               {% if widget.attrs.disabled %}disabled{% endif %}>
         <label for="{{ widget.checkbox_id }}">{{ widget.clear_checkbox_label }}</label>
       </span>
     {% endif %}
   </p>
 {% endif %}
-<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+<input type="{{ widget.type }}"
+       name="{{ widget.name }}"
+       {% include "django/forms/widgets/attrs.html" %}>

@@ -1,29 +1,26 @@
 {% extends "fiesta/base.html" %}
+
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
 {% load socialaccount %}
-
 
 {% block upper_head %}
   {% trans "Sign up social account" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+{% block breadcrumbs_container %}
+{% endblock breadcrumbs_container %}
 
 {% block main_container %}
   <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
     <div class="card card-bordered shadow-xl max-w-lg">
-      <form
-        method="POST" action="{% url 'socialaccount_signup' %}"
-        class="card-body space-y-2 {{ form|get_form_classes }}"
-      >
+      <form method="POST"
+            action="{% url 'socialaccount_signup' %}"
+            class="card-body space-y-2 {{ form|get_form_classes }}">
         {% csrf_token %}
-        <h1 class="card-title">
-          Create Account
-        </h1>
-
+        <h1 class="card-title">Create Account</h1>
         <p class="text-gray-800">
           You are about to use
           your <strong class="font-semibold">{{ account.get_provider.name }}</strong>
@@ -31,18 +28,14 @@
           <br>
           As a final step, please complete the following form:
         </p>
-
         {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
-
         {% if redirect_field_value %}
-          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          <input type="hidden"
+                 name="{{ redirect_field_name }}"
+                 value="{{ redirect_field_value }}"/>
         {% endif %}
-
         {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
-
-        <button type="submit" class="btn btn-block btn-primary">
-          Sign up
-        </button>
+        <button type="submit" class="btn btn-block btn-primary">Sign up</button>
       </form>
     </div>
   </div>

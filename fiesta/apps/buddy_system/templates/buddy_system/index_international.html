@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+
 {% load i18n %}
 {% load breadcrumbs %}
 
@@ -10,9 +11,7 @@
 {% block main %}
   <div class="prose prose-lg">
     <h1>My requests</h1>
-
-{# TODO: ugly    #}
-
+    {# TODO: ugly    #}
     <table>
       {% for request in requests %}
         <tr>
@@ -23,10 +22,11 @@
         </tr>
       {% empty %}
         <tr>
-          <td><a href="{% url "buddy_system:new-request" %}">new buddy request</a></td>
+          <td>
+            <a href="{% url "buddy_system:new-request" %}">new buddy request</a>
+          </td>
         </tr>
       {% endfor %}
     </table>
-
   </div>
 {% endblock %}

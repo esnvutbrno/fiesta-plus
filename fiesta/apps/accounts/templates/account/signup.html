@@ -1,16 +1,17 @@
 {% extends "fiesta/base-variants/center-card-sm.html" %}
+
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
 {% load socialaccount %}
-
 
 {% block upper_head %}
   {% trans "Sign up" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+{% block breadcrumbs_container %}
+{% endblock breadcrumbs_container %}
 
 {% block card_body %}
   {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url %}

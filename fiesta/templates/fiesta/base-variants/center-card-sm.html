@@ -1,16 +1,16 @@
 {% extends "fiesta/base.html" %}
+
 {% load breadcrumbs %}
 {% load i18n %}
 {% load fiestaforms %}
 {% load socialaccount %}
 
 {% block main_container %}
-  <div class="
-    w-full flex flex-grow flex-col justify-center
-    pb-[10vh] pt-4
-  ">
-    <div class="card card-bordered shadow-xl mx-auto w-full overflow-visible {% block card_class %}max-w-lg{% endblock %}">
+  <div class="w-full flex flex-grow flex-col justify-center pb-[10vh] pt-4">
+    <div class="card card-bordered shadow-xl mx-auto w-full overflow-visible
+                {% block card_class %}max-w-lg{% endblock %}">
       <div class="card-body">
+
         {% block card_body %}{% endblock %}
       </div>
     </div>

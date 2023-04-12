@@ -1,31 +1,26 @@
 {% load user_profile %}
 {% load utils %}
-
 <div class="Dashboard__tiles">
   <div class="Dashboard__tile shadow-2xl bg-gray-200 aspect-square">
     <div class="Dashboard__tile__title">My Profile</div>
-
     {% compute_profile_fullness user.profile as fullness %}
     {% interpolate_to_list fullness "text-red-400" "text-orange-400" "text-blue-400" "text-lime-400" as color %}
-
     <div class="flex justify-center items-center my-4">
       {# TODO: compute completness #}
       {# TODO: interpolate to color #}
-      <div class="radial-progress {{ color }}" style="--value:{{ fullness|multiply:100 }}; --size:20rem; --thickness: 2rem;">
+      <div class="radial-progress {{ color }}"
+           style="--value:{{ fullness|multiply:100 }};
+                  --size:20rem;
+                  --thickness: 2rem">
         <div class="text-black flex flex-col items-center">
           <span class="text-7xl font-bold">{{ fullness|multiply:100|int }}%</span>
           <span class="text">complete</span>
         </div>
       </div>
     </div>
-
     <div class="Dashboard__tile__actions text-right">
-      <a
-          href="{% url "accounts:my-profile-update" %}"
-          class="btn btn-lg btn-outline"
-      >
-        fill profile</a>
+      <a href="{% url "accounts:my-profile-update" %}"
+         class="btn btn-lg btn-outline">fill profile</a>
     </div>
-
   </div>
 </div>

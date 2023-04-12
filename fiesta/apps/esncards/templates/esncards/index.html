@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+
 {% load static %}
 
 {% block main %}
@@ -13,16 +14,14 @@
           travel, accommodation, entertainment, and cultural activities, as well as a vibrant community of international
           students.
         </p>
-        <a href="{% url "esncards:application_create_form" %}" class="btn btn-primary btn-lg">
-          Apply for ESNcard
-        </a>
+        <a href="{% url "esncards:application_create_form" %}"
+           class="btn btn-primary btn-lg">Apply for ESNcard</a>
       </div>
       <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
         <img src="{% static "esncards/savings.svg" %}" alt="mockup">
       </div>
     </div>
   </section>
-
   {% if applications.exists %}
     <div class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto">
       <div class="flex justify-between items-center mb-4">
@@ -44,9 +43,7 @@
                     {{ application.first_name }}
                     {{ application.last_name }}
                   </p>
-                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    {{ application.created|date }}
-                  </p>
+                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">{{ application.created|date }}</p>
                 </div>
                 <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
                   {{ application.get_state_display }}
@@ -57,6 +54,5 @@
         </ul>
       </div>
     </div>
-
   {% endif %}
 {% endblock %}

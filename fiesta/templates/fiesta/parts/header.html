@@ -3,11 +3,11 @@
 {% load i18n %}
 {% load navigation %}
 <nav
-    class="navbar px-0"
-    x-data="{mobileMenuShown: false, user: false}"
-    {# TODO: cannot be so general #}
-    {# hx-boost="true" #}
->
+  class="navbar px-0"
+  x-data="{mobileMenuShown: false, user: false}"
+  {# TODO: cannot be so general #}
+  {# hx-boost="true" #}
+  >
   <div class="container flex flex-wrap justify-between items-center mx-auto">
     {% include "fiesta/parts/logo.html" %}
     <div class="flex items-center md:order-2 relative">
@@ -17,7 +17,6 @@
     </div>
     {% if not hide_navigation %}
       {% get_navigation_items as items %}
-
       {% include "fiesta/parts/navigation_items.html" with item=items %}
     {% endif %}
   </div>

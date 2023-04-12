@@ -1,33 +1,26 @@
 {% extends "fiesta/base.html" %}
+
 {% load static %}
 {% load i18n %}
 {% load breadcrumbs %}
 
-
 {% block main %}
   <div>
-    <img src="{% static "buddy-system/buddies-1.svg" %}" alt="buddies" class="mx-auto w-2/5 mt-8">
-
+    <img src="{% static "buddy-system/buddies-1.svg" %}"
+         alt="buddies"
+         class="mx-auto w-2/5 mt-8">
     <div class="mt-12 px-4 text-center w-full lg:w-1/2 mx-auto prose">
       <h1 class="text-6xl font-bold text-center">{% trans "Buddy System" %}</h1>
-
       <p class="lead">
         Your sections uses buddy matching
         <span class="badge badge-primary badge-outline badge-lg">{{ configuration.matching_policy_instance.title.lower }}</span>
       </p>
-      <p>
-        {{ configuration.matching_policy_instance.description }}
-      </p>
-
+      <p>{{ configuration.matching_policy_instance.description }}</p>
       {% if configuration.matching_policy_instance.can_member_match %}
-        <a
-            class="btn btn-primary btn-lg"
-            href="{% url "buddy_system:matching-requests" %}"
-        >{% trans "Show buddy requests" %}</a>
+        <a class="btn btn-primary btn-lg"
+           href="{% url "buddy_system:matching-requests" %}">{% trans "Show buddy requests" %}</a>
       {% else %}
-        <div
-            class="alert alert-info"
-        >
+        <div class="alert alert-info">
           {% trans "Wait for match by coordinator" %}
           {# TODO: display matches or link to them #}
         </div>

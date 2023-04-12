@@ -1,20 +1,20 @@
 {% extends "fiesta/base-variants/center-card-sm.html" %}
+
 {% load i18n %}
 {% load breadcrumbs %}
 {% load fiestaforms %}
 {% load socialaccount %}
-
 
 {% block upper_head %}
   {% trans "Please, sign up before" as title %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+{% block breadcrumbs_container %}
+{% endblock breadcrumbs_container %}
 
 {% block card_body %}
   {% url "buddy_system:sign-up-before-entrance" as form_url %}
   {% trans "First step: please sign up" as card_title %}
-
   {% include "account/signup_form.html" with form=form redirect_field_value=redirect_field_value redirect_field_name=redirect_field_name login_url=login_url form_url=form_url card_title=card_title %}
 {% endblock %}

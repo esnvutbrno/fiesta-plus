@@ -12,31 +12,30 @@
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
-{% block breadcrumbs_container %}{% endblock breadcrumbs_container %}
+{% block breadcrumbs_container %}
+{% endblock breadcrumbs_container %}
 
 {% block card_body %}
   <h1 class="card-title">{% trans "Confirm E-mail Address" %}</h1>
-
   {% if confirmation %}
     {% user_display confirmation.email_address.user as user_display %}
-    <p>{% blocktrans with confirmation.email_address.email as email %}Please confirm that
+    <p>
+      {% blocktrans with confirmation.email_address.email as email %}Please confirm that
       <a href="mailto:{{ email }}" class="link link-hover link-secondary">{{ email }}</a> is an e-mail address for user
       <span class="text-secondary">{{ user_display }}</span>.{% endblocktrans %}
     </p>
-
-    <form method="post" action="{% url 'account_confirm_email' confirmation.key %}">
+    <form method="post"
+          action="{% url 'account_confirm_email' confirmation.key %}">
       {% csrf_token %}
       <div class="Forms__field Forms__field--buttons">
         <button type="submit" class="btn btn-primary">{% trans 'Confirm' %}</button>
       </div>
     </form>
-
   {% else %}
-
     {% url 'account_email' as email_url %}
-
-    <p>{% blocktrans %}This e-mail confirmation link expired or is invalid. Please
-      <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}</p>
-
+    <p>
+      {% blocktrans %}This e-mail confirmation link expired or is invalid. Please
+      <a href="{{ email_url }}">issue a new e-mail confirmation request</a>.{% endblocktrans %}
+    </p>
   {% endif %}
 {% endblock %}

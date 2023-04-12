@@ -1,2 +1,9 @@
 {# Custom fiesta templete to place checkbox before label to do the input:checked + label CSS hack #}
-{% include "django/forms/widgets/input.html" %}{% if widget.wrap_label %}<label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>{% endif %}{% if widget.wrap_label %} {{ widget.label }}</label>{% endif %}
+{% include "django/forms/widgets/input.html" %}
+{% if widget.wrap_label %}
+  <label{% if widget.attrs.id %} for="{{ widget.attrs.id }}"{% endif %}>
+  {% endif %}
+  {% if widget.wrap_label %}
+    {{ widget.label }}
+  </label>
+{% endif %}
