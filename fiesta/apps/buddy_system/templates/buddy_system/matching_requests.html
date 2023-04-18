@@ -11,13 +11,14 @@
 {% endblock upper_head %}
 
 {% block main %}
-  <div class="gap-x-4 columns-3">
+  <div class="gap-x-4 columns-1 lg:columns-3">
     {% for br in object_list %}
-      <div class="card card-bordered shadow h-fit break-inside-avoid-column mb-4 static">
+      <div class="card card-bordered shadow h-fit break-inside-avoid-column mb-4 static"
+           x-data="{modal: false}">
         <figure>
           {% if configuration.display_issuer_picture and br.issuer.profile.picture %}
             <img src="{% url "buddy_system:serve-issuer-profile-picture" br.issuer.profile.picture %}"
-                 alt=""
+                 alt="{% trans "request issuer photo" %}"
                  class="rounded-full w-24 h-24 m-4">
           {% else %}
             <svg version="1.1"
@@ -38,25 +39,25 @@
           <table class="table table-compact w-full">
             {% if configuration.display_issuer_gender %}
               <tr>
-                <td>gender</td>
+                <td>{% trans "gender" %}</td>
                 <td>{{ br.issuer.profile.get_gender_display }}</td>
               </tr>
             {% endif %}
             {% if configuration.display_issuer_faculty %}
               <tr>
-                <td>faculty on exchange</td>
+                <td>{% blocktrans %}faculty on exchange{% endblocktrans %}</td>
                 <td>{{ br.issuer.profile.guest_faculty }}</td>
               </tr>
             {% endif %}
             {% if configuration.display_issuer_country %}
               <tr>
-                <td>country</td>
+                <td>{% trans "country" %}</td>
                 <td>{{ br.issuer.profile.nationality.unicode_flag }} {{ br.issuer.profile.nationality.name }}</td>
               </tr>
             {% endif %}
             {% if configuration.display_issuer_university %}
               <tr>
-                <td>from university</td>
+                <td>{% blocktrans %}home university{% endblocktrans %}</td>
                 <td>{{ br.issuer.profile.home_university }}</td>
               </tr>
             {% endif %}
@@ -76,13 +77,45 @@
             {% if configuration.display_request_creation_date %}
               <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
             {% endif %}
-            <form action="{% url "buddy_system:take-buddy-request" br.pk %}"
-                  method="POST"
-                  hx-confirm="{% trans "You sure?" %}"
-                  hx-boost="true">
-              {% csrf_token %}
-              <button class="btn btn-primary" type="submit">{% trans "Take Buddy" %}</button>
-            </form>
+            <dialog class="modal-box backdrop:opacity-90 backdrop:bg-gray-900"
+                    x-ref="dialog">
+              <form action="{% url "buddy_system:take-buddy-request" br.pk %}"
+                    method="POST"
+                    hx-boost="true">
+                {% csrf_token %}
+                <div class="flex flex-row justify-between">
+                  <h3 class="text-2xl">{% blocktrans %}Buddy Request Confirmation{% endblocktrans %}</h3>
+                  <button @click="$refs.dialog.close()"
+                          class="transition-transform hover:scale-95"
+                          type="button">
+                    <svg fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         viewBox="0 0 24 24"
+                         xmlns="http://www.w3.org/2000/svg"
+                         aria-hidden="true"
+                         class="rotate-45 h-8 w-8">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"></path>
+                    </svg>
+                  </button>
+                </div>
+
+                <p class="my-8">
+                  {% blocktrans %}Are you sure you want to confirm the buddy request,
+                  acknowledging that you will be responsible for being buddy?{% endblocktrans %}
+                </p>
+
+                <div class="modal-actions flex flex-row justify-end">
+                  <button class="btn btn-lg btn-success" type="submit">{% trans "Take Buddy" %}</button>
+                </div>
+
+              </form>
+            </dialog>
+
+            <button class="btn btn-primary"
+                    @click="modal = true, $refs.dialog.showModal()">{% trans "Take Buddy" %}</button>
+
+
           </div>
         </div>
       </div>
