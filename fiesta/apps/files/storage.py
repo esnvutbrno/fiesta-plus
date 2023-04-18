@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import pathlib
 import typing
 from collections.abc import Callable
 from urllib.parse import urljoin
@@ -21,6 +22,8 @@ class NamespacedFilesStorage(FileSystemStorage):
 
     storages = []
 
+    namespace: str
+
     def __init__(
         self,
         namespace: str,
@@ -29,8 +32,9 @@ class NamespacedFilesStorage(FileSystemStorage):
     ):
         self.namespace = namespace.strip("/")
         super().__init__(location=settings.MEDIA_ROOT / namespace)
-        self.storages.append(self)
         self.has_permission = has_permission
+
+        self.storages.append(self)
 
     @property
     def url_name_suffix(self):
@@ -40,16 +44,23 @@ class NamespacedFilesStorage(FileSystemStorage):
         """Application public URL."""
         return reverse(f"files:{self.url_name_suffix}", kwargs=dict(name=filepath_to_uri(name)))
 
-    def serve_url(self, name):
-        """Inner URL for serving by webserver."""
+    def internal_serve_url(self, name):
+        """Inner URL for serving internally by webserver."""
         return urljoin(settings.MEDIA_URL, f"{self.namespace}/{filepath_to_uri(name)}")
 
     @staticmethod
     def upload_to(instance: BaseModel, filename: str) -> str:
+        ext = pathlib.Path(filename).suffix
         try:
             # for BaseTimestampedModel
             modified = instance.modified.isoformat()
         except AttributeError:
             modified = now().isoformat()
 
-        return hashlib.sha256(f"{instance.pk}-{modified}".encode()).hexdigest()
+        return (
+            pathlib.Path(
+                hashlib.sha256(f"{instance.pk}-{modified}".encode()).hexdigest(),
+            )
+            .with_suffix(ext)
+            .as_posix()
+        )

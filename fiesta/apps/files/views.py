@@ -29,7 +29,7 @@ class NamespacedFilesServeView(View):
         return HttpResponse(
             headers={
                 "Content-Disposition": f'filename="{name}"',
-                "X-Accel-Redirect": self.storage.serve_url(name),
+                "X-Accel-Redirect": self.storage.internal_serve_url(name),
                 "Content-Type": self.mime.from_file(self.storage.path(name=name)),
             }
         )
