@@ -44,3 +44,20 @@ class FilesConfigMixin(BaseConfigurationProtocol):
             "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
         },
     }
+
+    PICTURES = {
+        "USE_PLACEHOLDERS": False,
+        "BREAKPOINTS": {
+            # https://tailwindcss.com/docs/screens
+            "sm": 640,
+            "md": 768,
+            "lg": 1024,
+            "xl": 1280,
+            "2xl": 1536,
+        },
+        "GRID_COLUMNS": 12,
+        "CONTAINER_WIDTH": 1536,
+        "FILE_TYPES": ["WEBP"],
+        "PIXEL_DENSITIES": [1, 2],
+        "QUEUE_NAME": None,
+    }

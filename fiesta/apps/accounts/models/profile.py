@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import enum
 import typing
+from pathlib import Path
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -11,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
 from phonenumber_field.modelfields import PhoneNumberField
+from pictures.models import PictureField
 
 from apps.accounts.conf import INTERESTS_CHOICES
 from apps.files.storage import NamespacedFilesStorage
@@ -26,10 +28,14 @@ def has_permission_for_profile_picture_view(request: HttpRequest, name: str) -> 
     if (membership := request.membership) and membership.is_privileged:
         return True
 
+    if not request.user.is_authenticated:
+        return False
+
     if not (profile := request.user.profile_or_none):  # type: UserProfile
         return False
 
-    return profile.picture.name == name
+    # grrh, comparing base names
+    return name == profile.picture.name or Path(profile.picture.name).with_suffix("").name == Path(name).parts[0]
 
 
 # storage used for profile pictures, serving directly only for privileged and for user itself
@@ -108,9 +114,10 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         db_index=True,
     )
 
-    picture = models.ImageField(
+    picture = PictureField(
         storage=user_profile_picture_storage,
         upload_to=user_profile_picture_storage.upload_to,
+        aspect_ratios=["1/1"],
         verbose_name=_("profile picture"),
         null=True,
         blank=True,

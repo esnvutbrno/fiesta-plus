@@ -41,7 +41,7 @@ RUN addgroup -S 1000 \
     && adduser -s /bin/sh -D -S -G 1000 1000 \
     && apk update \
     # runtime deps
-    && apk add gettext tzdata bash graphviz graphviz-dev ttf-freefont postgresql-dev mariadb-dev libmagic \
+    && apk add gettext tzdata bash graphviz graphviz-dev fontconfig ttf-dejavu ttf-freefont postgresql-dev mariadb-dev libmagic \
     # && pipenv install psycopg2-binary --skip-lock --dev \
     && mkdir -p /usr/src/static /usr/src/media /usr/src/app \
     && chown 1000:1000 -R /usr/src \

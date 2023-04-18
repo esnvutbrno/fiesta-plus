@@ -85,7 +85,10 @@ class ProjectConfigMixin:
         "loginas",
         # editorjs integration
         "django_editorjs_fields",
+        # tree models
         "mptt",
+        # responsive images
+        "pictures",
     ]
 
     MIDDLEWARE = [

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 from django.utils.translation import gettext_lazy as _
+from pictures.conf import get_settings
 
 from apps.plugins.utils import all_plugin_apps
 
@@ -39,6 +40,11 @@ urlpatterns = [
     # editorjs
     path("ejs/", include("django_editorjs_fields.urls")),
 ]
+
+if get_settings().USE_PLACEHOLDERS:
+    urlpatterns += [
+        path("__pictures__/", include("pictures.urls")),
+    ]
 
 if settings.DEBUG:
     urlpatterns += [

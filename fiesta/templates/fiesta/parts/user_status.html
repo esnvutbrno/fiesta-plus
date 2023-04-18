@@ -1,4 +1,6 @@
 {% load user_profile %}
+{% load pictures %}
+
 {% if request.user.is_authenticated %}
   <button type="button"
           class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
@@ -8,8 +10,7 @@
     <span class="sr-only">Open user menu</span>
     {% get_user_picture request.user as picture %}
     {% if picture %}
-      <div class="w-10 h-10 rounded-full bg-cover bg-center"
-           style='background-image: url("{{ picture.url }}")'></div>
+      {% picture picture img_alt=request.user img_loading="lazy" img_class="w-10 h-10 rounded-full" sm=1 ratio="1/1" %}
     {% else %}
       <svg xmlns="http://www.w3.org/2000/svg"
            class="h-6 w-6"
