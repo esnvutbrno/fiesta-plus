@@ -1,5 +1,6 @@
 {% extends "fiesta/base.html" %}
 
+{% load i18n %}
 {% load static %}
 
 {% block main %}
@@ -14,8 +15,10 @@
           travel, accommodation, entertainment, and cultural activities, as well as a vibrant community of international
           students.
         </p>
-        <a href="{% url "esncards:application_create_form" %}"
-           class="btn btn-primary btn-lg">Apply for ESNcard</a>
+        {% if not applications.exists %}
+          <a href="{% url "esncards:application_create_form" %}"
+             class="btn btn-primary btn-lg">Apply for ESNcard</a>
+        {% endif %}
       </div>
       <div class="hidden lg:mt-0 lg:col-span-5 lg:flex">
         <img src="{% static "esncards/savings.svg" %}" alt="mockup">
@@ -23,36 +26,26 @@
     </div>
   </section>
   {% if applications.exists %}
-    <div class="p-4 max-w-md bg-white rounded-lg border shadow-md sm:p-8 dark:bg-gray-800 dark:border-gray-700 mx-auto">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-xl font-bold leading-none text-gray-900 dark:text-white">My ESNcard Applications</h3>
-      </div>
-      <div class="flow-root">
-        <ul role="list" class="divide-y divide-gray-200 dark:divide-gray-700">
-          {% for application in applications %}
-            <li class="py-3 sm:py-4">
-              <a class="flex items-center space-x-4"
-                 href="{% url "esncards:application_detail" application.pk %}">
-                <div class="flex-shrink-0">
-                  <img class="w-8 h-8 rounded-full"
-                       src="{{ application.holder_photo.url }}"
-                       alt="Neil image">
-                </div>
-                <div class="flex-1 min-w-0">
-                  <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
-                    {{ application.first_name }}
-                    {{ application.last_name }}
-                  </p>
-                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">{{ application.created|date }}</p>
-                </div>
-                <div class="inline-flex items-center text-base font-semibold text-gray-900 dark:text-white">
-                  {{ application.get_state_display }}
-                </div>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+    <div class="flex flex-col items-center max-w-md mx-auto">
+      {% for application in applications %}
+        <div class="card card-side shadow-xl w-full">
+          <figure>
+            <img src="{{ application.holder_photo.url }}"
+                 width="{{ application.holder_photo.width }}"
+                 height="{{ application.holder_photo.height }}"
+                 alt="{% trans "Holder photo" %}"/>
+          </figure>
+          <div class="card-body">
+            <div class="card-title">{{ application.last_name }} {{ application.first_name }}</div>
+            <p>{{ application.created|date }}</p>
+            <div class="card-actions items-center justify-between w-48">
+              <span class="badge badge-lg badge-outline">{{ application.get_state_display }}</span>
+              <a class="btn btn-primary"
+                 href="{% url "esncards:application_detail" application.pk %}">detail</a>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
   {% endif %}
 {% endblock %}
