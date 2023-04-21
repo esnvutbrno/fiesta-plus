@@ -1,7 +1,16 @@
 {% extends "fiesta/base.html" %}
+{% load i18n %}
+{% load breadcrumbs %}
 
 {% load editorjs %}
 {% load pages %}
+
+{% block upper_head %}
+  {# push it to <title> #}
+  {% breadcrumb_push_item page.title %}
+{% endblock %}
+
+{% block breadcrumbs_container %}{# no visible breadcrumbs #}{% endblock %}
 
 {% block header_container %}
   <nav
