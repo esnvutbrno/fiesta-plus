@@ -1,8 +1,9 @@
+{% load i18n %}
 {% load user_profile %}
 {% load utils %}
 <div class="Dashboard__tiles">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-gray-900 aspect-square">
-    <div class="Dashboard__tile__title text-white">My Profile</div>
+    <div class="Dashboard__tile__title text-white">{% blocktrans %}My Profile{% endblocktrans %}</div>
     {% compute_profile_fullness user.profile as fullness %}
     {% interpolate_to_list fullness "text-red-400" "text-orange-400" "text-blue-400" "text-lime-400" as color %}
     <div class="flex justify-center items-center my-4">
@@ -13,14 +14,14 @@
                   --size:20rem;
                   --thickness: 2rem">
         <div class="text-white flex flex-col items-center">
-          <span class="text-7xl font-bold">{{ fullness|multiply:100|int }}%</span>
+          <span class="text-4xl lg:text-7xl font-bold">{{ fullness|multiply:100|int }}%</span>
           <span class="text">complete</span>
         </div>
       </div>
     </div>
     <div class="Dashboard__tile__actions text-right">
       <a href="{% url "accounts:my-profile-update" %}"
-         class="btn btn-lg bg-light">fill profile</a>
+         class="btn btn-lg bg-light">{% blocktrans %}fill profile{% endblocktrans %}</a>
     </div>
   </div>
 </div>

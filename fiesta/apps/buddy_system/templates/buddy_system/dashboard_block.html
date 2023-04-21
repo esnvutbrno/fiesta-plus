@@ -20,11 +20,12 @@
         </div>
       {% elif br.state == br.State.MATCHED %}
         {% get_user_picture br.matched_by as buddy_picture %}
+
         {% if buddy_picture %}
           <div class="stat-figure text-secondary">
             <div class="avatar">
               <div class="w-16 rounded-full">
-                <img src="{{ buddy_picture.url }}"
+                <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
                      width="{{ buddy_picture.width }}"
                      height="{{ buddy_picture.height }}"
                      alt="Matched buddy picture"/>
