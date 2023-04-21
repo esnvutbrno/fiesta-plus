@@ -5,7 +5,7 @@ from django.contrib.admin import ModelAdmin
 
 
 class BaseRequestAdmin(ModelAdmin):
-    list_display = ["responsible_section", "issuer", "state", "matched_by", "created"]
+    list_display = ["responsible_section", "issuer", "state", "matched_by", "matched_at", "created"]
 
     date_hierarchy = "created"
 

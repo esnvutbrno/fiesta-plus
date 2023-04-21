@@ -46,4 +46,34 @@
       </div>
     {% endif %}
   </div>
+  {% if request.membership.is_local %}
+    <div class="Dashboard__tile bg-gray-200">
+      <div class="Dashboard__tile__title">My Buddies</div>
+      <div class="Dashboard__tile__value">
+        <div class="avatar-group -space-x-12 justify-center p-2">
+          {% get_matched_buddy_requests as matched_requests %}
+          {% for br in matched_requests|slice:":3" %}
+            {% get_user_picture br.issuer as buddy_picture %}
+
+            <div class="avatar hover:scale-105 transition-transform">
+              <div class="w-24">
+                <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+                     width="{{ buddy_picture.width }}"
+                     height="{{ buddy_picture.height }}"
+                     alt="{{ br.issuer }}"
+                     title="{{ br.issuer }}"/>
+              </div>
+            </div>
+          {% endfor %}
+          {% if matched_requests|length > 3 %}
+            <div class="avatar placeholder">
+              <div class="w-24 bg-neutral-focus text-neutral-content text-3xl">
+                <span>+{{ matched_requests|length|add:"-3" }}</span>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
 </div>

@@ -9,6 +9,7 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
+from apps.utils.models.query import get_single_object_or_none
 
 register = template.Library()
 
@@ -36,9 +37,11 @@ def censor_description(description: str) -> str:
 def get_current_buddy_request_of_user(context):
     request: HttpRequest = context["request"]
 
-    return request.membership.user.buddy_system_issued_requests.filter(
-        responsible_section=request.membership.section,
-    ).get()  # TODO: could be more then one?
+    return get_single_object_or_none(
+        request.membership.user.buddy_system_issued_requests.filter(
+            responsible_section=request.membership.section,
+        )
+    )  # TODO: could be more then one?
 
 
 @register.simple_tag(takes_context=True)
@@ -65,3 +68,14 @@ def get_waiting_buddy_requests_placed_before(context, br: BuddyRequest):
         state=BuddyRequest.State.CREATED,
         created__lt=br.created,
     ).count()
+
+
+@register.simple_tag(takes_context=True)
+def get_matched_buddy_requests(context):
+    request: HttpRequest = context["request"]
+
+    # TODO: limit by semester / time
+    return request.user.buddy_system_matched_requests.filter(
+        responsible_section=request.membership.section,
+        state=BuddyRequest.State.MATCHED,
+    ).order_by("-matched_at")

@@ -14,7 +14,7 @@
   <div class="gap-x-4 columns-1 lg:columns-3">
     {% for br in object_list %}
       <div class="card card-bordered shadow h-fit break-inside-avoid-column mb-4 static"
-           x-data="{modal: false}">
+           x-data>
         <figure>
           {% if configuration.display_issuer_picture and br.issuer.profile.picture %}
             <img src="{% url "buddy_system:serve-issuer-profile-picture" br.issuer.profile.picture %}"
@@ -112,10 +112,7 @@
               </form>
             </dialog>
 
-            <button class="btn btn-primary"
-                    @click="modal = true, $refs.dialog.showModal()">{% trans "Take Buddy" %}</button>
-
-
+            <button class="btn btn-primary" @click="$refs.dialog.showModal()">{% trans "Take Buddy" %}</button>
           </div>
         </div>
       </div>

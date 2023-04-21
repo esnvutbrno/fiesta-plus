@@ -11,10 +11,13 @@
         @apply stat shadow-xl
     }
     .Dashboard__tile--dark {
-        @apply text-white
+        @apply text-white dark:text-gray-900
     }
     .Dashboard__tile__title {
-        @apply stat-title text-2xl
+        @apply stat-title text-2xl dark:text-gray-900
+    }
+    .Dashboard__tile--dark .Dashboard__tile__title {
+        @apply dark:text-gray-200
     }
 
     .Dashboard__tile__value {

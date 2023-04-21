@@ -71,9 +71,9 @@ class ProfilePictureServeView(
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
-        in_my_section = request.membership.section.buddy_system_requests.filter(issuer__profile__picture=name).exists()
+        related_requests = request.membership.section.buddy_system_requests.filter(issuer__profile__picture=name)
 
         # does have the section enabled picture displaying?
-        display = self.configuration and self.configuration.display_issuer_picture
-
-        return in_my_section and display
+        return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
+            related_requests.filter(matched_by=request.user, state=BuddyRequest.State.MATCHED).exists()
+        )

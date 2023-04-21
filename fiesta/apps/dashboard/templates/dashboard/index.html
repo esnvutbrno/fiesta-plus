@@ -1,4 +1,15 @@
 {% extends "fiesta/base.html" %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block upper_head %}
+  {% breadcrumb_push_item request.in_space_of_section %}
+  {% breadcrumb_push_current_plugin %}
+{% endblock upper_head %}
+
+{% block breadcrumbs_container %}
+{% endblock breadcrumbs_container %}
+
 
 {% block main %}
   {#  <div class="stats bg-primary text-primary-content">#}
@@ -62,7 +73,7 @@
       <div class="w-full">{% include blocks.sections with request=request %}</div>
     {% endif %}
     {% if blocks.buddy_system %}
-      <div class="w-full md:w-4/5 self-start">{% include blocks.buddy_system with request=request %}</div>
+      <div class="w-full self-start">{% include blocks.buddy_system with request=request %}</div>
     {% endif %}
     <div class="flex flex-col md:flex-row w-full justify-between gap-x-4 gap-y-4">
       {% if blocks.accounts %}
