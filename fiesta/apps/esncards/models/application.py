@@ -77,6 +77,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         on_delete=models.RESTRICT,
         verbose_name=_("section"),
         db_index=True,
+        related_name="esncard_applications",
     )
     user = models.ForeignKey(
         "accounts.User",
@@ -120,6 +121,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
     class Meta:
         verbose_name = _("ESNcard application")
         verbose_name_plural = _("ESNcard applications")
+        ordering = ("-created", "state")
 
     @property
     def holder_full_name(self):

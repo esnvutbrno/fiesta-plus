@@ -11,7 +11,7 @@
       <li>
         {% if item.children %}
           <button
-            @click="expand = '{{ item.url }}'"
+            @click="expand = '{{ item.title }}'"
             {#              @mouseenter="expand = '{{ item.url }}'"#}
             class="Menu__link flex flex-row items-center w-full {% if item.active %}Menu__link--active{% endif %}">
             {{ item.title }}
@@ -27,7 +27,7 @@
           </button>
           <div
             x-cloak
-            x-show="expand === '{{ item.url }}'"
+            x-show="expand === '{{ item.title }}'"
             {#              @mouseover.away="expand = undefined"#}
             class="
             top-100 z-10 font-normal bg-white divide-y divide-gray-100 rounded-lg shadow

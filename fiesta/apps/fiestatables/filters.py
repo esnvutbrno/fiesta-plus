@@ -1,17 +1,9 @@
 from __future__ import annotations
 
-from django.db.models.fields.files import FieldFile
-from django.utils.html import format_html
 from django_filters import DateFromToRangeFilter, FilterSet
-from django_tables2 import Column
 
 from apps.fiestaforms.forms import DateInput
 from apps.fiestatables.forms import BaseFilterForm
-
-
-class ImageColumn(Column):
-    def render(self, value: FieldFile):
-        return format_html('<img src="{}" class="h-12" />', value.url)
 
 
 class BaseFilterSet(FilterSet):

@@ -15,11 +15,13 @@ class ProjectConfigMixin:
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     SITE_ID = 1
-    LANGUAGE_CODE = "en-us"
+    LANGUAGE_CODE = "en-gb"
 
     TIME_ZONE = "UTC"
 
     USE_I18N = True
+
+    USE_L10N = True
 
     USE_TZ = True
 

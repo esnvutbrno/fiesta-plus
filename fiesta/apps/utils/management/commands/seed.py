@@ -3,7 +3,7 @@ from __future__ import annotations
 import djclick as click
 
 from apps.sections.models import Section
-from apps.utils.factories.pages import PageFactory
+from apps.utils.factories.esncards import ESNCardApplicationFactory
 
 
 @click.command()
@@ -12,7 +12,5 @@ def seed():
     from faker_education import SchoolProvider
 
     factory.Faker.add_provider(SchoolProvider)
-    # pprint.pprint(SectionMembershipWithUserFactory.create_batch(15))
-    # secho(BuddyRequestWithKnownUserFactory.create_batch(15))
 
-    PageFactory.create_batch(10, section=Section.objects.filter(name="ESN VUT Brno").first())
+    ESNCardApplicationFactory.create_batch(10, section=Section.objects.filter(name="ESN VUT Brno").first())

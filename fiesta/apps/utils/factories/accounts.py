@@ -17,6 +17,8 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
+        django_get_or_create = ("username",)
+
     username = factory.Faker("user_name")
     first_name = factory.Faker("first_name")
     last_name = factory.Faker("last_name")
@@ -40,6 +42,7 @@ class UserSingleMembershipFactory(UserFactory):
 class UserProfileFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = UserProfile
+        django_get_or_create = ("user",)
 
     home_university = factory.SubFactory(
         "apps.utils.factories.universities.UniversityFactory",
