@@ -17,6 +17,7 @@
            x-data>
         <figure>
           {% if configuration.display_issuer_picture and br.issuer.profile.picture %}
+            {# TODO: img size #}
             <img src="{% url "buddy_system:serve-issuer-profile-picture" br.issuer.profile.picture %}"
                  alt="{% trans "request issuer photo" %}"
                  class="rounded-full w-24 h-24 m-4">

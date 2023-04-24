@@ -68,9 +68,10 @@
           {% endfor %}
           {% if matched_requests|length > 3 %}
             <div class="avatar placeholder">
-              <div class="w-24 bg-neutral-focus text-neutral-content text-3xl">
+              <a class="w-24 bg-neutral-focus text-neutral-content text-3xl"
+                 href="{% url "buddy_system:my-buddies" %}">
                 <span>+{{ matched_requests|length|add:"-3" }}</span>
-              </div>
+              </a>
             </div>
           {% endif %}
         </div>

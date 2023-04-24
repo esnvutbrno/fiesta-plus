@@ -48,6 +48,11 @@ class UserProfileAdmin(admin.ModelAdmin):
         ("nationality", admin.AllValuesFieldListFilter),
     )
     autocomplete_fields = ("user",)
+    search_fields = [
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+    ]
 
     def get_queryset(self, request):
         return (

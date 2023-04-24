@@ -5,6 +5,7 @@ from django.urls import path
 from ..accounts.models.profile import user_profile_picture_storage
 from .views import BuddySystemIndexView
 from .views.editor import RequestEditorDetailView, RequestsEditorView
+from .views.matches import MyBuddies
 from .views.matching import MatchingRequestsView, ProfilePictureServeView, TakeBuddyRequestView
 from .views.request import BuddySystemEntrance, NewRequestView, SignUpBeforeEntranceView, WannaBuddyView
 
@@ -19,6 +20,7 @@ urlpatterns = [
     ),
     path("new-request", NewRequestView.as_view(), name="new-request"),
     path("requests", RequestsEditorView.as_view(), name="requests-editor"),
+    path("my-buddies", MyBuddies.as_view(), name="my-buddies"),
     path("matching-requests", MatchingRequestsView.as_view(), name="matching-requests"),
     path(
         "take-request/<uuid:pk>",

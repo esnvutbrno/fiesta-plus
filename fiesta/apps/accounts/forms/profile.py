@@ -76,6 +76,10 @@ class UserProfileForm(BaseModelForm):
             "home_faculty",
             "guest_faculty",
             "picture",
+            "facebook",
+            "instagram",
+            "telegram",
+            "whatsapp",
             "interests",
         )
 

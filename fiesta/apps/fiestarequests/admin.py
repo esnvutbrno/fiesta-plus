@@ -17,4 +17,10 @@ class BaseRequestAdmin(ModelAdmin):
 
     autocomplete_fields = ["issuer", "matched_by"]
 
-    search_fields = ["issuer__username", "issuer__email", "responsible_section__name"]
+    search_fields = [
+        "issuer__username",
+        "issuer__email",
+        "issuer__last_name",
+        "issuer__first_name",
+        "responsible_section__name",
+    ]

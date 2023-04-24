@@ -5,6 +5,7 @@ import typing
 
 from django.conf import settings
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import CharField, CheckConstraint, TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -128,7 +129,24 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         blank=True,
     )
 
-    # TODO: social network profiles
+    facebook = models.URLField(
+        verbose_name=_("facebook profile"),
+        blank=True,
+    )
+    instagram = models.CharField(
+        verbose_name=_("instagram username"),
+        validators=[RegexValidator(r"^[\w_-.]+$")],
+        blank=True,
+    )
+    telegram = models.CharField(
+        verbose_name=_("telegram contact"),
+        blank=True,
+        help_text=_("Phone number or username"),
+    )
+    whatsapp = PhoneNumberField(
+        verbose_name=_("whatsapp phone number"),
+        blank=True,
+    )
 
     phone_number = PhoneNumberField(null=True, blank=True, verbose_name=_("phone number"))
 
