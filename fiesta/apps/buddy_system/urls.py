@@ -19,7 +19,7 @@ urlpatterns = [
         name="sign-up-before-request",
     ),
     path("new-request", NewRequestView.as_view(), name="new-request"),
-    path("requests", RequestsEditorView.as_view(), name="requests-editor"),
+    path("requests", RequestsEditorView.as_view(), name="requests"),
     path("my-buddies", MyBuddies.as_view(), name="my-buddies"),
     path("matching-requests", MatchingRequestsView.as_view(), name="matching-requests"),
     path(

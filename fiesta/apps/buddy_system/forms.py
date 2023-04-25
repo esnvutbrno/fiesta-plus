@@ -10,7 +10,7 @@ from apps.buddy_system.models import BuddyRequest
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.fields.datetime import DateTimeLocalField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import MembersFromSectionSpaceWidget, UserWidget
+from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, UserWidget
 
 USER_PROFILE_CONTACT_FIELDS = fields_for_model(
     UserProfile,
@@ -86,5 +86,5 @@ class BuddyRequestEditorForm(BaseModelForm):
         }
         widgets = {
             "issuer": UserWidget,
-            "matched_by": MembersFromSectionSpaceWidget,
+            "matched_by": ActiveLocalMembersFromSectionWidget,
         }

@@ -114,6 +114,9 @@ class Section(BaseTimestampedModel):
     # prefetched for request.in_space_of_section
     enabled_plugins_for_privileged: list[Plugin]
 
+    # only typing of related manager
+    buddy_system_requests: models.QuerySet
+
 
 class SectionUniversity(BaseTimestampedModel):
     section = models.ForeignKey(

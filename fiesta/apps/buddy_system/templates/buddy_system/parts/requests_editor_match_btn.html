@@ -1,0 +1,5 @@
+{% load i18n %}
+{% if not record.matched_by %}
+  {# TODO: tweak click#}
+  <button class="btn btn-sm btn-outline btn-primary">{% trans "Match" %}</button>
+{% endif %}

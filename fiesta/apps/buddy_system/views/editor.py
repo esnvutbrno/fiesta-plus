@@ -5,13 +5,13 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 from django_filters import ChoiceFilter
-from django_tables2 import Column, tables
+from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestaforms.views.htmx import HtmxFormMixin
-from apps.fiestatables.columns import ImageColumn
+from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
@@ -46,18 +46,29 @@ class RequestTable(tables.Table):
         ),
     )
 
-    matched_by__profile__picture = ImageColumn(verbose_name=_("Buddy"))
+    matched_by__profile__picture = ImageColumn(
+        verbose_name=_("Buddy"),
+    )
+
+    match_request = TemplateColumn(
+        template_name="buddy_system/parts/requests_editor_match_btn.html",
+        exclude_from_export=True,
+    )
+
+    created = NaturalDatetimeColumn()
 
     class Meta:
         model = BuddyRequest
         # TODO: dynamic by section preferences
-        fields = ("state", "created")
+        fields = ("state",)
         sequence = (
             "issuer__full_name_official",
             "issuer__profile__picture",
             "state",
             "matched_by__full_name_official",
             "matched_by__profile__picture",
+            "created",
+            "match_request",
             "...",
         )
 
@@ -75,8 +86,8 @@ class RequestsEditorView(
     filterset_class = RequestFilter
 
     def get_queryset(self):
-        return BuddyRequest.objects.filter(responsible_section=self.request.in_space_of_section).select_related(
-            "issuer__profile"
+        return self.request.in_space_of_section.buddy_system_requests.select_related(
+            "issuer__profile",
         )
 
 
@@ -91,9 +102,8 @@ class RequestEditorDetailView(
 ):
     template_name = "buddy_system/editor/detail.html"
     ajax_template_name = "buddy_system/editor/detail_form.html"
-    request: HttpRequest
     model = BuddyRequest
     form_class = BuddyRequestEditorForm
 
-    success_url = reverse_lazy("buddy_system:requests-editor")
+    success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been updated.")

@@ -36,6 +36,7 @@ def base_request_model_factory(related_base: str):
     class BaseRequest(LifecycleModelMixin, BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
+            ordering = ("-created",)
 
         State = BaseRequestProtocol.State
 
