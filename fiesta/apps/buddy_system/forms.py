@@ -88,3 +88,26 @@ class BuddyRequestEditorForm(BaseModelForm):
             "issuer": UserWidget,
             "matched_by": ActiveLocalMembersFromSectionWidget,
         }
+
+
+class QuickBuddyMatchForm(BaseModelForm):
+    submit_text = _("Match")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields["issuer"].disabled = True
+
+        if self.instance.state != BuddyRequest.State.CREATED:
+            self.fields["matched_by"].disabled = True
+
+    class Meta:
+        model = BuddyRequest
+        fields = (
+            "issuer",
+            "matched_by",
+        )
+        widgets = {
+            "issuer": UserWidget,
+            "matched_by": ActiveLocalMembersFromSectionWidget,
+        }

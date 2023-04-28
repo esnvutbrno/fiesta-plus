@@ -8,7 +8,7 @@ from django_filters import ChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
-from apps.buddy_system.forms import BuddyRequestEditorForm
+from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
@@ -53,6 +53,7 @@ class RequestTable(tables.Table):
     match_request = TemplateColumn(
         template_name="buddy_system/parts/requests_editor_match_btn.html",
         exclude_from_export=True,
+        order_by="matched_at",
     )
 
     created = NaturalDatetimeColumn()
@@ -107,3 +108,21 @@ class RequestEditorDetailView(
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been updated.")
+
+
+@with_breadcrumb(_("Quick Buddy Match"))
+@with_object_breadcrumb()
+class QuickBuddyMatchView(
+    EnsurePrivilegedUserViewMixin,
+    SuccessMessageMixin,
+    HtmxFormMixin,
+    AjaxViewMixin,
+    UpdateView,
+):
+    template_name = "buddy_system/editor/quick_match.html"
+    ajax_template_name = "buddy_system/editor/quick_match_form.html"
+    model = BuddyRequest
+    form_class = QuickBuddyMatchForm
+
+    success_url = reverse_lazy("buddy_system:requests")
+    success_message = _("Buddy request has been matched.")
