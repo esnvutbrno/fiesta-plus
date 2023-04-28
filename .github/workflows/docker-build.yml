@@ -1,57 +1,39 @@
-name: Docker Images Build
+name: ci
 
 on:
-  push:
-    branches: [ develop, main ]
-  pull_request:
-    branches: [ develop, main ]
+  - push
 
 jobs:
-  build-docker-images:
-    name: Build Docker images
-
-    strategy:
-      matrix:
-        include:
-          - image: web
-            context: .
-            file: fiesta/Dockerfile
-          - image: webpack
-            context: .
-            file: webpack/Dockerfile
-          - image: webserver
-            context: nginx
-            file: nginx/webserver.Dockerfile
-
+  docker:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      -
+        name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Load git tag
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF/refs\/tags\//}
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
 
-      # setup Docker buld action
-      - name: Set up Docker Buildx
+      -
+        name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Login to DockerHub
+      -
+        name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-
-      - name: Build ${{ matrix.image }}/ image
-        id: build_and_push
+          username: nologin
+          password: ${{ secrets.SCW_SECRET_KEY }}
+          registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
+      -
+        name: Build and push
         uses: docker/build-push-action@v4
         with:
-          context: ${{ matrix.context }}
-          file: ${{ matrix.file }}
+          context: .
+          file: fiesta/Dockerfile
+          push: true
+          tags: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:latest
+          # local github actions cache
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          # TODO: tag
-          # ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:${{ steps.vars.outputs.tag }},
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/buena-fiesta-${{ matrix.image }}:latest
-          push: ${{ contains('refs/heads/develop refs/heads/main', github.ref) }}
