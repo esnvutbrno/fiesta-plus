@@ -1,7 +1,7 @@
 {% load buddy_system %}
 {% load i18n %}
 {% load user_profile %}
-<div class="Dashboard__tiles">
+<div class="Dashboard__tiles flex flex-col md:flex-row">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
     <div class="Dashboard__tile__title">Buddy System</div>
     {% if request.membership.is_international %}
@@ -68,7 +68,7 @@
           {% endfor %}
           {% if matched_requests|length > 3 %}
             <div class="avatar placeholder">
-              <a class="w-24 bg-neutral-focus text-neutral-content text-3xl"
+              <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
                  href="{% url "buddy_system:my-buddies" %}">
                 <span>+{{ matched_requests|length|add:"-3" }}</span>
               </a>

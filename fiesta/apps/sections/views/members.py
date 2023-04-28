@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column
 
-from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn
+from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.user_membership import HttpRequest
@@ -65,6 +65,8 @@ class SectionMembershipTable(tables.Table):
             SectionMembership.State.BANNED: "⛔",
         },
     )
+
+    created = NaturalDatetimeColumn(verbose_name=_("Joined"))
 
     class Meta:
         model = SectionMembership

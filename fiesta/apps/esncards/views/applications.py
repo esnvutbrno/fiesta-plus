@@ -8,7 +8,7 @@ from django_filters import CharFilter, ChoiceFilter
 from django_tables2 import Column
 
 from apps.esncards.models import ESNcardApplication
-from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn
+from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.plugins.middleware.plugin import HttpRequest
@@ -50,7 +50,7 @@ class ESNcardApplicationsTable(tables.Table):
     holder_photo = ImageColumn(verbose_name=_("Photo"))
     birth_date = tables.DateColumn(verbose_name=_("Birth date"))
     nationality = Column(verbose_name=_("Nationality"))
-    created = tables.DateTimeColumn(short=False)
+    created = NaturalDatetimeColumn()
 
     state = LabeledChoicesColumn(
         ESNcardApplication.State,
@@ -99,4 +99,4 @@ class ApplicationsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                 ESNcardApplication.State.DECLINED,
                 ESNcardApplication.State.CANCELLED,
             )
-        )
+        ).select_related("user")

@@ -4,6 +4,7 @@ import typing
 
 from django import template
 
+from apps.esncards.models import ESNcardApplication
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
 
@@ -20,6 +21,7 @@ def get_section_statistics(context: dict):
         alumni: int
         internationals: int
         internationals_wo_request: int
+        unprocessed_esncard_applications: int
 
     return Stats(
         members=req.in_space_of_section.memberships.filter(
@@ -43,8 +45,14 @@ def get_section_statistics(context: dict):
             role=SectionMembership.Role.INTERNATIONAL,
         )
         .filter(
-            # check
             user__buddy_system_issued_requests__isnull=True,
+            user__esncard_applications__isnull=True,
         )
         .count(),
+        unprocessed_esncard_applications=req.in_space_of_section.esncard_applications.filter(
+            state__in=(
+                ESNcardApplication.State.CREATED,
+                ESNcardApplication.State.ACCEPTED,
+            )
+        ).count(),
     )
