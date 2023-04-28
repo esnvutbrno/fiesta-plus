@@ -1,16 +1,17 @@
-name: ci
+name: Deploy to cluster
 
 on:
   - push
 
 jobs:
-  docker:
+  build-images:
     runs-on: ubuntu-latest
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
-      - name: Docker meta
+
+      - name: Prepare image metadata
         id: meta
         uses: docker/metadata-action@v4
         with:
@@ -48,8 +49,29 @@ jobs:
           context: .
           file: fiesta/Dockerfile
           push: true
-          # local github actions cache
-          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
-          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
+#          TODO: ends with 400
+#          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
+#          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+  deploy:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: 'Deploy'
+        uses: 'deliverybot/helm@v1'
+        with:
+          release: 'fiesta'
+          namespace: 'default'
+          chart: 'charts'
+          token: '${{ github.token }}'
+          values: |
+            name: foobar
+          value-files: >-
+            [
+              "values.yaml",
+            ]
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'

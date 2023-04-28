@@ -1,0 +1,6 @@
+image:
+  repository: foo
+  tag: latest
+
+service:
+  port: 8080
