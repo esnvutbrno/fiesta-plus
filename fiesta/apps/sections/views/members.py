@@ -1,20 +1,26 @@
 from __future__ import annotations
 
 import django_tables2 as tables
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import UpdateView
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
-from django_tables2 import Column
+from django_tables2 import Column, TemplateColumn
 
-from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
+from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
+from apps.sections.forms.membership import ChangeMembershipStateForm
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.universities.models import Faculty
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.views import AjaxViewMixin
 
 
 def related_faculties(request: HttpRequest):
@@ -57,21 +63,20 @@ class SectionMembershipTable(tables.Table):
     user__profile__picture = ImageColumn()
     user__profile__home_faculty__abbr = Column(verbose_name=_("Faculty"))
 
-    state = LabeledChoicesColumn(
-        SectionMembership.State,
-        {
-            SectionMembership.State.UNCONFIRMED: "❓",
-            SectionMembership.State.ACTIVE: "✅",
-            SectionMembership.State.BANNED: "⛔",
-        },
-    )
-
     created = NaturalDatetimeColumn(verbose_name=_("Joined"))
+
+    approve_membership = TemplateColumn(
+        template_name="sections/parts/change_membership_state_btn.html",
+        exclude_from_export=True,
+        order_by="state",
+        verbose_name=_("Membership"),
+        extra_context={"SectionMembership": SectionMembership},
+    )
 
     class Meta:
         model = SectionMembership
 
-        fields = ("state", "created")
+        fields = ("created",)
 
         sequence = (
             "user__full_name_official",
@@ -79,6 +84,8 @@ class SectionMembershipTable(tables.Table):
             "user__profile__home_faculty__abbr",
             "...",
         )
+
+        attrs = dict(tbody={"hx-disable": True})
 
 
 @with_breadcrumb(_("Section"))
@@ -109,3 +116,21 @@ class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                 ),
             )
         )
+
+
+@with_breadcrumb(_("Membership State"))
+@with_object_breadcrumb()
+class ChangeMembershipStateView(
+    EnsurePrivilegedUserViewMixin,
+    SuccessMessageMixin,
+    HtmxFormMixin,
+    AjaxViewMixin,
+    UpdateView,
+):
+    template_name = "sections/parts/change_membership_state.html"
+    ajax_template_name = "sections/parts/change_membership_state_form.html"
+    model = SectionMembership
+    form_class = ChangeMembershipStateForm
+
+    success_url = reverse_lazy("sections:section-members")
+    success_message = _("Section membership state has been changed.")
