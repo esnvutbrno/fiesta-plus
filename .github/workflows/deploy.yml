@@ -64,8 +64,7 @@ jobs:
         env:
           KUBECONFIG_BASE64: ${{ secrets.KUBECONFIG }}
         run: |
-          mkdir -p .kube
-          echo $KUBECONFIG_BASE64 | base64 --decode > .kube/config
+          echo $KUBECONFIG_BASE64 | base64 --decode > kubeconfig.yml
 
       - name: 'Deploy'
         uses: 'vimeda/helm@v1.7.0'
@@ -81,4 +80,4 @@ jobs:
               "charts/values.yaml"
             ]
         env:
-          KUBECONFIG_FILE: .kube/config
+          KUBECONFIG_FILE: kubeconfig.yml
