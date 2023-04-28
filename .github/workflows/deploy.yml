@@ -60,6 +60,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - name: Load kubeconfig
+        env:
+          KUBECONFIG_BASE64: ${{ secrets.KUBECONFIG }}
+        run: |
+          echo $KUBECONFIG_BASE64 | base64 --decode > kubeconfig.yaml
+
       - name: 'Deploy'
         uses: 'vimeda/helm@v1.7.0'
         with:
@@ -74,4 +80,4 @@ jobs:
               "charts/values.yaml"
             ]
         env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+          KUBECONFIG_FILE: kubeconfig.yaml
