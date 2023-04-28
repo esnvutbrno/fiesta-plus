@@ -10,6 +10,21 @@ jobs:
       -
         name: Checkout
         uses: actions/checkout@v3
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
 
       -
         name: Set up QEMU
@@ -33,7 +48,8 @@ jobs:
           context: .
           file: fiesta/Dockerfile
           push: true
-          tags: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:latest
           # local github actions cache
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
+          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
