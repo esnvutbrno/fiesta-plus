@@ -57,6 +57,12 @@ ENTRYPOINT ["./run.sh"]
 
 FROM base as stable
 
+# stubs to get compatibility with fs storage
+ARG DJANGO_STATIC_ROOT=/usr/src/static
+ENV DJANGO_STATIC_ROOT=${DJANGO_STATIC_ROOT}
+ARG DJANGO_MEDIA_ROOT=/usr/src/media
+ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
+
 # TODO: maybe better name?
 ARG DJANGO_BUILD_DIR=/usr/src/build/
 ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}

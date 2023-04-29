@@ -53,3 +53,13 @@ class LocalProduction(Base):
 
 class Production(Base):
     DEBUG = False
+
+    def STORAGES(self):
+        return {
+            "default": {
+                "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+            },
+            "staticfiles": {
+                "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+            },
+        }
