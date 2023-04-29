@@ -100,13 +100,12 @@ jobs:
           path: webpack-stats.json
 
       -
-        name: Build and push
+        name: Build image
         uses: docker/build-push-action@v4
         with:
           context: .
           file: fiesta/Dockerfile
           load: true
-          push: true
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
@@ -126,6 +125,15 @@ jobs:
           name: web-static
           path: ./static/
           if-no-files-found: error
+
+      - name: Push image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: fiesta/Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
   build-proxy:
     runs-on: ubuntu-latest
