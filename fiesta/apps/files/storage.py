@@ -4,20 +4,20 @@ import hashlib
 import pathlib
 import typing
 from collections.abc import Callable
-from importlib import import_module
 from urllib.parse import urljoin
 
 from django.conf import settings
 from django.core.files.storage import Storage
 from django.urls import reverse
 from django.utils.encoding import filepath_to_uri
+from django.utils.module_loading import import_string
 from django.utils.timezone import now
 
 if typing.TYPE_CHECKING:
     from apps.sections.middleware.section_space import HttpRequest
     from apps.utils.models import BaseModel
 
-DEFAULT_STORAGE_CLASS: type[Storage] = import_module(settings.STORAGES["default"])
+DEFAULT_STORAGE_CLASS: type[Storage] = import_string(settings.STORAGES["default"]["BACKEND"])
 
 
 class NamespacedFilesStorage(DEFAULT_STORAGE_CLASS):
