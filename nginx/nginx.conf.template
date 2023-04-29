@@ -7,9 +7,8 @@ gzip_disable "MSIE [1-6]\.";
 
 resolver 8.8.8.8;
 
-
 upstream web {
-    server web:8000;
+    server ${PROXY_HOSTNAME_TARGET}:8000;
 }
 
 proxy_cache_path /tmp/cache levels=1:2 keys_zone=gh-assets-cache:8m max_size=1000m inactive=600m;
@@ -18,7 +17,6 @@ proxy_temp_path /tmp/cache/tmp;
 server {
     listen 80;
     server_tokens off;
-
 
     client_max_body_size 32M;
 
