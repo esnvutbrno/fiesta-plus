@@ -7,7 +7,9 @@ COPY ./nginx/nginx.conf.template /etc/nginx/templates/
 
 FROM base as stable
 
+# propared by webpack and web builds during CD
 COPY webpack-build/ /var/build/
+COPY web-static/ /var/static/
 
 ARG STATIC_LOCATION_PATTERN="^/static/(.*)$$"
 ENV STATIC_LOCATION_PATTERN=${STATIC_LOCATION_PATTERN}
