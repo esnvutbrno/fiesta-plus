@@ -1,4 +1,4 @@
-FROM python:3.11.3-alpine3.17 as builder
+FROM python:3.11.3-alpine3.17 as venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -20,9 +20,9 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN /venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 # pull official base image
-FROM python:3.11.3-alpine3.17
+FROM python:3.11.3-alpine3.17 as base
 
-COPY --from=builder /venv /venv
+COPY --from=venv-builder /venv /venv
 
 # set work directory
 WORKDIR /usr/src/app
@@ -53,3 +53,8 @@ COPY ./fiesta/ /usr/src/app/
 RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]
+
+FROM base as stable
+
+# TODO: https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
+CMD ["python manage.py runserver 0.0.0.0:8000"]
