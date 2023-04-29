@@ -36,8 +36,8 @@ services:
 
   webserver:
     build:
-      context: ./nginx
-      dockerfile: webserver.Dockerfile
+      context: .
+      dockerfile: nginx/webserver.Dockerfile
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
@@ -50,6 +50,7 @@ services:
       - wiki_static_files:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      PROXY_HOSTNAME_TARGET: "web"
       STATIC_LOCATION_PATTERN: "^\b$$"
       VIRTUAL_HOST: "*.fiesta.test,fiesta.test"
       VIRTUAL_PORT: 80
