@@ -1,10 +1,13 @@
-image:
+service:
+  port: 80
+
+web:
   repository: nginxdemos/hello
   tag: latest
 
-service:
-  port: 8000
-
-web:
   secretKeyName: web-secret-key
   configName: web-config
+
+proxy:
+  repository: nginxdemos/hello
+  tag: latest

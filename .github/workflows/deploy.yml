@@ -235,8 +235,11 @@ jobs:
           token: '${{ github.token }}'
           timeout: 60s
           values: |
-            image:
+            web:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
+              tag: ${{ env.image_tag }}
+            proxy:
+              repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/proxy
               tag: ${{ env.image_tag }}
           value-files: >-
             [

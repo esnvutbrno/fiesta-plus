@@ -14,19 +14,12 @@ spec:
       labels:
         app: web
         {{- include "fiesta.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-logs-container: web
     spec:
       containers:
-        - name: {{ .Chart.Name }}
+        - name: web
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-{{/*          command:*/}}
-{{/*            - bash*/}}
-{{/*            - -c*/}}
-{{/*            - "echo starting && sleep 900000"*/}}
-          ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
-              protocol: TCP
 {{/*          livenessProbe:*/}}
 {{/*            httpGet:*/}}
 {{/*              path: /*/}}
@@ -40,3 +33,9 @@ spec:
                 name: {{ .Values.web.secretKeyName }}
             - configMapRef:
                 name: {{ .Values.web.configName }}
+        - name: proxy
+          image: "{{ .Values.proxy.repository }}:{{ .Values.proxy.tag | default .Chart.AppVersion }}"
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
