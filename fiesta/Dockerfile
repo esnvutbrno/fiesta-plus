@@ -31,6 +31,7 @@ ENV PATH="/venv/bin:${PATH}"
 ENV VIRTUAL_ENV="/venv"
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE "fiesta.settings"
 # same for postgres container
 ENV TZ Europe/Prague
 
