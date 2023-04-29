@@ -50,9 +50,13 @@ def get_navigation_items(context):
 
 @register.simple_tag(takes_context=True)
 def get_home_url(context):
-    request: HttpRequest = context["request"]
+    url = reverse("public:home")
+    try:
+        request: HttpRequest = context["request"]
 
-    if request.in_space_of_section:
-        return request.in_space_of_section.section_home_url(request.membership)
+        if request.in_space_of_section:
+            url = request.in_space_of_section.section_home_url(request.membership)
+    except KeyError:
+        ...
 
-    return reverse("public:home")
+    return url
