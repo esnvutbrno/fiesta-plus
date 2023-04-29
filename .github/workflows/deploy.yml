@@ -116,7 +116,7 @@ jobs:
 
       - name: Extract compiled results
         run: |
-          docker cp $(docker create --name web web:${{ env.image_tag }}):/usr/src/static/ ./static
+          docker cp $(docker create --name web ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:${{ env.image_tag }}):/usr/src/static/ ./static
           docker rm web
 
       - uses: actions/upload-artifact@v3
