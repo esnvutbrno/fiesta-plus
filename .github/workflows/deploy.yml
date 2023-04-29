@@ -25,6 +25,8 @@ jobs:
           #          TODO: ends with 400
           #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
           #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: webpack:latest
 
       - name: Extract compiled results
@@ -108,6 +110,8 @@ jobs:
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -188,6 +192,8 @@ jobs:
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
