@@ -63,5 +63,5 @@ ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 # given by webpack compiled results
 COPY ./webpack-stats.json $DJANGO_BUILD_DIR
 
-# TODO: https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
-CMD ["python manage.py runserver 0.0.0.0:8000"]
+# TODO: check opts https://www.uvicorn.org/#command-line-options
+CMD ["python -m uvicorn fiesta.asgi:application"]

@@ -3,7 +3,7 @@ image:
   tag: latest
 
 service:
-  port: 80
+  port: 8000
 
 web:
   secretKeyName: web-secret-key
