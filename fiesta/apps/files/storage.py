@@ -7,7 +7,7 @@ from collections.abc import Callable
 from urllib.parse import urljoin
 
 from django.conf import settings
-from django.core.files.storage import Storage
+from django.core.files.storage import FileSystemStorage, Storage
 from django.urls import reverse
 from django.utils.encoding import filepath_to_uri
 from django.utils.module_loading import import_string
@@ -34,7 +34,12 @@ class NamespacedFilesStorage(DEFAULT_STORAGE_CLASS):
         has_permission: Callable[[HttpRequest, str], bool] = (lambda *_: False),
     ):
         self.location = location.strip("/")
-        super().__init__(location=settings.MEDIA_ROOT / self.location)
+
+        # magics for S3/FS compatible class
+        if issubclass(DEFAULT_STORAGE_CLASS, FileSystemStorage):
+            location = settings.MEDIA_ROOT / self.location
+
+        super().__init__(location=location)
 
         self.has_permission = has_permission
 

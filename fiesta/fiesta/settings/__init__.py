@@ -60,6 +60,7 @@ class Production(Base):
                 "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
             },
             "staticfiles": {
-                "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+                # static files are not served by Django in production (only collected)
+                "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
             },
         }
