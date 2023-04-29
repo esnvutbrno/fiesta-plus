@@ -4,7 +4,17 @@ metadata:
   name: fiesta-ingress
 spec:
   rules:
-    - host: bf.josefkolar.cz
+    - host: "*.bf.josefkolar.cz"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
+    - host: "bf.josefkolar.cz"
       http:
         paths:
           - path: /
