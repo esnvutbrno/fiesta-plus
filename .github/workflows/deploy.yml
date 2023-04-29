@@ -87,12 +87,12 @@ jobs:
           docker cp $(docker create --name webpack webpack:latest):/usr/src/build/ ./build
           docker rm webpack
 
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         name: Save compiled results
         with:
           name: webpack-build
-          path: ./build
-
+          path: ./build/
+          if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
