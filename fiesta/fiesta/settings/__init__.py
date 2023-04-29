@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from configurations import Configuration
+from configurations.values import Value
 
 from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
@@ -53,6 +54,8 @@ class LocalProduction(Base):
 
 class Production(Base):
     DEBUG = False
+
+    ROOT_DOMAIN = Value()
 
     def STORAGES(self):
         return {
