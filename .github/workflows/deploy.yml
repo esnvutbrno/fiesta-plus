@@ -62,15 +62,6 @@ jobs:
         name: Checkout
         uses: actions/checkout@v3
 
-      - name: Prepare image metadata
-        id: meta
-        uses: docker/metadata-action@v4
-        with:
-          images: |
-            webpack
-          tags: |
-            latest
-
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -84,12 +75,13 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
+          load: true
           file: webpack/Dockerfile
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags:
+            - webpack:latest
 
       - name: Extract compiled results
         run: |
