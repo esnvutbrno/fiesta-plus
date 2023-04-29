@@ -35,3 +35,6 @@ spec:
 {{/*            httpGet:*/}}
 {{/*              path: /*/}}
 {{/*              port: http*/}}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.web.secretKeyName }}

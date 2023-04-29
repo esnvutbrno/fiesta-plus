@@ -4,3 +4,6 @@ image:
 
 service:
   port: 80
+
+web:
+  secretKeyName: web-secret-key
