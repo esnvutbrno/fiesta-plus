@@ -1,3 +1,6 @@
+ingress:
+  host: bf.josefkolar.cz
+
 service:
   port: 80
 

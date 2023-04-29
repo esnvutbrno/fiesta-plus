@@ -4,3 +4,4 @@ metadata:
   name: {{ .Values.web.configName }}
 data:
   DJANGO_CONFIGURATION: "Production"
+  DJANGO_ROOT_DOMAIN: {{ .Values.ingress.host | quote }}
