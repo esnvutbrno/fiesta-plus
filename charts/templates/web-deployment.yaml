@@ -19,10 +19,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - bash
-            - -c
-            - "echo starting && sleep 900000"
+{{/*          command:*/}}
+{{/*            - bash*/}}
+{{/*            - -c*/}}
+{{/*            - "echo starting && sleep 900000"*/}}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
