@@ -60,17 +60,20 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Load kubeconfig
-        env:
-          KUBECONFIG_BASE64: ${{ secrets.KUBECONFIG }}
+#      - name: Set Kubernetes Context
+#        uses: azure/k8s-set-context@v1
+#        with:
+#          method: kubeconfig
+#          kubeconfig: "${{ secrets.KUBECONFIG }}"
+      - name: Setup k8s context
         run: |
-          echo $KUBECONFIG_BASE64 | base64 --decode > kubeconfig.yml
+          echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
 
-      - name: 'Deploy'
+      - name: Deploy
         uses: 'vimeda/helm@v1.7.0'
         with:
           release: 'fiesta'
-          namespace: 'default'
+          namespace: 'fiesta'
           chart: 'charts'
           token: '${{ github.token }}'
           values: |
@@ -79,5 +82,3 @@ jobs:
             [
               "charts/values.yaml"
             ]
-        env:
-          KUBECONFIG_FILE: kubeconfig.yml
