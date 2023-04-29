@@ -19,7 +19,7 @@ class NamespacedFilesServeView(View):
 
     def get(self, request, name: str, *args, **kwargs) -> HttpResponse:
         if not self.storage.exists(name):
-            logger.warning("File %s in namespace %s not found.", name, self.storage.namespace)
+            logger.warning("File %s in namespace %s not found.", name, self.storage.location)
             return HttpResponseNotFound()
 
         if not self.has_permission(request, name) and not request.user.is_superuser:
@@ -41,9 +41,9 @@ class NamespacedFilesServeView(View):
     @classmethod
     def as_url(cls, storage: NamespacedFilesStorage, url_name: str = None) -> RoutePattern:
         return path(
-            f"serve/{storage.namespace}/<path:name>",
+            f"serve/{storage.location}/<path:name>",
             cls.as_view(
                 storage=storage,
             ),
-            name=url_name or f"serve-{storage.namespace}",
+            name=url_name or f"serve-{storage.location}",
         )

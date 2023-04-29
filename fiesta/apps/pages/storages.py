@@ -7,4 +7,4 @@ class EditorImagesStorage(NamespacedFilesStorage):
     """Used for all images uploaded from editorjs interface, has to be defined as class."""
 
     def __init__(self):
-        super().__init__(namespace="editor-images", has_permission=lambda *_: True)
+        super().__init__(location="editor-images", has_permission=lambda *_: True)
