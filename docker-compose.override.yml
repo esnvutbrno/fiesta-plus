@@ -10,7 +10,7 @@ services:
       args:
         - POETRY_EXPORT_ARGS=--dev
 
-  webserver:
+  proxy:
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
 
