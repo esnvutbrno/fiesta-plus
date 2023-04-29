@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fiesta.fullname" . }}
+  name: web-deploy
   labels:
     {{- include "fiesta.labels" . | nindent 4 }}
 spec:
@@ -12,6 +12,7 @@ spec:
   template:
     metadata:
       labels:
+        app: web
         {{- include "fiesta.selectorLabels" . | nindent 8 }}
     spec:
       containers:
