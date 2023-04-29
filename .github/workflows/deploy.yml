@@ -4,6 +4,13 @@ on:
   - push
 
 jobs:
+  build-webpack:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Checkout
+        uses: actions/checkout@v3
+
   build-images:
     runs-on: ubuntu-latest
     steps:
@@ -15,17 +22,10 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          # list of Docker images to use as base name for tags
           images: |
-            ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
-          # generate Docker tags based on the following events/attributes
+            webpack
           tags: |
-            type=ref,event=branch
-            type=ref,event=tag
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
+            latest
 
       -
         name: Set up QEMU
@@ -36,24 +36,28 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: nologin
-          password: ${{ secrets.SCW_SECRET_KEY }}
-          registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
-      -
-        name: Build and push
+        name: Build
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: fiesta/Dockerfile
-          push: true
+          file: webpack/Dockerfile
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Extract compiled results
+        run: |
+          docker cp $(docker create --name webpack webpack:latest):/usr/src/build/ ./build
+          docker rm webpack
+
+      - uses: actions/upload-artifact@v2
+        name: Save compiled results
+        with:
+          name: webpack-build
+          path: ./build
+
 
   deploy:
     runs-on: ubuntu-latest
