@@ -56,5 +56,8 @@ ENTRYPOINT ["./run.sh"]
 
 FROM base as stable
 
+# given by webpack compiled results
+COPY ./webpack-stats.json /usr/src/build/
+
 # TODO: https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 CMD ["python manage.py runserver 0.0.0.0:8000"]

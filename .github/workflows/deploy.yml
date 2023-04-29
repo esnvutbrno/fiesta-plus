@@ -42,6 +42,14 @@ jobs:
           username: nologin
           password: ${{ secrets.SCW_SECRET_KEY }}
           registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
+
+      -
+        name: Prepare webpack build stats file
+        uses: actions/download-artifact@v3
+        with:
+          name: webpack-build-stats
+          path: webpack-stats.json
+
       -
         name: Build and push
         uses: docker/build-push-action@v4
@@ -86,6 +94,13 @@ jobs:
         run: |
           docker cp $(docker create --name webpack webpack:latest):/usr/src/build/ ./build
           docker rm webpack
+
+      - uses: actions/upload-artifact@v3
+        name: Save compiled results stats file
+        with:
+          name: webpack-build-stats
+          path: ./build/webpack-stats.json
+          if-no-files-found: error
 
       - uses: actions/upload-artifact@v3
         name: Save compiled results
