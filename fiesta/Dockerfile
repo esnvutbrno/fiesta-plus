@@ -56,8 +56,12 @@ ENTRYPOINT ["./run.sh"]
 
 FROM base as stable
 
+# TODO: maybe better name?
+ARG DJANGO_BUILD_DIR=/usr/src/build/
+ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
+
 # given by webpack compiled results
-COPY ./webpack-stats.json /usr/src/build/
+COPY ./webpack-stats.json $DJANGO_BUILD_DIR
 
 # TODO: https://docs.djangoproject.com/en/4.2/howto/deployment/asgi/
 CMD ["python manage.py runserver 0.0.0.0:8000"]
