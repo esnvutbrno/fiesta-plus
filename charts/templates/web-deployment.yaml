@@ -38,3 +38,5 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretKeyName }}
+            - configMapRef:
+                name: {{ .Values.web.configName }}
