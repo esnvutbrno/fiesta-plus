@@ -10,6 +10,7 @@ web:
 
   secretKeyName: web-secret-key
   configName: web-config
+  secretDbName: web-secret-db
 
 proxy:
   repository: nginxdemos/hello

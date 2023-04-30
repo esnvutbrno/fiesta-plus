@@ -31,6 +31,8 @@ spec:
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretKeyName }}
+            - secretRef:
+                name: {{ .Values.web.secretDbName }}
             - configMapRef:
                 name: {{ .Values.web.configName }}
         - name: proxy
