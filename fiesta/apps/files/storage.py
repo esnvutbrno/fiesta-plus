@@ -26,18 +26,19 @@ class NamespacedFilesStorage(DEFAULT_STORAGE_CLASS):
     storages = []
 
     location: str
+    namespace: str
 
     def __init__(
         self,
-        location: str,
+        namespace: str,
         *,
         has_permission: Callable[[HttpRequest, str], bool] = (lambda *_: False),
     ):
-        self.location = location.strip("/")
+        self.namespace = location = namespace
 
         # magics for S3/FS compatible class
-        if issubclass(DEFAULT_STORAGE_CLASS, FileSystemStorage):
-            location = settings.MEDIA_ROOT / self.location
+        if isinstance(self, FileSystemStorage):
+            location = settings.MEDIA_ROOT / namespace
 
         super().__init__(location=location)
 
@@ -55,7 +56,7 @@ class NamespacedFilesStorage(DEFAULT_STORAGE_CLASS):
 
     def internal_serve_url(self, name):
         """Inner URL for serving internally by webserver."""
-        return urljoin(settings.MEDIA_URL, f"{self.location}/{filepath_to_uri(name)}")
+        return urljoin(settings.MEDIA_URL, f"{self.namespace}/{filepath_to_uri(name)}")
 
     @staticmethod
     def upload_to(instance: BaseModel, filename: str) -> str:
