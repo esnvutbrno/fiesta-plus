@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: web-migrate
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-10"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrate
+          image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
+          command:
+            - python
+            - manage.py
+            - migrate
+            - --no-input
+          envFrom:
+            - secretRef:
+                name: {{ .Values.web.secretKeyName }}
+            - secretRef:
+                name: {{ .Values.web.secretDbName }}
+            - configMapRef:
+                name: {{ .Values.web.configName }}
+      restartPolicy: Never
+  backoffLimit: 1
