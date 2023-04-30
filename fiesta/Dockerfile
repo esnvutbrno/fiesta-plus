@@ -67,7 +67,8 @@ ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
 ARG DJANGO_BUILD_DIR=/usr/src/build/
 ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 
-RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=Production python manage.py collectstatic --no-input"
+# need production configuration, but not all values are ready in env
+RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
 
 # given by webpack compiled results
 COPY ./webpack-stats.json $DJANGO_BUILD_DIR

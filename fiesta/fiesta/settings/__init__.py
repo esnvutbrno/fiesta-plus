@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from configurations import Configuration
-from configurations.values import Value
+from configurations.values import DatabaseURLValue, Value
 
 from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
@@ -55,7 +55,9 @@ class LocalProduction(Base):
 class Production(Base):
     DEBUG = False
 
-    ROOT_DOMAIN = Value()
+    ROOT_DOMAIN = Value(environ_required=True)
+
+    DATABASES = DatabaseURLValue(environ_prefix="DJANGO")
 
     def STORAGES(self):
         return {
