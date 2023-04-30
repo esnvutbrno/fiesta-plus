@@ -241,6 +241,8 @@ jobs:
             proxy:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/proxy
               tag: ${{ env.image_tag }}
+            ingress:
+              certContactEmail: ${{ secrets.CERT_CONTACT_EMAIL }}
           value-files: >-
             [
               "charts/values.yaml"

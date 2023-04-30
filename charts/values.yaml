@@ -1,5 +1,9 @@
 ingress:
   host: bf.josefkolar.cz
+  certIssuerName: letsencrypt
+  certSecretName: fiesta-cert
+
+  certContactEmail: dummy@example.com
 
 service:
   port: 80
@@ -15,3 +19,7 @@ web:
 proxy:
   repository: nginxdemos/hello
   tag: latest
+
+cert-manager:
+  enabled: true
+  namespace: cert-manager
