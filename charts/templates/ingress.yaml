@@ -2,6 +2,8 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: fiesta-ingress
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
 spec:
   rules:
     - host: "*.{{ .Values.ingress.host }}"
