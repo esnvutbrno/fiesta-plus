@@ -3,8 +3,6 @@ name: Codacy Security Scan
 on:
   push:
     branches: [ develop, main ]
-  pull_request:
-    branches: [ develop ]
 
 jobs:
   codacy-security-scan:
