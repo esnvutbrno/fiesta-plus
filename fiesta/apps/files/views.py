@@ -22,7 +22,7 @@ class NamespacedFilesServeView(View):
             logger.warning("File %s in namespace %s not found.", name, self.storage.namespace)
             return HttpResponseNotFound()
 
-        if not self.has_permission(request, name):
+        if not self.has_permission(request, name) and not request.user.is_superuser:
             logger.warning("Access to %s denied for %s.", name, request.user)
             return HttpResponseForbidden()
 
