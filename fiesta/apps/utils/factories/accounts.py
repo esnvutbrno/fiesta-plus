@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+from io import BytesIO
 from operator import itemgetter
-from random import choice
 
 import factory
-from django.core.files.base import ContentFile
+import requests
+from django.core.files.images import ImageFile
 from django_countries.data import COUNTRIES
 from factory import fuzzy
-from factory.django import DjangoModelFactory, ImageField
-from PIL.ImageColor import colormap
+from factory.django import DjangoModelFactory
 
 from apps.accounts.models import User, UserProfile
 
@@ -52,8 +52,13 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
     gender = fuzzy.FuzzyChoice(UserProfile.Gender.choices, getter=itemgetter(0))
 
     picture = factory.LazyAttribute(
-        lambda _: ContentFile(
-            ImageField()._make_data({"width": 200, "height": 200, "color": choice(tuple(colormap.keys()))}),
-            name=ImageField.DEFAULT_FILENAME,
+        lambda u: ImageFile(
+            BytesIO(requests.get(f"https://i.pravatar.cc/150?u={u.user_id}").content),
+            "image.jpg",
         )
     )
+
+    facebook = factory.Faker("url")
+    instagram = factory.Faker("user_name")
+    telegram = factory.Faker("url")
+    whatsapp = factory.Faker("phone_number")
