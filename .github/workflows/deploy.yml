@@ -35,14 +35,14 @@ jobs:
           docker rm webpack
 
       - uses: actions/upload-artifact@v3
-        name: Save compiled results stats file
+        name: Upload compiled results stats file
         with:
           name: webpack-build-stats
           path: ./build/webpack-stats.json
           if-no-files-found: error
 
       - uses: actions/upload-artifact@v3
-        name: Save compiled results
+        name: Upload compiled results
         with:
           name: webpack-build
           path: ./build/
@@ -114,13 +114,13 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Extract compiled results
+      - name: Extract collectstatic results
         run: |
           docker cp $(docker create --name web ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:${{ env.image_tag }}):/usr/src/static/ ./static
           docker rm web
 
       - uses: actions/upload-artifact@v3
-        name: Save collected results
+        name: Upload collectstatic results
         with:
           name: web-static
           path: ./static/

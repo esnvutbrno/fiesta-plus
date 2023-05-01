@@ -10,7 +10,8 @@ metadata:
 spec:
   tls:
     - hosts:
-        - {{ .Values.ingress.host }}
+        - {{ .Values.ingress.host | quote }}
+        - "*.{{ .Values.ingress.host }}"
       secretName: {{ .Values.ingress.certSecretName | quote }}
   rules:
     - host: "*.{{ .Values.ingress.host }}"
