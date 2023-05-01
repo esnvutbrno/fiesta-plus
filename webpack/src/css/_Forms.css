@@ -4,9 +4,8 @@
 
 
 @layer components {
-
     .Forms__field {
-        @apply form-control !flex-row md:!flex-col;
+        @apply form-control flex-row md:flex-col;
     }
 
     .Forms__field--buttons {

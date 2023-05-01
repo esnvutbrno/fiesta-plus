@@ -56,15 +56,19 @@
           {% for br in matched_requests|slice:":3" %}
             {% get_user_picture br.issuer as buddy_picture %}
 
-            <div class="avatar hover:scale-105 transition-transform">
-              <div class="w-24">
-                <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
-                     width="{{ buddy_picture.width }}"
-                     height="{{ buddy_picture.height }}"
-                     alt="{{ br.issuer }}"
-                     title="{{ br.issuer }}"/>
+            {% if buddy_picture %}
+              <div class="avatar hover:scale-105 transition-transform">
+                <div class="w-24">
+                  <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+                       width="{{ buddy_picture.width }}"
+                       height="{{ buddy_picture.height }}"
+                       alt="{{ br.issuer }}"
+                       title="{{ br.issuer }}"/>
+                </div>
               </div>
-            </div>
+            {% else %}
+              {# TODO placeholder avatar #}
+            {% endif %}
           {% endfor %}
           {% if matched_requests|length > 3 %}
             <div class="avatar placeholder">

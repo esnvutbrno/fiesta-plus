@@ -1,6 +1,9 @@
-DC = docker compose
+
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
+DCFLAGS =
+
+DC = docker compose $(DCFLAGS)
 
 WEB_CMD = $(DC) run $(DCRUNFLAGS) web
 DJANGO_ADMIN =  $(WEB_CMD) python manage.py
@@ -49,6 +52,7 @@ makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all
 makemigrations: da
 
 loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
+loadlegacydata: DCFLAGS = --profile migration
 loadlegacydata: da
 
 test: DA_CMD = test --keepdb --parallel --verbosity 1 ## Runs django test cases.
