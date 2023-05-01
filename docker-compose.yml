@@ -74,6 +74,7 @@ services:
     build:
       context: .
       dockerfile: ./webpack/Dockerfile
+      target: base
     command: yarn dev
     expose:
       - 8003
@@ -90,7 +91,7 @@ services:
       PUBLIC_PATH: //webpack.fiesta.test/static/
 
   legacydb:
-    image: mariadb:10.3
+    image: mariadb:10.4
     profiles: [ "migration" ]
     volumes:
       - legacydb_data:/var/lib/mysql
