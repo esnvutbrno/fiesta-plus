@@ -35,7 +35,11 @@ class SectionsConfig(PluginAppConfig):
                         NavigationItemSpec(
                             _("Members"),
                             reverse("sections:section-members"),
-                        )
+                        ),
+                        NavigationItemSpec(
+                            _("Statistics"),
+                            reverse("sections:section-stats"),
+                        ),
                     ],
                 )
             )

@@ -4,7 +4,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
-from django_filters import ChoiceFilter
+from django_filters import ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
@@ -16,13 +16,24 @@ from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from apps.universities.models import Faculty
 from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
+def related_faculties(request: HttpRequest):
+    return Faculty.objects.filter(university__section=request.in_space_of_section)
+
+
 class RequestFilter(BaseFilterSet):
     state = ChoiceFilter(choices=BuddyRequest.State.choices)
-    created_when = ProperDateFromToRangeFilter(field_name="created")
+    matched_when = ProperDateFromToRangeFilter(field_name="matched_at")
+
+    matched_by_faculty = ModelChoiceFilter(
+        queryset=related_faculties,
+        label=_("Faculty of matcher"),
+        field_name="matched_by__profile__home_faculty",
+    )
 
     class Meta(BaseFilterSet.Meta):
         pass
@@ -45,6 +56,9 @@ class RequestTable(tables.Table):
             "matched_by__username",
         ),
     )
+    matched_by__email = Column(
+        visible=False,
+    )
 
     matched_by__profile__picture = ImageColumn(
         verbose_name=_("Buddy"),
@@ -56,7 +70,7 @@ class RequestTable(tables.Table):
         order_by="matched_at",
     )
 
-    created = NaturalDatetimeColumn()
+    matched_at = NaturalDatetimeColumn()
 
     class Meta:
         model = BuddyRequest
@@ -68,7 +82,7 @@ class RequestTable(tables.Table):
             "state",
             "matched_by__full_name_official",
             "matched_by__profile__picture",
-            "created",
+            "matched_at",
             "match_request",
             "...",
         )

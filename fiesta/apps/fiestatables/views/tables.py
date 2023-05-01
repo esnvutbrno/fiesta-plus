@@ -6,17 +6,13 @@ from django.db.models import QuerySet
 from django.utils import timezone
 from django.utils.text import slugify
 from django_filters.views import FilterView
-from django_tables2 import LazyPaginator, SingleTableMixin
+from django_tables2 import LazyPaginator, MultiTableMixin, SingleTableMixin
 from django_tables2.export import ExportMixin, TableExport
 
 from apps.fiestatables.views.htmx import HtmxTableMixin
 
 
-class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
-    paginate_by = 20
-    paginator_class = LazyPaginator
-    template_name = "fiestatables/page.html"
-
+class FiestaExportMixin(ExportMixin):
     export_formats = (TableExport.CSV, TableExport.JSON, TableExport.XLSX)
 
     def get_export_filename(self, export_format):
@@ -28,6 +24,18 @@ class FiestaTableMixin(HtmxTableMixin, SingleTableMixin, ExportMixin):
             export_name = slugify(data.model._meta.verbose_name_plural.lower())
 
         return f"{(timezone.now().isoformat('_', 'seconds')).replace(':', '-')}_{export_name}.{export_format}"
+
+
+class FiestaSingleTableMixin(HtmxTableMixin, SingleTableMixin, FiestaExportMixin):
+    paginate_by = 20
+    paginator_class = LazyPaginator
+    template_name = "fiestatables/page.html"
+
+
+class FiestaMultiTableMixin(HtmxTableMixin, MultiTableMixin, FiestaExportMixin):
+    paginate_by = 20
+    paginator_class = LazyPaginator
+    template_name = "fiestatables/page.html"
 
 
 class PreprocessQuerySetMixin:
@@ -45,5 +53,9 @@ class PreprocessQuerySetMixin:
         return qs
 
 
-class FiestaTableView(PreprocessQuerySetMixin, FiestaTableMixin, FilterView):
+class FiestaTableView(PreprocessQuerySetMixin, FiestaSingleTableMixin, FilterView):
+    pass
+
+
+class FiestaMultiTableView(PreprocessQuerySetMixin, FiestaMultiTableMixin, FilterView):
     pass

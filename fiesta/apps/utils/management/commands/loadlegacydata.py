@@ -21,6 +21,7 @@ SELECT
     du.name, du.surname,
     du.registered,
     u.status,
+    u.signature,
     json_array(ra.role),
     uni.section_short,
     f.faculty, f.faculty_shortcut,
@@ -88,6 +89,7 @@ def load_users(*, cursor: CursorWrapper):
             last_name,
             registered,
             status,
+            avatarName,
             roles,
             section_short,
             faculty_name,
@@ -134,13 +136,17 @@ def load_users(*, cursor: CursorWrapper):
             section=section,
             user=user,
             role=(
-                highest_role := SectionMembership.Role.ADMIN
-                if "admin" in roles
-                else SectionMembership.Role.EDITOR
-                if "editor" in roles
-                else SectionMembership.Role.MEMBER
-                if "member" in roles
-                else SectionMembership.Role.INTERNATIONAL
+                highest_role := (
+                    SectionMembership.Role.ADMIN
+                    if "admin" in roles
+                    else (
+                        SectionMembership.Role.EDITOR
+                        if "editor" in roles
+                        else (
+                            SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL
+                        )
+                    )
+                )
             ),
             # TODO: state
             state=SectionMembership.State.ACTIVE,

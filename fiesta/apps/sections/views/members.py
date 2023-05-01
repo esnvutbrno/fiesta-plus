@@ -24,7 +24,7 @@ from apps.utils.views import AjaxViewMixin
 
 
 def related_faculties(request: HttpRequest):
-    return Faculty.objects.filter(university__section=request.membership.section)
+    return Faculty.objects.filter(university__section=request.in_space_of_section)
 
 
 class SectionMembershipFilter(BaseFilterSet):
