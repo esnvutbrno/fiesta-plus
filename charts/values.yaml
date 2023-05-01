@@ -1,6 +1,5 @@
 ingress:
   host: bf.josefkolar.cz
-  certName: fiesta
   certSecretName: fiesta-cert
   certIssuerName: letsencrypt
   certIssuerSecretName: cert-issuer-key
