@@ -21,11 +21,17 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "space_slug", "all_universities", "system_state")
+    list_display = ("name", "country", "space_slug", "all_universities", "memberships_count", "system_state")
     list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("memberships", "universities")
+
+    @admin.display(
+        description=_("Memberships"),
+    )
+    def memberships_count(self, obj: Section):
+        return obj.memberships.count()
 
     @admin.display(
         description=_("Universities"),
