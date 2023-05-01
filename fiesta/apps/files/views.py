@@ -41,7 +41,7 @@ class NamespacedFilesServeView(View):
     @classmethod
     def as_url(cls, storage: NamespacedFilesStorage, url_name: str = None) -> RoutePattern:
         return path(
-            f"serve/{storage.location}/<path:name>",
+            f"serve/{storage.namespace}/<path:name>",
             cls.as_view(
                 storage=storage,
             ),
