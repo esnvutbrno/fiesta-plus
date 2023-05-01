@@ -10,8 +10,5 @@ spec:
       name: {{ .Values.ingress.certIssuerSecretName }}
     solvers:
       - http01:
-          selector:
-            dnsZones:
-              - {{ .Values.ingress.host | quote }}
           ingress:
             class: nginx
