@@ -11,6 +11,7 @@ spec:
   tls:
     - hosts:
         - {{ .Values.ingress.host | quote }}
+        {{- .Values.ingress.extraHosts |toYaml | nindent 8 }}
       secretName: {{ .Values.ingress.certSecretName | quote }}
   rules:
     - host: "*.{{ .Values.ingress.host }}"
