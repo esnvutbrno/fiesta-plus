@@ -1,10 +1,15 @@
 ingress:
-  host: bf.josefkolar.cz
   certSecretName: fiesta-cert
   certIssuerName: letsencrypt
   certIssuerSecretName: cert-issuer-key
 
   certContactEmail: dummy@example.com
+
+  host: bf.josefkolar.cz
+  extraHosts:
+    - esnvutbrno.bf.josefkolar.cz
+    - esnmunibrno.bf.josefkolar.cz
+    - esnmendelubrno.bf.josefkolar.cz
 
 service:
   port: 80
