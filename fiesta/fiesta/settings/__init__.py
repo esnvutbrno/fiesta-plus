@@ -1,12 +1,12 @@
 from __future__ import annotations
 
 from configurations import Configuration
-from configurations.values import DatabaseURLValue, SecretValue, Value
+from configurations.values import DatabaseURLValue, Value
 
 from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
 from .db import DatabaseConfigMixin
-from .files import FilesConfigMixin
+from .files import FilesConfigMixin, S3ConfigMixin
 from .logging import LoggingConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
@@ -18,6 +18,7 @@ class Base(
     AuthConfigMixin,
     DatabaseConfigMixin,
     FilesConfigMixin,
+    S3ConfigMixin,
     LoggingConfigMixin,
     SecurityConfigMixin,
     TemplatesConfigMixin,
@@ -69,21 +70,3 @@ class Production(Base):
                 "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
             },
         }
-
-    AWS_S3_ACCESS_KEY_ID = SecretValue()
-    AWS_S3_SECRET_ACCESS_KEY = SecretValue()
-    AWS_STORAGE_BUCKET_NAME = SecretValue()
-    AWS_S3_REGION_NAME = SecretValue()
-
-    AWS_DEFAULT_ACL = "public-read"
-    AWS_S3_SIGNATURE_VERSION = "s3v4"
-
-    def AWS_S3_HOST(self):
-        return f"s3.{self.AWS_S3_REGION_NAME}.scw.cloud"
-
-    def AWS_S3_ENDPOINT_URL(self):
-        return f"https://{self.AWS_S3_HOST}"
-
-    def S3_PUBLIC_URL(self):
-        """custom"""
-        return f"{self.AWS_STORAGE_BUCKET_NAME}.{self.AWS_S3_HOST}"
