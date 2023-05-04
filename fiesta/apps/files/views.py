@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import magic
 from django.http import HttpResponse, HttpResponseForbidden, HttpResponseNotFound
 from django.urls import path
 from django.urls.resolvers import RoutePattern
@@ -12,8 +11,6 @@ from apps.plugins.middleware.plugin import HttpRequest
 
 
 class NamespacedFilesServeView(View):
-    mime = magic.Magic(mime=True)
-
     # got from as_view() call in as_url()
     storage: NamespacedFilesStorage = None
 
@@ -26,13 +23,7 @@ class NamespacedFilesServeView(View):
             logger.warning("Access to %s denied for %s.", name, request.user)
             return HttpResponseForbidden()
 
-        return HttpResponse(
-            headers={
-                "Content-Disposition": f'filename="{name}"',
-                "X-Accel-Redirect": self.storage.internal_serve_url(name),
-                "Content-Type": self.mime.from_file(self.storage.path(name=name)),
-            }
-        )
+        return HttpResponse(headers=self.storage.object_response_headers(name=name))
 
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # for overriding purposes
