@@ -214,11 +214,6 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-#      - name: Set Kubernetes Context
-#        uses: azure/k8s-set-context@v1
-#        with:
-#          method: kubeconfig
-#          kubeconfig: "${{ secrets.KUBECONFIG }}"
       - name: Setup k8s context
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
