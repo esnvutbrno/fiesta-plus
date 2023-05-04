@@ -24,6 +24,9 @@ if typing.TYPE_CHECKING:
 
 
 def has_permission_for_profile_picture_view(request: HttpRequest, name: str) -> bool:
+    if not request.user.is_authenticated:
+        return False
+
     if (membership := request.membership) and membership.is_privileged:
         return True
 
