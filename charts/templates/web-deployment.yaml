@@ -20,14 +20,16 @@ spec:
       containers:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
-{{/*          livenessProbe:*/}}
-{{/*            httpGet:*/}}
-{{/*              path: /*/}}
-{{/*              port: http*/}}
-{{/*          readinessProbe:*/}}
-{{/*            httpGet:*/}}
-{{/*              path: /*/}}
-{{/*              port: http*/}}
+          livenessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /!/web
+              port: 8000
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: /!/web
+              port: 8000
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretKeyName }}
@@ -37,6 +39,16 @@ spec:
                 name: {{ .Values.web.configName }}
         - name: proxy
           image: "{{ .Values.proxy.repository }}:{{ .Values.proxy.tag | default .Chart.AppVersion }}"
+          livenessProbe:
+            initialDelaySeconds: 3
+            httpGet:
+              path: /!/proxy
+              port: 80
+          readinessProbe:
+            initialDelaySeconds: 3
+            httpGet:
+              path: /!/proxy
+              port: 80
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
