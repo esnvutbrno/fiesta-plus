@@ -82,6 +82,13 @@ server {
         alias /var/media/;
     }
 
+    # k8s health check
+    location = /!/proxy {
+        access_log off;
+        add_header 'Content-Type' 'text/plain';
+        return 200 'OK';
+    }
+
     location / {
         access_log /dev/null;
 

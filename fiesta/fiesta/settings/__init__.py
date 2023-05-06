@@ -70,3 +70,7 @@ class Production(Base):
                 "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
             },
         }
+
+    @property
+    def INSTALLED_APPS(self):
+        return super().INSTALLED_APPS + ["health_check.contrib.s3boto3_storage"]

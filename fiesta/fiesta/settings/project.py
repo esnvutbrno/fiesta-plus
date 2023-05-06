@@ -88,6 +88,9 @@ class ProjectConfigMixin:
         # editorjs integration
         "django_editorjs_fields",
         "mptt",
+        # health checks
+        "health_check",
+        "health_check.contrib.migrations",
     ]
 
     MIDDLEWARE = [
