@@ -11,21 +11,24 @@ ingress:
     - esnmunibrno.bf.josefkolar.cz
     - esnmendelubrno.bf.josefkolar.cz
 
-service:
-  port: 80
-
 web:
   repository: nginxdemos/hello
   tag: latest
 
-  secretKeyName: web-secret-key
   configName: web-config
-  secretDbName: web-secret-db
+  secretName: web-secret
 
 proxy:
   repository: nginxdemos/hello
   tag: latest
 
-cert-manager:
-  enabled: true
-  namespace: cert-manager
+service:
+  port: 80
+
+secrets:
+  databaseUrl: postgres
+  s3:
+    keyId: key
+    accessKey: key
+    regionName: region
+    bucketName: bucket
