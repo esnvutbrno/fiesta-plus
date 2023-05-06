@@ -18,7 +18,6 @@ class Base(
     AuthConfigMixin,
     DatabaseConfigMixin,
     FilesConfigMixin,
-    S3ConfigMixin,
     LoggingConfigMixin,
     SecurityConfigMixin,
     TemplatesConfigMixin,
@@ -53,7 +52,7 @@ class LocalProduction(Base):
     ROOT_DOMAIN = "fiesta.test"
 
 
-class Production(Base):
+class Production(S3ConfigMixin, Base):
     DEBUG = False
 
     ROOT_DOMAIN = Value(environ_required=True)
