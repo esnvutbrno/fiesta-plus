@@ -238,6 +238,13 @@ jobs:
               tag: ${{ env.image_tag }}
             ingress:
               certContactEmail: ${{ secrets.CERT_CONTACT_EMAIL }}
+            secrets:
+              databaseUrl: ${{ secrets.DATABASE_URL }}
+              s3:
+                keyId: ${{ secrets.S3_KEY_ID }}
+                accessKey: ${{ secrets.S3_ACCESS_KEY }}
+                regionName: ${{ secrets.S3_REGION_NAME }}
+                bucketName: ${{ secrets.S3_BUCKET_NAME }}
           value-files: >-
             [
               "charts/values.yaml"

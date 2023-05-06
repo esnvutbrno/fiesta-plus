@@ -32,9 +32,7 @@ spec:
               port: 8000
           envFrom:
             - secretRef:
-                name: {{ .Values.web.secretKeyName }}
-            - secretRef:
-                name: {{ .Values.web.secretDbName }}
+                name: {{ .Values.web.secretName }}
             - configMapRef:
                 name: {{ .Values.web.configName }}
         - name: proxy

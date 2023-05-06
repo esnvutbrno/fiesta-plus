@@ -7,7 +7,7 @@ metadata:
   annotations:
     "helm.sh/hook": pre-install,pre-upgrade
     "helm.sh/hook-weight": "-10"
-    "helm.sh/hook-delete-policy": hook-succeeded
+    "helm.sh/hook-delete-policy": before-hook-creation
 spec:
   template:
     spec:
@@ -21,9 +21,7 @@ spec:
             - --no-input
           envFrom:
             - secretRef:
-                name: {{ .Values.web.secretKeyName }}
-            - secretRef:
-                name: {{ .Values.web.secretDbName }}
+                name: {{ .Values.web.secretName }}
             - configMapRef:
                 name: {{ .Values.web.configName }}
       restartPolicy: Never
