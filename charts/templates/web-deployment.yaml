@@ -20,16 +20,16 @@ spec:
       containers:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
-          livenessProbe:
-            initialDelaySeconds: 5
-            httpGet:
-              path: /!/web
-              port: 8000
-          readinessProbe:
-            initialDelaySeconds: 5
-            httpGet:
-              path: /!/web
-              port: 8000
+{{/*          livenessProbe:*/}}
+{{/*            initialDelaySeconds: 5*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /!/web*/}}
+{{/*              port: 8000*/}}
+{{/*          readinessProbe:*/}}
+{{/*            initialDelaySeconds: 5*/}}
+{{/*            httpGet:*/}}
+{{/*              path: /!/web*/}}
+{{/*              port: 8000*/}}
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretName }}
