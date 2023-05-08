@@ -1,4 +1,4 @@
-FROM python:3.11.3-alpine3.17 as builder
+FROM python:3.11.3-alpine3.17 as venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -20,9 +20,9 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN /venv/bin/pip install --no-cache-dir -r /tmp/requirements.txt
 
 # pull official base image
-FROM python:3.11.3-alpine3.17
+FROM python:3.11.3-alpine3.17 as base
 
-COPY --from=builder /venv /venv
+COPY --from=venv-builder /venv /venv
 
 # set work directory
 WORKDIR /usr/src/app
@@ -31,6 +31,7 @@ ENV PATH="/venv/bin:${PATH}"
 ENV VIRTUAL_ENV="/venv"
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+ENV DJANGO_SETTINGS_MODULE "fiesta.settings"
 # same for postgres container
 ENV TZ Europe/Prague
 
@@ -53,3 +54,24 @@ COPY ./fiesta/ /usr/src/app/
 RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]
+
+FROM base as stable
+
+# stubs to get compatibility with fs storage
+ARG DJANGO_STATIC_ROOT=/usr/src/static
+ENV DJANGO_STATIC_ROOT=${DJANGO_STATIC_ROOT}
+ARG DJANGO_MEDIA_ROOT=/usr/src/media
+ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
+
+# TODO: maybe better name?
+ARG DJANGO_BUILD_DIR=/usr/src/build/
+ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
+
+# need production configuration, but not all values are ready in env
+RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
+
+# given by webpack compiled results
+COPY ./webpack-stats.json $DJANGO_BUILD_DIR
+
+# TODO: check opts https://www.uvicorn.org/#command-line-options
+CMD ["python -m uvicorn fiesta.asgi:application"]

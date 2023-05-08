@@ -9,6 +9,9 @@ repos:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-yaml
+        exclude: ^charts/templates/
+        args:
+          - --allow-multiple-documents
       - id: check-added-large-files
       - id: check-ast
       - id: check-case-conflict

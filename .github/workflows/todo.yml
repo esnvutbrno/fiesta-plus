@@ -1,8 +1,11 @@
 name: "TODOs to Issue Export"
+
 on:
   push:
     branches:
+      - main
       - develop
+
 jobs:
   build:
     runs-on: "ubuntu-latest"

@@ -14,6 +14,7 @@ services:
     build:
       context: .
       dockerfile: fiesta/Dockerfile
+      target: base
     depends_on:
       - db
     environment:
@@ -34,10 +35,11 @@ services:
       POSTGRES_DB: fiesta
       TZ: Europe/Prague
 
-  webserver:
+  proxy:
     build:
-      context: ./nginx
-      dockerfile: webserver.Dockerfile
+      context: .
+      dockerfile: nginx/proxy.Dockerfile
+      target: base
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
@@ -50,6 +52,7 @@ services:
       - wiki_static_files:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      PROXY_HOSTNAME_TARGET: "web"
       STATIC_LOCATION_PATTERN: "^\b$$"
       VIRTUAL_HOST: "*.fiesta.test,fiesta.test"
       VIRTUAL_PORT: 80
@@ -71,6 +74,7 @@ services:
     build:
       context: .
       dockerfile: ./webpack/Dockerfile
+      target: base
     command: yarn dev
     expose:
       - 8003
@@ -87,7 +91,7 @@ services:
       PUBLIC_PATH: //webpack.fiesta.test/static/
 
   legacydb:
-    image: mariadb:10.3
+    image: mariadb:10.4
     profiles: [ "migration" ]
     volumes:
       - legacydb_data:/var/lib/mysql

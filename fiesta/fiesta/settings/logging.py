@@ -33,5 +33,9 @@ class LoggingConfigMixin:
                     "level": self.LOG_LEVEL,
                     "propagate": False,
                 },
+                "boto": {
+                    "handlers": ["console"],
+                    "level": self.LOG_LEVEL,
+                },
             },
         }
