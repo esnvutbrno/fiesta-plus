@@ -1,7 +1,11 @@
 name: Deploy to cluster
 
 on:
-  - push
+  push:
+    branches:
+      - main
+      - develop
+
 
 jobs:
   build-webpack:
