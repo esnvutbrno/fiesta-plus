@@ -38,6 +38,8 @@ urlpatterns = [
     path("auto-options/", include("django_select2.urls")),
     # editorjs
     path("ejs/", include("django_editorjs_fields.urls")),
+    # health checks
+    path(r"!/web", include("health_check.urls")),
 ]
 
 if settings.DEBUG:

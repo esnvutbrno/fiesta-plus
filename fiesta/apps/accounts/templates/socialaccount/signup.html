@@ -32,7 +32,7 @@
         {% if redirect_field_value %}
           <input type="hidden"
                  name="{{ redirect_field_name }}"
-                 value="{{ redirect_field_value }}"/>
+                 value="{{ redirect_field_value }}" />
         {% endif %}
         {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
         <button type="submit" class="btn btn-block btn-primary">Sign up</button>
