@@ -39,7 +39,7 @@ class RequestFilter(BaseFilterSet):
         pass
 
 
-class RequestTable(tables.Table):
+class BuddyRequestsTable(tables.Table):
     issuer__full_name_official = Column(
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
@@ -49,18 +49,21 @@ class RequestTable(tables.Table):
 
     issuer__profile__picture = ImageColumn(verbose_name=_("Issuer"))
 
-    matched_by__full_name_official = Column(
+    matched_by_name = Column(
+        accessor="matched_by.full_name_official",
         order_by=(
             "matched_by__last_name",
             "matched_by__first_name",
             "matched_by__username",
         ),
     )
-    matched_by__email = Column(
+    matched_by_email = Column(
+        accessor="matched_by.email",
         visible=False,
     )
 
-    matched_by__profile__picture = ImageColumn(
+    matched_by_picture = ImageColumn(
+        accessor="matched_by.profile.picture",
         verbose_name=_("Buddy"),
     )
 
@@ -80,8 +83,8 @@ class RequestTable(tables.Table):
             "issuer__full_name_official",
             "issuer__profile__picture",
             "state",
-            "matched_by__full_name_official",
-            "matched_by__profile__picture",
+            "matched_by_name",
+            "matched_by_picture",
             "matched_at",
             "match_request",
             "...",
@@ -92,12 +95,12 @@ class RequestTable(tables.Table):
 
 @with_breadcrumb(_("Buddy System"))
 @with_breadcrumb(_("Requests"))
-class RequestsEditorView(
+class BuddyRequestsEditorView(
     EnsurePrivilegedUserViewMixin,
     FiestaTableView,
 ):
     request: HttpRequest
-    table_class = RequestTable
+    table_class = BuddyRequestsTable
     filterset_class = RequestFilter
 
     def get_queryset(self):
@@ -108,7 +111,7 @@ class RequestsEditorView(
 
 @with_breadcrumb(_("Buddy System"))
 @with_object_breadcrumb()
-class RequestEditorDetailView(
+class BuddyRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,

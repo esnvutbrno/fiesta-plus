@@ -1,9 +1,9 @@
 {% load i18n %}
-{% if record.state == SectionMembership.State.ACTIVE %}
+{% if record.state == record.State.ACTIVE %}
   <span class="badge badge-sm badge-success badge-outline">✅ {{ record.get_state_display }}</span>
-{% elif record.state == SectionMembership.State.BANNED %}
+{% elif record.state == record.State.BANNED %}
   <span class="badge badge-sm badge-error badge-outline">⛔ {{ record.get_state_display }}</span>
-{% elif record.state == SectionMembership.State.UNCONFIRMED %}
+{% elif record.state == record.State.UNCONFIRMED %}
   <a class="btn btn-sm btn-outline btn-primary"
      x-data="modal($el.href)"
      x-bind="bind"

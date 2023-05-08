@@ -47,3 +47,8 @@ def multiply(first, second):
 @register.filter(name="int")
 def int_(value):
     return int(value)
+
+
+@register.filter(name="zip")
+def zip_(value, another):
+    return zip(value, another, strict=True)
