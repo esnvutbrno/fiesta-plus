@@ -228,7 +228,8 @@ jobs:
           namespace: 'fiesta'
           chart: 'charts'
           token: '${{ github.token }}'
-          values: |
+          timeout: 120s
+          values: >-
             web:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
               tag: ${{ env.image_tag }}
