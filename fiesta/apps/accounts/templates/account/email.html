@@ -31,7 +31,7 @@
                        name="email"
                        class="radio radio-xs"
                        {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
-                       value="{{ emailaddress.email }}"/>
+                       value="{{ emailaddress.email }}" />
                 {{ emailaddress.email }}
               </label>
             </td>

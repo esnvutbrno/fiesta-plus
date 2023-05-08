@@ -22,7 +22,7 @@
         <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
       {% endif %}
     {% endblock head_title %}
-    <link rel="shortcut icon" href="{% static 'logo.svg' %}"/>
+    <link rel="shortcut icon" href="{% static 'logo.svg' %}" />
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {% django_htmx_script %}
