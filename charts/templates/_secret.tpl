@@ -7,10 +7,10 @@ metadata:
     {{- include "fiesta.labels" . | nindent 4 }}
 data:
 {{- $secretObj := (lookup "v1" "Secret" $.Release.Namespace .Args.Name) | default dict }}
-{{- range $key, $value := .Args.Values }}
+{{- range $key, $defaultValue := .Args.Values }}
   {{- $secretData := (get $secretObj "data") | default dict }}
-  {{/* set $key to existing secret data or generate a random one when not exists */}}
-  {{- $outValue := (get $secretData $key) | default $value -}}
-  {{ $key }}: {{ $outValue | quote }}
+  {{/* set $key to existing secret data or use default when not exists */}}
+  {{- $value := (get $secretData $key) | default $defaultValue -}}
+  {{ $key }}: {{ $value | quote }}
 {{- end }}
 {{- end }}
