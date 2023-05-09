@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.postgres.search import SearchVector
+from django.forms import TextInput
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
-from django_filters import ChoiceFilter, ModelChoiceFilter
+from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
@@ -26,6 +28,11 @@ def related_faculties(request: HttpRequest):
 
 
 class RequestFilter(BaseFilterSet):
+    search = CharFilter(
+        method="filter_search",
+        label=_("Search"),
+        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
+    )
     state = ChoiceFilter(choices=BuddyRequest.State.choices)
     matched_when = ProperDateFromToRangeFilter(field_name="matched_at")
 
@@ -34,6 +41,17 @@ class RequestFilter(BaseFilterSet):
         label=_("Faculty of matcher"),
         field_name="matched_by__profile__home_faculty",
     )
+
+    def filter_search(self, queryset, name, value):
+        return queryset.annotate(
+            search=SearchVector(
+                "issuer__last_name",
+                "issuer__first_name",
+                "matched_by__last_name",
+                "matched_by__first_name",
+                "state",
+            )
+        ).filter(search=value)
 
     class Meta(BaseFilterSet.Meta):
         pass
@@ -47,7 +65,7 @@ class BuddyRequestsTable(tables.Table):
         verbose_name=_("Request from"),
     )
 
-    issuer__profile__picture = ImageColumn(verbose_name=_("Issuer"))
+    issuer__profile__picture = ImageColumn(verbose_name="🧑")
 
     matched_by_name = Column(
         accessor="matched_by.full_name_official",
@@ -89,6 +107,7 @@ class BuddyRequestsTable(tables.Table):
             "match_request",
             "...",
         )
+        empty_text = _("No buddy requests found")
 
         attrs = dict(tbody={"hx-disable": True})
 
@@ -143,3 +162,8 @@ class QuickBuddyMatchView(
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
+
+    def form_valid(self, form):
+        form.instance.state = BuddyRequest.State.MATCHED
+        form.instance.save(update_fields=["state"])
+        return super().form_valid(form)

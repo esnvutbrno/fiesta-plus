@@ -154,7 +154,7 @@ class MembershipDetailView(
     template_name = "accounts/user_detail/user_detail.html"
 
     extra_context = {
-        "table_titles": (_("Buddies"),),
+        "table_titles": (_("🧑‍🤝‍🧑 Buddies"),),
     }
 
     def get_tables(self):

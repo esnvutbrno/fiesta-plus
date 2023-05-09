@@ -22,7 +22,8 @@
             {{ object.get_role_display }}
             {% include "sections/parts/change_membership_state_btn.html" with record=object %}
           </div>
-          <div class="flex flex-row justify-end">
+          <div class="flex flex-row justify-between text-sm">
+            {% trans "Joined" %}
             <span title="{{ object.created|date }}">{{ object.created|naturaltime }}</span>
           </div>
         </div>
@@ -47,9 +48,65 @@
     </div>
 
     <div class="w-3/4">
+      <div class="card">
+        <div class="card-body pt-0">
+          <h2 class="card-title">{% trans "👤 Profile Details" %}</h2>
+
+          <div class="flex flex-row items-start gap-x-4">
+            <table class="table table-zebra w-1/2">
+              <tr>
+                <th>{% trans "Home University" %}</th>
+                <td>
+                  {{ object.user.profile.home_university.country.unicode_flag }}
+                  {{ object.user.profile.home_university|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Home Faculty" %}</th>
+                <td>
+                  {{ object.user.profile.home_faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.home_faculty|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Guest Faculty" %}</th>
+                <td>
+                  {{ object.user.profile.guest_faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.guest_faculty|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Nationality" %}</th>
+                <td>
+                  {{ object.user.profile.nationality.unicode_flag }}
+                  {{ object.user.profile.nationality|default:"-" }}
+                </td>
+              </tr>
+            </table>
+            <table class="table table-zebra w-1/2">
+              <tr>
+                <th>{% trans "Facebook" %}</th>
+                <td>{{ object.user.profile.facebook|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "Instagram" %}</th>
+                <td>{{ object.user.profile.instagram|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "Telegram" %}</th>
+                <td>{{ object.user.profile.telegram|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "WhatsApp" %}</th>
+                <td>{{ object.user.profile.whatsapp|default:"-" }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
       {% for table, title in tables|zip:table_titles %}
         <div class="card group">
-          <div class="card-body group-first pt-0">
+          <div class="card-body pt-0">
             <div class="card-title">{{ title }}</div>
             {% render_table table %}
           </div>
