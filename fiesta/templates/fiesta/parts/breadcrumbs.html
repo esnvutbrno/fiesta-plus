@@ -7,7 +7,7 @@
         <div class="inline-flex items-center">
           {% if forloop.first %}
             <a href="{{ item.url }}"
-               class="inline-flex items-center text-sm font-medium text-gray-700 hover:text-gray-900">
+               class="inline-flex items-center text-sm font-medium text-base-content hover:text-primary-focus">
               <svg class="mr-2 w-6 h-6"
                    fill="currentColor"
                    viewBox="0 0 22 20"
@@ -26,7 +26,7 @@
               </path>
             </svg>
             <a href="{{ item.url }}"
-               class="ml-1 text-sm font-medium text-gray-700 hover:text-gray-900 md:ml-2">{{ item.title }}</a>
+               class="ml-1 text-sm font-medium md:ml-2 text-base-content hover:text-primary-focus">{{ item.title }}</a>
           {% endif %}
         </div>
       </li>

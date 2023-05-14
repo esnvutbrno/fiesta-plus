@@ -25,6 +25,8 @@ class ProjectConfigMixin:
 
     USE_TZ = True
 
+    FILTERS_EMPTY_CHOICE_LABEL = "---"
+
     WSGI_APPLICATION = "fiesta.wsgi.application"
 
     ROOT_URLCONF = "fiesta.urls"

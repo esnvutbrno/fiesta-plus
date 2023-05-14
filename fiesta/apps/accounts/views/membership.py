@@ -1,17 +1,16 @@
 from __future__ import annotations
 
-from _operator import attrgetter
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
 from django.forms import HiddenInput
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, DetailView, TemplateView
+from django.views.generic import CreateView, TemplateView
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.section_space import EnsureNotInSectionSpaceViewMixin
-from apps.utils.breadcrumbs import BreadcrumbItem, with_object_breadcrumb
+from apps.utils.breadcrumbs import BreadcrumbItem
 
 
 class NewSectionMembershipForm(BaseModelForm):
@@ -75,9 +74,3 @@ class NewSectionMembershipFormView(
             "user": self.request.user,
             "section": self.kwargs.get("section"),
         }
-
-
-@with_object_breadcrumb(getter=attrgetter("user.full_name"))
-class MembershipDetailView(DetailView):
-    model = SectionMembership
-    template_name = "accounts/user_detail/user_detail.html"

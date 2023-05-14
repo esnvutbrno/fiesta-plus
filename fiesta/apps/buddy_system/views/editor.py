@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.postgres.search import SearchVector
+from django.forms import TextInput
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
-from django_filters import ChoiceFilter, ModelChoiceFilter
+from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
@@ -26,6 +28,11 @@ def related_faculties(request: HttpRequest):
 
 
 class RequestFilter(BaseFilterSet):
+    search = CharFilter(
+        method="filter_search",
+        label=_("Search"),
+        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
+    )
     state = ChoiceFilter(choices=BuddyRequest.State.choices)
     matched_when = ProperDateFromToRangeFilter(field_name="matched_at")
 
@@ -35,11 +42,22 @@ class RequestFilter(BaseFilterSet):
         field_name="matched_by__profile__home_faculty",
     )
 
+    def filter_search(self, queryset, name, value):
+        return queryset.annotate(
+            search=SearchVector(
+                "issuer__last_name",
+                "issuer__first_name",
+                "matched_by__last_name",
+                "matched_by__first_name",
+                "state",
+            )
+        ).filter(search=value)
+
     class Meta(BaseFilterSet.Meta):
         pass
 
 
-class RequestTable(tables.Table):
+class BuddyRequestsTable(tables.Table):
     issuer__full_name_official = Column(
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
@@ -47,20 +65,23 @@ class RequestTable(tables.Table):
         verbose_name=_("Request from"),
     )
 
-    issuer__profile__picture = ImageColumn(verbose_name=_("Issuer"))
+    issuer__profile__picture = ImageColumn(verbose_name="🧑")
 
-    matched_by__full_name_official = Column(
+    matched_by_name = Column(
+        accessor="matched_by.full_name_official",
         order_by=(
             "matched_by__last_name",
             "matched_by__first_name",
             "matched_by__username",
         ),
     )
-    matched_by__email = Column(
+    matched_by_email = Column(
+        accessor="matched_by.email",
         visible=False,
     )
 
-    matched_by__profile__picture = ImageColumn(
+    matched_by_picture = ImageColumn(
+        accessor="matched_by.profile.picture",
         verbose_name=_("Buddy"),
     )
 
@@ -80,24 +101,25 @@ class RequestTable(tables.Table):
             "issuer__full_name_official",
             "issuer__profile__picture",
             "state",
-            "matched_by__full_name_official",
-            "matched_by__profile__picture",
+            "matched_by_name",
+            "matched_by_picture",
             "matched_at",
             "match_request",
             "...",
         )
+        empty_text = _("No buddy requests found")
 
         attrs = dict(tbody={"hx-disable": True})
 
 
 @with_breadcrumb(_("Buddy System"))
 @with_breadcrumb(_("Requests"))
-class RequestsEditorView(
+class BuddyRequestsEditorView(
     EnsurePrivilegedUserViewMixin,
     FiestaTableView,
 ):
     request: HttpRequest
-    table_class = RequestTable
+    table_class = BuddyRequestsTable
     filterset_class = RequestFilter
 
     def get_queryset(self):
@@ -108,7 +130,7 @@ class RequestsEditorView(
 
 @with_breadcrumb(_("Buddy System"))
 @with_object_breadcrumb()
-class RequestEditorDetailView(
+class BuddyRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,
@@ -140,3 +162,8 @@ class QuickBuddyMatchView(
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
+
+    def form_valid(self, form):
+        form.instance.state = BuddyRequest.State.MATCHED
+        form.instance.save(update_fields=["state"])
+        return super().form_valid(form)
