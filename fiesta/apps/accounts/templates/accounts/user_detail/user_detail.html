@@ -1,6 +1,118 @@
 {% extends "fiesta/base.html" %}
-
+{% load utils %}
+{% load django_tables2 %}
+{% load i18n %}
+{% load humanize %}
 
 {% block main %}
-  {{ object }}
+  <div class="flex flex-row items-start">
+    <div class="w-1/4">
+      <div class="card shadow">
+        {% if object.user.profile.picture %}
+          <figure>
+            <img src="{{ object.user.profile.picture.url }}"
+                 width="{{ object.user.profile.picture.width }}"
+                 height="{{ object.user.profile.picture.height }}"
+                 alt="{{ object.user.full_name_official }}">
+          </figure>
+        {% endif %}
+        <div class="card-body">
+          <h1 class="card-title">{{ object.user.full_name_official }}</h1>
+          <div class="flex flex-row justify-between items-center">
+            {{ object.get_role_display }}
+            {% include "sections/parts/change_membership_state_btn.html" with record=object %}
+          </div>
+          <div class="flex flex-row justify-between text-sm">
+            {% trans "Joined" %}
+            <span title="{{ object.created|date }}">{{ object.created|naturaltime }}</span>
+          </div>
+        </div>
+      </div>
+
+      {% if object.user.memberships.count > 2 %}
+        {# TODO: not only this one #}
+        <div class="card shadow">
+          <div class="card-body">
+            <h2 class="card-title">{% trans "Memberships" %}</h2>
+            <table class="table table-compact">
+              {% for m in object.user.memberships.all %}
+                <tr>
+                  <td>{{ m.section }}</td>
+                  <td>{{ m.role }}</td>
+                </tr>
+              {% endfor %}
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="w-3/4">
+      <div class="card">
+        <div class="card-body pt-0">
+          <h2 class="card-title">{% trans "👤 Profile Details" %}</h2>
+
+          <div class="flex flex-row items-start gap-x-4">
+            <table class="table table-zebra w-1/2">
+              <tr>
+                <th>{% trans "Home University" %}</th>
+                <td>
+                  {{ object.user.profile.home_university.country.unicode_flag }}
+                  {{ object.user.profile.home_university|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Home Faculty" %}</th>
+                <td>
+                  {{ object.user.profile.home_faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.home_faculty|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Guest Faculty" %}</th>
+                <td>
+                  {{ object.user.profile.guest_faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.guest_faculty|default:"-" }}
+                </td>
+              </tr>
+              <tr>
+                <th>{% trans "Nationality" %}</th>
+                <td>
+                  {{ object.user.profile.nationality.unicode_flag }}
+                  {{ object.user.profile.nationality|default:"-" }}
+                </td>
+              </tr>
+            </table>
+            <table class="table table-zebra w-1/2">
+              <tr>
+                <th>{% trans "Facebook" %}</th>
+                <td>{{ object.user.profile.facebook|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "Instagram" %}</th>
+                <td>{{ object.user.profile.instagram|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "Telegram" %}</th>
+                <td>{{ object.user.profile.telegram|default:"-" }}</td>
+              </tr>
+              <tr>
+                <th>{% trans "WhatsApp" %}</th>
+                <td>{{ object.user.profile.whatsapp|default:"-" }}</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </div>
+      {% for table, title in tables|zip:table_titles %}
+        <div class="card group">
+          <div class="card-body pt-0">
+            <div class="card-title">{{ title }}</div>
+            {% render_table table %}
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
 {% endblock %}

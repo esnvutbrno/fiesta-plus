@@ -1,0 +1,20 @@
+{% extends "accounts/user_profile/base.html" %}
+
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {{ block.super }}
+  {% trans "My Profile" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block content %}
+  <h1 class="card-title">{% trans "My Profile" %}</h1>
+  <table>
+    <tr>
+      <td></td>
+      <td>{{ object }}</td>
+    </tr>
+  </table>
+{% endblock content %}

@@ -1,8 +1,10 @@
+from __future__ import annotations
+
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 
-from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 
 
 @admin.register(SectionsConfiguration)
@@ -11,6 +13,7 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
         "required_nationality",
         "required_gender",
         "required_picture",
+        "required_interests",
         "auto_approved_membership_for_international",
     ]
     list_display = BaseChildConfigurationAdmin.list_display + list_editable
@@ -18,15 +21,17 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "space_slug", "all_universities")
-    list_filter = (("country", admin.AllValuesFieldListFilter),)
+    list_display = ("name", "country", "space_slug", "all_universities", "memberships_count", "system_state")
+    list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
     def get_queryset(self, request):
-        return (
-            super()
-            .get_queryset(request)
-            .prefetch_related("memberships", "universities")
-        )
+        return super().get_queryset(request).prefetch_related("memberships", "universities")
+
+    @admin.display(
+        description=_("Memberships"),
+    )
+    def memberships_count(self, obj: Section):
+        return obj.memberships.count()
 
     @admin.display(
         description=_("Universities"),
@@ -39,19 +44,14 @@ class SectionAdmin(admin.ModelAdmin):
         extra = 1
 
     # TODO: Listing all memberships in section admin
-    #  is kinda slow, so usega of some paginated would be usefull
+    #  is kinda slow, so usage of some paginated would be useful
     class SectionMembershipInline(admin.TabularInline):
         model = SectionMembership
         autocomplete_fields = ("user",)
         extra = 1
 
         def get_queryset(self, request):
-            return (
-                super()
-                .get_queryset(request)
-                .select_related("section", "user")
-                .order_by("-role", "user__username")
-            )
+            return super().get_queryset(request).select_related("section", "user").order_by("-role", "user__username")
 
     inlines = (
         # SectionMembershipInline,

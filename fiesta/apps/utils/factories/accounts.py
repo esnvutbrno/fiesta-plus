@@ -1,12 +1,14 @@
+from __future__ import annotations
+
+from io import BytesIO
 from operator import itemgetter
-from random import choice
 
 import factory
-from PIL.ImageColor import colormap
-from django.core.files.base import ContentFile
+import requests
+from django.core.files.images import ImageFile
 from django_countries.data import COUNTRIES
 from factory import fuzzy
-from factory.django import DjangoModelFactory, ImageField
+from factory.django import DjangoModelFactory
 
 from apps.accounts.models import User, UserProfile
 
@@ -14,6 +16,8 @@ from apps.accounts.models import User, UserProfile
 class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
+
+        django_get_or_create = ("username",)
 
     username = factory.Faker("user_name")
     first_name = factory.Faker("first_name")
@@ -23,9 +27,7 @@ class UserFactory(DjangoModelFactory):
     is_superuser = False
     is_staff = False
 
-    profile = factory.RelatedFactory(
-        "apps.utils.factories.accounts.UserProfileFactory", factory_related_name="user"
-    )
+    profile = factory.RelatedFactory("apps.utils.factories.accounts.UserProfileFactory", factory_related_name="user")
 
     state = User.State.ACTIVE
 
@@ -40,6 +42,7 @@ class UserSingleMembershipFactory(UserFactory):
 class UserProfileFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = UserProfile
+        django_get_or_create = ("user",)
 
     home_university = factory.SubFactory(
         "apps.utils.factories.universities.UniversityFactory",
@@ -49,10 +52,13 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
     gender = fuzzy.FuzzyChoice(UserProfile.Gender.choices, getter=itemgetter(0))
 
     picture = factory.LazyAttribute(
-        lambda _: ContentFile(
-            ImageField()._make_data(
-                {"width": 200, "height": 200, "color": choice(tuple(colormap.keys()))}
-            ),
-            name=ImageField.DEFAULT_FILENAME,
+        lambda u: ImageFile(
+            BytesIO(requests.get(f"https://i.pravatar.cc/150?u={u.user_id}").content),
+            "image.jpg",
         )
     )
+
+    facebook = factory.Faker("url")
+    instagram = factory.Faker("user_name")
+    telegram = factory.Faker("url")
+    whatsapp = factory.Faker("phone_number")

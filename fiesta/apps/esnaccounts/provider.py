@@ -22,7 +22,7 @@ class ESNAccountsAccount(ProviderAccount):
     accounts: SocialAccount
 
     def get_avatar_url(self):
-        sa: "SocialAccount" = self.account
+        sa: SocialAccount = self.account
         return sa.extra_data.get("picture")
 
     def __str__(self):
@@ -51,7 +51,7 @@ class ESNAccountsProvider(CASProvider):
         cls,
         *,
         request: HttpRequest,
-        sociallogin: "SocialLogin",
+        sociallogin: SocialLogin,
     ):
         user: User = sociallogin.user
         sa: SocialAccount = sociallogin.account
@@ -78,11 +78,15 @@ class ESNAccountsProvider(CASProvider):
                 #  if they want to trust
                 state=SectionMembership.State.ACTIVE,
                 # TODO: check all possible for ESN Accounts roles
-                role=SectionMembership.Role.EDITOR
-                if cls.EDITOR_ROLE in roles
-                else SectionMembership.Role.MEMBER
-                if cls.MEMBER_ROLE in roles
-                else SectionMembership.Role.INTERNATIONAL,
+                role=(
+                    SectionMembership.Role.EDITOR
+                    if cls.EDITOR_ROLE in roles
+                    else (
+                        SectionMembership.Role.MEMBER
+                        if cls.MEMBER_ROLE in roles
+                        else SectionMembership.Role.INTERNATIONAL
+                    )
+                ),
             ),
         )
 
@@ -117,16 +121,12 @@ class ESNAccountsProvider(CASProvider):
         )
 
         if not picture_response.ok:
-            logger.warn(
-                "Picture request %s for user profile %s failed.", picture_url, profile
-            )
+            logger.warn("Picture request %s for user profile %s failed.", picture_url, profile)
             return
 
         name = user_profile_picture_storage.upload_to(profile, "--dummy--")
 
-        name = user_profile_picture_storage.save(
-            name, ContentFile(picture_response.content)
-        )
+        name = user_profile_picture_storage.save(name, ContentFile(picture_response.content))
         profile.picture = name
         profile.save(update_fields=["picture"], skip_hooks=True)
 

@@ -1,0 +1,9 @@
+apiVersion: v2
+name: fiesta
+description: A Helm chart for Buena Fiesta Deployment
+
+type: application
+
+version: 0.1.0
+
+appVersion: "0.1.0"

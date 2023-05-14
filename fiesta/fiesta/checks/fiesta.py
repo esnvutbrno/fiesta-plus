@@ -1,6 +1,7 @@
 """Checks related to project, usually to keep codestyle."""
-import django
+from __future__ import annotations
 
+import django
 from django.apps import AppConfig, apps
 from django.core import checks
 
@@ -19,6 +20,8 @@ def check_app(app: AppConfig):
         len(app.name.rpartition(".")[-1]) > 4
         and not app.name.endswith("s")
         and "_system" not in app.name
+        and "public" not in app.name
+        and "dashboard" not in app.name
     ):
         yield django.core.checks.Warning(
             "App name is singular",

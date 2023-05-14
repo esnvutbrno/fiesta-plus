@@ -1,6 +1,14 @@
 {% extends "accounts/user_profile/base.html" %}
 
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {{ block.super }}
+  {% trans "Update My Profile" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
 {% block content %}
   {% include "accounts/user_profile/profile_form.html" %}
-
 {% endblock content %}

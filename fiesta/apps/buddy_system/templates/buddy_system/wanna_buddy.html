@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+
 {% load breadcrumbs %}
 {% load i18n %}
 
@@ -10,11 +11,67 @@
 {% block breadcrumbs_container %}{% endblock %}
 
 {% block main %}
+  <section class="py-20">
+    <div class="container mx-auto px-4">
+      <div class="max-w-3xl mx-auto text-center">
+        <h2 class="text-4xl font-bold text-gray-900 dark:text-gray-200">
+          Maximize Your Study Abroad Experience: The Buddy System Advantage!
+        </h2>
+        <p class="text-lg text-gray-700 dark:text-gray-300 my-12">
+          Going to a new country can be overwhelming, but with a buddy system in
+          place, international students on mobility can have a smoother transition. Here are some advantages:
+        </p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="bg-white rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Cultural Exchange</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            International students can learn about the local culture and customs
+            from their buddy, and in turn, share their own culture and experiences.
+          </p>
+        </div>
+        <div class="bg-pink-100 rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Language Practice</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            International students can practice their language skills with their
+            buddy, which can help them improve their communication abilities and confidence.
+          </p>
+        </div>
+        <div class="bg-yellow-100 rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Social Support</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            International students can feel less lonely and isolated with the help
+            of their buddy, who can offer emotional support and help them make new friends.
+          </p>
+        </div>
+        <div class="bg-purple-100 rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Practical Assistance</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            Buddies can help international students navigate the new environment,
+            such as finding housing, transportation, and healthcare services.
+          </p>
+        </div>
+        <div class="bg-green-100 rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Safety and Security</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            Having a buddy can provide a sense of security for international
+            students, especially when traveling or exploring new areas.
+          </p>
+        </div>
+        <div class="bg-orange-100 rounded-lg shadow-md p-6 hover:shadow transition-shadow">
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Long-Term Connections</h3>
+          <p class="text-lg text-gray-700 mb-4">
+            Buddies can develop long-lasting friendships that can continue even
+            after the international student returns home.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
   <div class="prose prose-lg mx-auto">
     <h1 class="text-center">Wanna Buddy?</h1>
     <h2 class="text-center">How does it work?</h2>
   </div>
-
   <section class="text-gray-600 body-font">
     <div class="max-w-2xl mx-auto flex flex-wrap">
       <div class="flex relative pt-10 pb-20 sm:items-center md:w-2/3 mx-auto group">
@@ -23,23 +80,19 @@
         </div>
         <div class="badge badge-primary z-10 group-hover:badge-secondary">1</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
-          <div
-            class="
-              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
-              bg-gray-100 text-primary transition-colors
-              group-hover:bg-gray-200 group-hover:text-secondary
-            ">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          <div class="flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center bg-gray-100 text-primary transition-colors group-hover:bg-gray-200 group-hover:text-secondary">
+            <svg class="w-12 h-12"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+              </path>
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0 prose">
             <h3>Profile in Buena Fiesta</h3>
-            <p class="">
-              At first, you'll need to register here and fill information and facts about you.
-            </p>
+            <p class="">At first, you'll need to register here and fill information and facts about you.</p>
           </div>
         </div>
       </div>
@@ -49,23 +102,19 @@
         </div>
         <div class="badge badge-primary z-10 group-hover:badge-secondary">2</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
-          <div
-            class="
-              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
-              bg-gray-100 text-primary transition-colors
-              group-hover:bg-gray-200 group-hover:text-secondary
-            ">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          <div class="flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center bg-gray-100 text-primary transition-colors group-hover:bg-gray-200 group-hover:text-secondary">
+            <svg class="w-12 h-12"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5v-1a1.5 1.5 0 013 0v1m0 0V11m0-5.5a1.5 1.5 0 013 0v3m0 0V11">
+              </path>
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0 prose">
             <h3>Buddy Request</h3>
-            <p>
-              Create a buddy request, so buddies can see you and take you!
-            </p>
+            <p>Create a buddy request, so buddies can see you and take you!</p>
           </div>
         </div>
       </div>
@@ -75,23 +124,19 @@
         </div>
         <div class="badge badge-primary z-10 group-hover:badge-secondary">3</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
-          <div
-            class="
-              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
-              bg-gray-100 text-primary transition-colors
-              group-hover:bg-gray-200 group-hover:text-secondary
-            ">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          <div class="flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center bg-gray-100 text-primary transition-colors group-hover:bg-gray-200 group-hover:text-secondary">
+            <svg class="w-12 h-12"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z">
+              </path>
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0 prose">
             <h3>Buddies Magic</h3>
-            <p>
-              One of our buddies will take your request and you'll be contacted!
-            </p>
+            <p>One of our buddies will take your request and you'll be contacted!</p>
           </div>
         </div>
       </div>
@@ -101,37 +146,25 @@
         </div>
         <div class="badge badge-primary z-10 group-hover:badge-secondary">4</div>
         <div class="flex-grow md:pl-8 pl-6 flex sm:items-center items-start flex-col sm:flex-row">
-          <div
-            class="
-              flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center
-              bg-gray-100 text-primary transition-colors
-              group-hover:bg-gray-200 group-hover:text-secondary
-            ">
-            <svg class="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+          <div class="flex-shrink-0 w-24 h-24 rounded-full inline-flex items-center justify-center bg-gray-100 text-primary transition-colors group-hover:bg-gray-200 group-hover:text-secondary">
+            <svg class="w-12 h-12"
+                 fill="none"
+                 stroke="currentColor"
+                 viewBox="0 0 24 24"
                  xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
+              </path>
             </svg>
           </div>
           <div class="flex-grow sm:pl-6 mt-6 sm:mt-0 prose">
             <h3>Enjoy your connection</h3>
-            <p>
-              The best time to go on trip with your buddy, grab a beer or go for a run! Enjoy the time!
-            </p>
+            <p>The best time to go on trip with your buddy, grab a beer or go for a run! Enjoy the time!</p>
           </div>
         </div>
       </div>
     </div>
   </section>
-
   <div class="flex flex-row justify-center">
-    <a
-      href="{{ continue_url }}"
-      class="
-        btn btn-secondary btn-lg mt-4
-      ">
-      Let's get the party started!
-    </a>
+    <a href="{{ continue_url }}" class=" btn btn-secondary btn-lg my-12 ">Let's get the party started!</a>
   </div>
-
 {% endblock %}

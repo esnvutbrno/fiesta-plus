@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pathlib import Path
 
 from ._utils import PathValue
@@ -13,24 +15,31 @@ class ProjectConfigMixin:
     DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
     SITE_ID = 1
-    LANGUAGE_CODE = "en-us"
+    LANGUAGE_CODE = "en-gb"
 
     TIME_ZONE = "UTC"
 
     USE_I18N = True
 
+    USE_L10N = True
+
     USE_TZ = True
 
-    ALLOWED_HOSTS: list[str] = [".localhost", ".local", "127.0.0.1"]
+    FILTERS_EMPTY_CHOICE_LABEL = "---"
 
     WSGI_APPLICATION = "fiesta.wsgi.application"
 
     ROOT_URLCONF = "fiesta.urls"
 
+    ROOT_DOMAIN = "xxx"  # TODO: fill from environ
+
+    def ALLOWED_HOSTS(self):
+        return [f".{self.ROOT_DOMAIN}"]
+
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
     INSTALLED_APPS = [
-        # dj admin autocompletiting widgets, must be before admin
+        # dj admin autocompletion widgets, must be before admin
         "dal",
         "dal_select2",
         # Django native
@@ -54,12 +63,15 @@ class ProjectConfigMixin:
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
+        "apps.dashboard.apps.DashboardConfig",
         "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
+        "apps.pages.apps.PagesConfig",
         "apps.plugins.apps.PluginsConfig",
+        "apps.public.apps.PublicConfig",
         "apps.sections.apps.SectionsConfig",
         "apps.universities.apps.UniversitiesConfig",
         "apps.utils.apps.UtilsConfig",
@@ -73,7 +85,14 @@ class ProjectConfigMixin:
         # "allauth.socialaccount.providers.facebook",
         "allauth.socialaccount.providers.google",
         "allauth_cas",
+        # superuser can log in as any user
         "loginas",
+        # editorjs integration
+        "django_editorjs_fields",
+        "mptt",
+        # health checks
+        "health_check",
+        "health_check.contrib.migrations",
     ]
 
     MIDDLEWARE = [

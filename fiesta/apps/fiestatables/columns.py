@@ -1,6 +1,7 @@
-from typing import Type
+from __future__ import annotations
 
 import django_tables2 as tables
+from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
@@ -15,10 +16,20 @@ class ImageColumn(tables.Column):
         return value.url
 
 
+class NaturalDatetimeColumn(tables.Column):
+    attrs = {"td": {"title": lambda bound_column, record: bound_column.accessor.resolve(record)}}
+
+    def value(self, value):
+        return value
+
+    def render(self, value):
+        return NaturalTimeFormatter.string_for(value)
+
+
 class LabeledChoicesColumn(tables.Column):
     def __init__(
         self,
-        choices: Type[Choices],
+        choices: type[Choices],
         labels_replacements: dict[str, str],
         *args,
         **kwargs,

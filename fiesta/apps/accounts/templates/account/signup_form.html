@@ -2,35 +2,24 @@
 {% load breadcrumbs %}
 {% load fiestaforms %}
 {% load socialaccount %}
-
 {% url 'account_signup' as default_form_url %}
-
 <h1 class="card-title">{{ card_title|default:"Create Account" }}</h1>
-
 {% include "account/parts/social_login_buttons.html" with process="Sign up" %}
-
-<form
-  method="POST" action="{{ form_url|default:default_form_url }}"
-  class="{{ form|get_form_classes }} space-y-2"
->
+<form method="POST"
+      action="{{ form_url|default:default_form_url }}"
+      class="{{ form|get_form_classes }} space-y-2">
   {% csrf_token %}
   {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+    <input type="hidden"
+           name="{{ redirect_field_name }}"
+           value="{{ redirect_field_value }}" />
   {% endif %}
-
   <hr>
-
   {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
-
   {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
   {% include "fiestaforms/parts/field.html" with bf=form.password1 errors=form.errors.password1 %}
   {% include "fiestaforms/parts/field.html" with bf=form.password2 errors=form.errors.password2 %}
-
-  <button type="submit" class="btn btn-block btn-primary">
-    Sign up
-  </button>
-
-
+  <button type="submit" class="btn btn-block btn-primary">Sign up</button>
   <div class="text-sm font-medium text-gray-500">
     Already registered?
     <a href="{{ login_url }}" class="link link-primary link-hover">Log in</a>

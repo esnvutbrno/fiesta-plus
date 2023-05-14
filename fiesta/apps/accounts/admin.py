@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from allauth.account.admin import EmailAddressAdmin
 from allauth.account.models import EmailAddress
 from django.contrib import admin
@@ -39,13 +41,18 @@ class UserAdmin(DjangoUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "nationality", "gender")
+    list_display = ("user", "nationality", "gender", "picture")
     list_filter = (
         "user__memberships__section",
         "gender",
         ("nationality", admin.AllValuesFieldListFilter),
     )
     autocomplete_fields = ("user",)
+    search_fields = [
+        "user__username",
+        "user__first_name",
+        "user__last_name",
+    ]
 
     def get_queryset(self, request):
         return (

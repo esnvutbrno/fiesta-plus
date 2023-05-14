@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class AuthConfigMixin:
     AUTH_PASSWORD_VALIDATORS = [
         {

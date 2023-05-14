@@ -1,33 +1,44 @@
+from __future__ import annotations
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DetailView
 
-from apps.accounts.models import UserProfile, User
+from apps.accounts.models import User, UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.utils.breadcrumbs import with_object_breadcrumb
+from apps.sections.models import SectionMembership
+from apps.sections.views.mixins.membership import UserPassesMembershipTestMixin
 
 
-class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
+class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, HtmxFormMixin, CreateView):
     request: HttpRequest
     object: ESNcardApplication
 
     form_class = ESNcardApplicationForm
     template_name = "esncards/application_create.html"
     success_message = _("Application has been created.")
+    permission_denied_message = _("An ESNcard application for current user for this section already exists.")
+
+    def test_membership(self, membership: SectionMembership) -> bool:
+        return not membership.user.esncard_applications.filter(section=membership.section).exists()
 
     def get_initial(self):
-        profile: UserProfile = self.request.user.profile
+        profile: UserProfile = self.request.user.profile_or_none
         university = (
-            profile.guest_faculty.university
-            if profile.guest_faculty
-            else profile.home_faculty.university
-            if profile.home_faculty
-            else profile.home_university
+            (
+                profile.guest_faculty.university
+                if profile.guest_faculty
+                else profile.home_faculty.university
+                if profile.home_faculty
+                else profile.home_university
+            )
+            if profile
+            else None
         )
 
         return dict(
@@ -36,7 +47,7 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
             section=self.request.membership.section,
             first_name=self.request.user.first_name,
             last_name=self.request.user.last_name,
-            nationality=profile.nationality,
+            nationality=profile.nationality if profile else None,
         )
 
     def form_valid(self, form):
@@ -63,20 +74,20 @@ class ApplicationCreateView(SuccessMessageMixin, HtmxFormMixin, CreateView):
         return resp
 
     def get_template_names(self):
-        return (
-            ["esncards/application_create_form.html"]
-            if self.request.htmx
-            else ["esncards/application_create.html"]
-        )
+        return ["esncards/application_create_form.html"] if self.request.htmx else ["esncards/application_create.html"]
 
     def get_success_url(self):
         return reverse("esncards:application_detail", kwargs=dict(pk=self.object.pk))
 
 
-@with_object_breadcrumb()
-class ApplicationDetailView(DetailView):
+class ApplicationDetailView(UserPassesMembershipTestMixin, DetailView):
     # TODO: check perms
     request: HttpRequest
+    object: ESNcardApplication
 
     template_name = "esncards/application_detail.html"
     queryset = ESNcardApplication.objects.all()
+
+    def test_membership(self, membership: SectionMembership) -> bool:
+        self.object = self.get_object(queryset=self.queryset or self.get_queryset())
+        return membership.is_privileged or membership.user == self.object.user

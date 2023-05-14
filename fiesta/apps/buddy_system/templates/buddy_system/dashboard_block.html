@@ -1,0 +1,85 @@
+{% load buddy_system %}
+{% load i18n %}
+{% load user_profile %}
+<div class="Dashboard__tiles flex flex-col md:flex-row">
+  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
+    <div class="Dashboard__tile__title">Buddy System</div>
+    {% if request.membership.is_international %}
+      {% get_current_buddy_request_of_user as br %}
+      {% if not br %}
+        <div class="Dashboard__tile__value">✖️ Not requested yet</div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "buddy_system:new-request" %}"
+             class="btn btn-lg btn-outline">create buddy request</a>
+        </div>
+      {% elif br.state == br.State.CREATED %}
+        <div class="Dashboard__tile__value">⌛ Waiting for match</div>
+        {% get_waiting_buddy_requests_placed_before br as waiting_total %}
+        <div class="Dashboard__tile__desc">
+          There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+        </div>
+      {% elif br.state == br.State.MATCHED %}
+        {% get_user_picture br.matched_by as buddy_picture %}
+
+        {% if buddy_picture %}
+          <div class="stat-figure text-secondary">
+            <div class="avatar">
+              <div class="w-16 rounded-full">
+                <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+                     width="{{ buddy_picture.width }}"
+                     height="{{ buddy_picture.height }}"
+                     alt="Matched buddy picture" />
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        <div class="Dashboard__tile__value">✅ Matched</div>
+        <div class="Dashboard__tile__desc">It's a match!</div>
+      {% endif %}
+    {% else %}
+      {% get_waiting_requests_to_match as waiting_brs %}
+      <div class="Dashboard__tile__value">
+        {% with waiting_brs.count as count %}<span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}{% endwith %}
+      </div>
+      <div class="Dashboard__tile__actions text-right">
+        <a href="{% url "buddy_system:matching-requests" %}"
+           class="btn btn-lg btn-outline">show waiting requests</a>
+      </div>
+    {% endif %}
+  </div>
+  {% if request.membership.is_local %}
+    <div class="Dashboard__tile bg-gray-200">
+      <div class="Dashboard__tile__title">My Buddies</div>
+      <div class="Dashboard__tile__value">
+        <div class="avatar-group -space-x-12 justify-center p-2">
+          {% get_matched_buddy_requests as matched_requests %}
+          {% for br in matched_requests|slice:":3" %}
+            {% get_user_picture br.issuer as buddy_picture %}
+
+            {% if buddy_picture %}
+              <div class="avatar hover:scale-105 transition-transform">
+                <div class="w-24">
+                  <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+                       width="{{ buddy_picture.width }}"
+                       height="{{ buddy_picture.height }}"
+                       alt="{{ br.issuer }}"
+                       title="{{ br.issuer }}" />
+                </div>
+              </div>
+            {% else %}
+              {# TODO placeholder avatar #}
+            {% endif %}
+          {% endfor %}
+          {% if matched_requests|length > 3 %}
+            <div class="avatar placeholder">
+              <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
+                 href="{% url "buddy_system:my-buddies" %}">
+                <span>+{{ matched_requests|length|add:"-3" }}</span>
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>

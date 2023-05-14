@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from apps.utils.request import HttpRequest
 
 

@@ -1,6 +1,9 @@
-from typing import Type, Generator, TypeVar
+from __future__ import annotations
 
-ClassType = TypeVar("ClassType", bound=Type)
+from collections.abc import Generator
+from typing import TypeVar
+
+ClassType = TypeVar("ClassType", bound=type)
 
 
 def all_subclasses(cls: ClassType) -> Generator[ClassType, None, None]:

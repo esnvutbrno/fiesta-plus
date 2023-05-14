@@ -1,16 +1,18 @@
-from django.utils.translation import gettext_lazy as _
+from __future__ import annotations
+
 from django.views.generic import TemplateView
 
 from apps.buddy_system.models import BuddySystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-@with_breadcrumb(_("Buddy System"))
 class BuddySystemIndexView(
-    PluginConfigurationViewMixin[BuddySystemConfiguration], TemplateView
+    EnsureInSectionSpaceViewMixin,
+    PluginConfigurationViewMixin[BuddySystemConfiguration],
+    TemplateView,
 ):
     request: HttpRequest
 
@@ -28,7 +30,9 @@ class BuddySystemIndexView(
 
     def get_template_names(self):
         return [
-            "buddy_system/index_international.html"
-            if self.request.membership.role == SectionMembership.Role.INTERNATIONAL
-            else "buddy_system/index_member.html"
+            (
+                "buddy_system/index_international.html"
+                if self.request.membership.role == SectionMembership.Role.INTERNATIONAL
+                else "buddy_system/index_member.html"
+            )
         ]

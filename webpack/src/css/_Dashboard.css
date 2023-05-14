@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components {
+    .Dashboard__tiles {
+        @apply stats w-full
+    }
+    .Dashboard__tile {
+        @apply stat shadow-xl
+    }
+    .Dashboard__tile--dark {
+        @apply text-white dark:text-gray-900
+    }
+    .Dashboard__tile__title {
+        @apply stat-title text-2xl dark:text-gray-900
+    }
+    .Dashboard__tile--dark .Dashboard__tile__title {
+        @apply dark:text-gray-200
+    }
+
+    .Dashboard__tile__value {
+        @apply stat-value text-2xl md:text-3xl lg:text-4xl xl:text-5xl my-4
+    }
+
+    .Dashboard__tile__desc {
+        @apply stat-desc text-xl
+    }
+
+    .Dashboard__tile__actions {
+        @apply text-xl mt-2
+    }
+
+}

@@ -1,14 +1,16 @@
+from __future__ import annotations
+
 import djclick as click
 
-from apps.utils.factories.buddy_system import BuddyRequestFactory
-from apps.utils.factories.sections import SectionMembershipFactory
+from apps.sections.models import Section
+from apps.utils.factories.esncards import ESNCardApplicationFactory
 
 
 @click.command()
 def seed():
-    from faker_education import SchoolProvider
     import factory
+    from faker_education import SchoolProvider
 
     factory.Faker.add_provider(SchoolProvider)
-    SectionMembershipFactory.create_batch(15)
-    BuddyRequestFactory.create_batch(15)
+
+    ESNCardApplicationFactory.create_batch(10, section=Section.objects.filter(name="ESN VUT Brno").first())

@@ -1,4 +1,5 @@
 {% extends "fiestaforms/classic.html" %}
+
 {% load i18n %}
 
 {% block buttons_extra %}
@@ -8,6 +9,6 @@
       {# is submiting button, but before request, form is reseted #}
       x-data @click="$store.tableControls.reset($event.target)"
       class="btn btn-sm btn-warning self-end"
-    >{% trans "reset" %}</button>
+      >{% trans "reset" %}</button>
   {% endif %}
 {% endblock %}

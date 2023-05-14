@@ -26,15 +26,13 @@ class UserProfileMiddleware:
 
         if not target_app:
             # target is not a plugin page, profile is not needed to have it completed
-            return
+            return None
 
         if request.resolver_match.view_name in (
             cls.FINISH_PROFILE_URL_NAME,
-        ) or UserMembershipMiddleware.should_ignore_403(
-            target_app=target_app, resolver_match=request.resolver_match
-        ):
+        ) or UserMembershipMiddleware.should_ignore_403(target_app=target_app, resolver_match=request.resolver_match):
             # to prevent loop, profile needs to be finished
-            return
+            return None
 
         try:
             # doesn't have profile at all, definitely needed to fill
@@ -52,6 +50,7 @@ class UserProfileMiddleware:
                 next=request.get_full_path(),
                 login_url=reverse(cls.FINISH_PROFILE_URL_NAME),
             )
+        return None
 
 
 __all__ = ["UserProfileMiddleware", "HttpRequest"]

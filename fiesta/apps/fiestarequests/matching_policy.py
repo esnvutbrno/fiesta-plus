@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import typing
 
-from django.db.models import QuerySet, Q
+from django.db.models import Q, QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from apps.sections.models import SectionMembership
@@ -15,9 +17,7 @@ class MatchingPolicyProtocol(typing.Protocol):
     description: str
     can_member_match: bool
 
-    def limit_requests(
-        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
-    ) -> typing.Union[QuerySet["BuddyRequest"]]:
+    def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         # TODO: NotImplemented or base implementation?
         return qs.filter(self._base_filter(membership=membership)).select_related(
             "issuer",
@@ -28,7 +28,7 @@ class MatchingPolicyProtocol(typing.Protocol):
 
     def on_created_request(
         self,
-        request: "BuddyRequest",
+        request: BuddyRequest,
     ) -> None:
         ...
 
@@ -46,28 +46,24 @@ class MatchingPolicyProtocol(typing.Protocol):
 class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
     id = "manual-by-editor"
     title = _("Manual by editors")
-    description = _("Matching done manualy only by editors.")
+    description = _("Matching is done manually only by editors.")
     can_member_match = False
 
 
 class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
     id = "manual-by-member"
     title = _("Manual by members")
-    description = _("Matching is done manualy directly by members.")
+    description = _("Matching is done manually directly by members.")
     can_member_match = True
 
 
 class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
-    title = _("Limited by faculty")
-    description = _(
-        "Matching done manualy by members themselfs, but limited to the same faculty."
-    )
+    title = _("Restricted to same faculty")
+    description = _("Matching is done manually by members themselves, but limited to the same faculty.")
     can_member_match = True
 
-    def limit_requests(
-        self, qs: typing.Union[QuerySet["BuddyRequest"]], membership: SectionMembership
-    ) -> typing.Union[QuerySet["BuddyRequest"]]:
+    def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         from apps.accounts.models import UserProfile
 
         member_profile: UserProfile = membership.user.profile_or_none
@@ -79,10 +75,10 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
 
 class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty-limited"
-    title = _("Limited by faculty till limit")
+    title = _("Restricted to same faculty with limit")
     description = _(
-        "Matching done manualy by members themselfs, but limited to same faculty till"
-        "the rolling limit - limitation is not enabled after reaching the rolling limit."
+        "Matching is done manually by members themselves, but limited to same faculty till"
+        "the rolling limit - limitation is not enabled after reaching the limit."
     )
     can_member_match = True
 
@@ -110,9 +106,7 @@ class MatchingPoliciesRegister:
 
     CHOICES = [(p.id, p.title) for p in AVAILABLE_POLICIES]
 
-    DESCRIPTION = " <br />".join(
-        f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES
-    )
+    DESCRIPTION = " <br />".join(f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES)
 
     _ID_TO_POLICY = {p.id: p() for p in AVAILABLE_POLICIES}
 

@@ -1,12 +1,16 @@
-DC = docker compose
-DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
+
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
+DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
+DCFLAGS =
+
+DC = docker compose $(DCFLAGS)
 
 WEB_CMD = $(DC) run $(DCRUNFLAGS) web
 DJANGO_ADMIN =  $(WEB_CMD) python manage.py
 
 cmd ?= help
 DA_CMD = $(cmd)
+DC_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
@@ -23,6 +27,9 @@ pre-commit: ## Runs all included lints/checks/reformats
 
 seed: DA_CMD = seed ## Seed database with fake data.
 seed: da
+
+clean_unlinked: DA_CMD = clean_unlinked ## Cleans all unlinked data from database.
+clean_unlinked: da
 
 startplugin: DA_CMD = startplugin ## Create plugin in project with name=
 startplugin: ARG = $(name)
@@ -45,6 +52,7 @@ makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all
 makemigrations: da
 
 loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
+loadlegacydata: DCFLAGS = --profile migration
 loadlegacydata: da
 
 test: DA_CMD = test --keepdb --parallel --verbosity 1 ## Runs django test cases.
@@ -55,41 +63,49 @@ graph_models: da ## Plot all Django models into models.png
 	@mv ./fiesta/$(MODELS_PNG) .
 
 da: ## Invokes django-admin command stored in cmd=
-	$(DC) run $(DCRUNFLAGS) web "python manage.py $(DA_CMD) $(ARG)"
+	$(DC) run web "python manage.py $(DA_CMD) $(ARG)"
 
-build: ## Builds docker images for development.
-	$(DC) build
+dc: ## Invokes docker compose command stored in cmd=
+	$(DC) $(DC_CMD)
 
-prodbuild: ## Builds docker images for production.
-	$(DC) build
+build: DC_CMD = build
+build: dc ## Builds docker images for development.
 
-upb: ## Build and runs all needed docker containers in non-deamon mode
-	$(DC) up --build
+upb: DC_CMD = up --build
+upb: dc ## Build and runs all needed docker containers in non-deamon mode
 
-upbd: ## Build and runs all needed docker containers in detached mode
-	$(DC) up --build --detach
+uppd: DC_CMD = up --build --detach
+upbd: dc ## Build and runs all needed docker containers in detached mode
 
-upd: ## Runs all needed docker containers in detached mode
-	$(DC) up --detach
+upd: DC_CMD = up --detach
+upd: dc ## Runs all needed docker containers in detached mode
 
-up: ## Runs all needed docker containers
-	$(DC) up
+up: DC_CMD = up
+up: dc ## Runs all needed docker containers
 
-produp: export DJANGO_CONFIGURATION = LocalProduction ## Runs fiesta in production mode.
-produp:
+produp: ## Runs fiesta in (local)production mode.
 	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
+
+psql: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta"
+psql: dc  ## Runs psql shell in database
+
+dumpdb: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta pg_dump --host db --user fiesta" > dump-`date +%Y-%m-%d-%H:%M:%S`.sql
+dumpdb: dc ## Dumps database to .sql
+
+loaddb: DC_CMD = run -T --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta" < $(dump)
+loaddb: dc ## Loads database from dump=
 
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
-generate-localhost-certs: ## Generates self-signed localhost certs for working HTTPS.
+generate-localhost-certs: ## Generates self-signed *.fiesta.test certs for working HTTPS.
 generate-localhost-certs: \
-	conf/certs/fiesta.local.crt \
-	conf/certs/*.fiesta.local.crt \
-	conf/certs/web.localhost.crt \
-	conf/certs/webpack.local.crt \
-	conf/certs/kibana.localhost.crt \
-	conf/certs/elastic.crt
+	conf/certs/fiesta.test.crt \
+	conf/certs/*.fiesta.test.crt \
+	conf/certs/web.fiesta.test.crt \
+	conf/certs/webpack.fiesta.test.crt \
+	conf/certs/kibana.fiesta.test.crt \
+	conf/certs/elastic.fiesta.test.crt
 
 
 # based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile

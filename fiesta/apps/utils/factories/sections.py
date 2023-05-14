@@ -1,15 +1,17 @@
+from __future__ import annotations
+
 from operator import itemgetter
 
 from django.utils.text import slugify
 from django_countries.data import COUNTRIES
-from factory import SubFactory, LazyAttribute
+from factory import LazyAttribute, SubFactory
 from factory.django import DjangoModelFactory
 from factory.fuzzy import FuzzyChoice
 
-from apps.sections.models import SectionMembership, Section
+from apps.sections.models import Section, SectionMembership
 
 
-class SectionFactory(DjangoModelFactory):
+class KnownSectionFactory(DjangoModelFactory):
     class Meta:
         model = Section
         django_get_or_create = ("name",)
@@ -17,8 +19,11 @@ class SectionFactory(DjangoModelFactory):
     name = FuzzyChoice(
         (
             "ESN VUT Brno",
-            "ESN MUNI",  # 'ESN VSB TUO',
-            "ISC CTU",  # 'ESN MENDELU',  'ESN Zlin'
+            "ESN MUNI",
+            "ESN VSB TUO",
+            "ISC CTU",
+            "ESN MENDELU",
+            "ESN Zlin",
         )
     )
 
@@ -27,7 +32,7 @@ class SectionFactory(DjangoModelFactory):
     country = FuzzyChoice(COUNTRIES.items(), getter=itemgetter(0))
 
 
-class SectionMembershipFactory(DjangoModelFactory):
+class SectionMembershipWithUserFactory(DjangoModelFactory):
     class Meta:
         model = SectionMembership
 
@@ -35,9 +40,7 @@ class SectionMembershipFactory(DjangoModelFactory):
         "apps.utils.factories.accounts.UserFactory",
     )
     section = SubFactory(
-        "apps.utils.factories.sections.SectionFactory",
+        "apps.utils.factories.sections.KnownSectionFactory",
     )
-    role = FuzzyChoice(
-        (SectionMembership.Role.MEMBER, SectionMembership.Role.INTERNATIONAL)
-    )
+    role = FuzzyChoice((SectionMembership.Role.MEMBER, SectionMembership.Role.INTERNATIONAL))
     state = SectionMembership.State.ACTIVE

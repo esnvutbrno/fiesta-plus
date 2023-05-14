@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
@@ -51,9 +53,7 @@ class BasePluginConfiguration(LifecycleModelMixin, BasePolymorphicModel):
     def clean(self):
         # cannot use isinstance, since children are allowed to create
         if type(self) == BasePluginConfiguration:
-            raise ValidationError(
-                _("Base plugin configuration cannot be saved directly, only children.")
-            )
+            raise ValidationError(_("Base plugin configuration cannot be saved directly, only children."))
 
 
 __all__ = ["BasePluginConfiguration"]

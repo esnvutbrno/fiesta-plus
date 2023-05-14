@@ -1,0 +1,36 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: fiesta-ingress
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: {{ .Values.ingress.certIssuerName | quote }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+        {{- .Values.ingress.extraHosts | toYaml | nindent 8 }}
+      secretName: {{ .Values.ingress.certSecretName | quote }}
+  rules:
+    - host: "*.{{ .Values.ingress.host }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80
+    - host: "{{ .Values.ingress.host }}"
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: web
+                port:
+                  number: 80

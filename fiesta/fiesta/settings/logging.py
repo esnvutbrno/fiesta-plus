@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from configurations.values import Value
 
 
@@ -30,6 +32,10 @@ class LoggingConfigMixin:
                     "handlers": ["console"],
                     "level": self.LOG_LEVEL,
                     "propagate": False,
+                },
+                "boto": {
+                    "handlers": ["console"],
+                    "level": self.LOG_LEVEL,
                 },
             },
         }

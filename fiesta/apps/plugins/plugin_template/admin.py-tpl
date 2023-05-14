@@ -1,11 +1,11 @@
 from django.contrib import admin
-from polymorphic.admin import PolymorphicChildModelAdmin
 from apps.plugins.models import BasePluginConfiguration
 
 from .models import {{ camel_case_plugin_name }}Configuration
+from ..plugins.admin import BaseChildConfigurationAdmin
 
 
 @admin.register({{ camel_case_plugin_name }}Configuration)
-class {{ camel_case_plugin_name }}ConfigurationAdmin(PolymorphicChildModelAdmin):
+class {{ camel_case_plugin_name }}ConfigurationAdmin(BaseChildConfigurationAdmin):
     base_model = BasePluginConfiguration
     show_in_index = True

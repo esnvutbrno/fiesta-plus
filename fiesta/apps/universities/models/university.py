@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
@@ -6,7 +8,10 @@ from apps.utils.models import BaseTimestampedModel
 
 
 class University(BaseTimestampedModel):
-    name = models.CharField(max_length=128, verbose_name=_("full name of university"))
+    name = models.CharField(
+        max_length=256,
+        verbose_name=_("full name of university"),
+    )
     abbr = models.SlugField(
         max_length=32,
         allow_unicode=True,

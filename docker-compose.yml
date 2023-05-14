@@ -14,28 +14,32 @@ services:
     build:
       context: .
       dockerfile: fiesta/Dockerfile
+      target: base
     depends_on:
       - db
     environment:
-      VIRTUAL_HOST: web.localhost
+      VIRTUAL_HOST: web.fiesta.test
       VIRTUAL_PORT: 8000
 
   db:
-    image: postgres:12.0-alpine
+    image: postgres:15-alpine3.17
     volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - postgres15_data:/var/lib/postgresql/data/
     ports:
       - "127.0.0.1:15432:5432"
+    expose:
+      - 5432
     environment:
       POSTGRES_USER: fiesta
       POSTGRES_PASSWORD: fiesta
       POSTGRES_DB: fiesta
       TZ: Europe/Prague
 
-  webserver:
+  proxy:
     build:
-      context: ./nginx
-      dockerfile: webserver.Dockerfile
+      context: .
+      dockerfile: nginx/proxy.Dockerfile
+      target: base
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
@@ -48,8 +52,9 @@ services:
       - wiki_static_files:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
+      PROXY_HOSTNAME_TARGET: "web"
       STATIC_LOCATION_PATTERN: "^\b$$"
-      VIRTUAL_HOST: "*.fiesta.local,fiesta.local,localhost"
+      VIRTUAL_HOST: "*.fiesta.test,fiesta.test"
       VIRTUAL_PORT: 80
 
   dockerproxy:
@@ -69,6 +74,7 @@ services:
     build:
       context: .
       dockerfile: ./webpack/Dockerfile
+      target: base
     command: yarn dev
     expose:
       - 8003
@@ -77,14 +83,15 @@ services:
     env_file:
       - ./webpack/.env.base
     environment:
-      VIRTUAL_HOST: webpack.local
+      VIRTUAL_HOST: webpack.fiesta.test
       VIRTUAL_PORT: 8003
       BUILD_DIR: /usr/src/build
       NODE_ENV: development
-      PUBLIC_PATH: https://webpack.local/static/
+      ROOT_DOMAIN: fiesta.test
+      PUBLIC_PATH: //webpack.fiesta.test/static/
 
   legacydb:
-    image: mariadb:10.3
+    image: mariadb:10.4
     profiles: [ "migration" ]
     volumes:
       - legacydb_data:/var/lib/mysql
@@ -93,7 +100,7 @@ services:
       MYSQL_DATABASE: fiesta
       MYSQL_USER: fiesta
       MYSQL_PASSWORD: fiesta
-      VIRTUAL_HOST: legacydb.localhost
+      VIRTUAL_HOST: legacydb.fiesta.test
       VIRTUAL_PORT: 3306
     expose:
       - 3306
@@ -117,7 +124,7 @@ services:
       - ./wiki/.env.base
       - ./.env
     environment:
-      VIRTUAL_HOST: kibana.localhost
+      VIRTUAL_HOST: kibana.fiesta.test
       VIRTUAL_PORT: 5601
 
   wikifetcher:
@@ -134,7 +141,7 @@ services:
       - wiki/.env.base
 
 volumes:
-  postgres_data:
+  postgres15_data:
   elastic_data:
   legacydb_data:
   webpack_build:

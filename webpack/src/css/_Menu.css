@@ -8,13 +8,14 @@
         @apply
         block py-2 pr-4 pl-3
 
-        text-gray-700 border-b border-gray-100
+        border-b border-gray-100
+        dark:text-white dark:hover:text-primary
 
-        hover:bg-gray-50
+        hover:bg-gray-50 hover:text-primary
         md:hover:bg-transparent
         md:border-0
         md:hover:text-primary
-        md:p-0 md:dark:text-white;
+        md:p-0;
     }
 
     .Menu__link--active {

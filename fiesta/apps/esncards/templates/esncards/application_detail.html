@@ -1,9 +1,15 @@
 {% extends "fiesta/base.html" %}
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {# TODO: maybe include more specific info? #}
+  {% trans "Application Detail" as title %}
+  {% breadcrumb_push_current_plugin %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
 
 {% block main %}
-  <h1>ESNcard Application</h1>
-
-
   <ol class="relative border-gray-200 dark:border-gray-700 ml-2 mt-4">
     {% for record in object.history %}
       {% with user=record.user|default:object.user %}
@@ -20,22 +26,21 @@
         {% endif %}
       {% endwith %}
     {% endfor %}
-
-
     <li class="mb-10 ml-6">
-      <span
-        class="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
-        <img class="rounded-full shadow-lg" src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
+      <span class="flex absolute -left-3 justify-center items-center w-6 h-6 bg-blue-200 rounded-full ring-8 ring-white dark:ring-gray-900 dark:bg-blue-900">
+        <img class="rounded-full shadow-lg"
+             src="https://flowbite.com/docs/images/people/profile-picture-3.jpg"
              alt="Jese Leos image">
       </span>
-      <div
-        class="justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow-sm sm:flex dark:bg-gray-700 dark:border-gray-600">
+      <div class="justify-between items-center p-4 bg-white rounded-lg border border-gray-200 shadow-sm sm:flex dark:bg-gray-700 dark:border-gray-600">
         <time class="mb-1 text-xs font-normal text-gray-400 sm:order-last sm:mb-0">1 day ago</time>
-        <div class="text-sm font-normal text-gray-500 lex dark:text-gray-300">Jese Leos has changed
-          <a href="#" class="font-semibold text-blue-600 dark:text-blue-500 hover:underline">Pricing page</a>
-          task status to <span class="font-semibold text-gray-900 dark:text-white">Finished</span></div>
+        <div class="text-sm font-normal text-gray-500 lex dark:text-gray-300">
+          Jese Leos has changed
+          <a href="#"
+             class="font-semibold text-blue-600 dark:text-blue-500 hover:underline">Pricing page</a>
+          task status to <span class="font-semibold text-gray-900 dark:text-white">Finished</span>
+        </div>
       </div>
     </li>
   </ol>
-
 {% endblock %}

@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.contrib.postgres.forms import SimpleArrayField
 from django.forms import CheckboxSelectMultiple
 

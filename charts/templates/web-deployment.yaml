@@ -1,0 +1,61 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fiesta.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: web
+        {{- include "fiesta.selectorLabels" . | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-logs-container: web
+    spec:
+      containers:
+        - name: web
+          image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
+{{/*          readinessProbe:*/}}
+{{/*            initialDelaySeconds: 5*/}}
+{{/*            httpGet:*/}}
+{{/*              path: "/!/web"*/}}
+{{/*              port: 8000*/}}
+{{/*              httpHeaders:*/}}
+{{/*                - name: Host*/}}
+{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
+{{/*          livenessProbe:*/}}
+{{/*            initialDelaySeconds: 5*/}}
+{{/*            periodSeconds: 20*/}}
+{{/*            httpGet:*/}}
+{{/*              path: "/!/web"*/}}
+{{/*              port: 8000*/}}
+{{/*              httpHeaders:*/}}
+{{/*                - name: Host*/}}
+{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.web.secretName }}
+            - configMapRef:
+                name: {{ .Values.web.configName }}
+        - name: proxy
+          image: "{{ .Values.proxy.repository }}:{{ .Values.proxy.tag | default .Chart.AppVersion }}"
+          readinessProbe:
+            initialDelaySeconds: 3
+            httpGet:
+              path: "/!/proxy"
+              port: 80
+          livenessProbe:
+            initialDelaySeconds: 3
+            periodSeconds: 20
+            httpGet:
+              path: "/!/proxy"
+              port: 80
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP

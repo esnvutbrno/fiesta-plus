@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from django.urls import path
 
-from apps.plugins.views.admin import ConfigurationAutocomplete, AppAutocomplete
+from apps.plugins.views.admin import AppAutocomplete, ConfigurationAutocomplete
 
 app_name = "plugins"
 urlpatterns = [

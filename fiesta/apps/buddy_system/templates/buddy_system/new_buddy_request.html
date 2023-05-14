@@ -1,16 +1,15 @@
 {% extends "fiesta/base-variants/center-card-lg.html" %}
+
 {% load breadcrumbs %}
 {% load i18n %}
 
 {% block upper_head %}
   {% trans "New Request for Buddy" as title %}
-
   {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
 {% block card_body %}
   <h1 class="card-title">Request for Buddy</h1>
-
   {% include "buddy_system/parts/new_buddy_request_form.html" %}
 {% endblock %}

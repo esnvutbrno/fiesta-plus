@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db import models
 
 from apps.fiestarequests.matching_policy import MatchingPoliciesRegister
@@ -10,6 +12,7 @@ class BaseRequestSystemConfiguration(BasePluginConfiguration):
     display_issuer_country = models.BooleanField(default=False)
     display_issuer_university = models.BooleanField(default=False)
     display_issuer_faculty = models.BooleanField(default=False)
+    display_request_creation_date = models.BooleanField(default=True)
 
     rolling_limit = models.PositiveSmallIntegerField(default=0)
 

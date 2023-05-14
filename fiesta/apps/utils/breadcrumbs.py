@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import wraps
-from typing import Type, NamedTuple, Callable
+from typing import NamedTuple
 
 from django.db.models import Model
 from django.http import HttpRequest
@@ -41,14 +42,12 @@ def with_breadcrumb(title: str, *, url_name: str = None):
     """
 
     @wraps(with_breadcrumb)
-    def inner(view_klass: Type[View]):
+    def inner(view_klass: type[View]):
         old_dispatch = view_klass.dispatch
 
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
-            _title_to_append = (
-                BreadcrumbItem(title, reverse(url_name)) if url_name else title
-            )
+            _title_to_append = BreadcrumbItem(title, reverse(url_name)) if url_name else title
 
             push_breadcrumb_item(request=request, item=_title_to_append)
 
@@ -71,14 +70,12 @@ def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = 
     """
 
     @wraps(with_breadcrumb)
-    def inner(view_klass: Type[View]):
+    def inner(view_klass: type[View]):
         old_dispatch = view_klass.dispatch
 
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
-            lazy_title = (
-                lambda: f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
-            )
+            lazy_title = lambda: f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
             push_breadcrumb_item(
                 request=request,
                 item=lazy(lazy_title, str),

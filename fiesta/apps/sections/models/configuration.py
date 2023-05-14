@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from django.db.models import BooleanField
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_SAVE, hook
@@ -5,8 +7,7 @@ from django_lifecycle import AFTER_SAVE, hook
 from apps.plugins.models import BasePluginConfiguration
 
 FLAG_HELP_TEXT = _(
-    "Flag if field is needed to fill in user profile: "
-    "True=is required, False=is optional, None=not available"
+    "Flag if field is needed to fill in user profile: True=is required, False=is optional, None=not available"
 )
 
 
@@ -39,13 +40,20 @@ class SectionsConfiguration(BasePluginConfiguration):
         blank=True,
         help_text=FLAG_HELP_TEXT,
     )
+    required_interests = BooleanField(
+        verbose_name=_("required interests"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
 
     auto_approved_membership_for_international = BooleanField(
         verbose_name=_("auto approved membership for international"),
         default=True,
         help_text=_(
-            "Decides, wheever is membership requested by user automatically approved for international"
-            "users (e.g. during registration process or requested by membership form."
+            "Decides, whenever is membership requested by user automatically approved for international users (e.g."
+            " during registration process or requested by membership form)."
         ),
     )
 

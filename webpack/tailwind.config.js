@@ -1,4 +1,5 @@
 const content = (process.env.TAILWIND_CONTENT_PATH || '').split(/:/);
+console.info(`Using content=${content}.`)
 
 module.exports = {
     darkMode: ['class', '[data-theme="dark"]'],

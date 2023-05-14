@@ -33,15 +33,19 @@ class UserWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
         return f"{user.full_name} ({user.username})"
 
 
-class MembersFromSectionSpaceWidget(UserWidget):
+class ActiveLocalMembersFromSectionWidget(UserWidget):
     def filter_queryset(self, request, term, queryset=None, **dependent_fields):
         queryset = (
             (queryset or self.get_queryset())
             .filter(
                 memberships__section=request.in_space_of_section,
             )
-            .exclude(
-                memberships__role=SectionMembership.Role.INTERNATIONAL,
+            .filter(
+                memberships__role__in=(
+                    SectionMembership.Role.MEMBER,
+                    SectionMembership.Role.ADMIN,
+                    SectionMembership.Role.EDITOR,
+                ),
             )
         )
 

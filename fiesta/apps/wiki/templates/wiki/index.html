@@ -1,84 +1,69 @@
 {% extends "fiesta/base.html" %}
+
 {% load humanize %}
 {% load utils %}
 
 {% block breadcrumbs_right %}
-  <form class="relative my-1 w-1/4" method="get" action="{% url "wiki:search" %}">
+  <form class="relative my-1 w-1/4"
+        method="get"
+        action="{% url "wiki:search" %}">
     <label for="search" class="sr-only">Search</label>
     <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-      <svg class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewBox="0 0 20 20"
+      <svg class="w-5 h-5 text-gray-500 dark:text-gray-400"
+           fill="currentColor"
+           viewBox="0 0 20 20"
            xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd"
-              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-              clip-rule="evenodd"></path>
+        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd">
+        </path>
       </svg>
     </div>
-    <input
-      type="text" id="search" name="q"
-      class="bg-gray-50 border border-gray-300 text-gray-700
-                text-xs rounded-lg block w-full pl-10 p-1.5
-                focus:ring-primary focus:border-primary
-                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
-                dark:text-white dark:focus:ring-primary dark:focus:border-primary"
-      placeholder="Search in docs" value="{{ q|default:'' }}"
-    >
+    <input type="text"
+           id="search"
+           name="q"
+           class="bg-gray-50 border border-gray-300 text-gray-700 text-xs rounded-lg block w-full pl-10 p-1.5 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary dark:focus:border-primary"
+           placeholder="Search in docs"
+           value="{{ q|default:'' }}">
   </form>
 {% endblock breadcrumbs_right %}
-
 
 {% block main_container %}
   <div class="max-w-4xl mx-auto mb-auto w-full flex flex-row justify-between items-start px-4 sm:px-2">
     <main class="w-3/4 mt-5 pr-5 Wiki__content">
+
       {% block main %}
         {{ page.content_html|safe }}
-
         <hr class="mt-10">
-        <div class="mt-5 mb-5 text-sm">
-          {{ footer.content_html|safe }}
-        </div>
+        <div class="mt-5 mb-5 text-sm">{{ footer.content_html|safe }}</div>
       {% endblock main %}
     </main>
+
     {% block main_right %}
-      <nav
-        class="Wiki__sidebar w-1/4 sticky md:top-[126px] top-[171px] h-full flex flex-col justify-between"
-        hx-boost="true"
-      >
+      <nav class="Wiki__sidebar w-1/4 sticky md:top-[126px] top-[171px] h-full flex flex-col justify-between"
+           hx-boost="true">
         {% if not page.toc %}
           {# TODO: sidebar html broken #}
           {{ sidebar.content_html|safe }}
         {% else %}
           {{ page.toc|safe }}
         {% endif %}
-
         <div class="mt-5 text-xs items-center space-y-1 text-gray-600">
           {# TODO: links to conf #}
-
           Last revision: {{ page.last_change.name }}
-          <a
-            href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
-            target="_blank" rel="noreferrer nofollow noopener"
-            class="hover:underline"
-            title="{{ page.last_change.at|date_from_iso|date }}"
-          >
+          <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
+             target="_blank"
+             rel="noreferrer nofollow noopener"
+             class="hover:underline"
+             title="{{ page.last_change.at|date_from_iso|date }}">
             {{ page.last_change.at|date_from_iso|naturaltime }}
           </a>
-
           <div class="border-t border-gray-100"></div>
-
-          <a
-            href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
-            target="_blank" rel="noreferrer nofollow noopener"
-          >
-            Page History
-          </a>
-
+          <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
+             target="_blank"
+             rel="noreferrer nofollow noopener">Page History</a>
           {% if request.user.is_superuser %}
-            <a
-              href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
-              target="_blank" rel="noreferrer,nofollow"
-            >
-              Edit this Page
-            </a>
+            <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
+               target="_blank"
+               rel="noreferrer,nofollow">Edit this Page</a>
           {% endif %}
         </div>
       </nav>
@@ -86,7 +71,5 @@
   </div>
 {% endblock main_container %}
 
-
 {% block upper_footer %}
-
 {% endblock upper_footer %}

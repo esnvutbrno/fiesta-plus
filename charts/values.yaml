@@ -1,0 +1,34 @@
+ingress:
+  certSecretName: fiesta-cert
+  certIssuerName: letsencrypt
+  certIssuerSecretName: cert-issuer-key
+
+  certContactEmail: dummy@example.com
+
+  host: bf.josefkolar.cz
+  extraHosts:
+    - esnvutbrno.bf.josefkolar.cz
+    - esnmunibrno.bf.josefkolar.cz
+    - esnmendelubrno.bf.josefkolar.cz
+
+web:
+  repository: nginxdemos/hello
+  tag: latest
+
+  configName: web-config
+  secretName: web-secret
+
+proxy:
+  repository: nginxdemos/hello
+  tag: latest
+
+service:
+  port: 80
+
+secrets:
+  databaseUrl: postgres
+  s3:
+    keyId: key
+    accessKey: key
+    regionName: region
+    bucketName: bucket

@@ -46,6 +46,7 @@ def as_widget_field(bf: BoundField):
         "password": "Forms__password",
         "select": "Forms__select",
         "text": "Forms__text",
+        "url": "Forms__text",
         "textarea": "Forms__textarea",
         "date": "Forms__date",
         "datetime-local": "Forms__datetime-local",
@@ -57,9 +58,7 @@ def as_widget_field(bf: BoundField):
 @register.filter
 def as_label(bf: BoundField):
     input_type = getattr(bf.field.widget, "input_type", "unknown")
-    return bf.label_tag(
-        attrs={"class": f"Forms__label " f"Forms__label--{input_type} "}
-    )
+    return bf.label_tag(attrs={"class": f"Forms__label Forms__label--{input_type} "})
 
 
 @register.filter
@@ -75,13 +74,7 @@ def with_class(bf: BoundField, klass: str):
 def get_form_classes(form: BaseForm | BaseModelForm):
     # for generic forms, which does not have the base form class
     base_form_class_name = (
-        form.base_form_class.__name__.lower()
-        if hasattr(form, "base_form_class")
-        else form.__class__.__name__.lower()
+        form.base_form_class.__name__.lower() if hasattr(form, "base_form_class") else form.__class__.__name__.lower()
     )
 
-    return (
-        f"Forms__form "
-        f"Forms__form--{base_form_class_name} "
-        f"Forms__form--{form.__class__.__name__.lower()} "
-    )
+    return f"Forms__form Forms__form--{base_form_class_name} Forms__form--{form.__class__.__name__.lower()} "

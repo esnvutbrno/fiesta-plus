@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .configuration import SectionsConfiguration
 from .membership import SectionMembership
 from .section import Section, SectionUniversity

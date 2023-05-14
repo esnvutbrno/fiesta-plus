@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+
 {% load django_tables2 %}
 
 {% block main %}
@@ -6,25 +7,22 @@
 {% endblock %}
 
 {% block breadcrumbs_right %}
-  <button
-    type="button"
-    class="btn btn-sm btn-link"
-    :class="$store.tableControls.isFilterActive ? 'text-warning' : 'text-gray-600'"
-    x-cloak x-data @click="$store.tableControls.toggle()"
-  >
-    <svg
-      class="w-6 h-6 shrink-0"
-      :class="{'rotate-180': $store.tableControls.shown}"
-      fill="currentColor" viewBox="0 0 20 20"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        fill-rule="evenodd"
-        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-        clip-rule="evenodd"
-      ></path>
+  <button type="button"
+          class="btn btn-sm btn-link"
+          :class="$store.tableControls.isFilterActive ? 'text-warning' : 'text-gray-600'"
+          x-cloak
+          x-data
+          @click="$store.tableControls.toggle()">
+    <svg :class="{'-rotate-90': $store.tableControls.shown}"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2"
+         viewBox="0 0 24 24"
+         xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true"
+         class="w-6 h-6 transition-transform">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z">
+      </path>
     </svg>
-
-    <span>Filter & Export</span>
   </button>
 {% endblock %}

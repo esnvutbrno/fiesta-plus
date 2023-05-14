@@ -1,0 +1,31 @@
+{% load buddy_system %}
+{% load i18n %}
+{% load user_profile %}
+{% load sections %}
+{% get_section_statistics as stats %}
+<div class="Dashboard__tiles">
+  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-secondary">
+    <div class="Dashboard__tile__title text-white">{{ request.in_space_of_section.name }}</div>
+    <div class="flex flex-col md:flex-row justify-between">
+      <div class="flex flex-col">
+        <a class="Dashboard__tile__value"
+           href="{% url "sections:section-members" %}">{{ stats.members }} member{{ stats.members|pluralize }}</a>
+        <a class="Dashboard__tile__desc text-gray-200 link"
+           href="{% url "sections:section-members" %}?state=inactive">{{ stats.unconfirmed_members }} unconfirmed</a>
+        <span class="Dashboard__tile__desc text-gray-200">{{ stats.alumni }} alumni</span>
+      </div>
+      {% if stats.unprocessed_esncard_applications %}
+        <div class="flex flex-col justify-end">
+          <a class="Dashboard__tile__desc text-gray-200 link"
+             href="{% url "esncards:applications" %}">
+            {{ stats.unprocessed_esncard_applications }} ESNcard{{ stats.members|pluralize }} to process
+          </a>
+        </div>
+      {% endif %}
+      <div class="flex flex-col items-start md:items-end">
+        <span class="Dashboard__tile__value">{{ stats.internationals }} international{{ stats.internationals|pluralize }}</span>
+        <span class="Dashboard__tile__desc text-gray-200">{{ stats.internationals_wo_request }} without interaction</span>
+      </div>
+    </div>
+  </div>
+</div>

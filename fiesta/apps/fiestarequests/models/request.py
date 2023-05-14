@@ -1,27 +1,51 @@
+from __future__ import annotations
+
+import datetime
+import typing
+
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import LifecycleModelMixin, hook, BEFORE_SAVE
+from django_lifecycle import BEFORE_SAVE, LifecycleModelMixin, hook
 
+from apps.accounts.models import User
+from apps.fiestarequests.models.managers.request import BaseRequestManager
+from apps.sections.models import Section
 from apps.utils.models import BaseTimestampedModel
+
+
+class BaseRequestProtocol(typing.Protocol):
+    class State(TextChoices):
+        CREATED = "created", _("Created")
+        MATCHED = "matched", _("Matched")
+
+        CANCELLED = "cancelled", _("Cancelled")
+
+    state: models.CharField | State
+    issuer: models.ForeignKey | User
+    responsible_section: models.ForeignKey | Section
+    matched_by: models.ForeignKey | User
+    matched_at: models.DateTimeField | datetime.datetime
+    description: models.TextField | str
+
+    objects: BaseRequestManager
 
 
 def base_request_model_factory(related_base: str):
     class BaseRequest(LifecycleModelMixin, BaseTimestampedModel):
-        class State(TextChoices):
-            CREATED = "created", _("Created")
-            MATCHED = "matched", _("Matched")
-
-            CANCELLED = "cancelled", _("Cancelled")
-
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
+            ordering = ("-created",)
+
+        State = BaseRequestProtocol.State
+
+        objects = BaseRequestManager()
 
         state = models.CharField(
             verbose_name=_("state"),
-            choices=State.choices,
-            default=State.CREATED,
+            choices=BaseRequestProtocol.State.choices,
+            default=BaseRequestProtocol.State.CREATED,
             max_length=16,
         )
         issuer = models.ForeignKey(

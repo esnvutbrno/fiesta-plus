@@ -1,12 +1,12 @@
+from __future__ import annotations
+
 from django.db.models.fields.files import FieldFile
 
 from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseModel
 
 
-def copy_between_storages(
-    *, from_: FieldFile, to_: FieldFile, to_instance: BaseModel
-) -> str:
+def copy_between_storages(*, from_: FieldFile, to_: FieldFile, to_instance: BaseModel) -> str:
     """
     Takes two Django Files from model fields and copy the first one onto second one.
     :param from_: Source of copying

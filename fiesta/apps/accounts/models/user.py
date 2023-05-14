@@ -29,7 +29,7 @@ class User(AbstractUser):
     modified = ModificationDateTimeField(verbose_name=_("modified"))
 
     @property
-    def profile_or_none(self) -> typing.Optional["UserProfile"]:
+    def profile_or_none(self) -> UserProfile | None:
         from apps.accounts.models import UserProfile
 
         try:
@@ -48,6 +48,10 @@ class User(AbstractUser):
     class Meta(AbstractUser.Meta):
         verbose_name = _("user")
         verbose_name_plural = _("users")
+
+    # a few dynamic related models
+    buddy_system_matched_requests: models.QuerySet
+    profile: UserProfile
 
 
 __all__ = ["User"]

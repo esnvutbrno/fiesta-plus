@@ -1,6 +1,10 @@
+from __future__ import annotations
+
 from pathlib import Path
 
-from ._utils import PathValue, BaseConfigurationProtocol
+from configurations.values import SecretValue
+
+from ._utils import BaseConfigurationProtocol, PathValue
 
 
 class FilesConfigMixin(BaseConfigurationProtocol):
@@ -33,3 +37,36 @@ class FilesConfigMixin(BaseConfigurationProtocol):
                 "INTEGRITY": self.USE_WEBPACK_INTEGRITY,
             }
         }
+
+    STORAGES = {
+        "default": {
+            "BACKEND": "django.core.files.storage.FileSystemStorage",
+            # "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",
+        },
+        "staticfiles": {
+            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+        },
+    }
+
+
+class S3ConfigMixin(BaseConfigurationProtocol):
+    AWS_S3_ACCESS_KEY_ID = SecretValue()
+    AWS_S3_SECRET_ACCESS_KEY = SecretValue()
+    AWS_STORAGE_BUCKET_NAME = SecretValue()
+    AWS_S3_REGION_NAME = SecretValue()
+
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_SIGNATURE_VERSION = "s3v4"
+
+    @property
+    def AWS_S3_HOST(self):
+        return f"s3.{self.AWS_S3_REGION_NAME}.scw.cloud"
+
+    @property
+    def AWS_S3_ENDPOINT_URL(self):
+        return f"https://{self.AWS_S3_HOST}"
+
+    @property
+    def S3_PUBLIC_URL(self):
+        """custom"""
+        return f"{self.AWS_STORAGE_BUCKET_NAME}.{self.AWS_S3_HOST}"

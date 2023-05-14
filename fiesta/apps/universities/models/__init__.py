@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from .faculty import Faculty
 from .university import University
 
