@@ -37,7 +37,7 @@ django-debug-toolbar = "^3.5.0"
 django-watchfiles = "^0.0.1"
 django-autocomplete-light = "^3.9.4"
 django-phonenumber-field = { extras = ["phonenumberslite"], version = "^6.3.0" }
-requests = "^2.28.2"
+requests = "^2.31.0"
 beautifulsoup4 = "^4.12.1"
 django-editorjs = "^0.2.1"
 django-editorjs-fields = "^0.2.7"
