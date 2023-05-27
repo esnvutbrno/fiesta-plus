@@ -1,26 +1,76 @@
 # Buena Fiesta
 
+![cluster deploy](https://github.com/esnvutbrno/buena-fiesta/actions/workflows/deploy.yml/badge.svg)
+
 _Buena means spanish great, so Fiesta is dead, long live Buena Fiesta!_
 
 New generation of social network for helping international students - used by sections of Erasmus Student Network. 💜
 By volunteers, for volunteers.
 
-## Authors
+## Development
 
-Created with love and patiently maintained by [@esnvutbrno](https://github.com/esnvutbrno) members.
+0. for local development is `docker`, `docker compose`, `make` needed
 
-## Usage
+1. After cloning, prepare local `.env` file:
+```shell
+cp .env.template .env
+```
 
-Buena Fiesta is based on Docker containers orchestrized by Docker Compose.
+2. Generate secret key for Django:
+```shell
+sed -ie "s/DJANGO_SECRET_KEY=$/DJANGO_SECRET_KEY=$(echo $RANDOM | md5sum | head -c 20)/" .env
+```
 
-### Requirements
+If you want to run fiesta on other domain than `fiesta.test`, adjust the `ROOT_DOMAIN` variable.
 
-For running the project, you need `docker compose` plugin with running Docker daemon.
+3. Prepare Webpack dependencies:
+```shell
+make dc cmd="run webpack yarn"
+```
 
-### Development
+4. Run database migrations:
+```shell
+make migrate
+```
 
-`Makefile` in root of project provides following targets, which are pretty self-explaining. If you just want to run
-project, hit the `up` target: `make up`.
+5. Prepare admin account
+```shell
+make da cmd=createsuperuser
+```
+
+6. Start the docker compose:
+```shell
+make up
+```
+
+You should see running Django:
+
+```
+buena-fiesta-web-1          | Django version 4.2.1, using settings 'fiesta.settings'
+buena-fiesta-web-1          | Starting development server at http://0.0.0.0:8000/
+```
+
+And webpack compiling the assets:
+
+```
+buena-fiesta-webpack-1      | asset main.22bd896b.js 1.37 MiB [emitted] [immutable] (name: main)
+buena-fiesta-webpack-1      | asset main.22bd896b.css 316 KiB [emitted] [immutable] (name: main)
+buena-fiesta-webpack-1      | Entrypoint main 1.68 MiB = main.22bd896b.css 316 KiB main.22bd896b.js 1.37 MiB¨
+...
+buena-fiesta-webpack-1      | webpack 5.78.0 compiled successfully in 5852 ms
+```
+
+7. Make sure domain `fiesta.test` (or your preferred domain from step 2) is pointing to localhost (use `/etc/hosts`). If you're using some kind of virtualized Docker (like colima), don't forget to point domain to the VM's IP.
+
+8. Open `http://fiesta.test` and profit!
+
+### Development tips:
+* use `make generate-local-certs` if you want to HTTPS in local environment -- restart of containers is needed afterward
+* Django and Webpack are watching the files via inotify, so no restart is needed after code changes
+* if you accidentally kill some of the containers, you can resurrect them with `make upd` in another shell to have them up faster
+* `make shell_plus` runs Django shell plus console, interactive tool with all Django models preloaded
+* `make makemigrations` and `migrate` are you friends on your Django journey
+* `Makefile` included in project provides a few self-explanatory useful targets:
 
 ```
 pre-commit                       Runs all included lints/checks/reformats
@@ -47,14 +97,19 @@ psql                             Runs psql shell in database
 dumpdb                           Dumps database to .sql
 loaddb                           Loads database from dump=
 help                             Shows help
-generate-localhost-certs         Generates self-signed *.fiesta.test certs for working HTTPS.
+generate-local-certs             Generates self-signed *.${ROOT_DOMAIN} certs for working HTTPS.
 setup-elastic                    Starts elasticsearch standalone an generates keystore and passwords for all users.
 trust-localhost-ca               Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 ```
 
-### Production
+## Contributing
 
-Fiesta is deployed as Helm chart described in [`charts/README.md`](charts/README.md).
+Use Pull requests -- [how to prepare a great PR?](https://github.blog/2015-01-21-how-to-write-the-perfect-pull-request/)
+
+
+## Authors
+
+Created with love and maintained by [@esnvutbrno](https://github.com/esnvutbrno) members.
 
 ## License
 

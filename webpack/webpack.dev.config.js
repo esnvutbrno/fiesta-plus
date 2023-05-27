@@ -2,7 +2,7 @@ const config = require('./webpack.base.config.js');
 const webpack = require('webpack');
 
 const PORT = process.env.HOST_PORT || 8003;
-const ROOT_DOMAIN = process.env.ROOT_DOMAIN || "fiesta.test";
+const ROOT_DOMAIN = process.env.ROOT_DOMAIN;
 
 config.mode = 'development';
 config.devtool = 'eval-source-map';

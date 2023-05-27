@@ -31,7 +31,8 @@ class Development(Base):
     DEBUG = True
     DEBUG_PROPAGATE_EXCEPTIONS = False
 
-    ROOT_DOMAIN = "fiesta.test"
+    # no prefix since "ROOT_DOMAIN" is widely used
+    ROOT_DOMAIN = Value(environ_prefix="")
 
     INTERNAL_IPS = type("ContainsAll", (), {"__contains__": lambda *_: True})()
 

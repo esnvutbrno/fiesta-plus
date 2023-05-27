@@ -1,3 +1,4 @@
+include .env
 
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
@@ -98,14 +99,14 @@ loaddb: dc ## Loads database from dump=
 help: ## Shows help
 	@egrep '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST)|awk 'BEGIN {FS = ":.*?## "};{printf "\033[31m%-32s\033[0m %s\n",$$1, $$2}'
 
-generate-localhost-certs: ## Generates self-signed *.fiesta.test certs for working HTTPS.
-generate-localhost-certs: \
-	conf/certs/fiesta.test.crt \
-	conf/certs/*.fiesta.test.crt \
-	conf/certs/web.fiesta.test.crt \
-	conf/certs/webpack.fiesta.test.crt \
-	conf/certs/kibana.fiesta.test.crt \
-	conf/certs/elastic.fiesta.test.crt
+generate-local-certs: ## Generates self-signed *.$ROOT_DOMAIN certs for working HTTPS.
+generate-local-certs: \
+	conf/certs/${ROOT_DOMAIN}.crt \
+	conf/certs/*.${ROOT_DOMAIN}.crt \
+	conf/certs/web.${ROOT_DOMAIN}.crt \
+	conf/certs/webpack.${ROOT_DOMAIN}.crt \
+	conf/certs/kibana.${ROOT_DOMAIN}.crt \
+	conf/certs/elastic.${ROOT_DOMAIN}.crt
 
 
 # based on https://github.com/vishnudxb/docker-mkcert/blob/master/Dockerfile

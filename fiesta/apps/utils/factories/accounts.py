@@ -53,7 +53,7 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
 
     picture = factory.LazyAttribute(
         lambda u: ImageFile(
-            BytesIO(requests.get(f"https://i.pravatar.cc/150?u={u.user_id}").content),
+            BytesIO(requests.get(f"https://i.pravatar.cc/150?u={u.user.id}").content),
             "image.jpg",
         )
     )
