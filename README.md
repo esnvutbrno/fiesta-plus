@@ -1,6 +1,15 @@
+
 # Buena Fiesta
 
+![python](https://img.shields.io/badge/python-3.11-ffd343?style=flat)
+![django](https://img.shields.io/badge/Django-4.2-0C4B33?style=flat)
+![kubernetes](https://img.shields.io/badge/Kubernetes-1.26-316ce6?style=flat)
+![tailwind css](https://img.shields.io/badge/Tailwind_CSS-3.3-38BDF8?style=flat)
+![nginx](https://img.shields.io/badge/Nginx-1.25-009639?style=flat)
+
+![last commit](https://img.shields.io/github/last-commit/esnvutbrno/buena-fiesta)
 ![cluster deploy](https://github.com/esnvutbrno/buena-fiesta/actions/workflows/deploy.yml/badge.svg)
+![licence](https://img.shields.io/github/license/esnvutbrno/buena-fiesta)
 
 _Buena means spanish great, so Fiesta is dead, long live Buena Fiesta!_
 
