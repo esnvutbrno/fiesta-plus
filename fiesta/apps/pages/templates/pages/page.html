@@ -7,7 +7,11 @@
 
 {% block upper_head %}
   {# push it to <title> #}
-  {% breadcrumb_push_item page.title %}
+  {% if page.default %}
+    {% breadcrumb_push_item page.section.name %}
+  {% else %}
+    {% breadcrumb_push_item page.title %}
+  {% endif %}
 {% endblock %}
 
 {% block breadcrumbs_container %}{# no visible breadcrumbs #}{% endblock %}
