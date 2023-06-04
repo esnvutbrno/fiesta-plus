@@ -69,9 +69,25 @@ buena-fiesta-webpack-1      | Entrypoint main 1.68 MiB = main.22bd896b.css 316 K
 buena-fiesta-webpack-1      | webpack 5.78.0 compiled successfully in 5852 ms
 ```
 
-7. Make sure domain `fiesta.test` (or your preferred domain from step 2) is pointing to localhost (use `/etc/hosts`). If you're using some kind of virtualized Docker (like colima), don't forget to point domain to the VM's IP.
+7. Make sure domain `fiesta.test` (or your preferred domain from step 2) is pointing to localhost (use `/etc/hosts`).
+```
+[local_host_ip] fiesta.test
+```
 
-8. Open `http://fiesta.test` and profit!
+8. If you're using some kind of virtualized Docker (like colima), don't forget to point domain to the VM's IP.
+```
+[virtual_machine_ip]
+```
+
+9. Make sure to also add `webpack.fiesta.test` to the entry made in the `/etc/hosts` file to load the styles for the project. 
+    
+    * If you are using the docker application directly add modify the entry as `[local_host_ip] fiesta.test  webpack.fiesta.test`
+
+    * If you are using a virtualized Docker to build the application, modify the entry as `[local_host_ip] webpack.fiesta.test`
+
+
+
+10. Open `http://fiesta.test` and profit!
 
 ### Development tips:
 * use `make generate-local-certs` if you want to HTTPS in local environment -- restart of containers is needed afterward
