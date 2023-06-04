@@ -211,6 +211,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    concurrency: deploy
     needs:
       - build-web
       - build-webpack
