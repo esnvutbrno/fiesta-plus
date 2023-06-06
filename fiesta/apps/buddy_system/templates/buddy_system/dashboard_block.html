@@ -1,6 +1,7 @@
 {% load buddy_system %}
 {% load i18n %}
 {% load user_profile %}
+
 <div class="Dashboard__tiles flex flex-col md:flex-row">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
     <div class="Dashboard__tile__title">Buddy System</div>
@@ -10,7 +11,7 @@
         <div class="Dashboard__tile__value">✖️ Not requested yet</div>
         <div class="Dashboard__tile__actions text-right">
           <a href="{% url "buddy_system:new-request" %}"
-             class="btn btn-lg btn-outline">create buddy request</a>
+             class="btn btn-lg btn-outline">Create buddy request</a>
         </div>
       {% elif br.state == br.State.CREATED %}
         <div class="Dashboard__tile__value">⌛ Waiting for match</div>
@@ -38,13 +39,21 @@
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}
-      <div class="Dashboard__tile__value">
-        {% with waiting_brs.count as count %}<span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}{% endwith %}
-      </div>
-      <div class="Dashboard__tile__actions text-right">
-        <a href="{% url "buddy_system:matching-requests" %}"
-           class="btn btn-lg btn-outline">show waiting requests</a>
-      </div>
+      {% if waiting_brs %}
+        <div class="Dashboard__tile__value">
+          {% with waiting_brs.count as count %}<span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}{% endwith %}
+        </div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "buddy_system:matching-requests" %}"
+             class="btn btn-lg btn-outline">Show waiting requests</a>
+        </div>
+      {% else %}
+        <div class="Dashboard__tile__value">✖️ No matched buddies</div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "buddy_system:matching-requests" %}"
+             class="btn btn-lg btn-outline">Create buddy request</a>
+        </div>
+      {% endif %}
     {% endif %}
   </div>
 </div>
