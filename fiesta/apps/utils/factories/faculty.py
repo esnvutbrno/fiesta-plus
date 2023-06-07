@@ -9,6 +9,7 @@ from apps.universities.models import Faculty
 
 factory.Faker.add_provider(SchoolProvider)
 
+
 class FacultyFactory(DjangoModelFactory):
     class Meta:
         model = Faculty
