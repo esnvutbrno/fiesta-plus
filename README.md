@@ -79,8 +79,8 @@ buena-fiesta-webpack-1      | webpack 5.78.0 compiled successfully in 5852 ms
 [virtual_machine_ip]
 ```
 
-9. Make sure to also add `webpack.fiesta.test` to the entry made in the `/etc/hosts` file to load the styles for the project. 
-    
+9. Make sure to also add `webpack.fiesta.test` to the entry made in the `/etc/hosts` file to load the styles for the project.
+
     * If you are using the docker application directly add modify the entry as `[local_host_ip] fiesta.test  webpack.fiesta.test`
 
     * If you are using a virtualized Docker to build the application, modify the entry as `[local_host_ip] webpack.fiesta.test`
