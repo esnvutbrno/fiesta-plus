@@ -1,22 +1,23 @@
 from __future__ import annotations
 
 import factory
-from django_countries import countries
-from factory import fuzzy
+from factory import SubFactory
 from factory.django import DjangoModelFactory
 from faker_education import SchoolProvider
 
-from apps.universities.models import University
+from apps.universities.models import Faculty
 
 factory.Faker.add_provider(SchoolProvider)
 
 
-class UniversityFactory(DjangoModelFactory):
+class FacultyFactory(DjangoModelFactory):
     class Meta:
-        model = University
+        model = Faculty
         django_get_or_create = ("name",)
 
-    name = factory.Faker("school_name")
+    name = factory.Faker("school_level")
     abbr = factory.LazyAttribute(lambda u: "".join((bit[0] if bit else "") for bit in u.name.split(" ")))
 
-    country = fuzzy.FuzzyChoice(countries.countries.items(), getter=lambda c: c[0])
+    university = SubFactory(
+        "apps.utils.factories.universities.UniversityFactory",
+    )
