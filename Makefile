@@ -7,7 +7,7 @@ DCFLAGS =
 DC = docker compose $(DCFLAGS)
 
 WEB_CMD = $(DC) run $(DCRUNFLAGS) web
-DJANGO_ADMIN =  $(WEB_CMD) python manage.py
+DJANGO_ADMIN = $(WEB_CMD) python manage.py
 
 cmd ?= help
 DA_CMD = $(cmd)
@@ -143,7 +143,6 @@ setup-elastic: ## Starts elasticsearch standalone an generates keystore and pass
 	'sleep 25 && elasticsearch-setup-passwords interactive'
 	docker stop buena-fiesta-elastic-setup-run
 	docker rm buena-fiesta-elastic-setup-run
-
 
 # chrome://settings/certificates
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
