@@ -18,7 +18,7 @@
         <div class="flex flex-col justify-end">
           <a class="Dashboard__tile__desc text-gray-200 link"
              href="{% url "esncards:applications" %}">
-            {{ stats.unprocessed_esncard_applications }} ESNcard{{ stats.members|pluralize }} to process
+            {{ stats.unprocessed_esncard_applications }} ESNcard{{ stats.unprocessed_esncard_applications|pluralize }} to process
           </a>
         </div>
       {% endif %}
