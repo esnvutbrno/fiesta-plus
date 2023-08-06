@@ -4,6 +4,12 @@ console.info(`Using content=${content}.`)
 module.exports = {
     darkMode: ['class', '[data-theme="dark"]'],
     content,
+    safelist: [
+        {
+            // hack to allow also classes used from Django forms definitions
+            pattern: /Forms__.+/,
+        },
+    ],
     theme: {
         extend: {},
     },
