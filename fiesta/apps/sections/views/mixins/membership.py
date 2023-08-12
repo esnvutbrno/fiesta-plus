@@ -9,6 +9,10 @@ from apps.sections.models import SectionMembership
 
 
 class UserPassesMembershipTestMixin(UserPassesTestMixin):
+    """
+    View mixin checking whenever is logged user in current section space and passes test_membership method.
+    """
+
     request: HttpRequest
 
     def test_func(self):
@@ -17,6 +21,7 @@ class UserPassesMembershipTestMixin(UserPassesTestMixin):
         if self.request.user.is_superuser:
             # superuser can do anything
             if not self.request.htmx:
+                # TODO: fallback to superuser (w/message) only if test_membership fails?
                 messages.warning(self.request, _("Accessing as superuser, be aware!"))
             return True
 

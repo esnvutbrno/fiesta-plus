@@ -26,25 +26,30 @@ class SectionsConfig(PluginAppConfig):
     ]
 
     def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
-        if request.membership.is_privileged:
-            return (
-                super()
-                .as_navigation_item(request, bound_plugin)
-                ._replace(
-                    url="",
-                    children=[
-                        NavigationItemSpec(
-                            _("Members"),
-                            reverse("sections:section-members"),
-                        ),
-                        NavigationItemSpec(
-                            _("Statistics"),
-                            reverse("sections:section-stats"),
-                        ),
-                    ],
-                )
+        if not request.membership.is_privileged:
+            # non privileged users should not see the plugin at all
+            return None
+        return (
+            super()
+            .as_navigation_item(request, bound_plugin)
+            ._replace(
+                url="",
+                children=[
+                    NavigationItemSpec(
+                        _("Members"),
+                        reverse("sections:section-members"),
+                    ),
+                    NavigationItemSpec(
+                        _("Statistics"),
+                        reverse("sections:section-stats"),
+                    ),
+                    NavigationItemSpec(
+                        _("Settings"),
+                        reverse("sections:section-settings"),
+                    ),
+                ],
             )
-        return None
+        )
 
 
 __all__ = ["SectionsConfig"]
