@@ -1,0 +1,14 @@
+{% extends "fiesta/base.html" %}
+
+{% load breadcrumbs %}
+{% load i18n %}
+{% load static %}
+
+{% block upper_head %}
+  {% trans "Settings" as title %}
+  {% breadcrumb_push_current_plugin %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+
+{% block main %}<h1 class="text-3xl">Settings</h1>{% endblock %}
