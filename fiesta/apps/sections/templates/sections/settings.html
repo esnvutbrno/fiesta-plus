@@ -11,4 +11,25 @@
 {% endblock upper_head %}
 
 
-{% block main %}<h1 class="text-3xl">Settings</h1>{% endblock %}
+{% block main %}
+  <div x-data="{ open: null }" class="space-y-2">
+    {% for label, name, instance in plugins %}
+      <div class="collapse collapse-plus bg-slate-100"
+           data-label="{{ label }}"
+           :class="{'collapse-open': open === $el.dataset.label}">
+        <div class="collapse-title text-xl font-medium"
+             @click="open = $el.parentElement.dataset.label">
+          {{ name }}
+          <span class="badge badge-lg ml-4">{{ instance.get_state_display }}</span>
+          {#        <span class="ml-4">#}
+          {#          {{ instance }}#}
+          {#        </span>#}
+        </div>
+        <div class="collapse-content">
+          <p>hello</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+{% endblock %}

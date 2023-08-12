@@ -20,6 +20,7 @@ from apps.utils.utils import all_non_abstract_sub_models
 class PluginAdmin(admin.ModelAdmin):
     list_display = ["section", "app_label", "state", "configuration_edit", "modified"]
     list_filter = ["section", "app_label", "state"]
+    list_editable = ["state"]
 
     class form(ModelForm):
         class Meta:
