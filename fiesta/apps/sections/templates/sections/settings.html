@@ -1,8 +1,10 @@
 {% extends "fiesta/base.html" %}
+{% load state %}
 
 {% load breadcrumbs %}
 {% load i18n %}
 {% load static %}
+{% load utils %}
 
 {% block upper_head %}
   {% trans "Settings" as title %}
@@ -17,10 +19,12 @@
       <div class="collapse collapse-plus bg-slate-100"
            data-label="{{ label }}"
            :class="{'collapse-open': open === $el.dataset.label}">
-        <div class="collapse-title text-xl font-medium"
+        <div class="collapse-title text-xl font-medium flex flex-row justify-between items-center"
              @click="open = $el.parentElement.dataset.label">
           {{ name }}
-          <span class="badge badge-lg ml-4">{{ instance.get_state_display }}</span>
+          <span class="badge badge-lg ml-4 {{ instance.state|plugin_state_to_badge_css }}">
+            {{ instance.get_state_display }}
+          </span>
           {#        <span class="ml-4">#}
           {#          {{ instance }}#}
           {#        </span>#}
