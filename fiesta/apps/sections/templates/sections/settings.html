@@ -15,22 +15,48 @@
 
 {% block main %}
   <div x-data="{ open: null }" class="space-y-2">
-    {% for label, name, instance in plugins %}
-      <div class="collapse collapse-plus bg-slate-100"
-           data-label="{{ label }}"
+    {% for app, plugin, form in plugins %}
+      <div class="collapse collapse-arrow bg-slate-100"
+           data-label="{{ app.label }}"
            :class="{'collapse-open': open === $el.dataset.label}">
-        <div class="collapse-title text-xl font-medium flex flex-row justify-between items-center"
-             @click="open = $el.parentElement.dataset.label">
-          {{ name }}
-          <span class="badge badge-lg ml-4 {{ instance.state|plugin_state_to_badge_css }}">
-            {{ instance.get_state_display }}
+        <div class="collapse-title text-xl font-medium flex flex-row justify-start items-center cursor-pointer"
+             @click="open = (open === $el.parentElement.dataset.label) ? null : $el.parentElement.dataset.label">
+          <span class="w-1/2">
+            {% if app.emoji %}<span class="text-4xl align-middle leading-10 mr-2">{{ app.emoji }}</span>{% endif %}
+
+            {{ app.verbose_name }}
+          </span>
+          <span class="btn {{ plugin.state|plugin_state_to_badge_css }} flex flex-row items-center space-x-2">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 viewBox="0 0 24 24"
+                 fill="currentColor"
+                 class="w-5 h-5">
+              <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+            </svg>
+
+            {{ plugin.get_state_display }}
           </span>
           {#        <span class="ml-4">#}
           {#          {{ instance }}#}
           {#        </span>#}
         </div>
         <div class="collapse-content">
-          <p>hello</p>
+          {# do not display empty form #}
+          {% if form.fields %}
+            <hr>
+            {{ form }}
+          {% else %}
+            <div class="alert">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   fill="none"
+                   viewBox="0 0 24 24"
+                   class="stroke-info shrink-0 w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z">
+                </path>
+              </svg>
+              {% trans "Plugin does not have specific configuration." %}
+            </div>
+          {% endif %}
         </div>
       </div>
     {% endfor %}

@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from django.forms import modelform_factory
 from django.views.generic import TemplateView
 
+from apps.fiestaforms.forms import BaseModelForm
 from apps.plugins.models import Plugin
-from apps.plugins.utils import all_plugins_as_choices
+from apps.plugins.utils import all_plugin_apps
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 
 
@@ -18,11 +20,21 @@ class SectionSettingsView(EnsurePrivilegedUserViewMixin, TemplateView):
         ctx.update(
             plugins=[
                 (
-                    label,
-                    name,
-                    by_label(label),
+                    app,
+                    plugin,
+                    (
+                        modelform_factory(
+                            plugin.configuration.__class__,
+                            form=BaseModelForm,
+                            # managed by fiesta/admins
+                            exclude=("name", "section", "shared"),
+                        )
+                        if plugin.configuration
+                        else None
+                    ),
                 )
-                for label, name in all_plugins_as_choices()
+                for app in all_plugin_apps()
+                if (plugin := by_label(app.label)) or True
             ],
         )
 

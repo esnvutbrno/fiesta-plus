@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
+from operator import attrgetter
 
 from django.urls import ResolverMatch
 
@@ -12,7 +13,9 @@ def all_plugin_apps() -> tuple[PluginAppConfig, ...]:
     """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
     from django.apps import apps
 
-    return tuple(filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs()))
+    return tuple(
+        sorted(filter(lambda a: isinstance(a, PluginAppConfig), apps.get_app_configs()), key=attrgetter("verbose_name"))
+    )
 
 
 @lru_cache

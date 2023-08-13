@@ -9,6 +9,9 @@ module.exports = {
             // hack to allow also classes used from Django forms definitions
             pattern: /Forms__.+/,
         },
+        {
+            pattern: /btn-.+/,
+        },
     ],
     theme: {
         extend: {},

@@ -48,6 +48,7 @@ def as_widget_field(bf: BoundField):
         "text": "Forms__text",
         "url": "Forms__text",
         "textarea": "Forms__textarea",
+        "number": "Forms__number",
         "date": "Forms__date",
         "datetime-local": "Forms__datetime-local",
         "unknown": "Forms__unknown",
