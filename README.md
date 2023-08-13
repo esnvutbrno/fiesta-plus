@@ -121,10 +121,16 @@ trust-localhost-ca               Copies generted CA cert to trusted CA certs and
 For demo your can use included fixtures with the ESN Hawaii and some users to test it out. To load them run:
 
 ```shell
+# admin user
 make loaddata fixture=fiesta/fiesta/fixtures/01_demo_admin.json
+# universities, faculties and ESN Hawaii
 make loaddata fixture=fiesta/fiesta/fixtures/02_demo_section-universities.json
+# demo users with ESN Hawaii memberships
 make loaddata fixture=fiesta/fiesta/fixtures/03_demo_users.json
+# Dashboard and ESN section plugin with configuration
 make loaddata fixture=fiesta/fiesta/fixtures/04_demo_base-plugins.json
+# all other plugins (ESNcard, Buddy System, Pages at the moment)
+make loaddata fixture=fiesta/fiesta/fixtures/05_demo_all-plugins.json
 ```
 
 The single included section is `ESN Hawaii` with enabled two crucial plugins: Dashboard and ESN section plugin -- usually it runs ons `esnhawaii.fiesta.test`, so don't forget to add it to your `/etc/hosts` file.
