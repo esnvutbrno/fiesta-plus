@@ -16,6 +16,7 @@ class PagesConfig(PluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.pages"
     title = _("pages")
+    emoji = "🌐"
 
     configuration_model = "pages.PagesConfiguration"
 

@@ -17,6 +17,7 @@ class BuddySystemConfig(PluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.buddy_system"
     verbose_name = _("Buddy System")
+    emoji = "🤼"
 
     configuration_model = "buddy_system.BuddySystemConfiguration"
 

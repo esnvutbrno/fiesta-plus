@@ -20,6 +20,7 @@ class ESNcardsConfig(PluginAppConfig):
     configuration_model = "esncards.ESNcardsConfiguration"
 
     verbose_name = _("ESNcard")
+    emoji = "💳"
 
     def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         base = super().as_navigation_item(request, bound_plugin)

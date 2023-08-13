@@ -16,10 +16,10 @@ if typing.TYPE_CHECKING:
 class SectionsConfig(PluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.sections"
+    verbose_name = _("ESN section")
+    emoji = "🏡"
 
     configuration_model = "sections.SectionsConfiguration"
-
-    verbose_name = _("ESN section")
 
     login_not_required_urls = [
         "choose-space",

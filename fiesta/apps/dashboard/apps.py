@@ -16,6 +16,7 @@ class DashboardConfig(PluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.dashboard"
     title = _("dashboard")
+    emoji = "🧮"
 
     configuration_model = "dashboard.DashboardConfiguration"
 

@@ -26,6 +26,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     verbose_name: str
 
+    emoji: str = ""
+
     configuration_model: str | None = None
 
     login_required = True
