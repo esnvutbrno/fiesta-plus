@@ -82,6 +82,7 @@ buena-fiesta-webpack-1      | webpack 5.78.0 compiled successfully in 5852 ms
 * if you accidentally kill some of the containers, you can resurrect them with `make upd` in another shell to have them up faster
 * `make shell_plus` runs Django shell plus console, interactive tool with all Django models preloaded
 * `make makemigrations` and `migrate` are you friends on your Django journey
+* see [Demo Data](#demo-data) for some demo data to play with, or use `make seed` to generate some fake data (check the [seed command](./fiesta/apps/utils/management/commands/seed.py) for more info)
 * `Makefile` included in project provides a few self-explanatory useful targets:
 
 ```
@@ -113,6 +114,38 @@ generate-local-certs             Generates self-signed *.${ROOT_DOMAIN} certs fo
 setup-elastic                    Starts elasticsearch standalone an generates keystore and passwords for all users.
 trust-localhost-ca               Copies generted CA cert to trusted CA certs and updates database -- requires sudo.
 ```
+
+
+### Demo Data
+
+For demo your can use included fixtures with the ESN Hawaii and some users to test it out. To load them run:
+
+```shell
+# admin user
+make loaddata fixture=fiesta/fiesta/fixtures/01_demo_admin.json
+# universities, faculties and ESN Hawaii
+make loaddata fixture=fiesta/fiesta/fixtures/02_demo_section-universities.json
+# demo users with ESN Hawaii memberships
+make loaddata fixture=fiesta/fiesta/fixtures/03_demo_users.json
+# Dashboard and ESN section plugin with configuration
+make loaddata fixture=fiesta/fiesta/fixtures/04_demo_base-plugins.json
+# all other plugins (ESNcard, Buddy System, Pages at the moment)
+make loaddata fixture=fiesta/fiesta/fixtures/05_demo_all-plugins.json
+```
+
+The single included section is `ESN Hawaii` with enabled two crucial plugins: Dashboard and ESN section plugin -- usually it runs ons `esnhawaii.fiesta.test`, so don't forget to add it to your `/etc/hosts` file.
+It has the following users:
+
+| username/password  | role                  |
+|--------------------|-----------------------|
+| `admin`            | Django superuser      |
+| `walter.white`     | section admin         |
+| `anna.gunn`        | section editor        |
+| `jesse.pinkman`    | section member        |
+| `aaron.paul`       | section member        |
+| `gus.fring`        | section international |
+| `hector.salamanca` | section international |
+
 
 ## Contributing
 

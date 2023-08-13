@@ -7,7 +7,7 @@
 }
 
 .table-container table {
-    @apply min-w-full table table-compact;
+    @apply min-w-full table table-sm;
 }
 
 .table-container table tbody a {

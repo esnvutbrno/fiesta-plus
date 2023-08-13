@@ -1,0 +1,67 @@
+[
+  {
+    "model": "dashboard.dashboardconfiguration",
+    "pk": "087340c2-bbc1-4ec1-8861-a2d937889094",
+    "fields": {}
+  },
+  {
+    "model": "plugins.basepluginconfiguration",
+    "pk": "087340c2-bbc1-4ec1-8861-a2d937889094",
+    "fields": {
+      "polymorphic_ctype": 11,
+      "created": "2023-08-13T10:38:44.798Z",
+      "modified": "2023-08-13T10:38:44.798Z",
+      "name": "default",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "shared": false
+    }
+  },
+  {
+    "model": "plugins.basepluginconfiguration",
+    "pk": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
+    "fields": {
+      "polymorphic_ctype": 19,
+      "created": "2023-08-13T12:43:06.779Z",
+      "modified": "2023-08-13T12:43:19.967Z",
+      "name": "default",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "shared": false
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "5dab58b1-232c-4d4e-98bd-ceec184408e2",
+    "fields": {
+      "created": "2023-08-13T12:43:20.838Z",
+      "modified": "2023-08-13T12:43:20.838Z",
+      "state": "enabled",
+      "app_label": "sections",
+      "configuration": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "c566aff8-8273-4bed-8cc7-6edcf7dbf2b8",
+    "fields": {
+      "created": "2023-08-13T10:38:46.550Z",
+      "modified": "2023-08-13T10:38:46.550Z",
+      "state": "enabled",
+      "app_label": "dashboard",
+      "configuration": "087340c2-bbc1-4ec1-8861-a2d937889094",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "sections.sectionsconfiguration",
+    "pk": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
+    "fields": {
+      "required_nationality": null,
+      "required_gender": null,
+      "required_picture": null,
+      "required_phone_number": null,
+      "required_interests": null,
+      "auto_approved_membership_for_international": true
+    }
+  }
+]
