@@ -1,5 +1,7 @@
 include .env
 
+export DOCKER_BUILDKIT=1
+
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 DCFLAGS =
