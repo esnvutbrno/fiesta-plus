@@ -82,6 +82,7 @@ buena-fiesta-webpack-1      | webpack 5.78.0 compiled successfully in 5852 ms
 * if you accidentally kill some of the containers, you can resurrect them with `make upd` in another shell to have them up faster
 * `make shell_plus` runs Django shell plus console, interactive tool with all Django models preloaded
 * `make makemigrations` and `migrate` are you friends on your Django journey
+* see [Demo Data](#demo-data) for some demo data to play with, or use `make seed` to generate some fake data (check the [seed command](./fiesta/apps/utils/management/commands/seed.py) for more info)
 * `Makefile` included in project provides a few self-explanatory useful targets:
 
 ```
