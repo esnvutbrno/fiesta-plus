@@ -1,0 +1,352 @@
+[
+  {
+    "model": "accounts.userprofile",
+    "pk": "18a1cb02-9d44-413e-9cdc-a2cb66a7f462",
+    "fields": {
+      "created": "2023-08-13T12:34:20.389Z",
+      "modified": "2023-08-13T12:34:20.389Z",
+      "user": 6,
+      "nationality": null,
+      "gender": "",
+      "home_university": "0d6b4c15-88b4-465f-81c7-946c100a4928",
+      "home_faculty": null,
+      "guest_faculty": "edc44204-2c83-4aa6-a5a8-0e4ae5cfbcaa",
+      "picture": "",
+      "interests": "[\"tik-tok\", \"painting\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "1a6d8300-eac2-4946-89f3-a455899ddb67",
+    "fields": {
+      "created": "2023-08-13T12:35:10.174Z",
+      "modified": "2023-08-13T12:35:10.174Z",
+      "user": 5,
+      "nationality": null,
+      "gender": "",
+      "home_university": "0e255f27-8039-4697-ad90-92bc683e6b13",
+      "home_faculty": null,
+      "guest_faculty": null,
+      "picture": "",
+      "interests": "[\"web_development\", \"filmmaking\", \"video_editing\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "7f9f6ff3-3f97-4d9a-b2a4-af393c009245",
+    "fields": {
+      "created": "2023-08-13T12:29:49.338Z",
+      "modified": "2023-08-13T12:29:49.338Z",
+      "user": 3,
+      "nationality": null,
+      "gender": "",
+      "home_university": "da3c6a62-3b22-444a-aee5-3e93d147391e",
+      "home_faculty": null,
+      "guest_faculty": null,
+      "picture": "",
+      "interests": "[\"music\", \"photo\", \"coffee\", \"travel\", \"movies\", \"pets\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "89d29fa3-de28-4a68-9464-39ee550ecbe0",
+    "fields": {
+      "created": "2023-08-13T12:33:16.012Z",
+      "modified": "2023-08-13T12:33:38.659Z",
+      "user": 7,
+      "nationality": null,
+      "gender": "",
+      "home_university": "96fefce0-1338-49b2-9a87-3cf4ff2eff06",
+      "home_faculty": null,
+      "guest_faculty": "313cd360-91e4-487f-adf6-d3c542092fd1",
+      "picture": "",
+      "interests": "[\"theatre\", \"writing\", \"sewing\", \"woodworking\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "bd2499b6-0fc5-4df6-a891-d40d40d1d3ec",
+    "fields": {
+      "created": "2023-08-13T12:29:20.621Z",
+      "modified": "2023-08-13T12:29:20.621Z",
+      "user": 2,
+      "nationality": null,
+      "gender": "",
+      "home_university": null,
+      "home_faculty": "6feb8ed4-e9ca-4f6d-862a-e5b351c650de",
+      "guest_faculty": null,
+      "picture": "",
+      "interests": "[\"metalworking\", \"graphic design\", \"acting\", \"podcasting\", \"snowboarding\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "ce669b27-0d3e-4218-998a-2fbf03e956f3",
+    "fields": {
+      "created": "2023-08-13T12:32:16.190Z",
+      "modified": "2023-08-13T12:32:27.928Z",
+      "user": 4,
+      "nationality": null,
+      "gender": "",
+      "home_university": null,
+      "home_faculty": "6feb8ed4-e9ca-4f6d-862a-e5b351c650de",
+      "guest_faculty": null,
+      "picture": "",
+      "interests": "[\"knitting\", \"crocheting\", \"metalworking\", \"graphic design\", \"animation\"]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete"
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$dZlume4o0i91xvo6Ylf8x5$SYejmkfhvT6hogieLLBukebiZNfpiNCZ8eRIRb6d24s=",
+      "last_login": "2023-08-13T12:31:47.958Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:13:28.100Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:13:28.320Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$HBwNRfw1sjGMKz54pyAebo$+e2T1bkr6ZID6tcut5OM7QIDdOEdOQNO9jJv5CD0bPk=",
+      "last_login": "2023-08-13T10:14:40.078Z",
+      "is_superuser": false,
+      "username": "walter.white",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:36:25Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:58:55.601Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$MR3qQTwCrS4mVty6G3CdMd$1RSbhSDiGUH5QsWJXOyKLaxj7iGDMIjvf8pMPsGXhFs=",
+      "last_login": "2023-08-13T12:29:34.433Z",
+      "is_superuser": false,
+      "username": "anna.gunn",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:55:48.563Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:55:48.796Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$YUuKhQvFHIg2ym0fSDaVRs$B9Qj0ucYND5BaI0Wa5vdSKsyh+mv0YXMqHufBgoyZWk=",
+      "last_login": "2023-08-13T12:30:03.952Z",
+      "is_superuser": false,
+      "username": "aaron.paul",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:56:12.739Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:56:12.957Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$tRyIV0m3Gu7c185rejLAZ7$BS74wQ08Una5UcGaAC7FnVGXHhwQawg8Sltu/71OYeM=",
+      "last_login": "2023-08-13T12:34:57.170Z",
+      "is_superuser": false,
+      "username": "jesse.pinkman",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:56:53.603Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:56:53.823Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$zM4zBYRQVK6jY0X55s1Kub$UxizdtgEVBXWfnYpdfvQXYTvUAtWeVRSxVA+Er927EA=",
+      "last_login": "2023-08-13T12:33:56.106Z",
+      "is_superuser": false,
+      "username": "gus.fring",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:57:25.782Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:57:25.960Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.user",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$9telugXFIIAwuuR8M67y9l$4+LmAfrTflXMvZWYXOtGJIKwA6OfUU/9zX+IUvKtcks=",
+      "last_login": "2023-08-13T12:33:28.916Z",
+      "is_superuser": false,
+      "username": "hector.salamanca",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2023-08-13T10:13:35.240Z",
+      "state": "registered",
+      "modified": "2023-08-13T10:13:35.453Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "043c03ba-e4e1-4b62-950b-753c3e81f925",
+    "fields": {
+      "created": "2023-08-13T10:12:08.245Z",
+      "modified": "2023-08-13T10:12:08.245Z",
+      "user": 6,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "international",
+      "state": "active"
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "109894e8-f11e-4e89-a106-838aea95c83f",
+    "fields": {
+      "created": "2023-08-13T10:13:59.606Z",
+      "modified": "2023-08-13T10:13:59.606Z",
+      "user": 7,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "international",
+      "state": "active"
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "633f554f-8d5e-4e6e-8162-d4cfd96b65a2",
+    "fields": {
+      "created": "2023-08-13T10:11:36.419Z",
+      "modified": "2023-08-13T10:11:36.419Z",
+      "user": 3,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "editor",
+      "state": "active"
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "9a544f8a-b797-4ab7-81f2-fc0fb2583e54",
+    "fields": {
+      "created": "2023-08-13T12:31:00.426Z",
+      "modified": "2023-08-13T12:31:00.426Z",
+      "user": 4,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "member",
+      "state": "inactive"
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "9e9b40ea-57d6-4ea0-b18d-bcaee8df9dfc",
+    "fields": {
+      "created": "2023-08-13T10:11:20.143Z",
+      "modified": "2023-08-13T10:11:20.143Z",
+      "user": 2,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "admin",
+      "state": "active"
+    }
+  },
+  {
+    "model": "sections.sectionmembership",
+    "pk": "e64f2d3a-75a1-412d-a44c-3587525a55c3",
+    "fields": {
+      "created": "2023-08-13T10:11:55.631Z",
+      "modified": "2023-08-13T10:11:55.631Z",
+      "user": 5,
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "role": "member",
+      "state": "active"
+    }
+  }
+]
