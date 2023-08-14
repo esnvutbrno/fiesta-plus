@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import enum
+
 from django import template
 from django.forms import BoundField
 
@@ -51,6 +53,7 @@ def as_widget_field(bf: BoundField):
         "number": "Forms__number",
         "date": "Forms__date",
         "datetime-local": "Forms__datetime-local",
+        "radio": "Forms__radio",
         "unknown": "Forms__unknown",
     }
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})
@@ -79,3 +82,15 @@ def get_form_classes(form: BaseForm | BaseModelForm):
     )
 
     return f"Forms__form Forms__form--{base_form_class_name} Forms__form--{form.__class__.__name__.lower()} "
+
+
+@register.filter
+def name_for_select_choice(bf: BoundField, choice: enum.Enum) -> str:
+    # w: RadioSelect = f.widget
+    return bf.name
+    # i = next((i for i, (v, _) in enumerate(f.choices) if v == choice), None)
+
+    # return bf.html_initial_id + w.id_for_label(
+    #     bf.name,
+    #     i,
+    # )

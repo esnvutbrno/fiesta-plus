@@ -11,6 +11,7 @@ module.exports = {
         },
         {
             pattern: /btn-.+/,
+            variants: ["checked"],
         },
     ],
     theme: {

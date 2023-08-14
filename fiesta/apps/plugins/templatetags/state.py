@@ -10,8 +10,8 @@ register = template.Library()
 @register.filter
 def plugin_state_to_badge_css(state: Plugin.State):
     return {
-        Plugin.State.ENABLED: "btn-success",
-        Plugin.State.READ_ONLY: "btn-ghost",
-        Plugin.State.PRIVILEGED_ONLY: "btn-accent",
-        Plugin.State.DISABLED: "btn-ghost",
+        Plugin.State.ENABLED: "success",
+        Plugin.State.READ_ONLY: "ghost",
+        Plugin.State.PRIVILEGED_ONLY: "accent",
+        Plugin.State.DISABLED: "ghost",
     }.get(state)

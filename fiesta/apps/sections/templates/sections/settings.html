@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+{% load fiestaforms %}
 {% load state %}
 
 {% load breadcrumbs %}
@@ -15,7 +16,7 @@
 
 {% block main %}
   <div x-data="{ open: null }" class="space-y-2">
-    {% for app, plugin, form in plugins %}
+    {% for app, plugin, conf_form, plugin_form in plugins %}
       <div class="collapse collapse-arrow bg-slate-100"
            data-label="{{ app.label }}"
            :class="{'collapse-open': open === $el.dataset.label}">
@@ -26,7 +27,9 @@
 
             {{ app.verbose_name }}
           </span>
-          <span class="btn {{ plugin.state|plugin_state_to_badge_css }} flex flex-row items-center space-x-2">
+          {# btn with state #}
+          <button class="btn btn-{{ plugin.state|plugin_state_to_badge_css }} flex flex-row items-center space-x-2"
+                  @click.stop="$refs['{{ app.label }}'].showModal()">
             <svg xmlns="http://www.w3.org/2000/svg"
                  viewBox="0 0 24 24"
                  fill="currentColor"
@@ -35,16 +38,17 @@
             </svg>
 
             {{ plugin.get_state_display }}
-          </span>
+          </button>
+
           {#        <span class="ml-4">#}
           {#          {{ instance }}#}
           {#        </span>#}
         </div>
         <div class="collapse-content">
           {# do not display empty form #}
-          {% if form.fields %}
+          {% if conf_form.fields %}
             <hr>
-            {{ form }}
+            {{ conf_form }}
           {% else %}
             <div class="alert">
               <svg xmlns="http://www.w3.org/2000/svg"
@@ -59,6 +63,50 @@
           {% endif %}
         </div>
       </div>
+      {# change state dialog #}
+      <dialog x-ref="{{ app.label }}" class="modal">
+        <div class="modal-box flex flex-col space-y-4">
+          <h3 class="font-bold text-xl">
+            {% if app.emoji %}<span class="text-3xl align-middle leading-4 mr-2">{{ app.emoji }}</span>{% endif %}
+            {{ app.verbose_name }}
+          </h3>
+
+          {# TODO: pass plugin type for non-existing plugins #}
+          <form hx-post="{% url "sections:change-plugin-state" plugin.pk %}"
+                method="POST">
+            {% csrf_token %}
+            <div class="join join-vertical w-full">
+              {% for value, label in PluginState.choices %}
+                {# TODO: would be nice to have the color of active button same as is plugin_state_to_badge_css returning #}
+                <input type="radio"
+                       name="{{ plugin_form.state|name_for_select_choice:value }}"
+                       value="{{ value }}"
+                       {% if value == plugin.state %}checked{% endif %}
+                       aria-label="{{ label }}"
+                       class="join-item btn" />
+              {% endfor %}
+            </div>
+
+            <hr class="mt-4">
+
+            <div class="Forms__field Forms__field--buttons space-x-4">
+              <span class="mr-auto alert alert-warning alert-outline">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="stroke-current shrink-0 h-6 w-6"
+                     fill="none"
+                     viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {% trans "The change is made immediately. Setting the plugin as not-enabled may disrupt your ongoing processes." %}
+              </span>
+              <input type="submit" value="{% trans "save" %}" class="btn btn-success">
+            </div>
+          </form>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     {% endfor %}
   </div>
 

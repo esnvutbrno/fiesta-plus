@@ -68,3 +68,15 @@ class EnsurePrivilegedUserViewMixin(UserPassesMembershipTestMixin):
 
     def test_membership(self, membership: SectionMembership) -> bool:
         return membership.is_privileged
+
+
+class EnsureSectionAdminViewMixin(UserPassesMembershipTestMixin):
+    """
+    View mixin checking wheever is logged user in admin role
+    in current section space.
+    """
+
+    permission_denied_message = _("Page is restricted to section admins.")
+
+    def test_membership(self, membership: SectionMembership) -> bool:
+        return membership.is_section_admin

@@ -1,15 +1,24 @@
 from __future__ import annotations
 
+from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import modelform_factory
-from django.views.generic import TemplateView
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView, UpdateView
 
 from apps.fiestaforms.forms import BaseModelForm
+from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugin_apps
-from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from apps.sections.forms.plugin_state import PluginStateForm
+from apps.sections.views.mixins.membership import EnsureSectionAdminViewMixin
+from apps.utils.views import AjaxViewMixin
 
 
-class SectionSettingsView(EnsurePrivilegedUserViewMixin, TemplateView):
+class SectionSettingsView(
+    EnsureSectionAdminViewMixin,
+    TemplateView,
+):
     template_name = "sections/settings.html"
 
     def get_context_data(self, **kwargs):
@@ -32,10 +41,28 @@ class SectionSettingsView(EnsurePrivilegedUserViewMixin, TemplateView):
                         if plugin.configuration
                         else None
                     ),
+                    PluginStateForm(instance=plugin),
                 )
                 for app in all_plugin_apps()
                 if (plugin := by_label(app.label)) or True
             ],
+            PluginState=Plugin.State,
         )
 
         return ctx
+
+
+class ChangePluginStateFormView(
+    EnsureSectionAdminViewMixin,
+    HtmxFormMixin,
+    AjaxViewMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    form_class = PluginStateForm
+    model = Plugin
+
+    success_message = _("Plugin state has been updated.")
+    success_url = reverse_lazy("sections:section-settings")
+
+    # TODO: some of the plugins cannot be disabled (ESN section/dashboard)
