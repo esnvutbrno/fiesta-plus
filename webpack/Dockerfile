@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essen
 WORKDIR /usr/src/app
 
 COPY ./webpack/package.json ./webpack/yarn.lock ./
-RUN npm install yarn && yarn install
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
 
 COPY ./webpack/ /usr/src/app/
 COPY ./fiesta/ /usr/src/fiesta/
