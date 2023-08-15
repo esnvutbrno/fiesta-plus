@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from ..plugin import PluginAppConfig
+from ..plugin import BasePluginAppConfig
 from ..utils import all_plugins_as_choices
 from .managers import PluginManager
 from apps.utils.models import BaseTimestampedModel
@@ -102,7 +102,7 @@ class Plugin(BaseTimestampedModel):
         return f"{self.get_app_label_display()}: {self.get_state_display()}"
 
     @property
-    def app_config(self) -> PluginAppConfig:
+    def app_config(self) -> BasePluginAppConfig:
         return apps.app_configs[self.app_label]
 
 

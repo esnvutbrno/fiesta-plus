@@ -4,7 +4,7 @@ import typing
 
 from django.utils.translation import gettext_lazy as _
 
-from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.plugin import BasePluginAppConfig
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
@@ -12,7 +12,7 @@ if typing.TYPE_CHECKING:
     from apps.utils.templatetags.navigation import NavigationItemSpec
 
 
-class PagesConfig(PluginAppConfig):
+class PagesConfig(BasePluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.pages"
     title = _("pages")

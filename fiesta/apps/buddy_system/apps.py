@@ -5,7 +5,7 @@ import typing
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
-from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.plugin import BasePluginAppConfig
 from apps.utils.templatetags.navigation import NavigationItemSpec
 
 if typing.TYPE_CHECKING:
@@ -13,7 +13,7 @@ if typing.TYPE_CHECKING:
     from apps.plugins.models import Plugin
 
 
-class BuddySystemConfig(PluginAppConfig):
+class BuddySystemConfig(BasePluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.buddy_system"
     verbose_name = _("Buddy System")
