@@ -28,17 +28,35 @@
             {{ app.verbose_name }}
           </span>
           {# btn with state #}
-          <button class="btn btn-{{ plugin.state|plugin_state_to_badge_css }} flex flex-row items-center space-x-2"
-                  @click.stop="$refs['{{ app.label }}'].showModal()">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 viewBox="0 0 24 24"
-                 fill="currentColor"
-                 class="w-5 h-5">
-              <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
-            </svg>
+          {% if app.auto_enabled %}
+            <div class="tooltip tooltip-right"
+                 data-tip="{% trans "Auto enabled as crucial part of the system." %}">
+              <button class="badge badge-ghost badge-lg gap-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     viewBox="0 0 24 24"
+                     fill="currentColor"
+                     class="w-4 h-4">
+                  <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm13.36-1.814a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clip-rule="evenodd" />
+                </svg>
+                {% trans "auto enabled" %}
+              </button>
+            </div>
+          {% else %}
+            <button
+              class="btn btn-{{ plugin.state|plugin_state_to_badge_css }} flex flex-row items-center space-x-2"
+              {# invokes the dialog, which is defined near the end of the endloop #}
+              @click.stop="$refs['{{ app.label }}'].showModal()"
+              >
+              <svg xmlns="http://www.w3.org/2000/svg"
+                   viewBox="0 0 24 24"
+                   fill="currentColor"
+                   class="w-5 h-5">
+                <path d="M21.731 2.269a2.625 2.625 0 00-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 000-3.712zM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 00-1.32 2.214l-.8 2.685a.75.75 0 00.933.933l2.685-.8a5.25 5.25 0 002.214-1.32L19.513 8.2z" />
+              </svg>
 
-            {{ plugin.get_state_display }}
-          </button>
+              {{ plugin.get_state_display }}
+            </button>
+          {% endif %}
 
           {#        <span class="ml-4">#}
           {#          {{ instance }}#}
@@ -63,50 +81,24 @@
           {% endif %}
         </div>
       </div>
-      {# change state dialog #}
-      <dialog x-ref="{{ app.label }}" class="modal">
-        <div class="modal-box flex flex-col space-y-4">
-          <h3 class="font-bold text-xl">
-            {% if app.emoji %}<span class="text-3xl align-middle leading-4 mr-2">{{ app.emoji }}</span>{% endif %}
-            {{ app.verbose_name }}
-          </h3>
 
-          {# TODO: pass plugin type for non-existing plugins #}
-          <form hx-post="{% url "sections:change-plugin-state" plugin.pk %}"
-                method="POST">
-            {% csrf_token %}
-            <div class="join join-vertical w-full">
-              {% for value, label in PluginState.choices %}
-                {# TODO: would be nice to have the color of active button same as is plugin_state_to_badge_css returning #}
-                <input type="radio"
-                       name="{{ plugin_form.state|name_for_select_choice:value }}"
-                       value="{{ value }}"
-                       {% if value == plugin.state %}checked{% endif %}
-                       aria-label="{{ label }}"
-                       class="join-item btn" />
-              {% endfor %}
-            </div>
+      {% if not app.auto_enabled %}
+        {# change state dialog #}
+        <dialog x-ref="{{ app.label }}" class="modal">
+          <div class="modal-box flex flex-col space-y-4">
+            <h3 class="font-bold text-xl">
+              {% if app.emoji %}<span class="text-3xl align-middle leading-4 mr-2">{{ app.emoji }}</span>{% endif %}
+              {{ app.verbose_name }}
+            </h3>
 
-            <hr class="mt-4">
-
-            <div class="Forms__field Forms__field--buttons space-x-4">
-              <span class="mr-auto alert alert-warning alert-outline">
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     class="stroke-current shrink-0 h-6 w-6"
-                     fill="none"
-                     viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-                {% trans "The change is made immediately. Setting the plugin as not-enabled may disrupt your ongoing processes." %}
-              </span>
-              <input type="submit" value="{% trans "save" %}" class="btn btn-success">
-            </div>
+            {# TODO: pass plugin type for non-existing plugins #}
+            {% include "sections/parts/settings_plugin_state_form.html" with form=plugin_form object=plugin PluginState=PluginState %}
+          </div>
+          <form method="dialog" class="modal-backdrop">
+            <button>close</button>
           </form>
-        </div>
-        <form method="dialog" class="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
+        </dialog>
+      {% endif %}
     {% endfor %}
   </div>
 

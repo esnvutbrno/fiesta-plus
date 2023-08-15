@@ -10,7 +10,7 @@ from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugin_apps
-from apps.sections.forms.plugin_state import PluginStateForm
+from apps.sections.forms.plugin_state import PluginStateSettingsForm
 from apps.sections.views.mixins.membership import EnsureSectionAdminViewMixin
 from apps.utils.views import AjaxViewMixin
 
@@ -41,7 +41,7 @@ class SectionSettingsView(
                         if plugin.configuration
                         else None
                     ),
-                    PluginStateForm(instance=plugin),
+                    PluginStateSettingsForm(instance=plugin),
                 )
                 for app in all_plugin_apps()
                 if (plugin := by_label(app.label)) or True
@@ -59,10 +59,16 @@ class ChangePluginStateFormView(
     SuccessMessageMixin,
     UpdateView,
 ):
-    form_class = PluginStateForm
+    form_class = PluginStateSettingsForm
     model = Plugin
 
     success_message = _("Plugin state has been updated.")
     success_url = reverse_lazy("sections:section-settings")
+
+    ajax_template_name = "sections/parts/settings_plugin_state_form.html"
+
+    extra_context = {
+        "PluginState": Plugin.State,
+    }
 
     # TODO: some of the plugins cannot be disabled (ESN section/dashboard)
