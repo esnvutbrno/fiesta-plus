@@ -25,6 +25,9 @@ class SectionSettingsView(
         def by_label(label: str) -> Plugin | None:
             return self.request.in_space_of_section.plugins.filter(app_label=label).first()
 
+        class BaseConfigurationForm(BaseModelForm):
+            template_name = "sections/parts/settings_plugin_configuration_form.html"
+
         ctx = super().get_context_data(**kwargs)
         ctx.update(
             plugins=[
@@ -34,7 +37,7 @@ class SectionSettingsView(
                     (
                         modelform_factory(
                             plugin.configuration.__class__,
-                            form=BaseModelForm,
+                            form=BaseConfigurationForm,
                             # managed by fiesta/admins
                             exclude=("name", "section", "shared"),
                         )

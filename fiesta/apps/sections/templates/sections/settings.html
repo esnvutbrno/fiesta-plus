@@ -15,13 +15,14 @@
 
 
 {% block main %}
-  <div x-data="{ open: null }" class="space-y-2">
+  <div x-data="{ open: window.location.hash.slice(1) }" class="space-y-2">
     {% for app, plugin, conf_form, plugin_form in plugins %}
       <div class="collapse collapse-arrow bg-slate-100"
            data-label="{{ app.label }}"
            :class="{'collapse-open': open === $el.dataset.label}">
-        <div class="collapse-title text-xl font-medium flex flex-row justify-start items-center cursor-pointer"
-             @click="open = (open === $el.parentElement.dataset.label) ? null : $el.parentElement.dataset.label">
+        <a class="collapse-title text-xl font-medium flex flex-row justify-start items-center cursor-pointer"
+           @click="open = (open === $el.parentElement.dataset.label) ? null : $el.parentElement.dataset.label"
+           href="#{{ app.label }}">
           <span class="w-1/2">
             {% if app.emoji %}<span class="text-4xl align-middle leading-10 mr-2">{{ app.emoji }}</span>{% endif %}
 
@@ -61,12 +62,12 @@
           {#        <span class="ml-4">#}
           {#          {{ instance }}#}
           {#        </span>#}
-        </div>
+        </a>
         <div class="collapse-content">
           {# do not display empty form #}
           {% if conf_form.fields %}
             <hr>
-            {{ conf_form }}
+            {% include "sections/parts/settings_plugin_configuration_form.html" with form=conf_form object=plugin.configuration %}
           {% else %}
             <div class="alert">
               <svg xmlns="http://www.w3.org/2000/svg"

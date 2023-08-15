@@ -1,0 +1,13 @@
+{% load i18n %}
+{% load fiestaforms %}
+
+<form hx-post="{% url "sections:change-plugin-state" object.pk %}"
+      method="POST"
+      hx-swap="outerHTML">
+  {% csrf_token %}
+
+  {% with form.get_context as ctx %}
+
+    {% include "fiestaforms/classic.html" with form=ctx.form hidden_fields=ctx.hidden_fields fields=ctx.fields errors=ctx.errors %}
+  {% endwith %}
+</form>
