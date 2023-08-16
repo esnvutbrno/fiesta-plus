@@ -21,8 +21,6 @@ class DashboardConfig(BasePluginAppConfig):
 
     auto_enabled = True
 
-    auto_enabled = True
-
     configuration_model = "dashboard.DashboardConfiguration"
 
     def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
