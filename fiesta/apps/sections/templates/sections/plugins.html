@@ -8,7 +8,7 @@
 {% load utils %}
 
 {% block upper_head %}
-  {% trans "Settings" as title %}
+  {% trans "Plugins" as title %}
   {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
@@ -27,18 +27,18 @@
         'collapse-open': open === $el.dataset.label,
         'collapse-arrow': !!$el.dataset.plugin
         }">
-        <a class="collapse-title flex flex-row justify-between items-center cursor-pointer gap-x-8"
+        <a class="collapse-title flex flex-row justify-between items-center cursor-pointer"
            @click="open = (open === $el.parentElement.dataset.label) ? null : $el.parentElement.dataset.label"
            href="#{{ app.label }}">
-          <span class="text-xl font-medium">
+          <span class="text-xl font-medium mr-4 whitespace-nowrap">
             {% if app.emoji %}<span class="text-4xl align-middle leading-10 mr-2">{{ app.emoji }}</span>{% endif %}
 
             {{ app.verbose_name }}
           </span>
-          <span class="mr-auto hidden md:block">{{ app.description }}</span>
+          <span class="mr-auto hidden md:block pr-2">{{ app.description }}</span>
           {# btn with state #}
           {% if app.auto_enabled %}
-            <div class="tooltip tooltip-left"
+            <div class="tooltip tooltip-left whitespace-nowrap"
                  data-tip="{% trans "Auto enabled as crucial part of the system." %}">
               <button class="badge badge-ghost badge-lg gap-x-2">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -52,7 +52,7 @@
             </div>
           {% else %}
             <button
-              class="btn btn-{{ plugin.state|plugin_state_to_badge_css|default:"primary" }} flex flex-row items-center space-x-2"
+              class="btn btn-{{ plugin.state|plugin_state_to_badge_css|default:"primary" }} whitespace-nowrap flex flex-row items-center space-x-2"
               {# invokes the dialog, which is defined near the end of the endloop #}
               @click.stop="$refs['{{ app.label }}'].showModal()"
               >
@@ -76,7 +76,7 @@
             {# do not display empty form #}
             {% if conf_form.fields %}
               <hr>
-              {% include "sections/parts/settings_plugin_configuration_form.html" with form=conf_form object=plugin.configuration %}
+              {% include "sections/parts/plugin_configuration_form.html" with form=conf_form object=plugin.configuration %}
             {% else %}
               <div class="alert">
                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -105,9 +105,9 @@
             {% if plugin %}
               {% url 'sections:change-plugin-state' plugin.pk as form_url %}
             {% else %}
-              {% url 'sections:create-plugin' as form_url %}
+              {% url 'sections:setup-plugin' as form_url %}
             {% endif %}
-            {% include "sections/parts/settings_plugin_state_form.html" with form=plugin_form object=plugin PluginState=PluginState form_url=form_url %}
+            {% include "sections/parts/plugin_state_form.html" with form=plugin_form object=plugin PluginState=PluginState form_url=form_url %}
           </div>
           <form method="dialog" class="modal-backdrop">
             <button>close</button>

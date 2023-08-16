@@ -11,7 +11,7 @@ from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_label
 
 
-class PluginStateSettingsForm(BaseModelForm):
+class ChangePluginStateForm(BaseModelForm):
     instance: Plugin
 
     class Meta:
@@ -31,11 +31,11 @@ class PluginStateSettingsForm(BaseModelForm):
         return data
 
 
-class CreatePluginSettingsForm(PluginStateSettingsForm):
+class SetupPluginSettingsForm(ChangePluginStateForm):
     instance: Plugin
 
-    class Meta(PluginStateSettingsForm.Meta):
-        fields = PluginStateSettingsForm.Meta.fields + (
+    class Meta(ChangePluginStateForm.Meta):
+        fields = ChangePluginStateForm.Meta.fields + (
             "app_label",
             "section",
         )

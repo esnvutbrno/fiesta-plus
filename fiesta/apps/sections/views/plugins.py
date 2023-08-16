@@ -9,16 +9,16 @@ from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.models import BasePluginConfiguration, Plugin
 from apps.plugins.utils import all_plugin_apps
 from apps.sections.forms.plugin_configuration import get_plugin_configuration_form
-from apps.sections.forms.plugin_state import CreatePluginSettingsForm, PluginStateSettingsForm
+from apps.sections.forms.plugin_state import ChangePluginStateForm, SetupPluginSettingsForm
 from apps.sections.views.mixins.membership import EnsureSectionAdminViewMixin
 from apps.utils.views import AjaxViewMixin
 
 
-class SectionSettingsView(
+class SectionPluginsView(
     EnsureSectionAdminViewMixin,
     TemplateView,
 ):
-    template_name = "sections/settings.html"
+    template_name = "sections/plugins.html"
 
     def get_context_data(self, **kwargs):
         def by_label(label: str) -> Plugin | None:
@@ -36,9 +36,9 @@ class SectionSettingsView(
                         else None
                     ),
                     (
-                        PluginStateSettingsForm(instance=plugin)
+                        ChangePluginStateForm(instance=plugin)
                         if plugin
-                        else CreatePluginSettingsForm(
+                        else SetupPluginSettingsForm(
                             initial={
                                 "app_label": app.label,
                                 "section": self.request.in_space_of_section,
@@ -55,45 +55,35 @@ class SectionSettingsView(
         return ctx
 
 
-class ChangePluginStateFormView(
+class PluginDetailMixin(
     EnsureSectionAdminViewMixin,
     HtmxFormMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
-    UpdateView,
 ):
-    form_class = PluginStateSettingsForm
     model = Plugin
 
-    success_message = _("Plugin state has been updated.")
-    success_url = reverse_lazy("sections:section-settings")
+    success_url = reverse_lazy("sections:section-plugins")
 
-    ajax_template_name = "sections/parts/settings_plugin_state_form.html"
-
-    extra_context = {
-        "PluginState": Plugin.State,
-    }
-
-
-class CreatePluginFormView(
-    EnsureSectionAdminViewMixin,
-    HtmxFormMixin,
-    AjaxViewMixin,
-    SuccessMessageMixin,
-    CreateView,
-):
-    form_class = CreatePluginSettingsForm
-    model = Plugin
-
-    success_message = _("Plugin has been activated.")
-    success_url = reverse_lazy("sections:section-settings")
-
-    ajax_template_name = "sections/parts/settings_plugin_state_form.html"
+    ajax_template_name = "sections/parts/plugin_state_form.html"
 
     extra_context = {
         "PluginState": Plugin.State,
         "form_url": reverse_lazy("sections:create-plugin"),
     }
+
+
+class ChangePluginStateFormView(
+    PluginDetailMixin,
+    UpdateView,
+):
+    form_class = ChangePluginStateForm
+    success_message = _("Plugin state has been updated.")
+
+
+class SetupPluginFormView(PluginDetailMixin, CreateView):
+    form_class = SetupPluginSettingsForm
+    success_message = _("Plugin has been activated.")
 
 
 class ChangePluginConfigurationFormView(
@@ -111,6 +101,6 @@ class ChangePluginConfigurationFormView(
     queryset = BasePluginConfiguration.objects.all()
 
     success_message = _("Plugin configuration has been updated.")
-    success_url = reverse_lazy("sections:section-settings")
+    success_url = reverse_lazy("sections:section-plugins")
 
-    ajax_template_name = "sections/parts/settings_plugin_configuration_form.html"
+    ajax_template_name = "sections/parts/plugin_configuration_form.html"

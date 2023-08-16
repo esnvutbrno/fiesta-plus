@@ -8,7 +8,7 @@ from apps.plugins.models import BasePluginConfiguration
 
 def get_plugin_configuration_form(configuration: BasePluginConfiguration) -> type[BaseModelForm]:
     class BaseConfigurationForm(BaseModelForm):
-        template_name = "sections/parts/settings_plugin_configuration_form.html"
+        template_name = "sections/parts/plugin_configuration_form.html"
 
     return modelform_factory(
         configuration.__class__,

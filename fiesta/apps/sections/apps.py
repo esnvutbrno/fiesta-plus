@@ -47,8 +47,8 @@ class SectionsConfig(BasePluginAppConfig):
                         reverse("sections:section-stats"),
                     ),
                     NavigationItemSpec(
-                        _("Settings"),
-                        reverse("sections:section-settings"),
+                        _("Plugins"),
+                        reverse("sections:section-plugins"),
                     ),
                 ],
             )
