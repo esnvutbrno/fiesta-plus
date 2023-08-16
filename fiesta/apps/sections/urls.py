@@ -11,6 +11,7 @@ from apps.sections.views.members import ChangeMembershipStateView, MembershipDet
 from apps.sections.views.settings import (
     ChangePluginConfigurationFormView,
     ChangePluginStateFormView,
+    CreatePluginFormView,
     SectionSettingsView,
 )
 from apps.sections.views.stats import SectionStatsView
@@ -23,6 +24,7 @@ urlpatterns = [
     path("membership-state/<uuid:pk>", ChangeMembershipStateView.as_view(), name="change-membership-state"),
     path("membership/<uuid:pk>", MembershipDetailView.as_view(), name="membership-detail"),
     path("choose-section", ChooseSpaceView.as_view(), name="choose-space"),
+    path("plugin", CreatePluginFormView.as_view(), name="create-plugin"),
     path("plugin-state/<uuid:pk>", ChangePluginStateFormView.as_view(), name="change-plugin-state"),
     path(
         "plugin-configuration/<uuid:pk>",

@@ -3,13 +3,13 @@ from __future__ import annotations
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, UpdateView
+from django.views.generic import CreateView, TemplateView, UpdateView
 
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.models import BasePluginConfiguration, Plugin
 from apps.plugins.utils import all_plugin_apps
 from apps.sections.forms.plugin_configuration import get_plugin_configuration_form
-from apps.sections.forms.plugin_state import PluginStateSettingsForm
+from apps.sections.forms.plugin_state import CreatePluginSettingsForm, PluginStateSettingsForm
 from apps.sections.views.mixins.membership import EnsureSectionAdminViewMixin
 from apps.utils.views import AjaxViewMixin
 
@@ -32,10 +32,19 @@ class SectionSettingsView(
                     plugin,
                     (
                         get_plugin_configuration_form(plugin.configuration)(instance=plugin.configuration)
-                        if plugin.configuration
+                        if plugin and plugin.configuration
                         else None
                     ),
-                    PluginStateSettingsForm(instance=plugin),
+                    (
+                        PluginStateSettingsForm(instance=plugin)
+                        if plugin
+                        else CreatePluginSettingsForm(
+                            initial={
+                                "app_label": app.label,
+                                "section": self.request.in_space_of_section,
+                            }
+                        )
+                    ),
                 )
                 for app in all_plugin_apps()
                 if (plugin := by_label(app.label)) or True
@@ -65,7 +74,26 @@ class ChangePluginStateFormView(
         "PluginState": Plugin.State,
     }
 
-    # TODO: check the plugin is in your section
+
+class CreatePluginFormView(
+    EnsureSectionAdminViewMixin,
+    HtmxFormMixin,
+    AjaxViewMixin,
+    SuccessMessageMixin,
+    CreateView,
+):
+    form_class = CreatePluginSettingsForm
+    model = Plugin
+
+    success_message = _("Plugin has been activated.")
+    success_url = reverse_lazy("sections:section-settings")
+
+    ajax_template_name = "sections/parts/settings_plugin_state_form.html"
+
+    extra_context = {
+        "PluginState": Plugin.State,
+        "form_url": reverse_lazy("sections:create-plugin"),
+    }
 
 
 class ChangePluginConfigurationFormView(

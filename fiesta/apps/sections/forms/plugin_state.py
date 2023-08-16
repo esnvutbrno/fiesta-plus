@@ -1,11 +1,14 @@
 from __future__ import annotations
 
+from django.apps import apps
 from django.core.exceptions import ValidationError
-from django.forms import RadioSelect
+from django.forms import HiddenInput, RadioSelect
 from django.utils.translation import gettext_lazy as _
 
 from apps.fiestaforms.forms import BaseModelForm
 from apps.plugins.models import Plugin
+from apps.plugins.plugin import BasePluginAppConfig
+from apps.plugins.utils import all_plugins_mapped_to_label
 
 
 class PluginStateSettingsForm(BaseModelForm):
@@ -18,8 +21,34 @@ class PluginStateSettingsForm(BaseModelForm):
             "state": RadioSelect(),
         }
 
-    def clean_state(self):
-        if self.instance.app_config.auto_enabled and self.cleaned_data["state"] != Plugin.State.ENABLED:
+    def clean(self):
+        data: dict = super().clean()
+
+        app: BasePluginAppConfig = all_plugins_mapped_to_label().get(data.get("app_label") or self.instance.app_label)
+        if app.auto_enabled and data["state"] != Plugin.State.ENABLED:
             raise ValidationError(_("This plugin is enabled automatically."))
 
-        return self.cleaned_data["state"]
+        return data
+
+
+class CreatePluginSettingsForm(PluginStateSettingsForm):
+    instance: Plugin
+
+    class Meta(PluginStateSettingsForm.Meta):
+        fields = PluginStateSettingsForm.Meta.fields + (
+            "app_label",
+            "section",
+        )
+        widgets = {
+            "app_label": HiddenInput(),
+            "section": HiddenInput(),
+        }
+
+    def save(self, commit=True):
+        self.instance.configuration = apps.get_model(self.instance.app_config.configuration_model)(
+            section=self.instance.section,
+            shared=False,
+        )
+        self.instance.configuration.save()
+
+        return super().save(commit=commit)

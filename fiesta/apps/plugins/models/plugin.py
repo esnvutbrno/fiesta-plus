@@ -64,24 +64,26 @@ class Plugin(BaseTimestampedModel):
 
         unique_together = (("app_label", "section"),)
 
-    def clean(self) -> None:
-        super().clean()
+    def clean_fields(self, exclude=None) -> None:
+        if exclude and "configuration" in exclude:
+            return super().clean_fields(exclude=exclude)
 
         if not self.configuration and not self.app_config.configuration_model:
             # not needed and not filled
-            return
+            return None
 
         if self.configuration and not self.app_config.configuration_model:
             raise ValidationError({"configuration": _("Selected plugin does not support configuration.")})
 
         if self.app_config.configuration_model and not self.configuration:
             raise ValidationError(
-                {"configuration": _("Selected plugin does requires configuration.")},
+                {"configuration": _("Selected plugin does require configuration.")},
                 code="required",
             )
 
         expected_content_type = ContentType.objects.get_for_model(apps.get_model(self.app_config.configuration_model))
         if self.configuration.polymorphic_ctype != expected_content_type:
+            print(expected_content_type, self.configuration.polymorphic_ctype)
             raise ValidationError(
                 {"configuration": _("Selected plugin does not correspond to type of linked configuration.")}
             )
@@ -97,6 +99,7 @@ class Plugin(BaseTimestampedModel):
                     )
                 }
             )
+        return None
 
     def __str__(self):
         return f"{self.get_app_label_display()}: {self.get_state_display()}"
