@@ -17,6 +17,7 @@ class DashboardConfig(BasePluginAppConfig):
     name = "apps.dashboard"
     title = _("dashboard")
     emoji = "🧮"
+    description = _("System dashboard with user specific content.")
 
     auto_enabled = True
 

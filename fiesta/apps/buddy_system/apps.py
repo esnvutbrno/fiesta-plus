@@ -18,6 +18,7 @@ class BuddySystemConfig(BasePluginAppConfig):
     name = "apps.buddy_system"
     verbose_name = _("Buddy System")
     emoji = "🤼"
+    description = _("Tool for matching buddies with internationals.")
 
     configuration_model = "buddy_system.BuddySystemConfiguration"
 

@@ -16,11 +16,11 @@ if typing.TYPE_CHECKING:
 class ESNcardsConfig(BasePluginAppConfig):
     default_auto_field = "django.db.models.BigAutoField"
     name = "apps.esncards"
-
-    configuration_model = "esncards.ESNcardsConfiguration"
-
     verbose_name = _("ESNcard")
     emoji = "💳"
+    description = _("ESNcard applications, processing and bulk export.")
+
+    configuration_model = "esncards.ESNcardsConfiguration"
 
     def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         base = super().as_navigation_item(request, bound_plugin)

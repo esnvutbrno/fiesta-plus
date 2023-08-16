@@ -28,6 +28,8 @@ class BasePluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     emoji: str = ""
 
+    description: str = ""
+
     configuration_model: str | None = None
 
     login_required = True

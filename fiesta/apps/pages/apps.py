@@ -17,6 +17,7 @@ class PagesConfig(BasePluginAppConfig):
     name = "apps.pages"
     title = _("pages")
     emoji = "🌐"
+    description = _("Public pages for your section with intuitive block editor.")
 
     configuration_model = "pages.PagesConfiguration"
 

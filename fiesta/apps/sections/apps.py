@@ -18,6 +18,7 @@ class SectionsConfig(BasePluginAppConfig):
     name = "apps.sections"
     verbose_name = _("ESN section")
     emoji = "🏡"
+    description = _("Section management of members, statistics and Fiesta settings.")
 
     configuration_model = "sections.SectionsConfiguration"
 
