@@ -17,10 +17,16 @@
 {% block main %}
   <div x-data="{ open: window.location.hash.slice(1) }" class="space-y-2">
     {% for app, plugin, conf_form, plugin_form in plugins %}
-      <div class="collapse bg-slate-100"
-           data-label="{{ app.label }}"
-           data-plugin="{{ plugin.pk }}"
-           :class="{ // collapse open when the specific plugin is selected 'collapse-open': open === $el.dataset.label, // when the setup is required first, do not show the collapse arrow yet 'collapse-arrow': !!$el.dataset.plugin }">
+      <div
+        class="collapse bg-slate-100"
+        data-label="{{ app.label }}"
+        data-plugin="{{ plugin.pk }}"
+        {# when the setup is required first, do not show the collapse arrow yet #}
+        {# collapse open when the specific plugin is selected #}
+        :class="{
+        'collapse-open': open === $el.dataset.label,
+        'collapse-arrow': !!$el.dataset.plugin
+        }">
         <a class="collapse-title flex flex-row justify-between items-center cursor-pointer gap-x-8"
            @click="open = (open === $el.parentElement.dataset.label) ? null : $el.parentElement.dataset.label"
            href="#{{ app.label }}">
