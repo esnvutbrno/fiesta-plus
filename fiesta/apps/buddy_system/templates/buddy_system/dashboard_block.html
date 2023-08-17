@@ -53,10 +53,10 @@
 
       {% get_matched_buddy_requests as matched_requests %}
       {% if not matched_requests.exists %}
-        <div class="Dashboard__tile__value"> So empty here :( </div>
+        <div class="Dashboard__tile__value">So empty here :(</div>
         <div class="Dashboard__tile__actions text-right">
           <a href="{% url "buddy_system:matching-requests" %}"
-            class="btn btn-lg btn-outline">get your first buddy</a>
+             class="btn btn-lg btn-outline">get your first buddy</a>
         </div>
       {% else %}
         <div class="Dashboard__tile__value">
