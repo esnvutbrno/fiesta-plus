@@ -1,7 +1,14 @@
 {% extends "fiesta/base.html" %}
 
-{% block main %}
+{% load breadcrumbs %}
+{% load i18n %}
 
+{% block upper_head %}
+  {% breadcrumb_push_current_plugin %}
+{% endblock upper_head %}
+
+
+{% block main %}
   <h1 class="text-4xl text-primary text-bold">
     Open Hours of
     {{ request.in_space_of_section.name }}
