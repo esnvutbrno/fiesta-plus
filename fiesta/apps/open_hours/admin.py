@@ -14,7 +14,7 @@ class OpenHoursConfigurationAdmin(BaseChildConfigurationAdmin):
 
 
 @admin.register(OpenHours)
-class OpenHours(ModelAdmin):
+class OpenHoursAdmin(ModelAdmin):
     list_display = ("section", "day_index", "from_time", "to_time", "enabled")
 
     list_filter = ("section", "day_index", "enabled")

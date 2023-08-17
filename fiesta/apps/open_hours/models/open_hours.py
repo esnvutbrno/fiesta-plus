@@ -18,7 +18,9 @@ class OpenHours(BaseTimestampedModel):
         related_name="open_hours",
     )
 
-    day_index = models.PositiveSmallIntegerField()
+    day_index = models.PositiveSmallIntegerField(
+        choices=enumerate(range(7)),
+    )
     from_time = models.TimeField()
     to_time = models.TimeField()
 
