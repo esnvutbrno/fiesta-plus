@@ -12,10 +12,24 @@
 {% block main %}
 
 
+  {% if request.plugin.configuration.map %}
+    <img
+        src="{{ request.plugin.configuration.map.url }}"
+        width="{{ request.plugin.configuration.map.width }}"
+        height="{{ request.plugin.configuration.map.height }}"
+       class="mx-auto"
+    >
+
+    {% else %}
+
+
   <img src="https://img.freepik.com/premium-vector/city-map-any-kind-digital-info-graphics-print-publication-gps-map_403715-34.jpg?w=1380"
        alt=""
        width="600"
        class="mx-auto">
+  {% endif %}
+
+
 
 
 {% endblock %}
