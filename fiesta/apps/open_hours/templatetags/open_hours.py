@@ -5,7 +5,6 @@ import itertools
 from django import template
 from django.db.models import QuerySet
 
-
 register = template.Library()
 
 

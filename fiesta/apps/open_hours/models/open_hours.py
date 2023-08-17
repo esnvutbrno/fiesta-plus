@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 from django.db import models
 
 from apps.utils.models import BaseTimestampedModel
-
 
 """
 day_index   from_   to_     enabled

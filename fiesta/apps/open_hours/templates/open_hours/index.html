@@ -34,11 +34,9 @@
           <td>{{ oh_item.from_time|date:"G:i" }}</td>
           <td>{{ oh_item.to_time|date:"G:i" }}</td>
           <td>
-            <a
-                class="btn btn-sm btn-outline"
-                href="{% url "open_hours:update-oh" oh_item.pk %}"
-              >
-            edit</a></td>
+            <a class="btn btn-sm btn-outline"
+               href="{% url "open_hours:update-oh" oh_item.pk %}">edit</a>
+          </td>
         </tr>
       {% endfor %}
     </table>

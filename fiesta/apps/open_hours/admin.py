@@ -1,10 +1,11 @@
+from __future__ import annotations
+
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from apps.plugins.models import BasePluginConfiguration
-
-from .models import OpenHours, OpenHoursConfiguration
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import OpenHours, OpenHoursConfiguration
+from apps.plugins.models import BasePluginConfiguration
 
 
 @admin.register(OpenHoursConfiguration)
