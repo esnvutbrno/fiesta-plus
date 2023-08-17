@@ -10,6 +10,7 @@ module.exports = {
             pattern: /Forms__.+/,
         },
         {
+            // TODO: till the https://github.com/esnvutbrno/buena-fiesta/issues/188 is fixed
             pattern: /btn-.+/,
             variants: ["checked"],
         },
