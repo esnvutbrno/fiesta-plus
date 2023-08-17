@@ -41,7 +41,8 @@ def get_navigation_items(context):
         [
             nav_item
             for plugin in plugins  # type: Plugin
-            if (apps := plugin.app_config) and (nav_item := apps.as_navigation_item(request))  # type: PluginAppConfig
+            if (apps := plugin.app_config)
+            and (nav_item := apps.as_navigation_item(request=request, bound_plugin=plugin))  # type: PluginAppConfig
         ]
     )
 
