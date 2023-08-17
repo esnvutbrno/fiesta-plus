@@ -7,7 +7,7 @@
     {% for value, label in PluginState.choices %}
       {# TODO: would be nice to have the color of active button same as is plugin_state_to_badge_css returning #}
       <input type="radio"
-             name="{{ form.state|name_for_select_choice:value }}"
+             name="{{ form.state.name }}"
              value="{{ value }}"
              {% if value == object.state %}checked{% endif %}
              {% if not object and value == PluginState.DISABLED %}checked{% endif %}

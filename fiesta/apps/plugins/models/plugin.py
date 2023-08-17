@@ -83,7 +83,6 @@ class Plugin(BaseTimestampedModel):
 
         expected_content_type = ContentType.objects.get_for_model(apps.get_model(self.app_config.configuration_model))
         if self.configuration.polymorphic_ctype != expected_content_type:
-            print(expected_content_type, self.configuration.polymorphic_ctype)
             raise ValidationError(
                 {"configuration": _("Selected plugin does not correspond to type of linked configuration.")}
             )

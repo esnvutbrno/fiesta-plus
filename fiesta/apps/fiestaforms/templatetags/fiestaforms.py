@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import enum
-
 from django import template
 from django.forms import BoundField
 
@@ -82,15 +80,3 @@ def get_form_classes(form: BaseForm | BaseModelForm):
     )
 
     return f"Forms__form Forms__form--{base_form_class_name} Forms__form--{form.__class__.__name__.lower()} "
-
-
-@register.filter
-def name_for_select_choice(bf: BoundField, choice: enum.Enum) -> str:
-    # w: RadioSelect = f.widget
-    return bf.name
-    # i = next((i for i, (v, _) in enumerate(f.choices) if v == choice), None)
-
-    # return bf.html_initial_id + w.id_for_label(
-    #     bf.name,
-    #     i,
-    # )
