@@ -1,5 +1,6 @@
 {% extends "fiesta/base.html" %}
 
+{% load open_hours %}
 {% load breadcrumbs %}
 {% load i18n %}
 
@@ -9,6 +10,7 @@
 
 
 {% block main %}
+
   <h1 class="text-4xl text-primary text-bold">
     Open Hours of
     {{ request.in_space_of_section.name }}
@@ -17,5 +19,51 @@
     <a href="{% url "open_hours:map" %}"
        class="btn btn-outline btn-primary mt-4">show map with our office</a>
   {% endif %}
+
+  <div class="prose prose-lg">
+    <h2>Native template access</h2>
+    <table>
+      <tr>
+        <th>Day</th>
+        <th>Open</th>
+        <th>Close</th>
+      </tr>
+      {% for oh_item in request.in_space_of_section.open_hours.all %}
+        <tr>
+          <td>{{ oh_item.day_index }}</td>
+          <td>{{ oh_item.from_time|date:"G:i" }}</td>
+          <td>{{ oh_item.to_time|date:"G:i" }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+
+    <h2>Filter access</h2>
+    <ul>
+      {% for index, items in request.in_space_of_section.open_hours.all|group_day_table %}
+        <li>
+          {{ index }}:
+          {% for oh in items %}
+            {{ oh.from_time|date:"G:i" }} - {{ oh.to_time|date:"G:i" }}
+            {% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+
+    <h2>View context data access</h2>
+    <ul>
+      {% for index, items in open_hours %}
+        <li>
+          {{ index }}:
+          {% for oh in items %}
+            {{ oh.from_time|date:"G:i" }} - {{ oh.to_time|date:"G:i" }}
+            {% if not forloop.last %},{% endif %}
+          {% endfor %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+
+
 
 {% endblock %}
