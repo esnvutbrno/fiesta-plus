@@ -16,6 +16,15 @@ class ImageColumn(tables.Column):
         return value.url
 
 
+class ExpandableImageColumn(tables.TemplateColumn):
+    def __init__(self, *args, **kwargs):
+        kwargs.setdefault("template_name", "fiestatables/expandable_image_column.html")
+        super().__init__(*args, **kwargs)
+
+    def value(self, record, value):
+        return value.url
+
+
 class NaturalDatetimeColumn(tables.Column):
     attrs = {"td": {"title": lambda bound_column, record: bound_column.accessor.resolve(record)}}
 

@@ -1,0 +1,15 @@
+<div x-data>
+  <img src="{{ value.url }}"
+       class="h-12 cursor-zoom-in"
+       @click="$refs.modal.showModal()" />
+  <dialog x-ref="modal" class="modal">
+    <div class="modal-box">
+      <img src="{{ value.url }}" alt="{{ record }}">
+    </div>
+    <form class="modal-backdrop"
+          @submit.stop="$refs.modal.close()"
+          name="close">
+      <button>close</button>
+    </form>
+  </dialog>
+</div>
