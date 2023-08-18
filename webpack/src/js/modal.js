@@ -1,7 +1,7 @@
 import Alpine from "alpinejs";
 import htmx from "htmx.org"
 
-Alpine.data('modal', (href) => ({
+Alpine.data('modal', (href = null) => ({
     href,
     bind: {
         ['@click.stop'](e) {
@@ -9,7 +9,7 @@ Alpine.data('modal', (href) => ({
             if (e.ctrlKey) return;
 
             e.preventDefault()
-            Alpine.store('modal').open(href)
+            Alpine.store('modal').open(this.href)
         }
     }
 }));

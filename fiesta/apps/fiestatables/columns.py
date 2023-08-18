@@ -5,6 +5,7 @@ from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 from django_tables2.columns import BoundColumn
 
 
@@ -57,3 +58,17 @@ class LabeledChoicesColumn(tables.Column):
 
     def value(self, record, value):
         return value
+
+
+class SelectionColumn(tables.TemplateColumn):
+    action_button_text = _("process selected")
+
+    def __init__(self, url, action_button_text=None, *args, **kwargs):
+        if action_button_text:
+            self.action_button_text = action_button_text
+
+        self.action_url_name = url
+
+        kwargs.setdefault("template_name", "fiestatables/selection_column.html")
+        kwargs["orderable"] = False
+        super().__init__(*args, **kwargs)

@@ -7,6 +7,7 @@ import "./js/filter"
 import "./js/model-select"
 import "./js/dark-mode"
 import "./js/modal"
+import "./js/table"
 
 Alpine.plugin(collapse)
 

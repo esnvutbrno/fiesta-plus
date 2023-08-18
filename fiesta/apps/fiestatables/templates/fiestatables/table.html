@@ -2,7 +2,8 @@
 <div hx-boost="true"
      hx-target="#table-{{ table.prefix|default:'default' }}"
      hx-swap="outerHTML focus-scroll:false"
-     id="table-{{ table.prefix|default:'default' }}">
+     id="table-{{ table.prefix|default:'default' }}"
+     x-data>
   <div x-data
        x-cloak
        x-collapse

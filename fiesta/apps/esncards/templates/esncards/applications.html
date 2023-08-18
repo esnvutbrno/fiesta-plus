@@ -1,0 +1,18 @@
+{% extends "fiestatables/page.html" %}
+{% load fiestatables %}
+{% load i18n %}
+
+{% block main %}{{ block.super }}{% endblock %}
+
+{% block breadcrumbs_right %}
+  <button class="btn btn-primary btn-sm ml-auto mr-2"
+          data-href="{{ table|selection_action_url:"__pks__" }}"
+          x-cloak
+          x-show="$store.tableSelection.selected.length"
+          x-data="{ href: $el.dataset.href }"
+          @click="Alpine.store('modal').open(href.replace(/__pks__/, $store.tableSelection.selected.join(',')))">
+    {{ table|selection_action_button_text }}
+    <span x-text="'(' + $store.tableSelection.selected.length + ')'"></span>
+  </button>
+  {{ block.super }}
+{% endblock %}

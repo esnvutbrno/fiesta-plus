@@ -1,0 +1,7 @@
+<label for="selection-{{ record.pk }}" class="block w-full h-full">
+  <input type="checkbox"
+         name="{{ column.name }}"
+         value="{{ record.pk }}"
+         id="selection-{{ record.pk }}"
+         x-model="$store.tableSelection.selected">
+</label>
