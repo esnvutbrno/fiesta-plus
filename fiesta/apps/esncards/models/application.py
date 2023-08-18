@@ -108,6 +108,16 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         encoder=DjangoJSONEncoder,
     )
 
+    export = models.ForeignKey(
+        "esncards.Export",
+        on_delete=models.SET_NULL,
+        related_name="applications",
+        verbose_name=_("part of export"),
+        db_index=True,
+        null=True,
+        blank=True,
+    )
+
     class HistoryRecord(TypedDict):
         timestamp: datetime
         initial_state: ESNcardApplication.State | str
