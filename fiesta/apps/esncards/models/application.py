@@ -149,7 +149,7 @@ class ESNcardApplication(LifecycleModelMixin, BaseTimestampedModel):
         )
 
     def __str__(self):
-        return _("ESNcard Application: {}").format(self.get_state_display())
+        return _("Application: {}").format(self.get_state_display())
 
     @property
     def to_be_ready_at(self):

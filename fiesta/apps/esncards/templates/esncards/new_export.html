@@ -1,18 +1,20 @@
 {% load i18n %}
-<h2 class="text-2xl">{% trans "New Export" %}</h2>
 
-<ul>
-  {% for application in applications %}<li>{{ application }}</li>{% endfor %}
-</ul>
+<form method="post" hx-post="{{ request.path }}" hx-swap="outerHTML">
+  <h2 class="text-2xl">{% trans "New Export" %}</h2>
 
-<form method="post" action="{{ request.path }}">
+  <div class="font-mono columns-md gap-8">
+    {% for application in applications %}
+      <span class="w-full">{{ application.last_name }} {{ application.first_name }}</span>
+    {% endfor %}
+  </div>
+
   {% csrf_token %}
   {{ form }}
 
   <div class="Forms__field Forms__field--buttons space-x-4">
     <div class="alert alert-info">
-      All selected applications will be accepted and a printing materials will be generated.
+      All listed applications will be accepted and a printing materials will be generated.
     </div>
-    <button class="btn btn-primary">{% translate "Accept and Generate" %}</button>
   </div>
 </form>
