@@ -8,6 +8,7 @@ from apps.plugins.plugin import PluginAppConfig
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models.plugin import Plugin
     from apps.utils.templatetags.navigation import NavigationItemSpec
 
 
@@ -25,7 +26,7 @@ class PagesConfig(PluginAppConfig):
     def url_prefix(self) -> str:
         return "_/"
 
-    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
+    def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         return None
 
 
