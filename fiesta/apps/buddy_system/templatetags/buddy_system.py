@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import re
+import hashlib
 
 from django import template
 
+from django.shortcuts import render
 from apps.buddy_system.apps import BuddySystemConfig
 from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
@@ -79,3 +81,21 @@ def get_matched_buddy_requests(context):
         responsible_section=request.membership.section,
         state=BuddyRequest.State.MATCHED,
     ).order_by("-matched_at")
+
+
+@register.filter
+def get_color_by_text(name: str) -> str:
+    hash_object = hashlib.md5(name.encode())
+    hash_hex = hash_object.hexdigest()
+
+    r = int(hash_hex[0:2], 16)
+    g = int(hash_hex[2:4], 16)
+    b = int(hash_hex[4:6], 16)
+
+    if r + g + b < 100:
+        r += 30
+        g += 30
+        b += 30
+
+    color = f'rgb({r}, {g}, {b})'
+    return color

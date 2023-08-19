@@ -67,7 +67,13 @@
                 </div>
               </div>
             {% else %}
-              {# TODO placeholder avatar #}
+              <div class="w-24 avatar hover:scale-105 transition-transform"
+                   style="background-color: {{br.issuer.username|get_color_by_text}}; color: white; font-size: 24px; line-height: 50px; text-align: center; width: 100px; height: 100px;
+                    {% if not forloop.last %}padding-right: 30px;{% endif %} ">
+                <div class="w-24" style="padding-top: 1.3rem;">
+                  {{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}
+                </div>
+              </div>
             {% endif %}
           {% endfor %}
           {% if matched_requests|length > 3 %}
