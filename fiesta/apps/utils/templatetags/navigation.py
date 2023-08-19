@@ -5,11 +5,10 @@ import typing
 from django import template
 from django.urls import reverse
 
-from apps.plugins.plugin import PluginAppConfig
-
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
     from apps.plugins.models import Plugin
+    from apps.plugins.plugin import PluginAppConfig
     from apps.sections.models import Section, SectionMembership
 
 register = template.Library()
