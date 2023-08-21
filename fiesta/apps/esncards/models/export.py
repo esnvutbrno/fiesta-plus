@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +13,15 @@ class Export(BaseTimestampedModel):
         "sections.Section",
         on_delete=models.RESTRICT,
         verbose_name=_("section"),
+        related_name="esncard_exports",
         db_index=True,
+    )
+
+    created_by = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.RESTRICT,
+        verbose_name=_("created by"),
+        related_name="esncard_exports",
     )
 
     class State(TextChoices):

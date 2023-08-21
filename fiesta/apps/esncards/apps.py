@@ -31,6 +31,7 @@ class ESNcardsConfig(BasePluginAppConfig):
             url="",
             children=[
                 NavigationItemSpec(title=_("Applications"), url=reverse("esncards:applications")),
+                NavigationItemSpec(title=_("Exports"), url=reverse("esncards:exports")),
             ],
         )
 

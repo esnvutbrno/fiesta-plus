@@ -40,3 +40,14 @@ class ESNcardApplicationForm(BaseModelForm):
             "section": HiddenInput,
             "university": HiddenInput,
         }
+
+
+class ApproveESNcardApplicationForm(BaseModelForm):
+    submit_text = _("Approve application")
+
+    class Meta:
+        model = ESNcardApplication
+        fields = ("state",)
+        widgets = {
+            "state": HiddenInput,
+        }

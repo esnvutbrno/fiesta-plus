@@ -21,7 +21,14 @@ class ESNcardApplicationAdmin(admin.ModelAdmin):
     raw_id_fields = ["user", "section"]
 
 
+class ESNCardApplicationInline(admin.StackedInline):
+    model = ESNcardApplication
+    extra = 0
+
+
 @admin.register(Export)
 class ExportAdmin(admin.ModelAdmin):
     list_display = ["section", "state", "created"]
     list_filter = ["section", "state"]
+
+    inlines = [ESNCardApplicationInline]

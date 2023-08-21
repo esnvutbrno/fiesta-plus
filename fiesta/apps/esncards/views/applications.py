@@ -1,23 +1,23 @@
 from __future__ import annotations
 
 import django_tables2 as tables
+from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
+from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
+from django.views.generic import UpdateView
 from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
+from django_tables2 import Column, TemplateColumn
 
+from apps.esncards.forms.application import ApproveESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
-from apps.fiestatables.columns import (
-    ExpandableImageColumn,
-    LabeledChoicesColumn,
-    NaturalDatetimeColumn,
-    SelectionColumn,
-)
+from apps.fiestatables.columns import ExpandableImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb
 
 
@@ -57,9 +57,14 @@ class ESNcardApplicationsTable(tables.Table):
     nationality = Column(verbose_name=_("Nationality"))
     created = NaturalDatetimeColumn()
 
-    select_for_export = SelectionColumn(
-        url="esncards:new-export",
-        verbose_name=_("Select for export"),
+    actions = TemplateColumn(
+        template_name="esncards/parts/application_action_column.html",
+        extra_context={
+            "ApplicationState": ESNcardApplication.State,
+        },
+        orderable=False,
+        exclude_from_export=True,
+        verbose_name="",
     )
 
     state = LabeledChoicesColumn(
@@ -95,6 +100,7 @@ class ESNcardApplicationsTable(tables.Table):
 @with_breadcrumb(_("ESNcard"))
 @with_breadcrumb(_("Applications"))
 class ApplicationsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
+    filterset: BaseFilterSet
     request: HttpRequest
     template_name = "esncards/applications.html"
     table_class = ESNcardApplicationsTable
@@ -113,3 +119,34 @@ class ApplicationsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                 ESNcardApplication.State.CANCELLED,
             )
         ).select_related("user")
+
+    def get_table_kwargs(self):
+        kwargs = super().get_table_kwargs()
+        state_value: ChoiceFilter = self.filterset.is_bound and self.filterset.form.cleaned_data.get("state")
+
+        dynamic_columns = {"select_for_export"}
+
+        match state_value:
+            case None | False:
+                kwargs["exclude"] = dynamic_columns
+
+            case ESNcardApplication.State.ACCEPTED.value:
+                kwargs["exclude"] = dynamic_columns - {"select_for_export"}
+
+        return kwargs
+
+
+class ChangeApplicationStateView(
+    EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
+    # HtmxFormMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
+    form_class = ApproveESNcardApplicationForm
+    success_message = _("Application has been approved.")
+    success_url = reverse_lazy("esncards:applications")
+    template_name = "esncards/parts/application_action_column.html"
+
+    def get_queryset(self):
+        return self.request.in_space_of_section.esncard_applications

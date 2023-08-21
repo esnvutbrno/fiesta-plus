@@ -36,4 +36,8 @@
   {# notify alpine store about activated filter #}
   {# cannot use <script> since we are in the middle of page #}
   <div x-init="Alpine.store('tableControls').isFilterActive = {{ filter.form.is_bound|lower }}"></div>
+
+  {% if request.htmx %}
+    {% include "fiesta/parts/messages.html" %}
+  {% endif %}
 </div>
