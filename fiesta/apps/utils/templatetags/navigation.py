@@ -8,6 +8,7 @@ from django.urls import reverse
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
     from apps.plugins.models import Plugin
+    from apps.plugins.plugin import PluginAppConfig
     from apps.sections.models import Section, SectionMembership
 
 register = template.Library()
@@ -28,24 +29,18 @@ def get_navigation_items(context):
     membership: SectionMembership | None = request.membership
     section: Section | None = request.in_space_of_section
 
-    items = []
-
     if not membership:
-        return items
+        return []
 
     plugins: list[Plugin] = (
         section.enabled_plugins_for_privileged if membership.is_privileged else section.enabled_plugins
     )
 
-    items.extend(
-        [
-            nav_item
-            for plugin in plugins  # type: Plugin
-            if (apps := plugin.app_config) and (nav_item := apps.as_navigation_item(request))  # type: PluginAppConfig
-        ]
-    )
-
-    return items
+    for plugin in plugins:
+        apps: PluginAppConfig = plugin.app_config
+        item = apps.as_navigation_item(request=request, bound_plugin=plugin)
+        if item:
+            yield item
 
 
 @register.simple_tag(takes_context=True)

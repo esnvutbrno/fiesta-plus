@@ -10,6 +10,7 @@ from apps.utils.templatetags.navigation import NavigationItemSpec
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models import Plugin
 
 
 class SectionsConfig(PluginAppConfig):
@@ -24,11 +25,11 @@ class SectionsConfig(PluginAppConfig):
         "choose-space",
     ]
 
-    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
+    def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         if request.membership.is_privileged:
             return (
                 super()
-                .as_navigation_item(request)
+                .as_navigation_item(request, bound_plugin)
                 ._replace(
                     url="",
                     children=[

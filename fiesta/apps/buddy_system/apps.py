@@ -10,6 +10,7 @@ from apps.utils.templatetags.navigation import NavigationItemSpec
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models import Plugin
 
 
 class BuddySystemConfig(PluginAppConfig):
@@ -26,8 +27,8 @@ class BuddySystemConfig(PluginAppConfig):
 
     membership_not_required_urls = ("new-request",)
 
-    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
-        base = super().as_navigation_item(request)
+    def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
+        base = super().as_navigation_item(request, bound_plugin)
         if not request.membership.is_privileged:
             return base
 
