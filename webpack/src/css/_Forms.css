@@ -216,3 +216,20 @@
 .Forms__form--basefilterform .Forms__field--buttons {
     @apply self-end;
 }
+
+/* all configuration forms rendered */
+.Forms__form--basemodelform[class*="configurationform"] {
+    @apply flex flex-row flex-wrap;
+
+    .Forms__field {
+        @apply w-full md:w-1/2 px-2 flex-col md:flex-col;
+
+        &.Forms__field--buttons {
+            @apply w-full flex-row;
+        }
+    }
+
+    .Forms__label {
+        @apply font-bold;
+    }
+}

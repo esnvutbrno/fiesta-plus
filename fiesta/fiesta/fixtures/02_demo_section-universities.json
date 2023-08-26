@@ -1,0 +1,158 @@
+[
+  {
+    "model": "sections.section",
+    "pk": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+    "fields": {
+      "created": "2023-08-13T09:34:36.216Z",
+      "modified": "2023-08-13T09:34:36.216Z",
+      "name": "ESN Hawaii",
+      "country": "US",
+      "code": null,
+      "space_slug": "esnhawaii",
+      "system_state": "enabled"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "15226bec-8bb6-4c84-ba54-f7474182731d",
+    "fields": {
+      "created": "2023-08-13T12:18:55.394Z",
+      "modified": "2023-08-13T12:18:55.394Z",
+      "name": "Faculty of Humanities",
+      "abbr": "FoH",
+      "university": "0e255f27-8039-4697-ad90-92bc683e6b13"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "1e870b36-0dd5-4469-ba8f-e8babf1738f6",
+    "fields": {
+      "created": "2023-08-13T12:19:03.979Z",
+      "modified": "2023-08-13T12:19:03.979Z",
+      "name": "Faculty of Natural Sciences",
+      "abbr": "FoNS",
+      "university": "0e255f27-8039-4697-ad90-92bc683e6b13"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "313cd360-91e4-487f-adf6-d3c542092fd1",
+    "fields": {
+      "created": "2023-08-13T12:18:55.400Z",
+      "modified": "2023-08-13T12:18:55.400Z",
+      "name": "Faculty of Political Science",
+      "abbr": "FoPS",
+      "university": "96fefce0-1338-49b2-9a87-3cf4ff2eff06"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "36ac02f8-2bef-4f4c-b0ae-5056b2a39fe5",
+    "fields": {
+      "created": "2023-08-13T12:18:55.397Z",
+      "modified": "2023-08-13T12:18:55.397Z",
+      "name": "Faculty of Economics",
+      "abbr": "FoE",
+      "university": "0e255f27-8039-4697-ad90-92bc683e6b13"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "52d06a1c-139e-4b38-94da-5196c446dbd3",
+    "fields": {
+      "created": "2023-08-13T12:18:55.404Z",
+      "modified": "2023-08-13T12:18:55.404Z",
+      "name": "Faculty of Engineering",
+      "abbr": "FoE",
+      "university": "0d6b4c15-88b4-465f-81c7-946c100a4928"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "6feb8ed4-e9ca-4f6d-862a-e5b351c650de",
+    "fields": {
+      "created": "2023-08-13T12:18:55.403Z",
+      "modified": "2023-08-13T12:18:55.403Z",
+      "name": "Faculty of Commerce",
+      "abbr": "FoC",
+      "university": "0d6b4c15-88b4-465f-81c7-946c100a4928"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "a097c347-f06a-4023-ba15-6d14702fc1de",
+    "fields": {
+      "created": "2023-08-13T12:18:55.398Z",
+      "modified": "2023-08-13T12:18:55.398Z",
+      "name": "Faculty of Classics",
+      "abbr": "FoC",
+      "university": "0e255f27-8039-4697-ad90-92bc683e6b13"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "ecb1cd09-8d64-43f6-8e76-8c17ed4c0ec4",
+    "fields": {
+      "created": "2023-08-13T12:18:55.399Z",
+      "modified": "2023-08-13T12:18:55.399Z",
+      "name": "Faculty of Information Technology",
+      "abbr": "FoIT",
+      "university": "96fefce0-1338-49b2-9a87-3cf4ff2eff06"
+    }
+  },
+  {
+    "model": "universities.faculty",
+    "pk": "edc44204-2c83-4aa6-a5a8-0e4ae5cfbcaa",
+    "fields": {
+      "created": "2023-08-13T12:18:55.401Z",
+      "modified": "2023-08-13T12:18:55.401Z",
+      "name": "Faculty of Education",
+      "abbr": "FoE",
+      "university": "96fefce0-1338-49b2-9a87-3cf4ff2eff06"
+    }
+  },
+  {
+    "model": "universities.university",
+    "pk": "0d6b4c15-88b4-465f-81c7-946c100a4928",
+    "fields": {
+      "created": "2023-08-13T12:12:01.356Z",
+      "modified": "2023-08-13T12:20:44.513Z",
+      "name": "Stanford University",
+      "abbr": "SU",
+      "country": "US"
+    }
+  },
+  {
+    "model": "universities.university",
+    "pk": "0e255f27-8039-4697-ad90-92bc683e6b13",
+    "fields": {
+      "created": "2023-08-13T12:12:01.355Z",
+      "modified": "2023-08-13T12:20:13.574Z",
+      "name": "Princeton University",
+      "abbr": "PU",
+      "country": "US"
+    }
+  },
+  {
+    "model": "universities.university",
+    "pk": "96fefce0-1338-49b2-9a87-3cf4ff2eff06",
+    "fields": {
+      "created": "2023-08-13T12:12:01.357Z",
+      "modified": "2023-08-13T12:20:30.699Z",
+      "name": "Harvard University",
+      "abbr": "HU",
+      "country": "US"
+    }
+  },
+  {
+    "model": "universities.university",
+    "pk": "da3c6a62-3b22-444a-aee5-3e93d147391e",
+    "fields": {
+      "created": "2023-08-13T12:12:01.353Z",
+      "modified": "2023-08-13T12:21:02.792Z",
+      "name": "Duke University",
+      "abbr": "DU",
+      "country": "US"
+    }
+  }
+]

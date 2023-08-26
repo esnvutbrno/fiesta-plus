@@ -13,9 +13,10 @@ from apps.utils.templatetags.navigation import NavigationItemSpec
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models.plugin import Plugin
 
 
-class PluginAppConfig(AppConfig, metaclass=ABCMeta):
+class BasePluginAppConfig(AppConfig, metaclass=ABCMeta):
     """
     Base app config for all pluginable applications.
 
@@ -25,6 +26,10 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     verbose_name: str
 
+    emoji: str = ""
+
+    description: str = ""
+
     configuration_model: str | None = None
 
     login_required = True
@@ -32,6 +37,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     login_not_required_urls: list[str] = []
 
     membership_not_required_urls: list[str] = []
+
+    auto_enabled = False
 
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""
@@ -65,7 +72,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         """Defines prefix, under which are all urls included."""
         return self.label.replace("_", "-") + "/"
 
-    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
+    def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         return NavigationItemSpec(
             self.verbose_name,
             f"/{self.url_prefix}",
@@ -74,4 +81,4 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         )
 
 
-__all__ = ["PluginAppConfig"]
+__all__ = ["BasePluginAppConfig"]
