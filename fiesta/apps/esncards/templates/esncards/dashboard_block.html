@@ -1,3 +1,4 @@
+{% load utils %}
 {% load humanize %}
 {% load esncards %}
 {% get_current_esncard_application_of_user as application %}
@@ -28,7 +29,7 @@
     {% elif application.state == application.State.ACCEPTED %}
       <div class="Dashboard__tile__value text-secondary">{{ application.get_state_display }}</div>
       <div class="Dashboard__tile__desc text-gray-800">
-        Expected to be ready in {{ application.to_be_ready_at|timeuntil }}.
+        Expected to be ready in {{ application.to_be_ready_at|single_unit_timeuntil }}.
       </div>
     {% elif application.state == application.State.READY %}
       <div class="Dashboard__tile__value text-secondary">✅ Ready for pickup</div>
