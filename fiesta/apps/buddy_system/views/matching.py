@@ -15,6 +15,7 @@ from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.models.query import Q
 
 
 class MatchingRequestsView(
@@ -71,9 +72,13 @@ class ProfilePictureServeView(
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
-        related_requests = request.membership.section.buddy_system_requests.filter(issuer__profile__picture=name)
+        related_requests = request.membership.section.buddy_system_requests.filter(
+            Q(issuer__profile__picture=name) | Q(matched_by__profile__picture=name)
+        )
 
         # does have the section enabled picture displaying?
         return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
-            related_requests.filter(matched_by=request.user, state=BuddyRequest.State.MATCHED).exists()
+            related_requests.filter(
+                Q(matched_by=request.user) | Q(issuer=request.user), state=BuddyRequest.State.MATCHED
+            ).exists()
         )
