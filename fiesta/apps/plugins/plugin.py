@@ -16,7 +16,7 @@ if typing.TYPE_CHECKING:
     from apps.plugins.models.plugin import Plugin
 
 
-class PluginAppConfig(AppConfig, metaclass=ABCMeta):
+class BasePluginAppConfig(AppConfig, metaclass=ABCMeta):
     """
     Base app config for all pluginable applications.
 
@@ -26,6 +26,10 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
 
     verbose_name: str
 
+    emoji: str = ""
+
+    description: str = ""
+
     configuration_model: str | None = None
 
     login_required = True
@@ -33,6 +37,8 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     login_not_required_urls: list[str] = []
 
     membership_not_required_urls: list[str] = []
+
+    auto_enabled = False
 
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""
@@ -75,4 +81,4 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         )
 
 
-__all__ = ["PluginAppConfig"]
+__all__ = ["BasePluginAppConfig"]

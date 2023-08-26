@@ -117,8 +117,13 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
 
     @property
     def is_privileged(self):
-        """Is privileged == has some higher perms for section."""
+        """Is privileged == has some higher (editor/admin) perms for section."""
         return SectionMembership.Role(self.role).is_privileged
+
+    @property
+    def is_section_admin(self):
+        """Is privileged == has some higher perms for section."""
+        return SectionMembership.Role(self.role) == SectionMembership.Role.ADMIN
 
 
 __all__ = ["SectionMembership"]
