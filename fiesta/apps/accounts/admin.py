@@ -3,7 +3,9 @@ from __future__ import annotations
 from allauth.account.admin import EmailAddressAdmin
 from allauth.account.models import EmailAddress
 from django.contrib import admin
+from django.contrib.admin import display
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
+from django.db.models import QuerySet
 from django.utils.translation import gettext_lazy as _
 
 from .models import User, UserProfile
@@ -37,6 +39,16 @@ class UserAdmin(DjangoUserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined", "modified")}),
     )
     readonly_fields = ("modified",)
+    list_display = DjangoUserAdmin.list_display + ("memberships",)
+
+    @display
+    def memberships(self, obj):
+        return ", ".join(f"{s.section.name}: {s.role}" for s in obj.memberships.all())
+
+    def get_queryset(self, request):
+        qs: QuerySet = super().get_queryset(request)
+
+        return qs.prefetch_related("memberships__section")
 
 
 @admin.register(UserProfile)

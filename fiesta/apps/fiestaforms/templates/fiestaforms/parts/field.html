@@ -13,7 +13,7 @@
   <div class="Forms__widget">{{ bf|as_widget_field }}</div>
   {% if bf.help_text %}
     <div class="Forms__label-widget Forms__label-widget--bottom">
-      <div class="Forms__help_text">{{ bf.help_text }}</div>
+      <div class="Forms__help_text">{{ bf.help_text|safe }}</div>
     </div>
   {% endif %}
   {% if errors %}<div class="Forms__error_text">{{ errors }}</div>{% endif %}

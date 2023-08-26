@@ -1,5 +1,7 @@
 include .env
 
+export DOCKER_BUILDKIT=1
+
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 DCFLAGS =
@@ -52,9 +54,16 @@ check: da
 makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
 
-loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
+loadlegacydata: DA_CMD = loadlegacydata  ## Loads all data from legacydb run from ./legacy.sql.
 loadlegacydata: DCFLAGS = --profile migration
 loadlegacydata: da
+
+dumpdata: DA_CMD = dumpdata --exclude auth --exclude contenttypes --exclude sessions --exclude sites --exclude admin
+dumpdata: da
+
+fixture ?=
+loaddata: DA_CMD = loaddata $(subst fiesta/fiesta,fiesta,$(fixture)) ## Loads all fixtures data from fixture= file
+loaddata: da
 
 test: DA_CMD = test --keepdb --parallel --verbosity 1 ## Runs django test cases.
 test: da
