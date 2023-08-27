@@ -66,19 +66,45 @@ class TakeBuddyRequestView(
         return HttpResponseClientRedirect("/")
 
 
-class ProfilePictureServeView(
+class IssuerPictureServeView(
     PluginConfigurationViewMixin[BuddySystemConfiguration],
     NamespacedFilesServeView,
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
         related_requests = request.membership.section.buddy_system_requests.filter(
-            Q(issuer__profile__picture=name) | Q(matched_by__profile__picture=name)
+            issuer__profile__picture=name,
         )
 
         # does have the section enabled picture displaying?
         return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
             related_requests.filter(
-                Q(matched_by=request.user) | Q(issuer=request.user), state=BuddyRequest.State.MATCHED
-            ).exists()
+                state=BuddyRequest.State.MATCHED,
+            )
+            .filter(
+                Q(matched_by=request.user) | Q(issuer=request.user),
+            )
+            .exists()
+        )
+
+
+class MatcherPictureServeView(
+    PluginConfigurationViewMixin[BuddySystemConfiguration],
+    NamespacedFilesServeView,
+):
+    def has_permission(self, request: HttpRequest, name: str) -> bool:
+        # is the file in requests, for whose is the related section responsible?
+        related_requests = request.membership.section.buddy_system_requests.filter(
+            matched_by__profile__picture=name,
+        )
+
+        # does have the section enabled picture displaying?
+        return (
+            related_requests.filter(
+                state=BuddyRequest.State.MATCHED,
+            )
+            .filter(
+                Q(matched_by=request.user) | Q(issuer=request.user),
+            )
+            .exists()
         )

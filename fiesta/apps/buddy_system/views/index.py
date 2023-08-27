@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from django.views.generic import TemplateView
 
-from apps.buddy_system.models import BuddySystemConfiguration
+from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.models import SectionMembership
@@ -15,6 +15,10 @@ class BuddySystemIndexView(
     TemplateView,
 ):
     request: HttpRequest
+
+    extra_context = {
+        "RequestState": BuddyRequest.State,
+    }
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)

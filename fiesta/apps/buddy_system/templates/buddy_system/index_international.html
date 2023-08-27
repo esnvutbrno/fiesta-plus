@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+{% load user_profile %}
 
 {% load i18n %}
 {% load breadcrumbs %}
@@ -9,24 +10,98 @@
 {% endblock upper_head %}
 
 {% block main %}
-  <div class="prose prose-lg">
-    <h1>My requests</h1>
-    {# TODO: ugly    #}
-    <table>
-      {% for request in requests %}
-        <tr>
-          <td>{{ request }}</td>
-          <td>{{ request.responsible_section }}</td>
-          <td>{{ request.created }}</td>
-          <td>{{ request.state }}</td>
-        </tr>
-      {% empty %}
-        <tr>
-          <td>
-            <a href="{% url "buddy_system:new-request" %}">new buddy request</a>
-          </td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+
+  {% for br in requests %}
+    <div class="card bg-base-200 shadow mb-4 mt-2">
+      <div class="card-body">
+        <h2 class="card-title flex flex-row justify-between">
+          Your Request from {{ br.created|date }}
+
+          <span class="badge badge-lg">{{ br.get_state_display }}</span>
+        </h2>
+
+        {% if br.state == RequestState.MATCHED %}
+          <div class="chat chat-start">
+            <div class="chat-header">
+              {{ br.issuer.get_full_name }}
+              <time class="text-xs opacity-50"
+                    title="{{ br.created|date:"SHORT_DATETIME_FORMAT" }}">
+                {{ br.created|date:"SHORT_DATETIME_FORMAT" }}
+              </time>
+            </div>
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                {% get_user_picture br.issuer as issuer_picture %}
+
+                {% if issuer_picture %}
+                  <img src="{% url "buddy_system:serve-issuer-profile-picture" issuer_picture %}"
+                       width="{{ issuer_picture.width }}"
+                       height="{{ issuer_picture.height }}"
+                       alt="Issuer picture" />
+                  {# TODO: avatar for empty #}
+                {% endif %}
+              </div>
+            </div>
+            <div class="chat-bubble">{{ br.description }}</div>
+          </div>
+          <div class="chat chat-end">
+            <div class="chat-header">
+              {{ br.matched_by.get_full_name }}
+              {% if br.matched_at %}
+                <time class="text-xs opacity-50"
+                      title="{{ br.matched_at|date:"SHORT_DATETIME_FORMAT" }}">
+                  {{ br.matched_at|date:"SHORT_DATETIME_FORMAT" }}
+                </time>
+              {% endif %}
+            </div>
+            <div class="chat-image avatar">
+              <div class="w-10 rounded-full">
+                {% get_user_picture br.matched_by as matcher_picture %}
+
+                {% if matcher_picture %}
+                  <img src="{% url "buddy_system:serve-matcher-profile-picture" matcher_picture %}"
+                       width="{{ matcher_picture.width }}"
+                       height="{{ matcher_picture.height }}"
+                       alt="Matcher picture" />
+                  {# TODO: avatar for empty #}
+                {% endif %}
+              </div>
+            </div>
+            <div class="chat-bubble">response from {{ br.matched_by.first_name }}</div>
+          </div>
+
+          <div class="flex flex-row items-center space-x-4 md:space-x-8 my-4">
+            <hr class="flex-grow bg-base-300 h-1 mt-0.5">
+            <h3 class="text-2xl">Connect with {{ br.matched_by.first_name }}</h3>
+            <hr class="flex-grow bg-base-300 h-1 mt-0.5">
+          </div>
+          <div class="btn-group justify-center">
+            {% if br.matched_by.profile.facebook %}
+              <a href="{{ br.matched_by.profile.facebook }}"
+                 rel="nofollow,noreferer,noopener"
+                 target="_blank"
+                 class="uppercase text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:ring-[#3b5998]/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center gap-x-2 dark:focus:ring-[#3b5998]/55">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     x="0px"
+                     y="0px"
+                     viewBox="0 0 30 30"
+                     class="text-white w-6 h-6"
+                     fill="currentColor">
+                  <path d="M24,4H6C4.895,4,4,4.895,4,6v18c0,1.105,0.895,2,2,2h10v-9h-3v-3h3v-1.611C16,9.339,17.486,8,20.021,8 c1.214,0,1.856,0.09,2.16,0.131V11h-1.729C19.376,11,19,11.568,19,12.718V14h3.154l-0.428,3H19v9h5c1.105,0,2-0.895,2-2V6 C26,4.895,25.104,4,24,4z">
+                  </path>
+                </svg>
+                {{ br.matched_by }}
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <tr>
+      <td>
+        <a href="{% url "buddy_system:new-request" %}">new buddy request</a>
+      </td>
+    </tr>
+  {% endfor %}
 {% endblock %}

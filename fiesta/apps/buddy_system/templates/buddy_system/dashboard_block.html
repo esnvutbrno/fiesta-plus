@@ -20,26 +20,35 @@
         </div>
       {% elif br.state == br.State.MATCHED %}
         {% get_user_picture br.matched_by as buddy_picture %}
+        <div class="stat-figure text-secondary flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
+          <a href="{% url "buddy_system:index" %}" class="btn btn-lg btn-white">{% trans "find out about your buddy" %}</a>
 
-        {% if buddy_picture %}
-          <div class="stat-figure text-secondary">
+          {% if buddy_picture %}
             <div class="avatar">
-              <div class="w-16 rounded-full">
-                <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+              <div class="w-24 rounded-full">
+                <img src="{% url "buddy_system:serve-matcher-profile-picture" buddy_picture %}"
                      width="{{ buddy_picture.width }}"
                      height="{{ buddy_picture.height }}"
                      alt="Matched buddy picture" />
               </div>
             </div>
-          </div>
-        {% endif %}
+          {% endif %}
+        </div>
+
         <div class="Dashboard__tile__value">✅ Matched</div>
-        <div class="Dashboard__tile__desc">It's a match!</div>
+        <div class="Dashboard__tile__desc">
+          It's a match!
+          <br>
+          You have been matched with {{ br.matched_by }}.
+        </div>
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}
       <div class="Dashboard__tile__value">
-        {% with waiting_brs.count as count %}<span>{{ count }}</span> waiting request{{ count|pluralize:"s" }}{% endwith %}
+        {% with waiting_brs.count as count %}
+          <span>{{ count }}</span> waiting request
+          {{ count|pluralize:"s" }}
+        {% endwith %}
       </div>
       <div class="Dashboard__tile__actions text-right">
         <a href="{% url "buddy_system:matching-requests" %}"
