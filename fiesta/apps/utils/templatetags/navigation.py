@@ -8,7 +8,7 @@ from django.urls import reverse
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
     from apps.plugins.models import Plugin
-    from apps.plugins.plugin import PluginAppConfig
+    from apps.plugins.plugin import BasePluginAppConfig
     from apps.sections.models import Section, SectionMembership
 
 register = template.Library()
@@ -37,7 +37,7 @@ def get_navigation_items(context):
     )
 
     for plugin in plugins:
-        apps: PluginAppConfig = plugin.app_config
+        apps: BasePluginAppConfig = plugin.app_config
         item = apps.as_navigation_item(request=request, bound_plugin=plugin)
         if item:
             yield item

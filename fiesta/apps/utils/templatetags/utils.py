@@ -8,6 +8,7 @@ from pathlib import Path
 
 from django import template
 from django.template.defaultfilters import stringfilter
+from django.utils.timesince import timeuntil
 
 register = template.Library()
 
@@ -52,3 +53,8 @@ def int_(value):
 @register.filter(name="zip")
 def zip_(value, another):
     return zip(value, another, strict=True)
+
+
+@register.filter
+def single_unit_timeuntil(v):
+    return timeuntil(v, depth=1)

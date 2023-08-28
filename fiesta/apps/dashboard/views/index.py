@@ -7,7 +7,7 @@ from pathlib import Path
 from django.apps import AppConfig
 from django.views.generic import TemplateView
 
-from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.plugin import BasePluginAppConfig
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
@@ -37,7 +37,7 @@ class DashboardIndexView(EnsureInSectionSpaceViewMixin, TemplateView):
         enabled_plugins_apps = tuple(map(attrgetter("app_label"), self.request.in_space_of_section.enabled_plugins))
 
         for app in apps.get_app_configs():
-            if not isinstance(app, PluginAppConfig):
+            if not isinstance(app, BasePluginAppConfig):
                 # not plugins always shown on dashboard
                 yield app
 

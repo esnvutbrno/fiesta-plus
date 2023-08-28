@@ -15,7 +15,7 @@ from ...sections.middleware.section_space import HttpRequest as BaseHttpRequest
 from ..models import SectionMembership
 
 if typing.TYPE_CHECKING:
-    from ...plugins.plugin import PluginAppConfig
+    from ...plugins.plugin import BasePluginAppConfig
 
 
 class HttpRequest(BaseHttpRequest):
@@ -129,7 +129,7 @@ class UserMembershipMiddleware:
         )
 
     @classmethod
-    def should_ignore_403(cls, target_app: PluginAppConfig, resolver_match: ResolverMatch):
+    def should_ignore_403(cls, target_app: BasePluginAppConfig, resolver_match: ResolverMatch):
         """Checks if specific request for specific plugin should be excluded from existing membership check."""
         anonymous_allowed = (
             resolver_match.url_name in target_app.login_not_required_urls or not target_app.login_required

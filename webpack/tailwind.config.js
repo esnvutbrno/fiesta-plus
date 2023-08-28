@@ -9,6 +9,11 @@ module.exports = {
             // hack to allow also classes used from Django forms definitions
             pattern: /Forms__.+/,
         },
+        {
+            // TODO: till the https://github.com/esnvutbrno/buena-fiesta/issues/188 is fixed
+            pattern: /btn-.+/,
+            variants: ["checked"],
+        },
     ],
     theme: {
         extend: {},
@@ -30,7 +35,7 @@ module.exports = {
                     "neutral": "#3D4451",
                     "base-100": "#FFFFFF",
                     "info": "#45c0f5",
-                    "success": "#69DC9E",
+                    "success": "#5df43f",
                     "warning": "#FBBD23",
                     "error": "#F87272",
 
@@ -46,7 +51,7 @@ module.exports = {
                     "neutral": "#3D4451",
                     "base-100": "#1A1423",
                     "info": "#45c0f5",
-                    "success": "#69DC9E",
+                    "success": "#5df43f",
                     "warning": "#FBBD23",
                     "error": "#F87272",
 

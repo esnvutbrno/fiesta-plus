@@ -12,7 +12,7 @@ from django_countries.fields import CountryField
 from apps.dashboard.apps import DashboardConfig
 from apps.pages.apps import PagesConfig
 from apps.plugins.models import Plugin
-from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_class
 from apps.sections.models.managers.section import SectionsManager
 from apps.utils.models import BaseTimestampedModel
@@ -98,7 +98,7 @@ class Section(BaseTimestampedModel):
         pages_app = all_plugins_mapped_to_class().get(PagesConfig)
         dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
 
-        target_app: PluginAppConfig | None = None
+        target_app: BasePluginAppConfig | None = None
 
         if for_membership and dashboard_app and dashboard_app.label in available_plugins:
             target_app = dashboard_app

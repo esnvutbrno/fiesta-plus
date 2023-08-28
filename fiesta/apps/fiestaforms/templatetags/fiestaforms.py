@@ -48,8 +48,10 @@ def as_widget_field(bf: BoundField):
         "text": "Forms__text",
         "url": "Forms__text",
         "textarea": "Forms__textarea",
+        "number": "Forms__number",
         "date": "Forms__date",
         "datetime-local": "Forms__datetime-local",
+        "radio": "Forms__radio",
         "unknown": "Forms__unknown",
     }
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})
