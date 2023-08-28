@@ -99,30 +99,6 @@
           {% endif %}
         </div>
       </div>
-              {% if buddy_picture %}
-                <div class="avatar hover:scale-105 transition-transform">
-                  <div class="w-24">
-                    <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
-                         width="{{ buddy_picture.width }}"
-                         height="{{ buddy_picture.height }}"
-                         alt="{{ br.issuer }}"
-                         title="{{ br.issuer }}" />
-                  </div>
-                </div>
-              {% else %}
-                {# TODO placeholder avatar #}
-              {% endif %}
-            {% endfor %}
-            {% if matched_requests|length > 3 %}
-              <div class="avatar placeholder">
-                <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
-                   href="{% url "buddy_system:my-buddies" %}">
-                  <span>+{{ matched_requests|length|add:"-3" }}</span>
-                </a>
-              </div>
-            {% endif %}
-          </div>
-        </div>
       {% endif %}
     </div>
   {% endif %}
