@@ -5,7 +5,6 @@ import hashlib
 
 from django import template
 
-from django.shortcuts import render
 from apps.buddy_system.apps import BuddySystemConfig
 from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
