@@ -18,11 +18,15 @@ def get_user_picture(user: User | None):
 
     return profile.picture
 
-
 @register.simple_tag(takes_context=True)
 def compute_profile_fullness(context: dict, profile: UserProfile) -> float:
-    # req: HttpRequest = context.get("request")
+    fields = profile._meta.get_fields()  # Get all field names of UserProfile
+    empty_fields = 0
 
-    # TODO: compute based on accounts conf and profile state
+    for field in fields:
+        field_value = getattr(profile, field.name, None)
+        if field_value is None or field_value == '':
+            empty_fields += 1
 
-    return 0.77
+    return (len(fields) - empty_fields) / len(fields)
+
