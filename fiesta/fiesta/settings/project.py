@@ -31,7 +31,7 @@ class ProjectConfigMixin:
 
     ROOT_URLCONF = "fiesta.urls"
 
-    ROOT_DOMAIN = "xxx"  # TODO: fill from environ
+    ROOT_DOMAIN = "fiesta.test"  # TODO: fill from environ
 
     def ALLOWED_HOSTS(self):
         return [f".{self.ROOT_DOMAIN}"]
@@ -70,6 +70,7 @@ class ProjectConfigMixin:
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
         "apps.pages.apps.PagesConfig",
+        "apps.events.apps.EventsConfig",
         "apps.plugins.apps.PluginsConfig",
         "apps.public.apps.PublicConfig",
         "apps.sections.apps.SectionsConfig",
