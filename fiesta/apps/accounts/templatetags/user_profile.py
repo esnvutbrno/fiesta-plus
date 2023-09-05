@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django import template
 
+from apps.accounts.forms.profile import UserProfileForm
 from apps.accounts.models import User, UserProfile
 
 # from apps.plugins.middleware.plugin import HttpRequest
@@ -18,13 +19,13 @@ def get_user_picture(user: User | None):
 
     return profile.picture
 
-@register.simple_tag(takes_context=True)
-def compute_profile_fullness(context: dict, profile: UserProfile) -> float:
-    fields = profile._meta.get_fields()  # Get all field names of UserProfile
+@register.simple_tag
+def compute_profile_fullness( user: User) -> float:
+    fields = UserProfileForm().get_form_fields(user)  # Get all field names of UserProfile
     empty_fields = 0
 
     for field in fields:
-        field_value = getattr(profile, field.name, None)
+        field_value = getattr(user.profile, field, None)
         if field_value is None or field_value == '':
             empty_fields += 1
 

@@ -10,7 +10,6 @@ from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
 from apps.sections.models import SectionMembership, SectionsConfiguration
 
-
 class UserProfileForm(BaseModelForm):
     FIELDS_TO_CONFIGURATION = {
         UserProfile.nationality: SectionsConfiguration.required_nationality,
@@ -22,17 +21,21 @@ class UserProfileForm(BaseModelForm):
     _FIELD_NAMES_TO_CONFIGURATION = {f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()}
 
     @classmethod
-    def for_user(
-        cls,
-        user: User,
-    ) -> type[UserProfileForm]:
-        """
-        Creates the profile form class for specific user.
-        Fields and configuration are constructed from all SectionsConfiguration from
-        all sections from all memberships of that specific user.
-        """
+    def get_form_fields(cls, user: User):
+        confs = cls.get_user_configuration(user)
+        # TODO: what to do, when no specific configuration is found?
+
+        fields_to_include = tuple(
+            field_name
+            for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
+            if any(conf_field.__get__(c) is not None for c in confs)
+        )
+        return cls.Meta.fields + fields_to_include
+
+    @classmethod
+    def get_user_configuration(cls, user: User):
         # all related configurations
-        confs = SectionsConfiguration.objects.filter(
+        return SectionsConfiguration.objects.filter(
             # from all user's memberships sections
             plugins__section__memberships__in=user.memberships.filter(
                 # with waiting for confirmation or already active membership
@@ -43,23 +46,28 @@ class UserProfileForm(BaseModelForm):
             )
         )
 
-        # TODO: what to do, when no specific configuration is found?
-
+    @classmethod
+    def for_user(
+        cls,
+        user: User,
+    ) -> type[UserProfileForm]:
+        """
+        Creates the profile form class for specific user.
+        Fields and configuration are constructed from all SectionsConfiguration from
+        all sections from all memberships of that specific user.
+        """
         def callback(f: Field, **kwargs) -> FormField:
+            confs = cls.get_user_configuration(user)
+            # TODO: what to do, when no specific configuration is found?
+
             if conf_field := cls._FIELD_NAMES_TO_CONFIGURATION.get(f.name):
                 return f.formfield(required=any(conf_field.__get__(c) for c in confs), **kwargs)
             return f.formfield(**kwargs)
 
-        fields_to_include = tuple(
-            field_name
-            for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
-            if any(conf_field.__get__(c) is not None for c in confs)
-        )
-
         return modelform_factory(
             model=UserProfile,
             form=cls,
-            fields=cls.Meta.fields + fields_to_include,
+            fields= cls.get_form_fields(user),
             formfield_callback=callback,
         )
 
