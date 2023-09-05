@@ -19,8 +19,9 @@ def get_user_picture(user: User | None):
 
     return profile.picture
 
+
 @register.simple_tag
-def compute_profile_fullness( user: User) -> float:
+def compute_profile_fullness(user: User) -> float:
     fields = UserProfileForm().get_form_fields(user)  # Get all field names of UserProfile
     empty_fields = 0
 
@@ -30,4 +31,3 @@ def compute_profile_fullness( user: User) -> float:
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)
-

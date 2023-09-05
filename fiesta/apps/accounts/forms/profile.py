@@ -10,6 +10,7 @@ from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
 from apps.sections.models import SectionMembership, SectionsConfiguration
 
+
 class UserProfileForm(BaseModelForm):
     FIELDS_TO_CONFIGURATION = {
         UserProfile.nationality: SectionsConfiguration.required_nationality,
@@ -48,14 +49,15 @@ class UserProfileForm(BaseModelForm):
 
     @classmethod
     def for_user(
-        cls,
-        user: User,
+            cls,
+            user: User,
     ) -> type[UserProfileForm]:
         """
         Creates the profile form class for specific user.
         Fields and configuration are constructed from all SectionsConfiguration from
         all sections from all memberships of that specific user.
         """
+
         def callback(f: Field, **kwargs) -> FormField:
             confs = cls.get_user_configuration(user)
             # TODO: what to do, when no specific configuration is found?
@@ -67,7 +69,7 @@ class UserProfileForm(BaseModelForm):
         return modelform_factory(
             model=UserProfile,
             form=cls,
-            fields= cls.get_form_fields(user),
+            fields=cls.get_form_fields(user),
             formfield_callback=callback,
         )
 
