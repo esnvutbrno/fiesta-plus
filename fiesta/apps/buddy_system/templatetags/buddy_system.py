@@ -84,7 +84,7 @@ def get_matched_buddy_requests(context):
 
 @register.filter
 def get_color_by_text(name: str) -> str:
-    hash_object = hashlib.md5(name.encode())
+    hash_object = hashlib.md5(name.encode(), usedforsecurity=False)
     hash_hex = hash_object.hexdigest()
 
     r = int(hash_hex[0:2], 16)
