@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-import re
 import hashlib
+import re
 
 from django import template
 
@@ -96,5 +96,4 @@ def get_color_by_text(name: str) -> str:
         g += 30
         b += 30
 
-    color = f'rgb({r}, {g}, {b})'
-    return color
+    return f"rgb({r}, {g}, {b})"

@@ -64,41 +64,35 @@
             {% for br in matched_requests|slice:":3" %}
               {% get_user_picture br.issuer as buddy_picture %}
 
-            {% if buddy_picture %}
-              <div class="avatar hover:scale-105 transition-transform">
-                <div class="w-24">
-                  <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
-                       width="{{ buddy_picture.width }}"
-                       height="{{ buddy_picture.height }}"
-                       alt="{{ br.issuer }}"
-                       title="{{ br.issuer }}" />
+              {% if buddy_picture %}
+                <div class="avatar hover:scale-105 transition-transform">
+                  <div class="w-24">
+                    <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
+                         width="{{ buddy_picture.width }}"
+                         height="{{ buddy_picture.height }}"
+                         alt="{{ br.issuer }}"
+                         title="{{ br.issuer }}" />
+                  </div>
                 </div>
-              </div>
-            {% else %}
-              <div class="
-                  w-24 avatar hover:scale-105 transition-transform
-                  aspect-square text-white text-3xl
-                  flex flex-row justify-center items-center
-                  group
-              "
-              style="background-color: {{ br.issuer.username|get_color_by_text }};"
-              >
-              <span class="-translate-x-3 group-last:translate-x-0 uppercase">
-                {{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}
-                </span>
+              {% else %}
+                <div class="w-24 avatar hover:scale-105 transition-transform aspect-square text-white text-3xl flex flex-row justify-center items-center group"
+                     style="background-color: {{ br.issuer.username|get_color_by_text }}">
+                  <span class="-translate-x-3 group-last:translate-x-0 uppercase">
+                    {{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}
+                  </span>
+                </div>
+              {% endif %}
+            {% endfor %}
+            {% if matched_requests|length > 3 %}
+              <div class="avatar placeholder">
+                <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
+                   href="{% url "buddy_system:my-buddies" %}">
+                  <span>+{{ matched_requests|length|add:"-3" }}</span>
+                </a>
               </div>
             {% endif %}
-          {% endfor %}
-          {% if matched_requests|length > 3 %}
-            <div class="avatar placeholder">
-              <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
-                 href="{% url "buddy_system:my-buddies" %}">
-                <span>+{{ matched_requests|length|add:"-3" }}</span>
-              </a>
-            </div>
-          {% endif %}
+          </div>
         </div>
-      </div>
       {% endif %}
     </div>
   {% endif %}
