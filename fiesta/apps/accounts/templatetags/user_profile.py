@@ -27,7 +27,7 @@ def compute_profile_fullness(user: User) -> float:
 
     for field in fields:
         field_value = getattr(user.profile, field, None)
-        if field_value is None or field_value == '':
+        if field_value is None or field_value == "":
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)
