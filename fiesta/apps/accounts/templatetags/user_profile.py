@@ -22,12 +22,12 @@ def get_user_picture(user: User | None):
 
 @register.simple_tag
 def compute_profile_fullness(user: User) -> float:
-    fields = UserProfileForm().get_form_fields(user)  # Get all field names of UserProfile
+    fields = UserProfileForm.get_form_fields(user)  # Get all field names of UserProfile
     empty_fields = 0
 
     for field in fields:
         field_value = getattr(user.profile, field, None)
-        if field_value is None or field_value == "":
+        if field_value is None or field_value == "":  # So far it's not possible to have a field with False value
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)
