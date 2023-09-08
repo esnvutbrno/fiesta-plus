@@ -105,19 +105,19 @@ class Event(BaseTimestampedModel):
         blank=True,
     )
 
-    organizer = models.ManyToOneRel(  # TODO authorisation
+    organizer = models.ForeignKey(  # TODO authorisation
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="event",
     )
 
-    confirmer = models.ManyToOneRel(  # TODO authorisation
+    confirmer = models.ForeignKey(  # TODO authorisation
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="event",
     )
 
-    section = models.ManyToManyRel(  # TODO authorisation // should we consider BU
+    section = models.ManyToManyField(  # TODO authorisation // should we consider BU
         related_name="event",
     )
 
