@@ -49,8 +49,8 @@ class UserProfileForm(BaseModelForm):
 
     @classmethod
     def for_user(
-            cls,
-            user: User,
+        cls,
+        user: User,
     ) -> type[UserProfileForm]:
         """
         Creates the profile form class for specific user.
