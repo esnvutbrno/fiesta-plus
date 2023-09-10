@@ -6,14 +6,13 @@ from django.utils.translation import gettext_lazy as _
 from apps.files.storage import NamespacedFilesStorage
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
-from django.conf import settings
 
+# TODO Maybe pre-registration, registration and paused registration for different field.
 
 class State(models.TextChoices):
-    CREATED = "created", _("Created")
-    APPROVED = "approved", _("Approved")
-    DECLINED = "declined", _("Declined")
-    BANNED = "banned", _("Banned")
+    DRAFT = "draft", _("Draft")
+    PUBLISHED = "published", _("Published")
+    HIDDEN = "hidden", _("Hidden")  # Visible only after invite
 
 
 def has_permission_for_cover_photo_view(request: HttpRequest, name: str) -> bool:  # TODO
@@ -25,8 +24,13 @@ def has_permission_for_cover_photo_view(request: HttpRequest, name: str) -> bool
 
 class Event(BaseTimestampedModel):
     # storage used for cover photos
-    event_cover_photo_storage = NamespacedFilesStorage(
-        "event-cover-photo",
+    event_portrait_cover_photo_storage = NamespacedFilesStorage(
+        "event-portrait-cover-photo",
+        has_permission=has_permission_for_cover_photo_view,
+    )
+    
+    event_landscape_cover_photo_storage = NamespacedFilesStorage(
+        "event-landscape-cover-photo",
         has_permission=has_permission_for_cover_photo_view,
     )
 
@@ -54,7 +58,7 @@ class Event(BaseTimestampedModel):
 
     state = models.CharField(
         choices=State.choices,
-        default=State.CREATED,
+        default=State.DRAFT,
         max_length=16,
         verbose_name=_("state"),
         help_text=_("current state of the event"),
@@ -72,53 +76,38 @@ class Event(BaseTimestampedModel):
         blank=True,
     )
 
-    # TODO jak s místem? samostatná tabulka? a co coordinates?
-
-    place = models.CharField(
-        max_length=64,
-        unique=True,
-        verbose_name=_("place"),
-        help_text=_("where is the event taking place"),
-    )
-
-    meeting_place = models.CharField(
-        max_length=64,
-        verbose_name=_("meeting_place"),
-        help_text=_("where are student meeting before the event"),
+    landscape_cover = models.ImageField(
+        storage=event_landscape_cover_photo_storage,
+        upload_to=event_landscape_cover_photo_storage.upload_to,
+        verbose_name=_("landscape_cover"),
         null=True,
         blank=True,
     )
 
-    meeting_coordinates = models.CharField(
-        max_length=64,
-        verbose_name=_("meeting_coordinated"),
-        help_text=_("where are student meeting before the event"),
+    portrait_cover = models.ImageField(
+        storage=event_portrait_cover_photo_storage,
+        upload_to=event_portrait_cover_photo_storage.upload_to,
+        verbose_name=_("portrait_cover"),
         null=True,
         blank=True,
     )
 
-    cover = models.ImageField(
-        storage=event_cover_photo_storage,
-        upload_to=event_cover_photo_storage.upload_to,
-        verbose_name=_("cover photo"),
-        null=True,
-        blank=True,
-    )
-
-    organizer = models.ForeignKey(  # TODO authorisation
-        settings.AUTH_USER_MODEL,
+    author = models.ForeignKey(
+        "accounts.User",
         on_delete=models.SET_NULL,
-        related_name="event",
+        related_name="events",
+        verbose_name=_("author"),
+        null=True,
+        blank=True,
+        db_index=True,
     )
 
-    confirmer = models.ForeignKey(  # TODO authorisation
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        related_name="event",
-    )
-
-    section = models.ManyToManyField(  # TODO authorisation // should we consider BU
-        related_name="event",
+    section = models.ManyToManyField(
+        "sections.Section",
+        through="events.EventSection",
+        related_name="events",
+        verbose_name=_("sections"),
+        help_text=_("Users from these sections can join this event."),
     )
 
     def __str__(self):

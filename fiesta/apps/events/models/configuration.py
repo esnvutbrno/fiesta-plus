@@ -13,3 +13,6 @@ class EventsConfiguration(BasePluginConfiguration):
 
 
 __all__ = ['EventsConfiguration']
+
+# TODO can be created by
+# TODO can be confirmed by

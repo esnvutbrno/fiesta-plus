@@ -17,7 +17,7 @@ DC_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
-GRAPH_MODELS_CMD = graph_models accounts plugins auth sections \
+GRAPH_MODELS_CMD = graph_models accounts plugins auth sections events \
 	universities esncards buddy_system \
 	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
