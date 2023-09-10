@@ -33,6 +33,10 @@ class BaseRequestProtocol(typing.Protocol):
 
 
 def base_request_model_factory(related_base: str):
+    """
+    Creates a base model for requests-like models.
+    """
+
     class BaseRequest(LifecycleModelMixin, BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
@@ -44,8 +48,8 @@ def base_request_model_factory(related_base: str):
 
         state = models.CharField(
             verbose_name=_("state"),
-            choices=BaseRequestProtocol.State.choices,
-            default=BaseRequestProtocol.State.CREATED,
+            choices=State.choices,
+            default=State.CREATED,
             max_length=16,
         )
         issuer = models.ForeignKey(
@@ -77,8 +81,12 @@ def base_request_model_factory(related_base: str):
             blank=True,
         )
 
-        description = models.TextField(
-            verbose_name=_("description"),
+        issuer_note = models.TextField(
+            verbose_name=_("text from issuer"),
+        )
+
+        matcher_note = models.TextField(
+            verbose_name=_("text from matcher"),
         )
 
         @hook(BEFORE_SAVE, when="matched_by", was=None, is_not=None)

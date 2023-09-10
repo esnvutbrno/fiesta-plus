@@ -29,7 +29,7 @@ class NewBuddyRequestForm(BaseModelForm):
     class Meta:
         model = BuddyRequest
         fields = (
-            "description",
+            "issuer_note",
             "interests",
             "responsible_section",
             "issuer",
@@ -42,12 +42,12 @@ class NewBuddyRequestForm(BaseModelForm):
             "issuer": HiddenInput,
         }
         labels = {
-            "description": _("Tell us about yourself"),
+            "issuer_note": _("Tell us about yourself"),
             "interests": _("What are you into?"),
         }
         help_texts = {
-            "description": lazy(
-                lambda: render_to_string("buddy_system/parts/buddy_request_description_help.html"),
+            "issuer_note": lazy(
+                lambda: render_to_string("buddy_system/parts/buddy_request_issuer_note_help.html"),
                 str,
             )
         }
@@ -67,7 +67,7 @@ class BuddyRequestEditorForm(BaseModelForm):
         if self.instance.state != BuddyRequest.State.CREATED:
             self.fields["matched_by"].disabled = True
             self.fields["matched_at"].disabled = True
-            self.fields["description"].disabled = True
+            self.fields["issuer_note"].disabled = True
             self.fields["interests"].disabled = True
 
     class Meta:
@@ -75,7 +75,7 @@ class BuddyRequestEditorForm(BaseModelForm):
         fields = (
             "issuer",
             "state",
-            "description",
+            "issuer_note",
             "interests",
             "matched_by",
             "matched_at",
