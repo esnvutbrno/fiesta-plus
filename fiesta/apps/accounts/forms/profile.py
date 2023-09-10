@@ -49,17 +49,17 @@ class UserProfileForm(BaseModelForm):
 
     @classmethod
     def for_user(
-        cls,
-        user: User,
+            cls,
+            user: User,
     ) -> type[UserProfileForm]:
         """
         Creates the profile form class for specific user.
         Fields and configuration are constructed from all SectionsConfiguration from
         all sections from all memberships of that specific user.
         """
+        confs = cls.get_user_configuration(user)
 
         def callback(f: Field, **kwargs) -> FormField:
-            confs = cls.get_user_configuration(user)
             # TODO: what to do, when no specific configuration is found?
 
             if conf_field := cls._FIELD_NAMES_TO_CONFIGURATION.get(f.name):
