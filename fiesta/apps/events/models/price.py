@@ -1,42 +1,79 @@
 from __future__ import annotations
 
-from django.db import models
-from django.utils.translation import gettext_lazy as _
+from datetime import datetime
 
+from django.db import models
+from django.db.models import TextChoices
+from django.utils.translation import gettext_lazy as _
+from djmoney.models.fields import MoneyField  # TODO poetry add django-money
+
+from apps.accounts.models import User
 from apps.utils.models import BaseModel
 
 
-class Price(BaseModel):
+class EventPriceVariantType(TextChoices):  # TODO add choice SALE
+    FREE = "free", _("Free")
+    STANDARD = "standard", _("Standard")
+    WITH_ESN_CARD = "with_esn_card", _("With ESN card")
+
+    def is_available(self, variant: PriceVariant, user: User):
+        to_ = variant.to_
+        from_ = variant.from_
+
+        if from_ is not None and from_ is not "" and from_ < datetime.now():
+            return False
+
+        if to_ is not None and to_ is not "" and to_ > datetime.now():
+            return False
+
+        if variant.type == self.STANDARD:
+            return True
+        elif variant.type == self.WITH_ESN_CARD and user.profile_or_none or user.profile.is_esn_card_holder():
+            return True
+
+        return False
+
+
+class PriceVariant(BaseModel):
     title = models.CharField(
-        max_length=64,
+        max_length=256,
         unique=True,
         verbose_name=_("title"),
         help_text=_("full name of the price"),
     )
 
-    description = models.TextField(
-        verbose_name=_("description"),
-        help_text=_("short description of the price"),
+    type = models.CharField(max_length=255, choices=EventPriceVariantType.choices)
+
+    amount = MoneyField(max_digits=10, decimal_places=2, default_currency='CZK')
+
+    event = models.ForeignKey(
+        "events.Event",
+        related_name="price_variant",
+        on_delete=models.CASCADE,
+        verbose_name=_("event"),
     )
 
-    # currency # TODO jak?
-
-    amounts = models.IntegerField(
-        verbose_name=_("amount"),
-        help_text=_("the price itself"),
+    from_ = models.DateTimeField(
+        verbose_name=_("from"),
+        help_text=_("From when users can purchase for this price."),
     )
 
-    esn_card_only = models.BooleanField(
-        verbose_name=_("amount"),
-        help_text=_("whether the price is available only with ESN card"),
+    to_ = models.DateTimeField(
+        verbose_name=_("to"),
+        help_text=_("Until when users can purchase for this price."),
+        null=True,
+        blank=True,
     )
 
-    section = models.ManyToManyRel(  # TODO authorisation
-        related_name="event",
+    data = models.JSONField(
+        verbose_name=_("data"),
+        help_text=_("any data related to the price"),
+        default=dict,
     )
 
-    def __str__(self):
-        return self.title
 
+__all__ = ["PriceVariant"]
 
-__all__ = ["Price"]
+# e = Event()
+#
+# e.price_variants.create(type=EventPriceVariantType.STANDARD, price=100)
