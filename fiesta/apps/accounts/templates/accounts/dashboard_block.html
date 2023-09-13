@@ -4,7 +4,7 @@
 <div class="Dashboard__tiles">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-gray-900 aspect-square">
     <div class="Dashboard__tile__title text-white">{% blocktrans %}My Profile{% endblocktrans %}</div>
-    {% compute_profile_fullness user.profile as fullness %}
+    {% compute_profile_fullness user as fullness %}
     {% interpolate_to_list fullness "text-red-400" "text-orange-400" "text-blue-400" "text-lime-400" as color %}
     <div class="flex justify-center items-center my-4">
       {# TODO: compute completness #}
