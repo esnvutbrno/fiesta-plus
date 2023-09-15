@@ -16,3 +16,4 @@ __all__ = ['EventsConfiguration']
 
 # TODO can be created by
 # TODO can be confirmed by
+# TODO section is selling events online

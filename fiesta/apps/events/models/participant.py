@@ -19,18 +19,18 @@ class Participant(BaseModel):
         help_text=_("when the user placed the ordered (does not have to be paid)"),
     )
 
-    user = models.ManyToOneRel(  # TODO authorisation
+    user = models.ManyToOneRel(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         related_name="user",
     )
 
-    event = models.ManyToOneRel(  # TODO authorisation
+    event = models.ManyToOneRel(
         on_delete=models.SET_NULL,
         related_name="event",
     )
 
-    price = models.ManyToOneRel(  # TODO authorisation
+    price = models.ManyToOneRel(
         on_delete=models.SET_NULL,
         related_name="price",
     )
@@ -40,3 +40,5 @@ class Participant(BaseModel):
 
 
 __all__ = ["Participant"]
+
+# TODO problematika ověřování lidí (QR check-in)

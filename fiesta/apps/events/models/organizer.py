@@ -9,7 +9,7 @@ from apps.utils.models import BaseTimestampedModel
 
 
 class Role(models.TextChoices):
-    MAIN = "draft", _("Draft")
+    EVENT_LEADER = "event_leader", _("Event_leader")
     OC = "oc", _("OC")
 
 
