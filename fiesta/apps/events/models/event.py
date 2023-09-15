@@ -44,6 +44,8 @@ class Event(BaseTimestampedModel):
     subtitle = models.TextField(
         verbose_name=_("subtitle"),
         help_text=_("short description of the event"),
+        null=True,
+        blank=True,
     )
 
     description = models.TextField(
@@ -99,7 +101,6 @@ class Event(BaseTimestampedModel):
         verbose_name=_("author"),
         null=True,
         blank=True,
-        db_index=True,
     )
 
     section = models.ManyToManyField(
@@ -108,6 +109,7 @@ class Event(BaseTimestampedModel):
         related_name="events",
         verbose_name=_("sections"),
         help_text=_("Users from these sections can join this event."),
+        db_index=True,
     )
 
     def __str__(self):
@@ -115,3 +117,4 @@ class Event(BaseTimestampedModel):
 
 
 __all__ = ["Event"]
+#TODO hibrid registration, default user, only online (qr), offline registrations (counter, odecist od kapacity)
