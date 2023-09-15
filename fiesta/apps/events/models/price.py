@@ -11,7 +11,7 @@ from apps.accounts.models import User
 from apps.utils.models import BaseModel
 
 
-class EventPriceVariantType(TextChoices):  # TODO add choice SALE
+class EventPriceVariantType(TextChoices):
     FREE = "free", _("Free")
     STANDARD = "standard", _("Standard")
     WITH_ESN_CARD = "with_esn_card", _("With ESN card")
@@ -56,6 +56,8 @@ class PriceVariant(BaseModel):
     from_ = models.DateTimeField(
         verbose_name=_("from"),
         help_text=_("From when users can purchase for this price."),
+        null=True,
+        blank=True,
     )
 
     to_ = models.DateTimeField(
