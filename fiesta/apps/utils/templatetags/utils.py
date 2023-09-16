@@ -37,7 +37,7 @@ def map_attrgetter(iterable: Reversible, attr: str):
 
 @register.simple_tag
 def interpolate_to_list(value: float, *values: typing.Any):
-    return values[int(min(1, max(0, value)) * len(values))]
+    return values[int(min(1, max(0, value)) * len(values)) - 1]
 
 
 @register.filter

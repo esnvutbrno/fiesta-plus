@@ -75,7 +75,12 @@
                   </div>
                 </div>
               {% else %}
-                {# TODO placeholder avatar #}
+                <div class="w-24 avatar hover:scale-105 transition-transform aspect-square text-white text-3xl flex flex-row justify-center items-center group"
+                     style="background-color: {{ br.issuer.username|get_color_by_text }}">
+                  <span class="-translate-x-3 group-last:translate-x-0 uppercase">
+                    {{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}
+                  </span>
+                </div>
               {% endif %}
             {% endfor %}
             {% if matched_requests|length > 3 %}
