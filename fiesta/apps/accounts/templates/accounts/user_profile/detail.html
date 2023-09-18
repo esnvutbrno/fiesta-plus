@@ -71,8 +71,14 @@
 
   <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
-      {% with user=object.user profile=object.user.profile_or_none %}
-      {{ object.interests }}
-      {% endwith %}
+      <div id="id_interests" class="inline-flex">
+      {% get_user_interests object.user as interests %}
+      {% for interest in interests %}
+      <div class="mr-2">
+        <label class="border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2">{{ interest }}</label>
+      </div>
+      {% endfor %}
+    </div>
+
   </div>
 {% endblock content %}

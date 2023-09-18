@@ -22,9 +22,8 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
     
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none
+
     
-    def get_form_class(self):
-        return UserProfileFinishForm.for_user(user=self.request.user)
 
 class MyProfileUpdateView(LoginRequiredMixin, UpdateView):
     request: HttpRequest
