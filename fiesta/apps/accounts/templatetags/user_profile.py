@@ -2,9 +2,9 @@ from __future__ import annotations
 
 from django import template
 
+from apps.accounts.conf import INTERESTS_CHOICES
 from apps.accounts.forms.profile import UserProfileForm
 from apps.accounts.models import User, UserProfile
-from apps.accounts.conf import INTERESTS_CHOICES
 
 # from apps.plugins.middleware.plugin import HttpRequest
 
@@ -32,6 +32,7 @@ def compute_profile_fullness(user: User) -> float:
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)
+
 
 @register.simple_tag
 def get_user_interests(user: User | None):
