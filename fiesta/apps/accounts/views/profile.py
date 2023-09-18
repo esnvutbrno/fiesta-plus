@@ -13,17 +13,15 @@ from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.breadcrumbs import with_breadcrumb
 from apps.utils.views import AjaxViewMixin
-from apps.fiestaforms.fields.array import ChoicedArrayField
 
 
 class MyProfileDetailView(LoginRequiredMixin, DetailView):
     request: HttpRequest
     template_name = "accounts/user_profile/detail.html"
-    
+
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none
 
-    
 
 class MyProfileUpdateView(LoginRequiredMixin, UpdateView):
     request: HttpRequest
