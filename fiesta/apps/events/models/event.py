@@ -95,7 +95,7 @@ class Event(BaseTimestampedModel):
     )
 
     author = models.ForeignKey(
-        "accounts.User",
+        to="accounts.User",
         on_delete=models.SET_NULL,
         related_name="events",
         verbose_name=_("author"),
