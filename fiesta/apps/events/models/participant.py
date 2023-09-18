@@ -19,18 +19,21 @@ class Participant(BaseModel):
         help_text=_("when the user placed the ordered (does not have to be paid)"),
     )
 
-    user = models.ManyToOneRel(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
+    user = models.ForeignKey(
+        to="accounts.User",
         related_name="user",
+        on_delete=models.SET_NULL
+
     )
 
-    event = models.ManyToOneRel(
+    event = models.ForeignKey(
+        to="events.Event",
         on_delete=models.SET_NULL,
         related_name="event",
     )
 
-    price = models.ManyToOneRel(
+    price = models.ForeignKey(
+        to="events.Price",
         on_delete=models.SET_NULL,
         related_name="price",
     )
