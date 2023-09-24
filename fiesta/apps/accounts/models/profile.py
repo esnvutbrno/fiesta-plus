@@ -138,7 +138,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     )
     instagram = models.CharField(
         verbose_name=_("instagram username"),
-        validators=[RegexValidator(r"^[\w_-.]+$")],
+        validators=[RegexValidator(r"^[\w_.]+$")],
         blank=True,
     )
     telegram = models.CharField(
