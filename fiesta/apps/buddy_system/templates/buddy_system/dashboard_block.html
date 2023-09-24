@@ -39,15 +39,15 @@
         <div class="Dashboard__tile__desc">
           It's a match!
           <br>
-          You have been matched with {{ br.matched_by }}.
+          You have been matched with {{ br.match.matcher }}.
         </div>
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}
       <div class="Dashboard__tile__value">
         {% with waiting_brs.count as count %}
-          <span>{{ count }}</span> waiting request
-          {{ count|pluralize:"s" }}
+          <span>{{ count }}</span>
+          waiting request{{ count|pluralize:"s" }}
         {% endwith %}
       </div>
       <div class="Dashboard__tile__actions text-right">

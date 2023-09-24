@@ -3,15 +3,16 @@ from __future__ import annotations
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import UpdateView
+from django.views.generic import CreateView, UpdateView
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
-from apps.buddy_system.models import BuddyRequest
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
@@ -153,17 +154,20 @@ class QuickBuddyMatchView(
     SuccessMessageMixin,
     HtmxFormMixin,
     AjaxViewMixin,
-    UpdateView,
+    CreateView,
 ):
     template_name = "buddy_system/editor/quick_match.html"
     ajax_template_name = "buddy_system/editor/quick_match_form.html"
-    model = BuddyRequest
+    model = BuddyRequestMatch
     form_class = QuickBuddyMatchForm
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
 
     def form_valid(self, form):
-        form.instance.state = BuddyRequest.State.MATCHED
-        form.instance.save(update_fields=["state"])
+        request = get_object_or_404(BuddyRequest, pk=self.kwargs["pk"])
+        form.instance.request = request
+        request.state = BuddyRequest.State.MATCHED
+        request.save(update_fields=["state"])
+
         return super().form_valid(form)

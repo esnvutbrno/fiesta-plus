@@ -5,9 +5,8 @@ import typing
 
 from django.db import models
 from django.db.models import TextChoices
-from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import BEFORE_SAVE, LifecycleModelMixin, hook
+from django_lifecycle import LifecycleModelMixin
 
 from apps.accounts.models import User
 from apps.fiestarequests.models.managers.request import BaseRequestManager
@@ -32,7 +31,10 @@ class BaseRequestProtocol(typing.Protocol):
     objects: BaseRequestManager
 
 
-def base_request_model_factory(related_base: str):
+def base_request_model_factory(
+    related_base: str,
+    final_request_model_name: str,
+):
     """
     Creates a base model for requests-like models.
     """
@@ -66,31 +68,34 @@ def base_request_model_factory(related_base: str):
             verbose_name=_("responsible section"),
             db_index=True,
         )
-        matched_by = models.ForeignKey(
-            "accounts.User",
-            related_name=f"{related_base}_matched_requests",
-            on_delete=models.RESTRICT,
-            verbose_name=_("matched by"),
-            db_index=True,
-            null=True,
-            blank=True,
-        )
-        matched_at = models.DateTimeField(
-            verbose_name=_("matched at"),
-            null=True,
-            blank=True,
-        )
 
-        issuer_note = models.TextField(
+        note = models.TextField(
             verbose_name=_("text from issuer"),
         )
 
-        matcher_note = models.TextField(
-            verbose_name=_("text from matcher"),
+    class BaseRequestMatch(BaseTimestampedModel):
+        class Meta(BaseTimestampedModel.Meta):
+            abstract = True
+            ordering = ("-created",)
+
+        request = models.OneToOneField(
+            final_request_model_name,
+            related_name="match",
+            on_delete=models.CASCADE,
+            verbose_name=_("request"),
         )
 
-        @hook(BEFORE_SAVE, when="matched_by", was=None, is_not=None)
-        def set_matched_at(self):
-            self.matched_at = now()
+        matcher = models.ForeignKey(
+            "accounts.User",
+            related_name=f"{related_base}_request_matches",
+            on_delete=models.RESTRICT,
+            verbose_name=_("matched by"),
+            db_index=True,
+        )
 
-    return BaseRequest
+        note = models.TextField(
+            verbose_name=_("text from matcher"),
+            blank=True,
+        )
+
+    return BaseRequest, BaseRequestMatch

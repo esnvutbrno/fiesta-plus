@@ -9,7 +9,7 @@ from django.views.generic import ListView
 from django.views.generic.detail import BaseDetailView
 from django_htmx.http import HttpResponseClientRedirect
 
-from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
 from apps.files.views import NamespacedFilesServeView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
@@ -56,10 +56,20 @@ class TakeBuddyRequestView(
         )
 
     def post(self, request, pk: uuid.UUID):
-        BuddyRequest.objects.match_by(
-            request=self.get_object(),
+        br: BuddyRequest = self.get_object()
+
+        match = BuddyRequestMatch(
+            request=br,
             matcher=self.request.user,
+            # TODO: better
+            note=self.request.POST.get("note"),
         )
+
+        # TODO: check matcher relation to responsible section?
+        match.save()
+
+        br.match = match
+        br.state = BuddyRequest.State.MATCHED
 
         messages.success(request, _("Request successfully matched!"))
         # TODO: target URL?

@@ -76,10 +76,10 @@ def get_matched_buddy_requests(context):
     request: HttpRequest = context["request"]
 
     # TODO: limit by semester / time
-    return request.user.buddy_system_matched_requests.filter(
-        responsible_section=request.membership.section,
-        state=BuddyRequest.State.MATCHED,
-    ).order_by("-matched_at")
+    return request.user.buddy_system_request_matches.filter(
+        request__responsible_section=request.membership.section,
+        request__state=BuddyRequest.State.MATCHED,
+    ).order_by("-created")
 
 
 @register.filter

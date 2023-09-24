@@ -39,7 +39,7 @@ class MatchingPolicyProtocol(typing.Protocol):
         return Q(
             responsible_section=membership.section,
             state=BuddyRequest.State.CREATED,
-            matched_by=None,  # to be sure
+            match__isnull=True,  # to be sure
         )
 
 
