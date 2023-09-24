@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from django import template
 
-from apps.accounts.conf import INTERESTS_CHOICES
 from apps.accounts.forms.profile import UserProfileForm
 from apps.accounts.models import User, UserProfile
 
