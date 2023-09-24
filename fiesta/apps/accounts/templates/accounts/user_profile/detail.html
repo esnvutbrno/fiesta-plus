@@ -82,49 +82,48 @@
 
   <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Socials and contact" %}</h1>
-    <table class="border-separate gap-4">
-      {% with user=object.user profile=object.user.profile_or_none %}
-        <tr>
-          <td class="font-semibold pr-12">Facebook:</td>
-          <td>
-            <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-               href="{{ profile.facebook }}">{{ profile.facebook }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="font-semibold pr-12">Instagram:</td>
-          <td>
-            <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-               href="{{ profile.instagram }}">{{ profile.instagram }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="font-semibold pr-12">Telegram:</td>
-          <td>
-            <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600"
-               href="{{ profile.telegram }}">{{ profile.telegram }}</a>
-          </td>
-        </tr>
-        <tr>
-          <td class="font-semibold pr-12">Whatsapp:</td>
-          <td>{{ profile.whatsapp }}</td>
-        </tr>
-        <tr>
-          <td class="font-semibold pr-12">Email:</td>
-          <td>{{ user.email_user }}</td>
-        </tr>
-      {% endwith %}
-    </table>
+    <div class="overflow-hidden">
+      <table class="w-full">
+        {% with user=object.user profile=object.user.profile_or_none %}
+          <tr class="flex">
+            <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.facebook }}">{{ profile.facebook }}</a>
+            </td>
+          </tr>
+          <tr class="flex">
+            <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.instagram }}">{{ profile.instagram }}</a>
+            </td>
+          </tr>
+          <tr class="flex">
+            <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.telegram }}">{{ profile.telegram }}</a>
+            </td>
+          </tr>
+          <tr class="flex">
+            <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
+            <td class="flex-grow">{{ profile.whatsapp }}</td>
+          </tr>
+          <tr class="flex">
+            <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
+            <td class="flex-grow">{{ user.email_user }}</td>
+          </tr>
+        {% endwith %}
+      </table>
+    </div>
   </div>
 
   <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
-    <div id="id_interests" class="inline-flex">
-      {% get_user_interests object.user as interests %}
-      {% for interest in interests %}
-        <div class="mr-2">
-          <label class="border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2">{{ interest }}</label>
-        </div>
+    <div class="inline-flex flex-wrap">
+      {% for interest in object.user.profile.get_interests_display %}
+        <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2">{{ interest }}</span>
       {% endfor %}
     </div>
 
