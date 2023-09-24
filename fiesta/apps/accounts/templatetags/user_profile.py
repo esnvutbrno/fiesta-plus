@@ -32,12 +32,3 @@ def compute_profile_fullness(user: User) -> float:
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)
-
-
-@register.simple_tag
-def get_user_interests(user: User | None):
-    formated_interests = []
-    for interest in INTERESTS_CHOICES:
-        if any(x in interest[0] for x in user.profile.interests):
-            formated_interests.append(interest[1])
-    return formated_interests
