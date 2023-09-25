@@ -64,7 +64,7 @@
       {% with profile=object.user.profile_or_none %}
         <tr>
           <td class="font-semibold pr-12">Home University:</td>
-          <td>{{ profile.home_university }}</td>
+          <td>{{ profile.home_faculty.university }}</td>
         </tr>
         <tr>
           <td class="font-semibold pr-12">Home Faculty:</td>
