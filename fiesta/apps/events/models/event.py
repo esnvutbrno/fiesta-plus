@@ -93,28 +93,43 @@ class Event(BaseTimestampedModel):
         null=True,
         blank=True,
     )
+    
+    place = models.ForeignKey(
+        "events.Place",
+        on_delete=models.SET_NULL,
+        verbose_name=_("place"),
+        db_index=False,
+        null=True,
+        blank=True,
+    )
 
     author = models.ForeignKey(
         to="accounts.User",
         on_delete=models.SET_NULL,
         related_name="events",
         verbose_name=_("author"),
+        db_index=False,
         null=True,
         blank=True,
     )
 
-    section = models.ManyToManyField(
-        "sections.Section",
-        through="events.EventSection",
+    section = models.ForeignKey(
+        to="sections.Section",
+        on_delete=models.CASCADE,
         related_name="events",
-        verbose_name=_("sections"),
-        help_text=_("Users from these sections can join this event."),
+        verbose_name=_("ESN section"),
+        help_text=_("Users from this section can join this event."),
         db_index=True,
     )
 
     def __str__(self):
-        return self.title
+        return f"{self.title} - {self.start}"
+
+    class Meta:
+        ordering = ["start"]
+        verbose_name = _("Event")
 
 
 __all__ = ["Event"]
-#TODO hibrid registration, default user, only online (qr), offline registrations (counter, odecist od kapacity)
+
+#TODO hybrid registration, default user, only online (qr), offline registrations (counter, subtract from capacity)
