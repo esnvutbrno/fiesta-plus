@@ -2,6 +2,7 @@
 
 {% load i18n %}
 {% load breadcrumbs %}
+{% load user_profile %}
 
 {% block upper_head %}
   {{ block.super }}
@@ -9,12 +10,122 @@
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
 
+
 {% block content %}
   <h1 class="card-title">{% trans "My Profile" %}</h1>
-  <table>
-    <tr>
-      <td></td>
-      <td>{{ object }}</td>
-    </tr>
-  </table>
+  <div class="md:flex md:flex-grow">
+    <div class="md:w-2/5 md:h-auto rounded-full flex items-center justify-center">
+      {% get_user_picture request.user as picture %}
+      {% if picture %}
+        <div class="w-48 h-48 rounded-full bg-cover bg-center"
+             style='background-image: url("{{ picture.url }}")'></div>
+      {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg"
+             class="h-40 w-40"
+             fill="none"
+             viewBox="0 0 24 24"
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+          </path>
+        </svg>
+      {% endif %}
+    </div>
+    <div class="md:w-3/5 bg-gray-100 shadow rounded-box p-4 mb-4 mt-4 md:box-content">
+      <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Basic information" %}</h1>
+      <table class="border-separate gap-4">
+        {% with user=object.user profile=object.user.profile_or_none %}
+          <tr>
+            <td class="font-semibold pr-12">Name:</td>
+            <td>{{ user.first_name }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12">Surname:</td>
+            <td>{{ user.last_name }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12">Email:</td>
+            <td>{{ user.email_user }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12">Gender:</td>
+            <td>{{ profile.gender }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12">Joined:</td>
+            <td>{{ user.date_joined }}</td>
+          </tr>
+        {% endwith %}
+      </table>
+    </div>
+  </div>
+  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+    <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Studies" %}</h1>
+    <table class="border-separate gap-4">
+      {% with profile=object.user.profile_or_none %}
+        <tr>
+          <td class="font-semibold pr-12">Home University:</td>
+          <td>{{ profile.home_faculty.university }}</td>
+        </tr>
+        <tr>
+          <td class="font-semibold pr-12">Home Faculty:</td>
+          <td>{{ profile.home_faculty }}</td>
+        </tr>
+        {% if request.membership.is_international %}
+          <tr>
+            <td class="font-semibold pr-12">Quest Faculty:</td>
+            <td>{{ profile.guest_faculty }}</td>
+          </tr>
+        {% endif %}
+      {% endwith %}
+    </table>
+  </div>
+
+  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+    <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Socials and contact" %}</h1>
+    <div class="overflow-hidden">
+      <table class="border-separate gap-4">
+        {% with user=object.user profile=object.user.profile_or_none %}
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.facebook }}">{{ profile.facebook }}</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.instagram }}">{{ profile.instagram }}</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="{{ profile.telegram }}">{{ profile.telegram }}</a>
+            </td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
+            <td class="flex-grow">{{ profile.whatsapp }}</td>
+          </tr>
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
+            <td class="flex-grow">{{ user.email_user }}</td>
+          </tr>
+        {% endwith %}
+      </table>
+    </div>
+  </div>
+
+  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+    <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
+    <div class="inline-flex flex-wrap">
+      {% for interest in object.user.profile.get_interests_display %}
+        <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
+      {% endfor %}
+    </div>
+
+  </div>
 {% endblock content %}
