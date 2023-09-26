@@ -30,21 +30,12 @@
   },
   {
     "model": "plugins.basepluginconfiguration",
-    "pk": "087340c2-bbc1-4ec1-8861-a2d937889094",
-    "fields": {
-      "polymorphic_ctype": 11,
-      "created": "2023-08-13T10:38:44.798Z",
-      "modified": "2023-08-13T10:38:44.798Z",
-      "name": "default",
-      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
-      "shared": false
-    }
-  },
-  {
-    "model": "plugins.basepluginconfiguration",
     "pk": "880a4f9d-2e32-45a9-94d5-7286f5aef367",
     "fields": {
-      "polymorphic_ctype": 13,
+      "polymorphic_ctype": [
+        "esncards",
+        "esncardsconfiguration"
+      ],
       "created": "2023-08-13T14:49:19.458Z",
       "modified": "2023-08-13T14:49:19.458Z",
       "name": "default",
@@ -56,7 +47,10 @@
     "model": "plugins.basepluginconfiguration",
     "pk": "9bb5cecc-feca-4d5a-905b-c870fec74207",
     "fields": {
-      "polymorphic_ctype": 14,
+      "polymorphic_ctype": [
+        "pages",
+        "pagesconfiguration"
+      ],
       "created": "2023-08-13T14:49:35.217Z",
       "modified": "2023-08-13T14:49:35.217Z",
       "name": "default",
@@ -66,21 +60,12 @@
   },
   {
     "model": "plugins.basepluginconfiguration",
-    "pk": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
-    "fields": {
-      "polymorphic_ctype": 19,
-      "created": "2023-08-13T12:43:06.779Z",
-      "modified": "2023-08-13T12:43:19.967Z",
-      "name": "default",
-      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
-      "shared": false
-    }
-  },
-  {
-    "model": "plugins.basepluginconfiguration",
     "pk": "f1896350-356b-4b52-8337-7a53f7ae8063",
     "fields": {
-      "polymorphic_ctype": 9,
+      "polymorphic_ctype": [
+        "buddy_system",
+        "buddysystemconfiguration"
+      ],
       "created": "2023-08-13T14:48:57.228Z",
       "modified": "2023-08-13T14:49:02.847Z",
       "name": "default",

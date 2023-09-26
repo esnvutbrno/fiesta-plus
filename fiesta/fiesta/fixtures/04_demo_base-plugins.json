@@ -8,7 +8,10 @@
     "model": "plugins.basepluginconfiguration",
     "pk": "087340c2-bbc1-4ec1-8861-a2d937889094",
     "fields": {
-      "polymorphic_ctype": 11,
+      "polymorphic_ctype": [
+        "dashboard",
+        "dashboardconfiguration"
+      ],
       "created": "2023-08-13T10:38:44.798Z",
       "modified": "2023-08-13T10:38:44.798Z",
       "name": "default",
@@ -20,7 +23,10 @@
     "model": "plugins.basepluginconfiguration",
     "pk": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
     "fields": {
-      "polymorphic_ctype": 19,
+      "polymorphic_ctype": [
+        "sections",
+        "sectionsconfiguration"
+      ],
       "created": "2023-08-13T12:43:06.779Z",
       "modified": "2023-08-13T12:43:19.967Z",
       "name": "default",
