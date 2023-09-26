@@ -83,34 +83,34 @@
   <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Socials and contact" %}</h1>
     <div class="overflow-hidden">
-      <table class="w-full">
+      <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
-          <tr class="flex">
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
             <td class="flex-grow">
               <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                  href="{{ profile.facebook }}">{{ profile.facebook }}</a>
             </td>
           </tr>
-          <tr class="flex">
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
             <td class="flex-grow">
               <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                  href="{{ profile.instagram }}">{{ profile.instagram }}</a>
             </td>
           </tr>
-          <tr class="flex">
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
             <td class="flex-grow">
               <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                  href="{{ profile.telegram }}">{{ profile.telegram }}</a>
             </td>
           </tr>
-          <tr class="flex">
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
             <td class="flex-grow">{{ profile.whatsapp }}</td>
           </tr>
-          <tr class="flex">
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
             <td class="flex-grow">{{ user.email_user }}</td>
           </tr>
@@ -123,7 +123,7 @@
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
     <div class="inline-flex flex-wrap">
       {% for interest in object.user.profile.get_interests_display %}
-        <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2">{{ interest }}</span>
+        <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
       {% endfor %}
     </div>
 
