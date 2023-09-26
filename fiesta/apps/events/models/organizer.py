@@ -36,6 +36,11 @@ class Organizer(BaseTimestampedModel):
         verbose_name=_("event"),
         db_index=True,
     )
+    
+    class Meta:
+        verbose_name = _("Organizer")
+        unique_together = (("user", "event"),)
+
 
     def __str__(self):
         return self.user + self.event

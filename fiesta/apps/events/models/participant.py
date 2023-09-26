@@ -22,24 +22,35 @@ class Participant(BaseModel):
     user = models.ForeignKey(
         to="accounts.User",
         related_name="user",
-        on_delete=models.SET_NULL
-
+        on_delete=models.SET_NULL,
+        null=True,
+        db_index=True,
     )
 
     event = models.ForeignKey(
         to="events.Event",
         on_delete=models.SET_NULL,
         related_name="event",
+        null=True,
+        db_index=True,
     )
 
     price = models.ForeignKey(
-        to="events.Price",
+        to="events.PriceVariant",
         on_delete=models.SET_NULL,
         related_name="price",
+        null=True,
+        db_index=False,
     )
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        unique_together = (("event", "user"),)
+        verbose_name = _("Participant")
+        ordering = ["created"]
+
 
 
 __all__ = ["Participant"]
