@@ -17,8 +17,8 @@ class EventPriceVariantType(TextChoices):
     WITH_ESN_CARD = "with_esn_card", _("With ESN card")
 
     def is_available(self, variant: PriceVariant, user: User):
-        to_ = variant.to_
-        from_ = variant.from_
+        to_ = variant.available_to
+        from_ = variant.available_from
 
         if from_ is not None and from_ is not "" and from_ < datetime.now():
             return False
@@ -37,7 +37,6 @@ class EventPriceVariantType(TextChoices):
 class PriceVariant(BaseModel):
     title = models.CharField(
         max_length=256,
-        unique=True,
         verbose_name=_("title"),
         help_text=_("full name of the price"),
     )
@@ -51,17 +50,19 @@ class PriceVariant(BaseModel):
         related_name="price_variant",
         on_delete=models.CASCADE,
         verbose_name=_("event"),
+        null=True,
+        db_index=True,
     )
 
-    from_ = models.DateTimeField(
-        verbose_name=_("from"),
+    available_from = models.DateTimeField(
+        verbose_name=_("available from"),
         help_text=_("From when users can purchase for this price."),
         null=True,
         blank=True,
     )
 
-    to_ = models.DateTimeField(
-        verbose_name=_("to"),
+    available_to = models.DateTimeField(
+        verbose_name=_("available to"),
         help_text=_("Until when users can purchase for this price."),
         null=True,
         blank=True,
@@ -72,6 +73,9 @@ class PriceVariant(BaseModel):
         help_text=_("any data related to the price"),
         default=dict,
     )
+
+    class Meta:
+        unique_together = (("title", "event"),)
 
 
 __all__ = ["PriceVariant"]

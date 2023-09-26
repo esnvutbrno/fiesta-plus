@@ -37,6 +37,21 @@ class Place(BaseModel):
         blank=True,
     )
 
+    section = models.ForeignKey(
+        "sections.Section",
+        on_delete=models.CASCADE,
+        verbose_name=_("ESN section"),
+        db_index=True,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = _("Place")
+        unique_together = (("section", "name"),)
+
+
     # TODO nearest tram stop?
 
     def __str__(self):
