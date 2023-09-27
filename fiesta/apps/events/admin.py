@@ -8,6 +8,7 @@ from ..plugins.admin import BaseChildConfigurationAdmin
 @admin.register(EventsConfiguration)
 class EventsConfigurationAdmin(BaseChildConfigurationAdmin):
     base_model = BasePluginConfiguration
+    list_display = ("name", "section", "shared", "require_confirmation", "members_can_create", "online_purchases",)
     show_in_index = True
 
 
