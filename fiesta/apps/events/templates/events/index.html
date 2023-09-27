@@ -1,7 +1,51 @@
 {% extends "fiesta/base.html" %}
-
+<!-- Missing breadcrums -->
 {% block main %}
-<!--  <h1>Upcoming Events of {{ request.in_space_of_section }}</h1>-->
+<h1>Upcoming Events of {{ request.in_space_of_section }}</h1>
+<div class="container mx-auto p-6">
+    <h1 class="text-3xl font-semibold mb-4">Upcoming Events</h1>
+    <ul class="divide-y divide-gray-300">
+        <!-- Event Item -->
+        {% for event in request.in_space_of_section.events.all %}
+            {% if request.membership.is_international %}
+                {% if not event.state == "draft" %}
+                    <li class="py-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="flex-shrink-0">
+                                <div class="h-12 w-12 rounded-full bg-cover bg-center"
+                                style='background-image: url("{{ event.portrait_cover }}")'></div>
+                            </div>
+                            <div class="flex-grow">
+                                <h2 class="text-xl font-semibold">{{ event.title }}</h2>
+                                <p class="text-gray-600">{{ event.start }}</p>
+                                <p class="text-gray-600">{{ event.description }}</p>
+                            </div>
+                        </div>
+                    </li>
+                {% endif %}
+            {% else %}
+                <li class="py-4">
+                    <div class="flex items-center space-x-4">
+                        <div class="flex-shrink-0">
+                            <div class="h-12 w-12 rounded-full bg-cover bg-center"
+                            style='background-image: url("{{ event.portrait_cover }}")'></div>
+                        </div>
+                        <div class="flex-grow">
+                            <h2 class="text-xl font-semibold">{{ event.title }}</h2>
+                            <p class="text-gray-600">{{ event.start }}</p>
+                            <p class="text-gray-600">{{ event.description }}</p>
+                        </div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+
+<!-- Only allow adding of events to members and admins -->
+{% if not request.membership.is_international %}
+    <button><a href="{% url "events:add-event" %}">Add event</a></button>
+{% endif %}
 <!--  {{ request.in_space_of_section.events }}-->
 
 
