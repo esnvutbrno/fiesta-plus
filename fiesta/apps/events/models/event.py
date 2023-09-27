@@ -9,6 +9,7 @@ from apps.utils.models import BaseTimestampedModel
 
 # TODO Maybe pre-registration, registration and paused registration for different field.
 
+
 class State(models.TextChoices):
     DRAFT = "draft", _("Draft")
     PUBLISHED = "published", _("Published")
@@ -28,7 +29,7 @@ class Event(BaseTimestampedModel):
         "event-portrait-cover-photo",
         has_permission=has_permission_for_cover_photo_view,
     )
-    
+
     event_landscape_cover_photo_storage = NamespacedFilesStorage(
         "event-landscape-cover-photo",
         has_permission=has_permission_for_cover_photo_view,
@@ -93,7 +94,7 @@ class Event(BaseTimestampedModel):
         null=True,
         blank=True,
     )
-    
+
     place = models.ForeignKey(
         "events.Place",
         on_delete=models.SET_NULL,
@@ -129,9 +130,9 @@ class Event(BaseTimestampedModel):
     class Meta:
         ordering = ["start"]
         verbose_name = _("event")
-        verbose_name_plural = _('events')
+        verbose_name_plural = _("events")
 
 
 __all__ = ["Event"]
 
-#TODO hybrid registration, default user, only online (qr), offline registrations (counter, subtract from capacity)
+# TODO hybrid registration, default user, only online (qr), offline registrations (counter, subtract from capacity)

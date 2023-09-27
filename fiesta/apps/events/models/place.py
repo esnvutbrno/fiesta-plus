@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from apps.utils.models import BaseModel
 
 
@@ -49,9 +50,8 @@ class Place(BaseModel):
 
     class Meta:
         verbose_name = _("place")
-        verbose_name_plural = _('places')
+        verbose_name_plural = _("places")
         unique_together = (("section", "name"),)
-
 
     # TODO nearest tram stop?
 
@@ -60,4 +60,3 @@ class Place(BaseModel):
 
 
 __all__ = ["Place"]
-
