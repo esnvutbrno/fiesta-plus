@@ -1,5 +1,7 @@
-from __future__ import annotations
-
 from .index import EventsIndexView
+from .event import AddEventView, EventView
 
-__all__ = ["EventsIndexView"]
+__all__ = [
+    "EventView",
+    "AddEventView",
+]
