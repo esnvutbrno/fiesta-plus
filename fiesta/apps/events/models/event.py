@@ -81,7 +81,7 @@ class Event(BaseTimestampedModel):
     landscape_cover = models.ImageField(
         storage=event_landscape_cover_photo_storage,
         upload_to=event_landscape_cover_photo_storage.upload_to,
-        verbose_name=_("landscape_cover"),
+        verbose_name=_("landscape cover photo"),
         null=True,
         blank=True,
     )
@@ -89,7 +89,7 @@ class Event(BaseTimestampedModel):
     portrait_cover = models.ImageField(
         storage=event_portrait_cover_photo_storage,
         upload_to=event_portrait_cover_photo_storage.upload_to,
-        verbose_name=_("portrait_cover"),
+        verbose_name=_("portrait cover photo"),
         null=True,
         blank=True,
     )
@@ -123,11 +123,13 @@ class Event(BaseTimestampedModel):
     )
 
     def __str__(self):
+        # return self.title
         return f"{self.title} - {self.start}"
 
     class Meta:
         ordering = ["start"]
-        verbose_name = _("Event")
+        verbose_name = _("event")
+        verbose_name_plural = _('events')
 
 
 __all__ = ["Event"]

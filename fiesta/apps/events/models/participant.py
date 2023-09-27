@@ -15,7 +15,7 @@ class State(models.TextChoices):  # TODO do we need a state if we have an expira
 class Participant(BaseModel):
 
     created = models.DateTimeField(
-        verbose_name=_("created"),
+        verbose_name=_("created at"),
         help_text=_("when the user placed the ordered (does not have to be paid)"),
     )
 
@@ -25,6 +25,7 @@ class Participant(BaseModel):
         on_delete=models.SET_NULL,
         null=True,
         db_index=True,
+        verbose_name=_("user"),
     )
 
     event = models.ForeignKey(
@@ -33,11 +34,13 @@ class Participant(BaseModel):
         related_name="event",
         null=True,
         db_index=True,
+        verbose_name=_("event"),
     )
 
     price = models.ForeignKey(
         to="events.PriceVariant",
         on_delete=models.SET_NULL,
+        verbose_name=_("price"),
         related_name="price",
         null=True,
         db_index=False,
@@ -48,7 +51,8 @@ class Participant(BaseModel):
 
     class Meta:
         unique_together = (("event", "user"),)
-        verbose_name = _("Participant")
+        verbose_name = _("participant")
+        verbose_name_plural = _("participants")
         ordering = ["created"]
 
 
