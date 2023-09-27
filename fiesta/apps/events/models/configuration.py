@@ -5,7 +5,20 @@ from apps.plugins.models import BasePluginConfiguration
 
 
 class EventsConfiguration(BasePluginConfiguration):
-    require_confirmation = models.BooleanField(default=True)
+    require_confirmation = models.BooleanField(
+        default=True,
+        verbose_name=_("require confirmation to publish"),
+    )
+
+    members_can_create = models.BooleanField(
+        default=True,
+        verbose_name=_("basic members can create an event"),
+    )
+
+    online_purchases = models.BooleanField(
+        default=True,
+        verbose_name=_("online purchases"),
+    )
 
     class Meta:
         verbose_name = _('events configuration')
@@ -13,7 +26,3 @@ class EventsConfiguration(BasePluginConfiguration):
 
 
 __all__ = ['EventsConfiguration']
-
-# TODO can be created by
-# TODO can be confirmed by
-# TODO section is selling events online

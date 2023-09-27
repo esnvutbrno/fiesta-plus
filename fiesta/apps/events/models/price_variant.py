@@ -5,7 +5,7 @@ from datetime import datetime
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
-from djmoney.models.fields import MoneyField  # TODO poetry add django-money
+from djmoney.models.fields import MoneyField
 
 from apps.accounts.models import User
 from apps.utils.models import BaseModel
@@ -41,9 +41,16 @@ class PriceVariant(BaseModel):
         help_text=_("full name of the price"),
     )
 
-    type = models.CharField(max_length=255, choices=EventPriceVariantType.choices)
+    type = models.CharField(max_length=255,
+                            choices=EventPriceVariantType.choices,
+                            verbose_name=_("type"),
+                            )
 
-    amount = MoneyField(max_digits=10, decimal_places=2, default_currency='CZK')
+    amount = MoneyField(max_digits=10,
+                        decimal_places=2,
+                        default_currency='CZK',
+                        verbose_name=_("amount"),
+                        )
 
     event = models.ForeignKey(
         "events.Event",
@@ -76,10 +83,8 @@ class PriceVariant(BaseModel):
 
     class Meta:
         unique_together = (("title", "event"),)
+        verbose_name = _('price variant')
+        verbose_name_plural = _('price variants')
 
 
 __all__ = ["PriceVariant"]
-
-# e = Event()
-#
-# e.price_variants.create(type=EventPriceVariantType.STANDARD, price=100)

@@ -38,7 +38,8 @@ class Organizer(BaseTimestampedModel):
     )
     
     class Meta:
-        verbose_name = _("Organizer")
+        verbose_name = _("organizer")
+        verbose_name_plural = _('organizers')
         unique_together = (("user", "event"),)
 
 
