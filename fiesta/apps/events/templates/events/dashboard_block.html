@@ -1,0 +1,12 @@
+{% load i18n %}
+<div class="Dashboard__tiles flex flex-col md:flex-row">
+  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
+    <div class="Dashboard__tile__title">Events</div>
+    {% if request.membership.is_international %}
+
+    {% else %}
+
+    {% endif %}
+
+  </div>
+</div>

@@ -82,6 +82,9 @@
       {% if blocks.esncards %}
         <div class="w-full md:w-3/5">{% include blocks.esncards with request=request %}</div>
       {% endif %}
+      {% if blocks.events %}
+        <div class="w-full md:w-3/5">{% include blocks.events with request=request %}</div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

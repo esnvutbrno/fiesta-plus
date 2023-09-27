@@ -5,7 +5,7 @@ from datetime import datetime
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
-from djmoney.models.fields import MoneyField  # TODO poetry add django-money
+from djmoney.models.fields import MoneyField
 
 from apps.accounts.models import User
 from apps.utils.models import BaseModel
