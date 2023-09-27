@@ -1,11 +1,11 @@
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import datetime
 
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
-from djmoney.models.fields import MoneyField
+from djmoney.models.fields import MoneyField  # TODO poetry add django-money
 
 from apps.accounts.models import User
 from apps.utils.models import BaseModel
@@ -20,17 +20,15 @@ class EventPriceVariantType(TextChoices):
         to_ = variant.available_to
         from_ = variant.available_from
 
-        if from_ is not None and from_ != "" and from_ < datetime.now(UTC):
+        if from_ is not None and from_ is not "" and from_ < datetime.now():
             return False
 
-        if to_ is not None and to_ != "" and to_ > datetime.now(UTC):
+        if to_ is not None and to_ is not "" and to_ > datetime.now():
             return False
 
-        if variant.type == self.STANDARD or (
-            variant.type == self.WITH_ESN_CARD
-            and user.profile_or_none is not None
-            and user.profile.is_esn_card_holder()
-        ):
+        if variant.type == self.STANDARD:
+            return True
+        elif variant.type == self.WITH_ESN_CARD and user.profile_or_none or user.profile.is_esn_card_holder():
             return True
 
         return False
@@ -43,18 +41,16 @@ class PriceVariant(BaseModel):
         help_text=_("full name of the price"),
     )
 
-    type = models.CharField(
-        max_length=255,
-        choices=EventPriceVariantType.choices,
-        verbose_name=_("type"),
-    )
+    type = models.CharField(max_length=255,
+                            choices=EventPriceVariantType.choices,
+                            verbose_name=_("type"),
+                            )
 
-    amount = MoneyField(
-        max_digits=10,
-        decimal_places=2,
-        default_currency="CZK",
-        verbose_name=_("amount"),
-    )
+    amount = MoneyField(max_digits=10,
+                        decimal_places=2,
+                        default_currency='CZK',
+                        verbose_name=_("amount"),
+                        )
 
     event = models.ForeignKey(
         "events.Event",
@@ -87,8 +83,8 @@ class PriceVariant(BaseModel):
 
     class Meta:
         unique_together = (("title", "event"),)
-        verbose_name = _("price variant")
-        verbose_name_plural = _("price variants")
+        verbose_name = _('price variant')
+        verbose_name_plural = _('price variants')
 
 
 __all__ = ["PriceVariant"]

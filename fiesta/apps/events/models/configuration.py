@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -23,8 +21,8 @@ class EventsConfiguration(BasePluginConfiguration):
     )
 
     class Meta:
-        verbose_name = _("events configuration")
-        verbose_name_plural = _("events configurations")
+        verbose_name = _('events configuration')
+        verbose_name_plural = _('events configurations')
 
 
-__all__ = ["EventsConfiguration"]
+__all__ = ['EventsConfiguration']

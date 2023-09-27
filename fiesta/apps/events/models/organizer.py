@@ -3,6 +3,8 @@ from __future__ import annotations
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.files.storage import NamespacedFilesStorage
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
 
 
@@ -34,11 +36,12 @@ class Organizer(BaseTimestampedModel):
         verbose_name=_("event"),
         db_index=True,
     )
-
+    
     class Meta:
         verbose_name = _("organizer")
-        verbose_name_plural = _("organizers")
+        verbose_name_plural = _('organizers')
         unique_together = (("user", "event"),)
+
 
     def __str__(self):
         return self.user + self.event
