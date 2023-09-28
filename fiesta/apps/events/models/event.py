@@ -45,7 +45,6 @@ class Event(BaseTimestampedModel):
     subtitle = models.TextField(
         verbose_name=_("subtitle"),
         help_text=_("short description of the event"),
-        null=True,
         blank=True,
     )
 

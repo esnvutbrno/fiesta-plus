@@ -18,7 +18,6 @@ class Place(BaseModel):
         max_length=256,
         verbose_name=_("description"),
         help_text=_("Descriptions of the place or directions"),
-        null=True,
         blank=True,
     )
 
@@ -26,7 +25,6 @@ class Place(BaseModel):
         max_length=256,
         verbose_name=_("webpage link"),
         help_text=_("Link to the place"),
-        null=True,
         blank=True,
     )
 
@@ -34,7 +32,6 @@ class Place(BaseModel):
         max_length=256,
         verbose_name=_("map link"),
         help_text=_("Link to a position to the place on a map"),
-        null=True,
         blank=True,
     )
 
@@ -52,11 +49,6 @@ class Place(BaseModel):
         verbose_name = _("place")
         verbose_name_plural = _("places")
         unique_together = (("section", "name"),)
-
-    # TODO nearest tram stop?
-
-    def __str__(self):
-        return self.name
 
 
 __all__ = ["Place"]

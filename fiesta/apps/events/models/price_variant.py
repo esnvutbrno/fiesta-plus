@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 
 from django.db import models
 from django.db.models import TextChoices
@@ -20,15 +20,17 @@ class EventPriceVariantType(TextChoices):
         to_ = variant.available_to
         from_ = variant.available_from
 
-        if from_ is not None and from_ != "" and from_ < datetime.now():
+        if from_ is not None and from_ != "" and from_ < datetime.now(UTC):
             return False
 
-        if to_ is not None and to_ != "" and to_ > datetime.now():
+        if to_ is not None and to_ != "" and to_ > datetime.now(UTC):
             return False
 
-        if variant.type == self.STANDARD:
-            return True
-        elif variant.type == self.WITH_ESN_CARD and user.profile_or_none or user.profile.is_esn_card_holder():
+        if variant.type == self.STANDARD or (
+            variant.type == self.WITH_ESN_CARD
+            and user.profile_or_none is not None
+            and user.profile.is_esn_card_holder()
+        ):
             return True
 
         return False
