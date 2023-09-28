@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from .configuration import EventsConfiguration
 from .event import Event
 from .organizer import Organizer
