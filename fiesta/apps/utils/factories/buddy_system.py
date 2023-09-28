@@ -38,7 +38,7 @@ class BuddyRequestWithUserFactory(DjangoModelFactory):
         ),
     )
 
-    description = factory.Faker("text", max_nb_chars=600)
+    note = factory.Faker("text", max_nb_chars=600)
 
 
 class BuddyRequestWithKnownUserFactory(BuddyRequestWithUserFactory):

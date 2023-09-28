@@ -60,7 +60,7 @@
             {% endif %}
           </table>
           {# <p /> are added by filter #}
-          {{ br.description|censor_description|linebreaks }}
+          {{ br.note|censor_description|linebreaks }}
           {% if br.interests %}
             <hr>
             <div class="flex flex-row flex-wrap justify-between">
