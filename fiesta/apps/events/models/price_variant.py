@@ -20,10 +20,10 @@ class EventPriceVariantType(TextChoices):
         to_ = variant.available_to
         from_ = variant.available_from
 
-        if from_ is not None and from_ is not "" and from_ < datetime.now():
+        if from_ is not None and from_ != "" and from_ < datetime.now():
             return False
 
-        if to_ is not None and to_ is not "" and to_ > datetime.now():
+        if to_ is not None and to_ != "" and to_ > datetime.now():
             return False
 
         if variant.type == self.STANDARD:
@@ -41,16 +41,18 @@ class PriceVariant(BaseModel):
         help_text=_("full name of the price"),
     )
 
-    type = models.CharField(max_length=255,
-                            choices=EventPriceVariantType.choices,
-                            verbose_name=_("type"),
-                            )
+    type = models.CharField(
+        max_length=255,
+        choices=EventPriceVariantType.choices,
+        verbose_name=_("type"),
+    )
 
-    amount = MoneyField(max_digits=10,
-                        decimal_places=2,
-                        default_currency='CZK',
-                        verbose_name=_("amount"),
-                        )
+    amount = MoneyField(
+        max_digits=10,
+        decimal_places=2,
+        default_currency="CZK",
+        verbose_name=_("amount"),
+    )
 
     event = models.ForeignKey(
         "events.Event",
@@ -83,8 +85,8 @@ class PriceVariant(BaseModel):
 
     class Meta:
         unique_together = (("title", "event"),)
-        verbose_name = _('price variant')
-        verbose_name_plural = _('price variants')
+        verbose_name = _("price variant")
+        verbose_name_plural = _("price variants")
 
 
 __all__ = ["PriceVariant"]

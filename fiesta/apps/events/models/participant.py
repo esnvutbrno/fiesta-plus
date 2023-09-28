@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+
 from apps.utils.models import BaseModel
-from django.conf import settings
 
 
 class State(models.TextChoices):  # TODO do we need a state if we have an expiration date
@@ -13,7 +13,6 @@ class State(models.TextChoices):  # TODO do we need a state if we have an expira
 
 
 class Participant(BaseModel):
-
     created = models.DateTimeField(
         verbose_name=_("created at"),
         help_text=_("when the user placed the ordered (does not have to be paid)"),
@@ -54,7 +53,6 @@ class Participant(BaseModel):
         verbose_name = _("participant")
         verbose_name_plural = _("participants")
         ordering = ["created"]
-
 
 
 __all__ = ["Participant"]
