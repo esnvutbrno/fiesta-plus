@@ -1,4 +1,5 @@
 {% load buddy_system %}
+{% load utils %}
 {% load i18n %}
 {% load user_profile %}
 <div class="Dashboard__tiles flex flex-col md:flex-row">
@@ -21,18 +22,23 @@
       {% elif br.state == br.State.MATCHED %}
         {% get_user_picture br.matched_by as buddy_picture %}
         <div class="stat-figure text-secondary flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
-          <a href="{% url "buddy_system:index" %}" class="btn btn-lg btn-white">{% trans "find out about your buddy" %}</a>
+          <a href="{% url "buddy_system:index" %}"
+             class="btn btn-lg btn-secondary">{% trans "find out about your buddy" %}</a>
 
-          {% if buddy_picture %}
-            <div class="avatar">
-              <div class="w-24 rounded-full">
+          <div class="avatar">
+            <div class="w-24 rounded-full">
+              {% if buddy_picture %}
                 <img src="{% url "buddy_system:serve-matcher-profile-picture" buddy_picture %}"
                      width="{{ buddy_picture.width }}"
                      height="{{ buddy_picture.height }}"
                      alt="Matched buddy picture" />
-              </div>
+              {% else %}
+                <span class="w-24 aspect-square text-white text-3xl flex flex-row justify-center items-center group"
+                      style="background-color: {{ br.match.matcher.id|get_color_by_text }}">{{ br.match.matcher.first_name|first }}{{ br.match.matcher.last_name|first }}</span>
+              {% endif %}
             </div>
-          {% endif %}
+          </div>
+
         </div>
 
         <div class="Dashboard__tile__value">✅ Matched</div>

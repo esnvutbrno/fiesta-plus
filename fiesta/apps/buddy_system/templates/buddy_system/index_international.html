@@ -1,5 +1,6 @@
 {% extends "fiesta/base.html" %}
 {% load user_profile %}
+{% load utils %}
 
 {% load i18n %}
 {% load breadcrumbs %}
@@ -38,7 +39,9 @@
                        width="{{ issuer_picture.width }}"
                        height="{{ issuer_picture.height }}"
                        alt="Issuer picture" />
-                  {# TODO: avatar for empty #}
+                {% else %}
+                  <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
+                        style="background-color: {{ br.issuer.id|get_color_by_text }}">{{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}</span>
                 {% endif %}
               </div>
             </div>
@@ -63,7 +66,9 @@
                        width="{{ matcher_picture.width }}"
                        height="{{ matcher_picture.height }}"
                        alt="Matcher picture" />
-                  {# TODO: avatar for empty #}
+                {% else %}
+                  <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
+                        style="background-color: {{ br.match.matcher.id|get_color_by_text }}">{{ br.match.matcher.first_name|first }}{{ br.match.matcher.last_name|first }}</span>
                 {% endif %}
               </div>
             </div>

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import re
 
 from django import template
@@ -77,20 +76,3 @@ def get_matched_buddy_requests(context):
         request__responsible_section=request.membership.section,
         request__state=BuddyRequest.State.MATCHED,
     ).order_by("-created")
-
-
-@register.filter
-def get_color_by_text(name: str) -> str:
-    hash_object = hashlib.md5(name.encode(), usedforsecurity=False)
-    hash_hex = hash_object.hexdigest()
-
-    r = int(hash_hex[0:2], 16)
-    g = int(hash_hex[2:4], 16)
-    b = int(hash_hex[4:6], 16)
-
-    if r + g + b < 100:
-        r += 30
-        g += 30
-        b += 30
-
-    return f"rgb({r}, {g}, {b})"
