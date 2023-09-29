@@ -1,5 +1,5 @@
 {% load i18n %}
-{% if not record.matched_by %}
+{% if not record.match %}
   <a class="btn btn-sm btn-outline btn-primary"
      x-data="modal($el.href)"
      x-bind="bind"

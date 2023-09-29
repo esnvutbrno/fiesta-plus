@@ -3,10 +3,9 @@ from __future__ import annotations
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
-from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import UpdateView
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
@@ -15,7 +14,7 @@ from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
-from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
+from apps.fiestatables.filters import BaseFilterSet
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
@@ -35,7 +34,7 @@ class RequestFilter(BaseFilterSet):
         widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
     )
     state = ChoiceFilter(choices=BuddyRequest.State.choices)
-    matched_when = ProperDateFromToRangeFilter(field_name="matched_at")
+    # matched_when = ProperDateFromToRangeFilter(field_name="match.created_at")
 
     matched_by_faculty = ModelChoiceFilter(
         queryset=related_faculties,
@@ -63,36 +62,37 @@ class BuddyRequestsTable(tables.Table):
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
         linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
-        verbose_name=_("Request from"),
+        verbose_name=_("Issuer"),
     )
 
     issuer__profile__picture = ImageColumn(verbose_name="🧑")
 
     matched_by_name = Column(
-        accessor="matched_by.full_name_official",
+        accessor="match.matcher.full_name_official",
         order_by=(
-            "matched_by__last_name",
-            "matched_by__first_name",
-            "matched_by__username",
+            "match__matcher__last_name",
+            "match__matcher__first_name",
+            "match__matcher__username",
         ),
     )
     matched_by_email = Column(
-        accessor="matched_by.email",
+        accessor="matcher.matcher.email",
         visible=False,
     )
 
     matched_by_picture = ImageColumn(
-        accessor="matched_by.profile.picture",
-        verbose_name=_("Buddy"),
+        accessor="match.matcher.profile.picture",
+        verbose_name=_("Matcher"),
     )
 
     match_request = TemplateColumn(
         template_name="buddy_system/parts/requests_editor_match_btn.html",
         exclude_from_export=True,
-        order_by="matched_at",
+        order_by="match",
     )
 
-    matched_at = NaturalDatetimeColumn()
+    created = NaturalDatetimeColumn()
+    # matched_at = NaturalDatetimeColumn(accessor="match.created_at")
 
     class Meta:
         model = BuddyRequest
@@ -104,7 +104,8 @@ class BuddyRequestsTable(tables.Table):
             "state",
             "matched_by_name",
             "matched_by_picture",
-            "matched_at",
+            # "matched_at",
+            "created",
             "match_request",
             "...",
         )
@@ -154,20 +155,27 @@ class QuickBuddyMatchView(
     SuccessMessageMixin,
     HtmxFormMixin,
     AjaxViewMixin,
-    CreateView,
+    UpdateView,
 ):
     template_name = "buddy_system/editor/quick_match.html"
     ajax_template_name = "buddy_system/editor/quick_match_form.html"
-    model = BuddyRequestMatch
+    model = BuddyRequest
     form_class = QuickBuddyMatchForm
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
 
     def form_valid(self, form):
-        request = get_object_or_404(BuddyRequest, pk=self.kwargs["pk"])
-        form.instance.request = request
-        request.state = BuddyRequest.State.MATCHED
-        request.save(update_fields=["state"])
+        br: BuddyRequest = self.get_object()
+
+        match = BuddyRequestMatch(
+            request=br,
+            matcher=form.cleaned_data.get("matcher"),
+        )
+
+        match.save()
+
+        br.state = BuddyRequest.State.MATCHED
+        br.save(update_fields=["state"])
 
         return super().form_valid(form)

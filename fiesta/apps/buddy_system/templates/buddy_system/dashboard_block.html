@@ -60,8 +60,8 @@
     <div class="Dashboard__tile bg-gray-200">
       <div class="Dashboard__tile__title">My Buddies</div>
 
-      {% get_matched_buddy_requests as matched_requests %}
-      {% if not matched_requests.exists %}
+      {% get_matched_buddy_requests as request_matches %}
+      {% if not request_matches.exists %}
         <div class="Dashboard__tile__value">So empty here :(</div>
         <div class="Dashboard__tile__actions text-right">
           <a href="{% url "buddy_system:matching-requests" %}"
@@ -70,33 +70,35 @@
       {% else %}
         <div class="Dashboard__tile__value">
           <div class="avatar-group -space-x-12 justify-center p-2">
-            {% for br in matched_requests|slice:":3" %}
-              {% get_user_picture br.issuer as buddy_picture %}
+            {% for rm in request_matches|slice:":3" %}
+              {% get_user_picture rm.request.issuer as buddy_picture %}
 
               {% if buddy_picture %}
-                <div class="avatar hover:scale-105 transition-transform">
+                <a class="avatar hover:scale-105 transition-transform"
+                   href="{% url "buddy_system:my-buddies" %}">
                   <div class="w-24">
                     <img src="{% url "buddy_system:serve-issuer-profile-picture" buddy_picture %}"
                          width="{{ buddy_picture.width }}"
                          height="{{ buddy_picture.height }}"
-                         alt="{{ br.issuer }}"
-                         title="{{ br.issuer }}" />
+                         alt="{{ rm.request.issuer }}"
+                         title="{{ rm.request.issuer }}" />
                   </div>
-                </div>
+                </a>
               {% else %}
-                <div class="w-24 avatar hover:scale-105 transition-transform aspect-square text-white text-3xl flex flex-row justify-center items-center group"
-                     style="background-color: {{ br.issuer.username|get_color_by_text }}">
+                <a class="w-24 avatar hover:scale-105 transition-transform aspect-square text-white text-3xl flex flex-row justify-center items-center group"
+                   style="background-color: {{ rm.request.issuer.username|get_color_by_text }}"
+                   href="{% url "buddy_system:my-buddies" %}">
                   <span class="-translate-x-3 group-last:translate-x-0 uppercase">
-                    {{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}
+                    {{ rm.request.issuer.first_name|first }}{{ rm.request.issuer.last_name|first }}
                   </span>
-                </div>
+                </a>
               {% endif %}
             {% endfor %}
-            {% if matched_requests|length > 3 %}
+            {% if request_matches|length > 3 %}
               <div class="avatar placeholder">
                 <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
                    href="{% url "buddy_system:my-buddies" %}">
-                  <span>+{{ matched_requests|length|add:"-3" }}</span>
+                  <span>+{{ request_matches|length|add:"-3" }}</span>
                 </a>
               </div>
             {% endif %}

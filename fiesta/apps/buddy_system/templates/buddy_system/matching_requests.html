@@ -78,10 +78,13 @@
                     x-ref="dialog">
               <form action="{% url "buddy_system:take-buddy-request" br.pk %}"
                     method="POST"
-                    hx-boost="true">
+                    hx-boost="true"
+                    class="flex flex-col space-y-4"
+                    x-data="{ note: '', noteEnabled: $el.dataset.enableNoteFromMatcher === 'true' }"
+                    data-enable-note-from-matcher="{{ configuration.enable_note_from_matcher|lower }}">
                 {% csrf_token %}
                 <div class="flex flex-row justify-between">
-                  <h3 class="text-2xl">{% blocktrans %}Buddy Request Confirmation{% endblocktrans %}</h3>
+                  <h3 class="text-3xl">{% blocktrans %}Buddy Request Confirmation{% endblocktrans %}</h3>
                   <button @click="$refs.dialog.close()"
                           class="transition-transform hover:scale-95"
                           type="button">
@@ -97,15 +100,36 @@
                   </button>
                 </div>
 
-                <p class="my-8">
+                <p class="text-md">
                   {% blocktrans %}Are you sure you want to confirm the buddy request,
                   acknowledging that you will be responsible for being buddy?{% endblocktrans %}
                 </p>
 
-                <div class="modal-actions flex flex-row justify-end">
-                  <button class="btn btn-lg btn-success" type="submit">{% trans "Take Buddy" %}</button>
-                </div>
+                {% if configuration.enable_note_from_matcher %}
+                  <label for="id_for_note">
+                    <span class="text-xl">{% translate 'Message for your buddy' %}</span>
+                    <textarea name="note"
+                              id="id_for_note"
+                              cols="15"
+                              rows="10"
+                              class="Forms__textarea"
+                              x-model="note"
+                              placeholder="{% translate "Hi! I am John and I will be your buddy! The best for communication for me is Telegram, but I am basically on all the social platforms. Looking forward to see your and grab a drink together!" %}"></textarea>
+                  </label>
 
+                  <h4 class="text-lg">{% translate 'What to include in message?' %}</h4>
+                  <ul class="list-disc text-sm">
+                    <li>{% translate 'Through which platform you will contact him/her' %}</li>
+                    <li>{% translate "That you're looking forward to see her/him" %}</li>
+                    <li>{% translate "Kind words to support in their international mobility" %}</li>
+                  </ul>
+                {% endif %}
+
+                <div class="modal-actions flex flex-row justify-end">
+                  <button class="btn btn-lg btn-success"
+                          type="submit"
+                          :disabled="noteEnabled && !note">{% trans "Take Buddy" %}</button>
+                </div>
               </form>
             </dialog>
 

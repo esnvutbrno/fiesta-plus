@@ -4,6 +4,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import transaction
 from django.utils.translation import gettext as _
 from django.views.generic import ListView
 from django.views.generic.detail import BaseDetailView
@@ -55,21 +56,23 @@ class TakeBuddyRequestView(
             membership=self.request.membership,
         )
 
+    @transaction.atomic
     def post(self, request, pk: uuid.UUID):
         br: BuddyRequest = self.get_object()
 
         match = BuddyRequestMatch(
             request=br,
             matcher=self.request.user,
-            # TODO: better
             note=self.request.POST.get("note"),
         )
 
-        # TODO: check matcher relation to responsible section?
+        # TODO: check matcher relation to responsible section
+        # TODO: reset any previous match for this BR
         match.save()
 
         br.match = match
         br.state = BuddyRequest.State.MATCHED
+        br.save(update_fields=["state"])
 
         messages.success(request, _("Request successfully matched!"))
         # TODO: target URL?

@@ -58,7 +58,7 @@ loadlegacydata: DA_CMD = loadlegacydata  ## Loads all data from legacydb run fro
 loadlegacydata: DCFLAGS = --profile migration
 loadlegacydata: da
 
-dumpdata: DA_CMD = dumpdata --exclude auth --exclude contenttypes --exclude sessions --exclude sites --exclude admin
+dumpdata: DA_CMD = dumpdata --exclude auth --exclude contenttypes --exclude sessions --exclude sites --exclude admin --natural-foreign
 dumpdata: da
 
 fixture ?=

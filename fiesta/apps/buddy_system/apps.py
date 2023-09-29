@@ -30,13 +30,22 @@ class BuddySystemConfig(BasePluginAppConfig):
     membership_not_required_urls = ("new-request",)
 
     def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
-        base = super().as_navigation_item(request, bound_plugin)
+        base = (
+            super()
+            .as_navigation_item(request, bound_plugin)
+            ._replace(
+                children=[
+                    NavigationItemSpec(title=_("My Buddies"), url=reverse("buddy_system:my-buddies")),
+                ],
+            )
+        )
+
         if not request.membership.is_privileged:
             return base
 
         return base._replace(
-            url="",
-            children=[
+            children=base.children
+            + [
                 NavigationItemSpec(title=_("Requests"), url=reverse("buddy_system:requests")),
             ],
         )

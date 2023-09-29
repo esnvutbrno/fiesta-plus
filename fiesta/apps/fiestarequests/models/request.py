@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import datetime
 import typing
 
 from django.db import models
@@ -9,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModelMixin
 
 from apps.accounts.models import User
-from apps.fiestarequests.models.managers.request import BaseRequestManager
+from apps.fiestarequests.models.managers.request import BaseRequestManager, BaseRequestMatchManager
 from apps.sections.models import Section
 from apps.utils.models import BaseTimestampedModel
 
@@ -24,11 +23,19 @@ class BaseRequestProtocol(typing.Protocol):
     state: models.CharField | State
     issuer: models.ForeignKey | User
     responsible_section: models.ForeignKey | Section
-    matched_by: models.ForeignKey | User
-    matched_at: models.DateTimeField | datetime.datetime
-    description: models.TextField | str
+    # matched_by: models.ForeignKey | User
+    # matched_at: models.DateTimeField | datetime.datetime
+    note: models.TextField | str
 
     objects: BaseRequestManager
+
+
+class BaseRequestMatchProtocol(typing.Protocol):
+    request: models.ForeignKey | BaseRequestProtocol
+    matcher: models.ForeignKey | User
+    note: models.TextField | str
+
+    objects: BaseRequestMatchManager
 
 
 def base_request_model_factory(

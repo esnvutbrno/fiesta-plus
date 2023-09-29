@@ -13,42 +13,42 @@
 
 {% block main %}
   <div class="md:columns-2 space-y-4">
-    {% for br in object_list.all %}
-      <div class="card card-side bg-gray-100 group">
+    {% for match in object_list.all %}
+      <div class="card card-side bg-gray-100 group break-inside-avoid-column">
         <div class="card-body w-3/4 grow-1">
           <div class="card-title flex flex-row justify-between">
-            {{ br.issuer.full_name_official }}
+            {{ match.request.issuer.full_name_official }}
 
-            <span class="text-gray-600 text-xs">{{ br.matched_at|date }}</span>
+            <span class="text-gray-600 text-xs">{{ match.created|date }}</span>
           </div>
 
 
           <div class="prose prose-sm">
             {# <p /> are added by filter #}
-            {{ br.note|censor_description|linebreaks }}
+            {{ match.request.note|censor_description|linebreaks }}
           </div>
 
           <div>
-            {% for interest in br.get_interests_display %}
+            {% for interest in match.request.get_interests_display %}
               <span class="badge badge-outline badge-sm mr-1 mb-1">{{ interest }}</span>
             {% endfor %}
           </div>
 
         </div>
-        {% if br.issuer.profile.picture %}
+        {% if match.request.issuer.profile.picture %}
           <figure class="flex flex-col !items-start space-y-4 pb-4 max-w-[33%]">
-            <img src="{% url "buddy_system:serve-issuer-profile-picture" br.issuer.profile.picture %}"
-                 width="{{ br.issuer.profile.picture.width }}"
-                 height="{{ br.issuer.profile.picture.height }}"
+            <img src="{% url "buddy_system:serve-issuer-profile-picture" match.request.issuer.profile.picture %}"
+                 width="{{ match.request.issuer.profile.picture.width }}"
+                 height="{{ match.request.issuer.profile.picture.height }}"
                  alt=""
                  class="rounded-bl-xl">
 
             <div class="flex flex-col justify-start items-center space-y-2">
-              {% if br.issuer.profile_or_none.facebook %}
+              {% if match.request.issuer.profile_or_none.facebook %}
                 <a type="button"
                    class="inline-block rounded px-6 py-2.5 text-xs font-medium leading-normal text-white transition duration-150 ease-in-out hover:shadow focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                    style="background-color: #1877f2"
-                   href="{{ br.issuer.profile_or_none.facebook }}"
+                   href="{{ match.request.issuer.profile_or_none.facebook }}"
                    rel="nofollow,noreferer">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        class="h-4 w-4"
@@ -58,11 +58,11 @@
                   </svg>
                 </a>
               {% endif %}
-              {% if br.issuer.profile_or_none.instagram %}
+              {% if match.request.issuer.profile_or_none.instagram %}
                 <a type="button"
                    class="inline-block rounded px-6 py-2.5 text-xs font-medium leading-normal text-white transition duration-150 ease-in-out hover:shadow focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
                    style="background-color: #c13584"
-                   href="{{ br.issuer.profile_or_none.instagram }}">
+                   href="{{ match.request.issuer.profile_or_none.instagram }}">
                   <svg xmlns="http://www.w3.org/2000/svg"
                        class="h-4 w-4"
                        fill="currentColor"
@@ -75,7 +75,7 @@
 
                 <a type="button"
                    class="bg-gray-500 inline-block rounded px-6 py-1.5 font-medium leading-normal text-white transition duration-150 ease-in-out hover:shadow focus:shadow-lg focus:outline-none focus:ring-0 active:shadow-lg"
-                   href="mailto:{{ br.issuer.email }}">@</a>
+                   href="mailto:{{ match.request.issuer.email }}">@</a>
               {% endif %}
             </div>
           </figure>

@@ -10,7 +10,6 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
-from apps.utils.models.query import get_single_object_or_none
 
 register = template.Library()
 
@@ -38,11 +37,9 @@ def censor_description(description: str) -> str:
 def get_current_buddy_request_of_user(context):
     request: HttpRequest = context["request"]
 
-    return get_single_object_or_none(
-        request.membership.user.buddy_system_issued_requests.filter(
-            responsible_section=request.membership.section,
-        )
-    )  # TODO: could be more then one?
+    return request.membership.user.buddy_system_issued_requests.filter(
+        responsible_section=request.membership.section,
+    ).latest("created")
 
 
 @register.simple_tag(takes_context=True)
