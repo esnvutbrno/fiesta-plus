@@ -1,7 +1,7 @@
 from .index import EventsIndexView
-from .event import AddEventView, EventView
+from .event import AddEventView
 
 __all__ = [
-    "EventView",
+    "EventsIndexView",
     "AddEventView",
 ]

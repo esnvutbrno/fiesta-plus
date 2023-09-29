@@ -16,13 +16,6 @@ from apps.events.forms.event import AddEventForm
 from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
 from apps.sections.models.section import Section
 
-class EventView(ListView):
-    template_name='events/index.html'
-    model = Event
-    
-    def get_queryset(self):
-        return super().get_queryset()
-    
 class AddEventView(
     CreateView, 
     HtmxFormMixin,

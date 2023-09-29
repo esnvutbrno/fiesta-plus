@@ -43,7 +43,7 @@
 
 <!-- Only allow adding of events to members and admins -->
 {% if not request.membership.is_international %}
-<button><a href="{% url " events:add-event" %}">Add event</a></button>
+<button><a href="{% url "events:add-event" %}">Add event</a></button>
 {% endif %}
 <!--  {{ request.in_space_of_section.events }}-->
 
