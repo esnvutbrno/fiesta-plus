@@ -11,7 +11,7 @@ module.exports = {
         },
         {
             // TODO: till the https://github.com/esnvutbrno/buena-fiesta/issues/188 is fixed
-            pattern: /btn-.+/,
+            pattern: /(btn-.+)|(badge-.+)/,
             variants: ["checked"],
         },
     ],

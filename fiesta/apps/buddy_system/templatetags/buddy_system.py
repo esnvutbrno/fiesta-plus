@@ -76,3 +76,12 @@ def get_matched_buddy_requests(context):
         request__responsible_section=request.membership.section,
         request__state=BuddyRequest.State.MATCHED,
     ).order_by("-created")
+
+
+@register.filter
+def request_state_to_css_variant(state: BuddyRequest.State):
+    return {
+        BuddyRequest.State.CREATED: "info",
+        BuddyRequest.State.MATCHED: "success",
+        BuddyRequest.State.CANCELLED: "danger",
+    }.get(state)

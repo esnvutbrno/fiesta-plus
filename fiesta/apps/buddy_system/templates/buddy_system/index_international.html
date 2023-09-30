@@ -1,4 +1,5 @@
 {% extends "fiesta/base.html" %}
+{% load buddy_system %}
 {% load user_profile %}
 {% load utils %}
 
@@ -18,7 +19,7 @@
         <h2 class="card-title flex flex-row justify-between">
           Your Request from {{ br.created|date }}
 
-          <span class="badge badge-lg">{{ br.get_state_display }}</span>
+          <span class="badge badge-lg badge-{{ br.state|request_state_to_css_variant|default:"default" }}">{{ br.get_state_display }}</span>
         </h2>
 
         {% if br.state == RequestState.MATCHED %}
