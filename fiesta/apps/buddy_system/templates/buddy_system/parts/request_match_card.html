@@ -1,0 +1,104 @@
+{% load utils %}
+{% load user_profile %}
+{% load buddy_system %}
+<div class="card bg-base-200 shadow mb-4 mt-2">
+  <div class="card-body">
+    <h2 class="card-title flex flex-row justify-between">
+      {{ title }}
+
+      <span class="badge badge-lg badge-{{ request.state|request_state_to_css_variant|default:"default" }}">
+        {{ request.get_state_display }}
+      </span>
+    </h2>
+
+    {% if request.state == request.State.MATCHED %}
+      <div class="chat chat-start">
+        <div class="chat-header">
+          {{ request.issuer.get_full_name }}
+          <time class="text-xs opacity-50"
+                title="{{ request.created|date:"SHORT_DATETIME_FORMAT" }}">
+            {{ request.created|date:"SHORT_DATETIME_FORMAT" }}
+          </time>
+        </div>
+        <div class="chat-image avatar">
+          <div class="w-10 rounded-full">
+            {% get_user_picture request.issuer as issuer_picture %}
+
+            {% if issuer_picture %}
+              <img src="{% url "buddy_system:serve-issuer-profile-picture" issuer_picture %}"
+                   width="{{ issuer_picture.width }}"
+                   height="{{ issuer_picture.height }}"
+                   alt="Issuer picture" />
+            {% else %}
+              <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
+                    style="background-color: {{ request.issuer.id|get_color_by_text }}">{{ request.issuer.first_name|first }}{{ request.issuer.last_name|first }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="chat-bubble">{{ request.note }}</div>
+      </div>
+      <div class="chat chat-end">
+        <div class="chat-header">
+          {% if request.match.created %}
+            <time class="text-xs opacity-50"
+                  title="{{ request.matched_at|date:"SHORT_DATETIME_FORMAT" }}">
+              {{ request.match.created|date:"SHORT_DATETIME_FORMAT" }}
+            </time>
+          {% endif %}
+          {{ request.match.matcher.get_full_name }}
+        </div>
+        <div class="chat-image avatar">
+          <div class="w-10 rounded-full">
+            {% get_user_picture request.match.matcher as matcher_picture %}
+
+            {% if matcher_picture %}
+              <img src="{% url "buddy_system:serve-matcher-profile-picture" matcher_picture %}"
+                   width="{{ matcher_picture.width }}"
+                   height="{{ matcher_picture.height }}"
+                   alt="Matcher picture" />
+            {% else %}
+              <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
+                    style="background-color: {{ request.match.matcher.id|get_color_by_text }}">{{ request.match.matcher.first_name|first }}{{ request.match.matcher.last_name|first }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <div class="chat-bubble">{{ request.match.note }}</div>
+      </div>
+
+      <div class="flex flex-row items-center space-x-4 md:space-x-8 my-4">
+        <hr class="flex-grow bg-base-300 h-1 mt-0.5">
+        <h3 class="text-2xl">Connect with {{ connect_with.first_name }}</h3>
+        <hr class="flex-grow bg-base-300 h-1 mt-0.5">
+      </div>
+      <div class="flex flex-row gap-x-4 items-center justify-center">
+        {% if connect_with.profile.facebook %}
+          <a href="{{ connect_with.profile.facebook }}"
+             rel="nofollow,noreferer,noopener"
+             target="_blank"
+             class="btn uppercase text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:ring-[#3b5998]/50 inline-flex items-center gap-x-2 dark:focus:ring-[#3b5998]/55">
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 x="0px"
+                 y="0px"
+                 viewBox="0 0 30 30"
+                 class="text-white w-6 h-6"
+                 fill="currentColor">
+              <path d="M24,4H6C4.895,4,4,4.895,4,6v18c0,1.105,0.895,2,2,2h10v-9h-3v-3h3v-1.611C16,9.339,17.486,8,20.021,8 c1.214,0,1.856,0.09,2.16,0.131V11h-1.729C19.376,11,19,11.568,19,12.718V14h3.154l-0.428,3H19v9h5c1.105,0,2-0.895,2-2V6 C26,4.895,25.104,4,24,4z">
+              </path>
+            </svg>
+            {{ connect_with }}
+          </a>
+        {% endif %}
+        {% if connect_with.email %}
+          <a href="mailto:{{ connect_with.email }}"
+             rel="nofollow,noreferer,noopener"
+             target="_blank"
+             class="btn btn-primary inline-flex items-center gap-x-2">
+            <span class="text-xl">✉️</span>
+
+            {{ connect_with.email }}
+          </a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+</div>
