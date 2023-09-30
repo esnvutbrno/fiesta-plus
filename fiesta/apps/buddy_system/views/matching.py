@@ -95,7 +95,7 @@ class IssuerPictureServeView(
                 state=BuddyRequest.State.MATCHED,
             )
             .filter(
-                Q(matched_by=request.user) | Q(issuer=request.user),
+                Q(match__matcher=request.user) | Q(issuer=request.user),
             )
             .exists()
         )
@@ -108,7 +108,7 @@ class MatcherPictureServeView(
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
         related_requests = request.membership.section.buddy_system_requests.filter(
-            matched_by__profile__picture=name,
+            match__matcher__profile__picture=name,
         )
 
         # does have the section enabled picture displaying?
@@ -117,7 +117,7 @@ class MatcherPictureServeView(
                 state=BuddyRequest.State.MATCHED,
             )
             .filter(
-                Q(matched_by=request.user) | Q(issuer=request.user),
+                Q(match__matcher=request.user) | Q(issuer=request.user),
             )
             .exists()
         )

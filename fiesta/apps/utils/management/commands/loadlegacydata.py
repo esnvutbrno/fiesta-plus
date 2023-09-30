@@ -17,7 +17,7 @@ from django_countries.fields import Country
 
 from apps.accounts.hashers import LegacyBCryptSHA256PasswordHasher
 from apps.accounts.models import User, UserProfile
-from apps.buddy_system.models import BuddyRequest
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.sections.models import Section, SectionMembership, SectionUniversity
 from apps.universities.models import Faculty, University
 
@@ -73,16 +73,23 @@ def load_requests(*, cursor: CursorWrapper):
 
         responsible_section = Section.objects.filter(universities__abbr=issuer_university).first()
 
-        BuddyRequest.objects.update_or_create(
+        br, _ = BuddyRequest.objects.update_or_create(
             issuer=ID_TO_USER[issuer_email],
             responsible_section=responsible_section,
             defaults=dict(
-                description=description,
-                matched_by=ID_TO_USER.get(matched_by_email),
-                matched_at=make_aware(matched_at) if matched_at else None,
+                note=description,
                 state=BuddyRequest.State.MATCHED if matched_by_email else BuddyRequest.State.CREATED,
             ),
         )
+
+        if matched_by_email:
+            BuddyRequestMatch.objects.create_or_update(
+                request=br,
+                defaults=dict(
+                    matcher=ID_TO_USER[matched_by_email],
+                    created=make_aware(matched_at) if matched_at else None,
+                ),
+            )
 
         secho("Processing {i: >4}: {desc}.".format(i=i, desc=description[:32].replace("\n", " ")))
 

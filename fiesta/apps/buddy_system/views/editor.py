@@ -14,7 +14,7 @@ from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
-from apps.fiestatables.filters import BaseFilterSet
+from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
@@ -34,12 +34,14 @@ class RequestFilter(BaseFilterSet):
         widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
     )
     state = ChoiceFilter(choices=BuddyRequest.State.choices)
-    # matched_when = ProperDateFromToRangeFilter(field_name="match.created_at")
+    matched_when = ProperDateFromToRangeFilter(
+        field_name="match__created",
+    )
 
-    matched_by_faculty = ModelChoiceFilter(
+    matcher_faculty = ModelChoiceFilter(
         queryset=related_faculties,
         label=_("Faculty of matcher"),
-        field_name="matched_by__profile__home_faculty",
+        field_name="match__matcher__profile__home_faculty",
     )
 
     def filter_search(self, queryset, name, value):
@@ -47,8 +49,8 @@ class RequestFilter(BaseFilterSet):
             search=SearchVector(
                 "issuer__last_name",
                 "issuer__first_name",
-                "matched_by__last_name",
-                "matched_by__first_name",
+                "match__matcher__last_name",
+                "match__matcher__first_name",
                 "state",
             )
         ).filter(search=value)
@@ -67,7 +69,7 @@ class BuddyRequestsTable(tables.Table):
 
     issuer__profile__picture = ImageColumn(verbose_name="🧑")
 
-    matched_by_name = Column(
+    matcher_name = Column(
         accessor="match.matcher.full_name_official",
         order_by=(
             "match__matcher__last_name",
@@ -75,12 +77,12 @@ class BuddyRequestsTable(tables.Table):
             "match__matcher__username",
         ),
     )
-    matched_by_email = Column(
-        accessor="matcher.matcher.email",
+    matcher_email = Column(
+        accessor="match.matcher.email",
         visible=False,
     )
 
-    matched_by_picture = ImageColumn(
+    matcher_picture = ImageColumn(
         accessor="match.matcher.profile.picture",
         verbose_name=_("Matcher"),
     )
@@ -91,8 +93,12 @@ class BuddyRequestsTable(tables.Table):
         order_by="match",
     )
 
-    created = NaturalDatetimeColumn()
-    # matched_at = NaturalDatetimeColumn(accessor="match.created_at")
+    requested = NaturalDatetimeColumn(verbose_name=_("Requested"), accessor="created")
+    matched = NaturalDatetimeColumn(
+        accessor="match.created",
+        verbose_name=_("Matched"),
+        attrs={"td": {"title": None}},  # TODO: fix attrs accessor
+    )
 
     class Meta:
         model = BuddyRequest
@@ -102,10 +108,10 @@ class BuddyRequestsTable(tables.Table):
             "issuer__full_name_official",
             "issuer__profile__picture",
             "state",
-            "matched_by_name",
-            "matched_by_picture",
-            # "matched_at",
-            "created",
+            "matcher_name",
+            "matcher_picture",
+            "requested",
+            "matched",
             "match_request",
             "...",
         )

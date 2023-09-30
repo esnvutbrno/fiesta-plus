@@ -23,8 +23,6 @@ class BaseRequestProtocol(typing.Protocol):
     state: models.CharField | State
     issuer: models.ForeignKey | User
     responsible_section: models.ForeignKey | Section
-    # matched_by: models.ForeignKey | User
-    # matched_at: models.DateTimeField | datetime.datetime
     note: models.TextField | str
 
     objects: BaseRequestManager

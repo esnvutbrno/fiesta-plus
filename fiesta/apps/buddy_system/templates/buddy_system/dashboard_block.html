@@ -20,7 +20,7 @@
           There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
         </div>
       {% elif br.state == br.State.MATCHED %}
-        {% get_user_picture br.matched_by as buddy_picture %}
+        {% get_user_picture br.match.matcher as buddy_picture %}
         <div class="stat-figure text-secondary flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
           <a href="{% url "buddy_system:index" %}"
              class="btn btn-lg btn-secondary">{% trans "find out about your buddy" %}</a>
