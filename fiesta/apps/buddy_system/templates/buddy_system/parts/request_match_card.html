@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static %}
 {% load utils %}
 {% load user_profile %}
@@ -70,7 +71,13 @@
             {% endif %}
           </div>
         </div>
-        <div class="chat-bubble">{{ br.match.note }}</div>
+        <div class="chat-bubble">
+          {% if br.match.note %}
+            {{ br.match.note }}
+          {% else %}
+            {% translate "We have been successfully matched!" %}
+          {% endif %}
+        </div>
       </div>
 
       <div class="flex flex-row items-center space-x-4 md:space-x-8 my-4">
@@ -156,10 +163,10 @@
         <div class="chat-image avatar rounded-full">
           <div class="w-10 h-10 text-4xl">🤖</div>
         </div>
-        <div class="chat-bubble bg-info-content">
+        <div class="chat-bubble bg-base-300 text-base-content">
           {% get_waiting_buddy_requests_placed_before br as waiting_total %}
 
-          <div class="text-xl">⌛ Waiting for match</div>
+          <div class="text-xl">⌛ {% translate "Waiting for match" %}</div>
 
           {% if waiting_total %}
             There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.

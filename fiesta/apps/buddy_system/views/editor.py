@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchVector
+from django.db import transaction
 from django.forms import TextInput
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -171,8 +172,21 @@ class QuickBuddyMatchView(
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
 
+    def get_initial(self):
+        try:
+            return {
+                "matcher": self.get_object().match.matcher,
+            }
+        except BuddyRequestMatch.DoesNotExist:
+            return {}
+
+    @transaction.atomic
     def form_valid(self, form):
         br: BuddyRequest = self.get_object()
+
+        if br.match:
+            # could be already matched by someone else
+            br.match.delete()
 
         match = BuddyRequestMatch(
             request=br,
