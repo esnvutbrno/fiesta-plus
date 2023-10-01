@@ -36,9 +36,12 @@ def censor_description(description: str) -> str:
 def get_current_buddy_request_of_user(context):
     request: HttpRequest = context["request"]
 
-    return request.membership.user.buddy_system_issued_requests.filter(
-        responsible_section=request.membership.section,
-    ).latest("created")
+    try:
+        return request.membership.user.buddy_system_issued_requests.filter(
+            responsible_section=request.membership.section,
+        ).latest("created")
+    except BuddyRequest.DoesNotExist:
+        return None
 
 
 @register.simple_tag(takes_context=True)

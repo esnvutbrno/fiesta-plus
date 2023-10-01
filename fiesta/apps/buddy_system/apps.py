@@ -34,9 +34,13 @@ class BuddySystemConfig(BasePluginAppConfig):
             super()
             .as_navigation_item(request, bound_plugin)
             ._replace(
-                children=[
-                    NavigationItemSpec(title=_("My Buddies"), url=reverse("buddy_system:my-buddies")),
-                ],
+                children=(
+                    [
+                        NavigationItemSpec(title=_("My Buddies"), url=reverse("buddy_system:my-buddies")),
+                    ]
+                    if request.membership.is_local
+                    else []
+                ),
             )
         )
 
