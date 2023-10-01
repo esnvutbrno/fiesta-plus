@@ -45,6 +45,10 @@ class User(AbstractUser):
     def full_name_official(self):
         return f"{self.last_name} {self.first_name}".strip() or self.username
 
+    @property
+    def is_esn_card_holder(self):
+        return False
+
     class Meta(AbstractUser.Meta):
         verbose_name = _("user")
         verbose_name_plural = _("users")

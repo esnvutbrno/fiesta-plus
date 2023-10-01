@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
 from apps.utils.models import BaseModel
+from apps.events.models.price_variant import PriceVariant
 
 
-class State(models.TextChoices):  # TODO do we need a state if we have an expiration date
+class ParticipantState(models.TextChoices):  # TODO do we need a state if we have an expiration date
     WAITING = "waiting", _("Waiting")
     CONFIRMED = "confirmed", _("Confirmed")
     DELETED = "deleted", _("Deleted")
@@ -20,7 +20,7 @@ class Participant(BaseModel):
 
     user = models.ForeignKey(
         to="accounts.User",
-        related_name="user",
+        related_name="users",
         on_delete=models.SET_NULL,
         null=True,
         db_index=True,
@@ -30,7 +30,7 @@ class Participant(BaseModel):
     event = models.ForeignKey(
         to="events.Event",
         on_delete=models.SET_NULL,
-        related_name="event",
+        related_name="participants",
         null=True,
         db_index=True,
         verbose_name=_("event"),
@@ -45,8 +45,15 @@ class Participant(BaseModel):
         db_index=False,
     )
 
+    state = models.CharField(
+        choices=ParticipantState.choices,
+        default=ParticipantState.WAITING,
+        verbose_name=_("state"),
+        help_text=_("current state of the event"),
+    )
+
     def __str__(self):
-        return self.title
+        return f"{self.user} - {self.event}"
 
     class Meta:
         unique_together = (("event", "user"),)
