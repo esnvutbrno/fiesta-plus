@@ -206,9 +206,6 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
             f"{self.home_university or (self.home_faculty.university if self.home_faculty else None) or ''} "
         )
 
-    def is_esn_card_holder(self):
-        return False
-
 
 __all__ = [
     "UserProfile",

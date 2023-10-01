@@ -1,13 +1,23 @@
-from django.contrib import admin
-from apps.plugins.models import BasePluginConfiguration
+from __future__ import annotations
 
-from .models import EventsConfiguration, Event, Organizer, Participant, Place, PriceVariant
+from django.contrib import admin
+
 from ..plugins.admin import BaseChildConfigurationAdmin
+from .models import Event, EventsConfiguration, Organizer, Participant, Place, PriceVariant
+from apps.plugins.models import BasePluginConfiguration
 
 
 @admin.register(EventsConfiguration)
 class EventsConfigurationAdmin(BaseChildConfigurationAdmin):
     base_model = BasePluginConfiguration
+    list_display = (
+        "name",
+        "section",
+        "shared",
+        "require_confirmation",
+        "members_can_create",
+        "online_purchases",
+    )
     show_in_index = True
 
 
@@ -20,8 +30,8 @@ class EventAdmin(admin.ModelAdmin):
     #     description=_("Filled"),
     # )
     # def filled(self, obj: Section):
-        # return obj.memberships.count()
-        # TODO
+    # return obj.memberships.count()
+    # TODO
 
 
 @admin.register(Organizer)
