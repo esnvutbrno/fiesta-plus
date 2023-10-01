@@ -1,3 +1,4 @@
+{% load static %}
 {% load utils %}
 {% load user_profile %}
 {% load buddy_system %}
@@ -6,55 +7,57 @@
     <h2 class="card-title flex flex-row justify-between">
       {{ title }}
 
-      <span class="badge md:badge-lg badge-{{ request.state|request_state_to_css_variant|default:"default" }}">
-        {{ request.get_state_display }}
+      <span class="badge md:badge-lg badge-{{ br.state|request_state_to_css_variant|default:"default" }}">
+        {{ br.get_state_display }}
       </span>
     </h2>
 
-    {% if request.state == request.State.MATCHED %}
-      <div class="chat chat-start">
-        <div class="chat-header">
-          {{ request.issuer.get_full_name }}
-          <time class="text-xs opacity-50"
-                title="{{ request.created|date:"SHORT_DATETIME_FORMAT" }}">
-            {{ request.created|date:"SHORT_DATETIME_FORMAT" }}
-          </time>
-        </div>
-        <div class="chat-image avatar">
-          <div class="w-10 rounded-full">
-            {% get_user_picture request.issuer as issuer_picture %}
+    <div class="chat chat-start">
 
-            {% if issuer_picture %}
-              <img src="{% url "buddy_system:serve-issuer-profile-picture" issuer_picture %}"
-                   width="{{ issuer_picture.width }}"
-                   height="{{ issuer_picture.height }}"
-                   alt="Issuer picture" />
-            {% else %}
-              <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
-                    style="background-color: {{ request.issuer.id|get_color_by_text }}">{{ request.issuer.first_name|first }}{{ request.issuer.last_name|first }}</span>
-            {% endif %}
-          </div>
-        </div>
-        <div class="chat-bubble">{{ request.note }}</div>
-        <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">
-          {% for interest in request.issuer.profile.get_interests_display %}
-            <span class="mr-2 badge badge-outline">{{ interest }}</span>
-          {% endfor %}
+      <div class="chat-header">
+        {{ br.issuer.get_full_name }}
+        <time class="text-xs opacity-50"
+              title="{{ br.created|date:"SHORT_DATETIME_FORMAT" }}">
+          {{ br.created|date:"SHORT_DATETIME_FORMAT" }}
+        </time>
+      </div>
+      <div class="chat-image avatar">
+        <div class="w-10 rounded-full">
+          {% get_user_picture br.issuer as issuer_picture %}
+
+          {% if issuer_picture %}
+            <img src="{% url "buddy_system:serve-issuer-profile-picture" issuer_picture %}"
+                 width="{{ issuer_picture.width }}"
+                 height="{{ issuer_picture.height }}"
+                 alt="Issuer picture" />
+          {% else %}
+            <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
+                  style="background-color: {{ br.issuer.id|get_color_by_text }}">{{ br.issuer.first_name|first }}{{ br.issuer.last_name|first }}</span>
+          {% endif %}
         </div>
       </div>
+      <div class="chat-bubble">{{ br.note }}</div>
+      <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">
+        {% for interest in br.issuer.profile.get_interests_display %}
+          <span class="mr-2 badge badge-outline">{{ interest }}</span>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if br.state == br.State.MATCHED %}
       <div class="chat chat-end">
         <div class="chat-header">
-          {% if request.match.created %}
+          {% if br.match.created %}
             <time class="text-xs opacity-50"
-                  title="{{ request.matched_at|date:"SHORT_DATETIME_FORMAT" }}">
-              {{ request.match.created|date:"SHORT_DATETIME_FORMAT" }}
+                  title="{{ br.matched_at|date:"SHORT_DATETIME_FORMAT" }}">
+              {{ br.match.created|date:"SHORT_DATETIME_FORMAT" }}
             </time>
           {% endif %}
-          {{ request.match.matcher.get_full_name }}
+          {{ br.match.matcher.get_full_name }}
         </div>
         <div class="chat-image avatar">
           <div class="w-10 rounded-full">
-            {% get_user_picture request.match.matcher as matcher_picture %}
+            {% get_user_picture br.match.matcher as matcher_picture %}
 
             {% if matcher_picture %}
               <img src="{% url "buddy_system:serve-matcher-profile-picture" matcher_picture %}"
@@ -63,11 +66,11 @@
                    alt="Matcher picture" />
             {% else %}
               <span class="w-10 aspect-square text-white text-lg flex flex-row justify-center items-center group"
-                    style="background-color: {{ request.match.matcher.id|get_color_by_text }}">{{ request.match.matcher.first_name|first }}{{ request.match.matcher.last_name|first }}</span>
+                    style="background-color: {{ br.match.matcher.id|get_color_by_text }}">{{ br.match.matcher.first_name|first }}{{ br.match.matcher.last_name|first }}</span>
             {% endif %}
           </div>
         </div>
-        <div class="chat-bubble">{{ request.match.note }}</div>
+        <div class="chat-bubble">{{ br.match.note }}</div>
       </div>
 
       <div class="flex flex-row items-center space-x-4 md:space-x-8 my-4">
@@ -146,6 +149,22 @@
             E-mail
           </a>
         {% endif %}
+      </div>
+    {% elif br.state == br.State.CREATED %}
+      <div class="chat chat-end">
+        <div class="chat-header"></div>
+        <div class="chat-image avatar rounded-full">
+          <div class="w-10 h-10 text-4xl">🤖</div>
+        </div>
+        <div class="chat-bubble bg-info-content">
+          {% get_waiting_buddy_requests_placed_before br as waiting_total %}
+
+          <div class="text-xl">⌛ Waiting for match</div>
+
+          {% if waiting_total %}
+            There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+          {% endif %}
+        </div>
       </div>
     {% endif %}
   </div>

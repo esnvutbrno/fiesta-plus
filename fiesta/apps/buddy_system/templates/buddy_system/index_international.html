@@ -15,7 +15,7 @@
 
   {% for br in requests %}
     {% blocktranslate with created=br.created|date asvar title %}Your Request from {{ created }}{% endblocktranslate %}
-    {% include "buddy_system/parts/request_match_card.html" with request=br title=title connect_with=br.match.matcher %}
+    {% include "buddy_system/parts/request_match_card.html" with br=br title=title connect_with=br.match.matcher %}
   {% empty %}
     <tr>
       <td>

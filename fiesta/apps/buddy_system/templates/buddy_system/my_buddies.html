@@ -13,6 +13,6 @@
 
 {% block main %}
   {% for match in object_list.all %}
-    {% include "buddy_system/parts/request_match_card.html" with request=match.request title=match.request.issuer.full_name connect_with=match.request.issuer %}
+    {% include "buddy_system/parts/request_match_card.html" with br=match.request title=match.request.issuer.full_name connect_with=match.request.issuer %}
   {% endfor %}
 {% endblock %}
