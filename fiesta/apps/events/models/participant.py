@@ -20,7 +20,7 @@ class Participant(BaseModel):
 
     user = models.ForeignKey(
         to="accounts.User",
-        related_name="users",
+        related_name="participants",
         on_delete=models.SET_NULL,
         null=True,
         db_index=True,
@@ -40,7 +40,7 @@ class Participant(BaseModel):
         to="events.PriceVariant",
         on_delete=models.SET_NULL,
         verbose_name=_("price"),
-        related_name="price",
+        related_name="participants",
         null=True,
         db_index=False,
     )
