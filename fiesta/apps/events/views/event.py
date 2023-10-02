@@ -13,7 +13,7 @@ from django_tables2 import Column
 from django.db import models
 
 from ..models import Participant
-from ..models.event import Event
+from ..models.event import Event, EventState
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -65,6 +65,24 @@ class EventDetailView(DetailView):
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
 
+class EventParticipantsFilter(BaseFilterSet):
+    search = CharFilter(
+        method="filter_search",
+        label=_("Search"),
+        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
+    )
+    state = ChoiceFilter(choices=EventState.choices, label=_("State"))
+
+    created = ProperDateFromToRangeFilter(label=_("Created"))
+
+    class Meta(BaseFilterSet.Meta):
+        pass
+
+    def filter_search(self, queryset, name, value):
+        return queryset.annotate(search=SearchVector("user__last_name", "user__first_name", "state")).filter(
+            search=value
+        )
+
 
 
 class EventParticipantsTable(tables.Table):
@@ -98,8 +116,16 @@ class EventParticipantsTable(tables.Table):
 
     class Meta:
         model = Participant
-        template_name = "fiestatables/page.html"
-        attrs = {"class": "table table-bordered table-striped table-hover"}
+
+        fields = ("created",)
+                  
+        sequence = (
+            "user__full_name",
+            "event__title",
+            "price__name",
+            "state"
+        )
+
         empty_text = _("No p Applications")
 
 
@@ -110,22 +136,20 @@ class EventParticipantsTable(tables.Table):
         return str(value)
 
 
-@with_breadcrumb(_("Events"))
-@with_breadcrumb(_("participants"))
-class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView, DetailView):
+class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
-    object: Event
     template_name = "fiestatables/page.html"
     table_class = EventParticipantsTable
-    # filterset_class = EventParticipantsFilter
-    model = Event
-    context_object_name = 'event'
+    filterset_class = EventParticipantsFilter
+    model = Participant
+    
 
-    def get_queryset(self, event):
-        return self.request.in_space_of_section.esncard_applications.filter(
+    def get_queryset(self):
+        event_id = self.kwargs.get('pk')
+        return self.request.in_space_of_section.events.get(id=event_id).participants.filter(
             state__in=(
                 ParticipantState.WAITING,
                 ParticipantState.CONFIRMED,
                 ParticipantState.DELETED,
             )
-        ).select_related("participant")
+        )
