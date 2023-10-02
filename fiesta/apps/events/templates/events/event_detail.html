@@ -19,10 +19,9 @@
 
 
   <br><br>
-{{event.organizers}}
-{% if event.organizers %}
-  {# for organizer in event.organizers #}
-    {# organizer.user.get_full_name #}<br>
+{% if event.organizers.all %}
+  {# for organizer in event.organizers.all #}
+    {{ organizer.user.get_full_name }}<br>
   {# endfor #}
 {% endif %}
   <br><br>
@@ -37,7 +36,6 @@
     {% endfor %}
   {% endif %}
 
-  <!--TODO use the typical table-->
   {% get_price_variants event as prices %}
   {% if prices is not None %}
     {% for price in prices %}
