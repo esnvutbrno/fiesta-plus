@@ -26,10 +26,8 @@
 
   <br><br>
 {% get_ocs event as organizers %}
-  {% if participants is not None %}
+  {% if organizers is not None %}
     {% for organizer in organizers %}
-      {{ organizer }}<br>
-      {{ organizer.user }}<br>
       {{ organizer.user.get_full_name }}<br>
     {% endfor %}
   {% endif %}
