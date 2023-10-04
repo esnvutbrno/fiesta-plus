@@ -1,9 +1,10 @@
+from typing import Any
 from uuid import UUID
 
 import django_filters
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
-from django.views.generic import CreateView, DetailView
+from django.views.generic import CreateView, DetailView, UpdateView
 import django_tables2 as tables
 
 from django.utils.translation import gettext_lazy as _
@@ -18,13 +19,15 @@ from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.events.forms.event import AddEventForm
+from apps.events.forms.event import AddEventForm, UpdateEventForm
 from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
+from allauth.account.utils import get_next_redirect_url
+from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
 @with_breadcrumb(_("Events"))
@@ -46,13 +49,50 @@ class AddEventView(
     success_message = _("Event added")
 
     def get_initial(self):
-        print(self.request.in_space_of_section.id)
         return dict(
             section=self.request.in_space_of_section,
+            author=self.request.user
         )
 
     def get_success_url(self):
         return reverse("events:index")
+
+@with_breadcrumb(_("Events"))
+@with_breadcrumb(_("Update"))
+class UpdateEventView(
+    UpdateView,
+    HtmxFormMixin,
+    AjaxViewMixin,
+    SuccessMessageMixin
+):
+    request: HttpRequest
+    object: Event
+
+    template_name = 'events/update_event.html'
+    ajax_template_name = 'events/parts/update_event_form.html'
+
+    form_class = UpdateEventForm
+
+    success_message = _("Event updated")
+
+    def get_object(self, queryset=None):
+        event_id = self.kwargs.get('pk')
+        return self.request.in_space_of_section.events.get(id=event_id)
+    
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data.update(
+            {
+                "redirect_field_name": REDIRECT_FIELD_NAME,
+                "redirect_field_value": get_next_redirect_url(self.request, REDIRECT_FIELD_NAME),
+            }
+        )
+        return data
+    
+    def get_success_url(self):
+        return reverse("events:event-detail", args=[self.object.id])
+
+
 
 
 @with_breadcrumb(_("Events"))
@@ -71,7 +111,7 @@ class EventParticipantsFilter(BaseFilterSet):
         label=_("Search"),
         widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
     )
-    state = ChoiceFilter(choices=EventState.choices, label=_("State"))
+    state = ChoiceFilter(choices=ParticipantState.choices, label=_("State"))
 
     created = ProperDateFromToRangeFilter(label=_("Created"))
 
@@ -145,6 +185,7 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     
 
     def get_queryset(self):
+        print(self.request.in_space_of_section.memberships.all())
         event_id = self.kwargs.get('pk')
         return self.request.in_space_of_section.events.get(id=event_id).participants.filter(
             state__in=(
