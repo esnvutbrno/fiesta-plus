@@ -1,4 +1,3 @@
-from typing import Any
 from uuid import UUID
 
 import django_filters
@@ -78,7 +77,7 @@ class UpdateEventView(
     def get_object(self, queryset=None):
         event_id = self.kwargs.get('pk')
         return self.request.in_space_of_section.events.get(id=event_id)
-    
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         data.update(
@@ -88,7 +87,7 @@ class UpdateEventView(
             }
         )
         return data
-    
+
     def get_success_url(self):
         return reverse("events:event-detail", args=[self.object.id])
 
@@ -109,7 +108,7 @@ class EventParticipantsFilter(BaseFilterSet):
     search = CharFilter(
         method="filter_search",
         label=_("Search"),
-        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
+        widget=TextInput(attrs={"placeholder": _("Petr, Daniel...")}),
     )
     state = ChoiceFilter(choices=ParticipantState.choices, label=_("State"))
 

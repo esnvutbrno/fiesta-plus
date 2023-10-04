@@ -17,6 +17,11 @@ def show_participants(context, event: Event):
     return None
 
 
+@register.simple_tag
+def get_ocs(event: Event):
+    return event.organizers.all()
+
+
 @register.simple_tag(takes_context=True)
 def get_price_variants(context, event: Event):
     request: HttpRequest = context["request"]
