@@ -25,11 +25,12 @@
   </a>
 
   <br><br>
-{% if event.organizers.all %}
-  {# for organizer in event.organizers.all #}
+{% get_ocs as organizers event %}
+  {% for organizer in organizers %}
+    {{ organizer }}<br>
+    {{ organizer.user }}<br>
     {{ organizer.user.get_full_name }}<br>
   {# endfor #}
-{% endif %}
   <br><br>
 
   <!--TODO use the typical table-->
