@@ -1,6 +1,6 @@
 from apps.fiestaforms.forms import BaseModelForm
 from apps.events.models import Event, Organizer
-from django.forms import Field as FormField, modelform_factory, CharField, HiddenInput, ChoiceField, Fiel
+from django.forms import Field as FormField, modelform_factory, CharField, HiddenInput, ChoiceField
 from django.utils.translation import gettext_lazy as _
 
 class AddEventForm(BaseModelForm):
