@@ -25,23 +25,15 @@
   </a>
 
   <br><br>
-{% get_ocs as organizers event %}
-  {% for organizer in organizers %}
-    {{ organizer }}<br>
-    {{ organizer.user }}<br>
-    {{ organizer.user.get_full_name }}<br>
-  {# endfor #}
-  <br><br>
-
-  <!--TODO use the typical table-->
-  {% show_participants event as participants %}
+{% get_ocs event as organizers %}
   {% if participants is not None %}
-    {% for participant in participants %}
-      {{ participant.user.get_full_name }}
-      {{ participant.user.email }}
-      {{ participant.price }}<br>
+    {% for organizer in organizers %}
+      {{ organizer }}<br>
+      {{ organizer.user }}<br>
+      {{ organizer.user.get_full_name }}<br>
     {% endfor %}
   {% endif %}
+  <br><br>
 
   {% get_price_variants event as prices %}
   {% if prices is not None %}
