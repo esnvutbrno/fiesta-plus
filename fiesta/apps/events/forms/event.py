@@ -1,6 +1,7 @@
+from apps.events.models.organizer import OrganizerRole
 from apps.fiestaforms.forms import BaseModelForm
 from apps.events.models import Event, Organizer
-from django.forms import Field as FormField, modelform_factory, CharField, HiddenInput, ChoiceField
+from django.forms import CharField, HiddenInput, MultipleChoiceField, ModelMultipleChoiceField
 from django.utils.translation import gettext_lazy as _
 
 from apps.sections.models import SectionMembership
@@ -41,24 +42,37 @@ class AddEventForm(BaseModelForm):
             "author": HiddenInput,
         }
 
+
 class UpdateEventForm(BaseModelForm):
     # section_name = CharField(label=_("ESN section"), disabled=True)
     # author_name = CharField(label=_("Author of the event"), disabled=True)
-    memberships_queryset = SectionMembership.objects.all()
-    membership_choices = [(membership.user.id, membership.user.full_name_official) for membership in memberships_queryset]
 
-    add_organizer = ChoiceField(choices=membership_choices, label=_("Add organizer"), required=False)
+    add_organizer = MultipleChoiceField(label=_("Add organizer"), required=False, queryset=SectionMembership.objects.none())
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        memberships_queryset = self.initial["section"].memberships.all()
+        membership_choices = [(str(membership.user.id), membership.user.full_name_official) for membership in
+                              memberships_queryset]
 
-        # self.fields["section"].disabled = True
-        # self.fields["author"].disabled = True
+        self.fields["add_organizer"].queryset = membership_choices
 
-        # self.initial["section_name"] = self.initial["section"].name
-        # self.initial["author_name"] = self.initial["author"].full_name
+    def save(self, commit=True):
+        event = super().save(commit=commit)
 
-    
+        # Get the selected organizer user IDs from cleaned_data
+        organizer_user_ids = self.cleaned_data.get("add_organizer", [])
+
+        # Create organizers for the selected users
+        for user_id in organizer_user_ids:
+            Organizer.objects.create(
+                user_id=user_id,
+                event=event,
+                state=OrganizerRole.OC,
+            )
+
+        return event
+
     class Meta:
         model = Event
         fields = (
@@ -73,9 +87,11 @@ class UpdateEventForm(BaseModelForm):
             "landscape_cover",
             "portrait_cover",
             "section",
-            "author"
+            "author",
+            "add_organizer"
         )
         widgets = {
             "section": HiddenInput,
             "author": HiddenInput,
         }
+
