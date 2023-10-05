@@ -67,12 +67,18 @@ class UpdateEventView(
     request: HttpRequest
     object: Event
 
+    form_class = UpdateEventForm
     template_name = 'events/update_event.html'
     ajax_template_name = 'events/parts/update_event_form.html'
 
-    form_class = UpdateEventForm
 
     success_message = _("Event updated")
+
+    def get_initial(self):
+        return dict(
+            section=self.request.in_space_of_section,
+        )
+
 
     def get_object(self, queryset=None):
         event_id = self.kwargs.get('pk')
