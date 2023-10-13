@@ -7,8 +7,8 @@ from django.urls import reverse
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
-    from apps.plugins.models import Plugin
     from apps.plugins.plugin import BasePluginAppConfig
+    from apps.plugins.models import Plugin
     from apps.sections.models import Section, SectionMembership
 
 register = template.Library()

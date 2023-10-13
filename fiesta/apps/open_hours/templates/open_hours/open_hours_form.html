@@ -1,0 +1,23 @@
+{% extends "fiesta/base.html" %}
+
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block upper_head %}
+  {% breadcrumb_push_current_plugin %}
+  {% if object %}
+    {% trans "Update OH" as title %}
+    {% breadcrumb_push_item title %}
+  {% else %}
+    {% trans "New OH" as title %}
+    {% breadcrumb_push_item title %}
+  {% endif %}
+{% endblock upper_head %}
+
+{% block main %}
+  <form action="{% url "open_hours:new-oh" %}" method="post">
+    {% csrf_token %}
+
+    {{ form }}
+  </form>
+{% endblock %}

@@ -73,6 +73,7 @@ class ProjectConfigMixin:
         "apps.events.apps.EventsConfig",
         "apps.plugins.apps.PluginsConfig",
         "apps.public.apps.PublicConfig",
+        "apps.open_hours.apps.OpenHoursConfig",
         "apps.sections.apps.SectionsConfig",
         "apps.universities.apps.UniversitiesConfig",
         "apps.utils.apps.UtilsConfig",
