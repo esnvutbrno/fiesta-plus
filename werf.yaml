@@ -1,0 +1,23 @@
+project: buena-fiesta
+configVersion: 1
+
+---
+image: fiesta
+context: fiesta/
+dockerfile: Dockerfile
+
+---
+image: webpack
+context: webpack/
+dockerfile: Dockerfile
+
+---
+
+image: web
+from: fiesta
+import:
+- image: webpack
+  stage: setup
+  add: /usr/src/build/
+  to: /usr/src/build/
+  before: setup
