@@ -17,7 +17,7 @@ DC_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
-GRAPH_MODELS_CMD = graph_models accounts plugins auth sections \
+GRAPH_MODELS_CMD = graph_models accounts plugins auth sections events \
 	universities esncards buddy_system \
 	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
@@ -43,6 +43,9 @@ shell_plus: da
 
 migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
+
+showmigrations: DA_CMD = showmigrations ## Runs manage.py showmigrations for all apps
+showmigrations: da
 
 optimizemigration: DA_CMD = optimizemigration ## Optimize last migration by optimizemigration: app= migration=
 optimizemigration: ARG = $(name) $(migration)
