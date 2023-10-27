@@ -63,7 +63,7 @@ class TakeBuddyRequestView(
         match = BuddyRequestMatch(
             request=br,
             matcher=self.request.user,
-            note=self.request.POST.get("note"),
+            note=self.request.POST.get("note") or "",
         )
 
         # TODO: check matcher relation to responsible section
