@@ -5,7 +5,9 @@ from django.contrib.admin import ModelAdmin
 
 
 class BaseRequestAdmin(ModelAdmin):
-    list_display = ["responsible_section", "issuer", "state", "matched_by", "matched_at", "created"]
+    # https://github.com/gitaarik/django-admin-relation-links
+
+    list_display = ["responsible_section", "issuer", "state", "match", "created"]
 
     date_hierarchy = "created"
 
@@ -15,7 +17,7 @@ class BaseRequestAdmin(ModelAdmin):
         "state",
     ]
 
-    autocomplete_fields = ["issuer", "matched_by"]
+    autocomplete_fields = ["issuer"]
 
     search_fields = [
         "issuer__username",
@@ -23,4 +25,29 @@ class BaseRequestAdmin(ModelAdmin):
         "issuer__last_name",
         "issuer__first_name",
         "responsible_section__name",
+    ]
+
+
+class BaseRequestMatchAdmin(ModelAdmin):
+    list_display = ["matcher", "note", "created"]
+
+    date_hierarchy = "created"
+
+    list_filter = [
+        ("request__responsible_section", admin.RelatedOnlyFieldListFilter),
+        ("request__responsible_section__country", admin.AllValuesFieldListFilter),
+    ]
+
+    autocomplete_fields = ["matcher"]
+
+    search_fields = [
+        "request__issuer__username",
+        "request__issuer__email",
+        "request__issuer__last_name",
+        "request__issuer__first_name",
+        "matcher__username",
+        "matcher__email",
+        "matcher__last_name",
+        "matcher__first_name",
+        "request_match__responsible_section__name",
     ]

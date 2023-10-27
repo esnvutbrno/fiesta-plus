@@ -29,7 +29,7 @@ class BuddyStatsFilterset(BaseFilterSet):
         qs = super().qs
 
         request_counting_qs = BuddyRequest.objects.filter(
-            matched_by__profile__home_faculty=OuterRef("pk"),
+            match__matcher__profile__home_faculty=OuterRef("pk"),
         )
 
         # TODO: weird, filtering via self.filters keeps lookup_expr as exact
@@ -43,7 +43,7 @@ class BuddyStatsFilterset(BaseFilterSet):
         return qs.annotate(
             matched_buddy_requests=Coalesce(
                 Subquery(
-                    request_counting_qs.values("matched_by__profile__home_faculty")
+                    request_counting_qs.values("match__matcher__profile__home_faculty")
                     .annotate(count=Count("pk"))
                     .values("count"),
                     output_field=models.IntegerField(),

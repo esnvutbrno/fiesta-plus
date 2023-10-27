@@ -1,4 +1,5 @@
 {% load user_profile %}
+{% load utils %}
 {% if request.user.is_authenticated %}
   <button type="button"
           class="flex mr-3 text-sm rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300"
@@ -11,14 +12,8 @@
       <div class="w-10 h-10 rounded-full bg-cover bg-center"
            style='background-image: url("{{ picture.url }}")'></div>
     {% else %}
-      <svg xmlns="http://www.w3.org/2000/svg"
-           class="h-6 w-6"
-           fill="none"
-           viewBox="0 0 24 24"
-           stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-        </path>
-      </svg>
+      <span class="w-10 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center group"
+            style="background-color: {{ request.user.id|get_color_by_text }}">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
     {% endif %}
   </button>
   <div class="z-30 my-4 text-base list-none bg-white rounded divide-y divide-gray-100 shadow w-40 absolute top-full -right-1/2 hidden"

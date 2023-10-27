@@ -12,4 +12,6 @@ class MyBuddies(EnsureLocalUserViewMixin, ListView):
     template_name = "buddy_system/my_buddies.html"
 
     def get_queryset(self):
-        return self.request.user.buddy_system_matched_requests.prefetch_related("issuer__profile")
+        return self.request.user.buddy_system_request_matches.prefetch_related(
+            "request__issuer__profile"
+        ).select_related("request", "matcher")

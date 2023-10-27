@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from apps.fiestarequests.matching_policy import MatchingPoliciesRegister
 from apps.plugins.models import BasePluginConfiguration
@@ -21,6 +22,11 @@ class BaseRequestSystemConfiguration(BasePluginConfiguration):
         choices=MatchingPoliciesRegister.CHOICES,
         max_length=32,
         help_text=MatchingPoliciesRegister.DESCRIPTION,
+    )
+
+    enable_note_from_matcher = models.BooleanField(
+        default=True,
+        help_text=_("Allows matcher to reply with custom notes to the request issuer"),
     )
 
     @property
