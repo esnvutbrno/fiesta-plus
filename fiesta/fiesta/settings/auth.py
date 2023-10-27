@@ -79,6 +79,8 @@ class AuthConfigMixin:
     SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
     # general django urls
     LOGIN_URL = "/auth/login"
+    # TODO: do redirect to special url with smart router, which redirects to section
+    #   (if user has only one section)
     LOGIN_REDIRECT_URL = "/"
 
     # fixme: verify it
