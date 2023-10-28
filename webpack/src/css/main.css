@@ -6,6 +6,7 @@
 @import "_Menu.css";
 @import "_Tables.css";
 @import "_Dashboard.css";
+@import "_Flags.css";
 
 @tailwind base;
 @tailwind components;

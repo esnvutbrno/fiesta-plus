@@ -18,8 +18,10 @@
       {% breadcrumb_items as items %}
       {% if items|length_is:0 %}
         <title>Buena Fiesta</title>
+      {% elif request.in_space_of_section %}
+        <title>{{ items|join_breadcrumbs }} · {{ request.in_space_of_section }}</title>
       {% else %}
-        <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
+        <title>{{ items|join_breadcrumbs }}</title>
       {% endif %}
     {% endblock head_title %}
     <link rel="shortcut icon" href="{% static 'logo.svg' %}" />

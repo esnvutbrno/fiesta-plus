@@ -5,6 +5,7 @@ from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
+from django_countries.fields import Country
 from django_tables2.columns import BoundColumn
 
 
@@ -14,6 +15,20 @@ class ImageColumn(tables.Column):
 
     def value(self, record, value):
         return value.url
+
+
+class CountryColumn(tables.Column):
+    attrs = {"td": {"data-flag": str(True).lower()}}
+
+    def render(self, value):
+        return format_html(
+            "<span title='{}'>{}</span>",
+            value,
+            Country(value).unicode_flag,
+        )
+
+    def value(self, value):
+        return value
 
 
 class NaturalDatetimeColumn(tables.Column):

@@ -46,20 +46,14 @@
       <div class="card shadow">
         <div class="card-body">
           <h2 class="card-title">{% trans "Actions" %}</h2>
-
-          {% if object.role.is_local %}
-            <button class="btn btn-primary btn-outline"
-                    hx-post="here"
-                    hx-confirm="U sure?">Promote to editor</button>
-
-            <button class="btn btn-primary btn-outline">Promote to admin</button>
-          {% else %}
-
+          {% if object.is_international %}
             <button class="btn btn-primary btn-outline">Convert to member</button>
+          {% elif not object.is_privileged %}
+            <button class="btn btn-secondary">Promote to editor</button>
+            <button class="btn btn-warning">Promote to admin</button>
+          {% else %}
+            <button class="btn btn-warning">Demote to member</button>
           {% endif %}
-
-
-
         </div>
       </div>
     </div>

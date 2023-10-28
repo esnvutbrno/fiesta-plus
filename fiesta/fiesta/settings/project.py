@@ -114,3 +114,8 @@ class ProjectConfigMixin:
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",
     ]
+
+    # setup for django-country
+    # all EU countries first, then the rest
+    COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
+    COUNTRIES_FIRST_REPEAT = True
