@@ -69,10 +69,9 @@ class SectionMembershipAdmin(admin.ModelAdmin):
         "user__username",
         "user__first_name",
         "user__last_name",
-        "user__profile__home_faculty__name",
-        "user__profile__home_faculty__university__name",
-        "user__profile__home_university__name",
-        "user__profile__guest_faculty__university__name",
+        "user__profile__faculty__name",
+        "user__profile__faculty__university__name",
+        "user__profile__university__name",
         "section__name",
         "section__universities__name",
     )

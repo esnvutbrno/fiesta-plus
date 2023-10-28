@@ -82,9 +82,8 @@ class UserProfileForm(BaseModelForm):
 
         fields = (
             # TODO: think about limiting the choices by country of section, in which is current membership
-            "home_university",
-            "home_faculty",
-            "guest_faculty",
+            "university",
+            "faculty",
             "picture",
             "facebook",
             "instagram",
@@ -94,9 +93,8 @@ class UserProfileForm(BaseModelForm):
         )
 
         widgets = {
-            "home_university": UniversityWidget,
-            "home_faculty": FacultyWidget,
-            "guest_faculty": FacultyWidget,
+            "university": UniversityWidget,
+            "faculty": FacultyWidget,
         }
 
 

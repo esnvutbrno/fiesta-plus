@@ -55,24 +55,17 @@
           <div class="flex flex-row items-start gap-x-4">
             <table class="table table-zebra w-1/2">
               <tr>
-                <th>{% trans "Home University" %}</th>
+                <th>{% trans "University" %}</th>
                 <td>
-                  {{ object.user.profile.home_university.country.unicode_flag }}
-                  {{ object.user.profile.home_university|default:"-" }}
+                  {{ object.user.profile.university.country.unicode_flag }}
+                  {{ object.user.profile.university|default:"-" }}
                 </td>
               </tr>
               <tr>
-                <th>{% trans "Home Faculty" %}</th>
+                <th>{% trans "Faculty" %}</th>
                 <td>
-                  {{ object.user.profile.home_faculty.university.country.unicode_flag }}
-                  {{ object.user.profile.home_faculty|default:"-" }}
-                </td>
-              </tr>
-              <tr>
-                <th>{% trans "Guest Faculty" %}</th>
-                <td>
-                  {{ object.user.profile.guest_faculty.university.country.unicode_flag }}
-                  {{ object.user.profile.guest_faculty|default:"-" }}
+                  {{ object.user.profile.faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.faculty|default:"-" }}
                 </td>
               </tr>
               <tr>

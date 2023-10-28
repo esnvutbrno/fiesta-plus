@@ -72,8 +72,8 @@ class UserProfileAdmin(admin.ModelAdmin):
             .get_queryset(request)
             .select_related(
                 "user",
-                "home_university",
-                "home_faculty__university",
+                "university",
+                "faculty__university",
             )
         )
 
