@@ -7,7 +7,9 @@ from model_path_converter import register_model_converter
 
 from apps.sections.models import Section
 from apps.sections.views.choose_space import ChooseSpaceView
-from apps.sections.views.members import ChangeMembershipStateView, MembershipDetailView, SectionMembersView
+from apps.sections.views.internationals import SectionInternationalsView
+from apps.sections.views.members import ChangeMembershipStateView, SectionMembersView
+from apps.sections.views.membership import MembershipDetailView
 from apps.sections.views.plugins import (
     ChangePluginConfigurationFormView,
     ChangePluginStateFormView,
@@ -19,6 +21,7 @@ from apps.sections.views.stats import SectionStatsView
 register_model_converter(Section, field="space_slug", base=SlugConverter)
 urlpatterns = [
     path("section-members", SectionMembersView.as_view(), name="section-members"),
+    path("section-internationals", SectionInternationalsView.as_view(), name="section-internationals"),
     path("section-stats", SectionStatsView.as_view(), name="section-stats"),
     path("section-plugins", SectionPluginsView.as_view(), name="section-plugins"),
     path("membership-state/<uuid:pk>", ChangeMembershipStateView.as_view(), name="change-membership-state"),

@@ -78,6 +78,15 @@ def base_request_model_factory(
             verbose_name=_("text from issuer"),
         )
 
+        # fields cloned from issuer/issuer's profile to have consistency over time
+        issuer_faculty = models.ForeignKey(
+            "universities.Faculty",
+            related_name=f"{related_base}_issued_requests",
+            on_delete=models.RESTRICT,
+            verbose_name=_("issuer's faculty"),
+            db_index=True,
+        )
+
     class BaseRequestMatch(BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
@@ -101,6 +110,15 @@ def base_request_model_factory(
         note = models.TextField(
             verbose_name=_("text from matcher"),
             blank=True,
+        )
+
+        # fields cloned from issuer/issuer's profile to have consistency over time
+        matcher_faculty = models.ForeignKey(
+            "universities.Faculty",
+            related_name=f"{related_base}_request_matches",
+            on_delete=models.RESTRICT,
+            verbose_name=_("matcher's faculty"),
+            db_index=True,
         )
 
     return BaseRequest, BaseRequestMatch

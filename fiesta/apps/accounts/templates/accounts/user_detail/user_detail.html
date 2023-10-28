@@ -29,22 +29,39 @@
         </div>
       </div>
 
-      {% if object.user.memberships.count > 2 %}
-        {# TODO: not only this one #}
-        <div class="card shadow">
-          <div class="card-body">
-            <h2 class="card-title">{% trans "Memberships" %}</h2>
-            <table class="table table-compact">
-              {% for m in object.user.memberships.all %}
-                <tr>
-                  <td>{{ m.section }}</td>
-                  <td>{{ m.role }}</td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title">{% trans "Memberships" %}</h2>
+          <table class="table table-compact [&_td]:px-0">
+            {% for m in object.user.memberships.all %}
+              <tr>
+                <td>{{ m.section }}</td>
+                <td class="text-right">{{ m.role }}</td>
+              </tr>
+            {% endfor %}
+          </table>
         </div>
-      {% endif %}
+      </div>
+
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title">{% trans "Actions" %}</h2>
+
+          {% if object.role.is_local %}
+            <button class="btn btn-primary btn-outline"
+                    hx-post="here"
+                    hx-confirm="U sure?">Promote to editor</button>
+
+            <button class="btn btn-primary btn-outline">Promote to admin</button>
+          {% else %}
+
+            <button class="btn btn-primary btn-outline">Convert to member</button>
+          {% endif %}
+
+
+
+        </div>
+      </div>
     </div>
 
     <div class="w-3/4">

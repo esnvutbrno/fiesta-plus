@@ -42,7 +42,7 @@ class RequestFilter(BaseFilterSet):
     matcher_faculty = ModelChoiceFilter(
         queryset=related_faculties,
         label=_("Faculty of matcher"),
-        field_name="match__matcher__profile__home_faculty",
+        field_name="match__matcher__profile__faculty",
     )
 
     def filter_search(self, queryset, name, value):
@@ -61,14 +61,15 @@ class RequestFilter(BaseFilterSet):
 
 
 class BuddyRequestsTable(tables.Table):
-    issuer__full_name_official = Column(
+    issuer_name = Column(
+        accessor="issuer.full_name_official",
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
         linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
         verbose_name=_("Issuer"),
     )
 
-    issuer__profile__picture = ImageColumn(verbose_name="🧑")
+    issuer_picture = ImageColumn(accessor="issuer.profile.picture", verbose_name="🧑")
 
     matcher_name = Column(
         accessor="match.matcher.full_name_official",
@@ -106,8 +107,8 @@ class BuddyRequestsTable(tables.Table):
         # TODO: dynamic by section preferences
         fields = ("state",)
         sequence = (
-            "issuer__full_name_official",
-            "issuer__profile__picture",
+            "issuer_name",
+            "issuer_picture",
             "state",
             "matcher_name",
             "matcher_picture",

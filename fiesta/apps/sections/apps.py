@@ -43,6 +43,10 @@ class SectionsConfig(BasePluginAppConfig):
                         reverse("sections:section-members"),
                     ),
                     NavigationItemSpec(
+                        _("Internationals"),
+                        reverse("sections:section-internationals"),
+                    ),
+                    NavigationItemSpec(
                         _("Statistics"),
                         reverse("sections:section-stats"),
                     ),
