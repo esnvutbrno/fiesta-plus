@@ -18,7 +18,7 @@ By volunteers, for volunteers.
 
 ## Development
 
-See [Development](docs/Development/Development.md) for more information.
+See the [Development wiki page](https://github.com/esnvutbrno/buena-fiesta/wiki/Development#local-development) for more information.
 
 ## Contributing
 
