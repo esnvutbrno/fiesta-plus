@@ -90,6 +90,12 @@ class Section(BaseTimestampedModel):
         return f"//{self.space_slug}.{site.domain}"
 
     def section_home_url(self, for_membership: SectionMembership = None) -> str | None:
+        """
+        Returns home URL page of a section, if available:
+            - for non-members, it's always pages (if enabled, available for a current role and has default page)
+            - for members, it's always dashboard (if available and enabled for a current role)
+            - otherwise, None
+        """
         plugins = (
             self.enabled_plugins_for_privileged
             if for_membership and for_membership.is_privileged
@@ -98,15 +104,19 @@ class Section(BaseTimestampedModel):
 
         available_plugins = tuple(map(attrgetter("app_label"), plugins))
 
-        pages_app = all_plugins_mapped_to_class().get(PagesConfig)
-        dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
+        pages_app: PagesConfig | None = all_plugins_mapped_to_class().get(PagesConfig)
+        dashboard_app: DashboardConfig | None = all_plugins_mapped_to_class().get(DashboardConfig)
 
         target_app: BasePluginAppConfig | None = None
 
         if for_membership and dashboard_app and dashboard_app.label in available_plugins:
+            # in active membership, dashboard is always preferred
             target_app = dashboard_app
         elif not for_membership and pages_app and pages_app.label in available_plugins:
-            target_app = pages_app
+            # for non-members, pages are preferred (if available)
+            has_default_page = self.pages.filter(default=True).exists()
+            if has_default_page:
+                target_app = pages_app
 
         if not target_app:
             logger.warning(
@@ -115,7 +125,6 @@ class Section(BaseTimestampedModel):
                 for_membership,
             )
 
-        # TODO: what to do if user is logged and dashboard is not available?
         return f"/{target_app.url_prefix}" if target_app else None
 
     # prefetched for request.in_space_of_section
