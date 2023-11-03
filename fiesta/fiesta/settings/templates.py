@@ -10,7 +10,13 @@ class TemplatesConfigMixin(BaseConfigurationProtocol):
         return [
             {
                 "BACKEND": "django.template.backends.django.DjangoTemplates",
-                "DIRS": [self.BASE_DIR / "templates"],
+                "DIRS": [
+                    # to have "root" no-app templates
+                    self.BASE_DIR / "templates",
+                    # to allow to include "static" files in templates
+                    # (e.g., svgs sometimes included and sometimes served as static files)
+                    self.BASE_DIR / "static",
+                ],
                 "APP_DIRS": True,
                 "OPTIONS": {
                     "context_processors": [
