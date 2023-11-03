@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import typing
 
 from _operator import attrgetter
@@ -21,6 +22,8 @@ from apps.utils.models.validators import validate_plain_slug_lowercase
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
     from apps.sections.models import SectionMembership
+
+logger = logging.getLogger(__name__)
 
 
 class Section(BaseTimestampedModel):
@@ -104,6 +107,13 @@ class Section(BaseTimestampedModel):
             target_app = dashboard_app
         elif not for_membership and pages_app and pages_app.label in available_plugins:
             target_app = pages_app
+
+        if not target_app:
+            logger.warning(
+                "No home URL found for section %s to membership %s.",
+                self,
+                for_membership,
+            )
 
         # TODO: what to do if user is logged and dashboard is not available?
         return f"/{target_app.url_prefix}" if target_app else None

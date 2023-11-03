@@ -15,12 +15,22 @@ class LoggingConfigMixin:
                     "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
                     "datefmt": "%d/%b/%Y %H:%M:%S",
                 },
+                "verbose.server": {
+                    # TODO: [%(request)s] is bullshit here, since it's wsgi request only
+                    #  try to find a way, how to include the domain
+                    "format": "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+                    "datefmt": "%d/%b/%Y %H:%M:%S",
+                },
                 "simple": {"format": "%(levelname)s %(message)s"},
             },
             "handlers": {
                 "console": {
                     "class": "logging.StreamHandler",
                     "formatter": "verbose",
+                },
+                "console.server": {
+                    "class": "logging.StreamHandler",
+                    "formatter": "verbose.server",
                 },
             },
             "root": {
@@ -30,6 +40,11 @@ class LoggingConfigMixin:
             "loggers": {
                 "django": {
                     "handlers": ["console"],
+                    "level": self.LOG_LEVEL,
+                    "propagate": False,
+                },
+                "django.server": {
+                    "handlers": ["console.server"],
                     "level": self.LOG_LEVEL,
                     "propagate": False,
                 },

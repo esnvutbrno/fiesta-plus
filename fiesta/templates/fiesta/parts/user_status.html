@@ -49,7 +49,7 @@
       {#           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>#}
       {#      </li>#}
       <li>
-        <a href="{% url 'account_logout' %}"
+        <a href="{% url 'account_logout' %}?{{ redirect_field_name }}={{ redirect_field_value }}"
            hx-post="{% url 'account_logout' %}"
            {% if redirect_field_value %}hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'{% endif %}
            class="py-2 px-4 text-sm text-base-content flex flex-row justify-between items-center hover:bg-base-200">
