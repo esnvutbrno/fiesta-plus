@@ -96,6 +96,7 @@ class Section(BaseTimestampedModel):
             - for members, it's always dashboard (if available and enabled for a current role)
             - otherwise, None
         """
+        # TODO: refactor to share code from CheckEnabledPluginsViewMixin
         plugins = (
             self.enabled_plugins_for_privileged
             if for_membership and for_membership.is_privileged

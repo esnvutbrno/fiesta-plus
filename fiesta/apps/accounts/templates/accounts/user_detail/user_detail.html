@@ -108,15 +108,17 @@
           </div>
         </div>
       </div>
-      {% for table, title in tables|zip:table_titles %}
-        <div class="card group">
-          <div class="card-body pt-0">
-            <div class="card-title">{{ title }}</div>
-            {% render_table table %}
+      {% if tables and table_titles %}
+        {# check if any table should be rendered #}
+        {% for table, title in tables|zip:table_titles %}
+          <div class="card group">
+            <div class="card-body pt-0">
+              <div class="card-title">{{ title }}</div>
+              {% render_table table %}
+            </div>
           </div>
-        </div>
-      {% endfor %}
-
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

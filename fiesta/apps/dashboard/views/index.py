@@ -1,18 +1,18 @@
 from __future__ import annotations
 
 import typing
-from operator import attrgetter
 from pathlib import Path
 
 from django.apps import AppConfig
 from django.views.generic import TemplateView
 
 from apps.plugins.plugin import BasePluginAppConfig
+from apps.plugins.views.mixins import CheckEnabledPluginsViewMixin
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class DashboardIndexView(EnsureInSectionSpaceViewMixin, TemplateView):
+class DashboardIndexView(EnsureInSectionSpaceViewMixin, CheckEnabledPluginsViewMixin, TemplateView):
     template_name = "dashboard/index.html"
 
     def get_context_data(self, **kwargs):
@@ -35,15 +35,9 @@ class DashboardIndexView(EnsureInSectionSpaceViewMixin, TemplateView):
     def _select_apps_for_dashboard(self, membership: SectionMembership) -> typing.Generator[AppConfig, None, None]:
         from django.apps import apps
 
-        enabled_plugins_apps = tuple(
-            map(
-                attrgetter("app_label"),
-                (
-                    self.request.in_space_of_section.enabled_plugins_for_privileged
-                    if membership.is_privileged
-                    else self.request.in_space_of_section.enabled_plugins
-                ),
-            )
+        enabled_plugins_apps = self._get_enabled_plugin_app_labels(
+            in_space_of_section=self.request.in_space_of_section,
+            membership=membership,
         )
 
         for app in apps.get_app_configs():

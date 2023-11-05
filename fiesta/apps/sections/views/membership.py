@@ -6,9 +6,11 @@ from django.utils.translation import gettext_lazy as _
 from django.views import View
 from django.views.generic import DetailView
 
+from apps.buddy_system.apps import BuddySystemConfig
 from apps.buddy_system.models import BuddyRequest
 from apps.buddy_system.views.editor import BuddyRequestsTable
 from apps.fiestatables.views.tables import FiestaMultiTableMixin
+from apps.plugins.views.mixins import CheckEnabledPluginsViewMixin
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
@@ -36,6 +38,7 @@ def page_title(view: DetailView | View) -> BreadcrumbItem:
 class MembershipDetailView(
     EnsurePrivilegedUserViewMixin,
     EnsureInSectionSpaceViewMixin,
+    CheckEnabledPluginsViewMixin,
     FiestaMultiTableMixin,
     DetailView,
 ):
@@ -43,43 +46,55 @@ class MembershipDetailView(
     object: SectionMembership
     template_name = "accounts/user_detail/user_detail.html"
 
-    extra_context = {}
-
     def get_context_data(self, **kwargs):
+        bs_enabled = self._is_plugin_enabled_for_user(BuddySystemConfig)
+
         data = super().get_context_data(**kwargs)
         data.update(
             {
-                "table_titles": (_("🧑‍🤝‍🧑 Buddies") if self.object.is_local else _("🧑‍🤝‍🧑 Buddy requests"),),
+                "table_titles": (
+                    (_("🧑‍🤝‍🧑 Buddies") if self.object.is_local else _("🧑‍🤝‍🧑 Buddy requests"),) if bs_enabled else ()
+                ),
             }
         )
         return data
 
     def get_tables(self):
+        bs_enabled = self._is_plugin_enabled_for_user(BuddySystemConfig)
+
         if self.object.is_local:
-            return [
+            return (
+                [
+                    BuddyRequestsTable(
+                        request=self.request,
+                        data=BuddyRequest.objects.filter(match__matcher=self.object.user),
+                        exclude=(
+                            "matcher_name",
+                            "matcher_picture",
+                            "match_request",
+                        ),
+                    ),
+                ]
+                if bs_enabled
+                else []
+            )
+
+        return (
+            [
                 BuddyRequestsTable(
                     request=self.request,
-                    data=BuddyRequest.objects.filter(match__matcher=self.object.user),
+                    data=BuddyRequest.objects.filter(issuer=self.object.user),
                     exclude=(
-                        "matcher_name",
-                        "matcher_picture",
-                        "match_request",
+                        "issuer_name",
+                        "issuer_picture",
+                        # "matcher_picture",
+                        # "match_request",
                     ),
                 ),
             ]
-
-        return [
-            BuddyRequestsTable(
-                request=self.request,
-                data=BuddyRequest.objects.filter(issuer=self.object.user),
-                exclude=(
-                    "issuer_name",
-                    "issuer_picture",
-                    # "matcher_picture",
-                    # "match_request",
-                ),
-            ),
-        ]
+            if bs_enabled
+            else []
+        )
 
     def get_queryset(self):
         return self.request.in_space_of_section.memberships
