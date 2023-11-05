@@ -4,7 +4,7 @@ import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
 from django_tables2 import Column, TemplateColumn
 
-from apps.fiestatables.columns import CountryColumn, ImageColumn, NaturalDatetimeColumn
+from apps.fiestatables.columns import CountryColumn, ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.sections.models import SectionMembership
 
 
@@ -23,6 +23,8 @@ class SectionMembershipTable(tables.Table):
     user__profile__picture = ImageColumn()
     user__profile__nationality = CountryColumn(verbose_name=_("Nationality"))
     user__profile__faculty__abbr = Column(verbose_name=_("Faculty"))
+
+    role = LabeledChoicesColumn(choices=SectionMembership.Role, verbose_name=_("Role"))
 
     created = NaturalDatetimeColumn(verbose_name=_("Joined"))
 
@@ -43,6 +45,7 @@ class SectionMembershipTable(tables.Table):
             "user__profile__picture",
             "user__profile__nationality",
             "user__profile__faculty__abbr",
+            "role",
             "...",
         )
 

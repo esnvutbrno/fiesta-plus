@@ -45,12 +45,12 @@ class LabeledChoicesColumn(tables.Column):
     def __init__(
         self,
         choices: type[Choices],
-        labels_replacements: dict[str, str],
+        labels_replacements: dict[str, str] = None,
         *args,
         **kwargs,
     ):
         self._choices = choices
-        self._labels_replacements = labels_replacements
+        self._labels_replacements = labels_replacements or dict()
         super().__init__(*args, **kwargs)
 
     def render(self, bound_column: BoundColumn, record: Model):

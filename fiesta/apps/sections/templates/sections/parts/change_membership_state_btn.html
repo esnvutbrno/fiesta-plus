@@ -3,7 +3,7 @@
   <span class="badge badge-success">✅ {{ record.get_state_display }}</span>
 {% elif record.state == record.State.BANNED %}
   <span class="badge badge-error">⛔ {{ record.get_state_display }}</span>
-{% elif record.state == record.State.UNCONFIRMED %}
+{% elif record.state == record.State.UNCONFIRMED and not disable_button %}
   <a class="btn btn-sm btn-outline btn-primary"
      x-data="modal($el.href)"
      x-bind="bind"

@@ -20,7 +20,7 @@
           <h1 class="card-title">{{ object.user.full_name_official }}</h1>
           <div class="flex flex-row justify-between items-center">
             {{ object.get_role_display }}
-            {% include "sections/parts/change_membership_state_btn.html" with record=object %}
+            {% include "sections/parts/change_membership_state_btn.html" with record=object disable_button=True %}
           </div>
           <div class="flex flex-row justify-between text-sm">
             {% trans "Joined" %}
@@ -46,19 +46,61 @@
       <div class="card shadow">
         <div class="card-body">
           <h2 class="card-title">{% trans "Actions" %}</h2>
-          {% if object.is_international %}
-            <button class="btn btn-primary btn-outline">Convert to member</button>
-          {% elif not object.is_privileged %}
-            <button class="btn btn-secondary">Promote to editor</button>
-            <button class="btn btn-warning">Promote to admin</button>
-          {% else %}
-            <button class="btn btn-warning">Demote to member</button>
+          {% if object.state == object.State.UNCONFIRMED %}
+
+          {% elif object.state == object.State.ACTIVE %}
+            {% if object.is_international %}
+              <button class="btn btn-primary btn-outline">Convert to member</button>
+            {% elif not object.is_privileged %}
+              <button class="btn btn-secondary">Promote to editor</button>
+              <button class="btn btn-warning">Promote to admin</button>
+            {% else %}
+              <button class="btn btn-warning">Demote to member</button>
+            {% endif %}
+
+            <button class="btn btn-danger btn-outline">Suspend</button>
+          {% elif object.state == object.State.BANNED %}
+            <button class="btn btn-primary btn-outline">Unsuspend</button>
           {% endif %}
+
         </div>
       </div>
     </div>
 
     <div class="w-3/4">
+
+      {% if object.state == object.State.UNCONFIRMED %}
+        <div class="card bg-base-300 m-6 mt-0">
+          <div class="card-body">
+            <h2 class="card-title flex flex-row items-center justify-between">
+              {% trans "⚠️ Pending membership request" %}
+
+              <span class="text-sm">from {{ object.created|date:"SHORT_DATETIME_FORMAT" }}</span>
+            </h2>
+            <div class="alert alert-info">
+              User has requested to join the section. Please review the request and confirm or reject it.
+            </div>
+            <div class="btn-group w-full">
+              <button class="btn btn-warning grow">Reject</button>
+              <button class="btn btn-primary grow">Confirm</button>
+            </div>
+            <div class="flex flex-row justify-around [&>p]:w-1/2 [&>p]:px-8 [&>p]:pt-4 text-sm text-justify">
+              <p>
+                After rejection, the user will be notified.
+                The user will not be able to access the section space.
+                It's possible to approve the request later.
+              </p>
+              <p>
+                By confirming the request, the user will be added to the section and will be able to access the section's
+                enabled plugins and features.
+                It's possible to suspend the user later.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      {% endif %}
+
       <div class="card">
         <div class="card-body pt-0">
           <h2 class="card-title">{% trans "👤 Profile Details" %}</h2>
