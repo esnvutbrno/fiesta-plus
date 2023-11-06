@@ -49,7 +49,7 @@ class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
 
 @with_breadcrumb(_("Membership State"))
 @with_object_breadcrumb()
-class ChangeMembershipStateView(
+class ChangeMembershipStateFormView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,

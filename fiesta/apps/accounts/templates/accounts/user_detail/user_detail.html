@@ -5,8 +5,8 @@
 {% load humanize %}
 
 {% block main %}
-  <div class="flex flex-row items-start">
-    <div class="w-1/4">
+  <div class="flex flex-col md:flex-row gap-y-6 items-start">
+    <div class="w-full md:w-1/3">
       <div class="card shadow">
         {% if object.user.profile.picture %}
           <figure>
@@ -23,8 +23,8 @@
             {% include "sections/parts/change_membership_state_btn.html" with record=object disable_button=True %}
           </div>
           <div class="flex flex-row justify-between text-sm">
-            {% trans "Joined" %}
-            <span title="{{ object.created|date }}">{{ object.created|naturaltime }}</span>
+            <span>{% trans "Joined" %}</span>
+            <span title="{{ object.created|date }}" class="text-right">{{ object.created|naturaltime }}</span>
           </div>
         </div>
       </div>
@@ -47,27 +47,71 @@
         <div class="card-body">
           <h2 class="card-title">{% trans "Actions" %}</h2>
           {% if object.state == object.State.UNCONFIRMED %}
-
+            {# done with great panel with more info #}
           {% elif object.state == object.State.ACTIVE %}
             {% if object.is_international %}
-              <button class="btn btn-primary btn-outline">Convert to member</button>
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-primary btn-outline grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.MEMBER.value }}">Convert to member</button>
             {% elif not object.is_privileged %}
-              <button class="btn btn-secondary">Promote to editor</button>
-              <button class="btn btn-warning">Promote to admin</button>
-            {% else %}
-              <button class="btn btn-warning">Demote to member</button>
+              {% if request.membership.is_section_admin %}
+                <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                        class="btn btn-secondary btn-outline grow"
+                        type="submit"
+                        name="role"
+                        value="{{ object.Role.ADMIN.value }}">Promote to editor</button>
+
+                <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                        class="btn btn-warning btn-outline grow"
+                        type="submit"
+                        name="role"
+                        value="{{ object.Role.ADMIN.value }}">Promote to admin</button>
+              {% endif %}
+
+              <hr>
+
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-primary btn-outline grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.INTERNATIONAL.value }}">Convert to international</button>
+            {% elif request.membership.is_section_admin %}
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.MEMBER.value }}">Demote to member</button>
             {% endif %}
 
-            <button class="btn btn-danger btn-outline">Suspend</button>
-          {% elif object.state == object.State.BANNED %}
-            <button class="btn btn-primary btn-outline">Unsuspend</button>
-          {% endif %}
+            <hr>
 
+            {% if not object.is_section_admin %}
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-error grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.BANNED.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator -ml-8"></span>
+                Suspend
+              </button>
+            {% endif %}
+          {% elif object.state == object.State.BANNED %}
+            <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                    class="btn btn-warning grow"
+                    type="submit"
+                    name="state"
+                    value="{{ object.State.ACTIVE.value }}">
+              <span class="loading loading-spinner loading-xl htmx-indicator -ml-8"></span>
+              Unsuspend
+            </button>
+          {% endif %}
         </div>
       </div>
     </div>
 
-    <div class="w-3/4">
+    <div class="w-full md:w-2/3">
 
       {% if object.state == object.State.UNCONFIRMED %}
         <div class="card bg-base-300 m-6 mt-0">
@@ -81,7 +125,14 @@
               User has requested to join the section. Please review the request and confirm or reject it.
             </div>
             <div class="btn-group w-full">
-              <button class="btn btn-warning grow">Reject</button>
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.BANNED.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator"></span>
+                Reject
+              </button>
               <button class="btn btn-primary grow">Confirm</button>
             </div>
             <div class="flex flex-row justify-around [&>p]:w-1/2 [&>p]:px-8 [&>p]:pt-4 text-sm text-justify">

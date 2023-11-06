@@ -75,12 +75,6 @@ class UserMembershipMiddleware:
             # IDK :-D we gonna need tests for this
             return None
 
-        if request.in_space_of_section and not membership:
-            # hohoo, whatcha doing here, go away
-            host = request.get_host().removeprefix(request.in_space_of_section.space_slug).removeprefix(".")
-            messages.warning(request, _("You have no permission to access this section space."))
-            return HttpResponseRedirect(f"{request.scheme}://{host}{reverse(cls.MEMBERSHIP_URL_NAME)}")
-
         if cls.should_ignore_403(target_app, request.resolver_match):
             # target is plugin view, but user does not have any membership,
             # and we're not on membership page
@@ -89,18 +83,27 @@ class UserMembershipMiddleware:
         return cls.handle_redirect_to_membership_select(request=request, membership=membership)
 
     @classmethod
-    def handle_redirect_to_membership_select(cls, request: HttpRequest, membership: SectionMembership) -> HttpResponse:
-        # user in section space with inactive membership yet?
-        if membership and membership.state == SectionMembership.State.UNCONFIRMED:
-            messages.warning(request, _("Your membership is not active yet."))
-        elif membership and membership.state == SectionMembership.State.BANNED:
-            messages.warning(request, _("Your membership has been suspended."))
-        elif not request.in_space_of_section:
-            messages.warning(request, _("Please, select log into one of your memberships."))
-        else:
-            messages.warning(request, _("You don't have no active membership to view this page."))
+    def handle_redirect_to_membership_select(
+        cls,
+        request: HttpRequest,
+        membership: SectionMembership,
+        with_warning: bool = True,
+    ) -> HttpResponse:
+        host = request.get_host().removeprefix(request.in_space_of_section.space_slug).removeprefix(".")
+        no_section_space_host = f"{request.scheme}://{host}"
 
-        if not membership and request.in_space_of_section:
+        if with_warning:
+            # user in section space with inactive membership yet?
+            if membership and membership.state == SectionMembership.State.UNCONFIRMED:
+                messages.warning(request, _("Your membership is not active yet."))
+            elif membership and membership.state == SectionMembership.State.BANNED:
+                messages.warning(request, _("Your membership has been suspended."))
+            elif not request.in_space_of_section:
+                messages.warning(request, _("Please, select log into one of your memberships."))
+            else:
+                messages.warning(request, _("You don't have no active membership to view this page."))
+
+        if request.in_space_of_section and not membership:
             # in specific section space, but no membership --> provide form
             messages.warning(
                 request,
@@ -109,7 +112,8 @@ class UserMembershipMiddleware:
             return HttpResponseRedirect(
                 "?".join(
                     (
-                        reverse(
+                        no_section_space_host
+                        + reverse(
                             cls.MEMBERSHIP_NEW_URL_NAME,
                             args=(request.in_space_of_section,),
                         ),
@@ -117,10 +121,10 @@ class UserMembershipMiddleware:
                     )
                 )
             )
-
         # no section space, so display all memberships
         return HttpResponseRedirect(
-            "?".join(
+            no_section_space_host
+            + "?".join(
                 (
                     reverse(cls.MEMBERSHIP_URL_NAME),
                     urlencode({REDIRECT_FIELD_NAME: request.get_full_path()}),

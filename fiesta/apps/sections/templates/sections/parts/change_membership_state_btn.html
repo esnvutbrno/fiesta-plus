@@ -7,5 +7,5 @@
   <a class="btn btn-sm btn-outline btn-primary"
      x-data="modal($el.href)"
      x-bind="bind"
-     href="{% url "sections:change-membership-state" record.pk %}">{% trans "Approve" %}</a>
+     href="{% url "sections:change-membership-state-form" record.pk %}">{% trans "Approve" %}</a>
 {% endif %}
