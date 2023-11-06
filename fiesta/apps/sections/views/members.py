@@ -12,6 +12,7 @@ from django.views.generic import DetailView, UpdateView
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn
 
+from apps.buddy_system.models import BuddyRequest
 from apps.buddy_system.views.editor import BuddyRequestsTable
 from apps.fiestaforms.views.htmx import HtmxFormMixin
 from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
@@ -161,10 +162,10 @@ class MembershipDetailView(
         return [
             BuddyRequestsTable(
                 request=self.request,
-                data=self.object.user.buddy_system_matched_requests.all(),
+                data=BuddyRequest.objects.filter(match__matcher=self.object.user),
                 exclude=(
-                    "matched_by_name",
-                    "matched_by_picture",
+                    "matcher_name",
+                    "matcher_picture",
                     "match_request",
                 ),
             ),

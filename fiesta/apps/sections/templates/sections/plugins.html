@@ -18,7 +18,7 @@
   <div x-data="{ open: window.location.hash.slice(1) }" class="space-y-2">
     {% for app, plugin, conf_form, plugin_form in plugins %}
       <div
-        class="collapse bg-slate-100"
+        class="collapse bg-slate-100 dark:bg-slate-800"
         data-label="{{ app.label }}"
         data-plugin="{{ plugin.pk }}"
         {# when the setup is required first, do not show the collapse arrow yet #}

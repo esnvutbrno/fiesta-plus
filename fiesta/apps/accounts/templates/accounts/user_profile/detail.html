@@ -30,7 +30,7 @@
         </svg>
       {% endif %}
     </div>
-    <div class="md:w-3/5 bg-gray-100 shadow rounded-box p-4 mb-4 mt-4 md:box-content">
+    <div class="md:w-3/5 bg-base-200 shadow rounded-box p-4 mb-4 mt-4 md:box-content">
       <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Basic information" %}</h1>
       <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
@@ -58,7 +58,7 @@
       </table>
     </div>
   </div>
-  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+  <div class="bg-base-200 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Studies" %}</h1>
     <table class="border-separate gap-4">
       {% with profile=object.user.profile_or_none %}
@@ -80,7 +80,7 @@
     </table>
   </div>
 
-  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+  <div class="bg-base-200 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Socials and contact" %}</h1>
     <div class="overflow-hidden">
       <table class="border-separate gap-4">
@@ -119,7 +119,7 @@
     </div>
   </div>
 
-  <div class="bg-gray-100 shadow rounded-box p-4 mb-4 md:box-content">
+  <div class="bg-base-200 shadow rounded-box p-4 mb-4 md:box-content">
     <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
     <div class="inline-flex flex-wrap">
       {% for interest in object.user.profile.get_interests_display %}

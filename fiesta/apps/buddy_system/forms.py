@@ -6,9 +6,8 @@ from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
-from apps.buddy_system.models import BuddyRequest
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.fields.array import ChoicedArrayField
-from apps.fiestaforms.fields.datetime import DateTimeLocalField
 from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, UserWidget
 
@@ -29,7 +28,7 @@ class NewBuddyRequestForm(BaseModelForm):
     class Meta:
         model = BuddyRequest
         fields = (
-            "description",
+            "note",
             "interests",
             "responsible_section",
             "issuer",
@@ -42,12 +41,12 @@ class NewBuddyRequestForm(BaseModelForm):
             "issuer": HiddenInput,
         }
         labels = {
-            "description": _("Tell us about yourself"),
+            "note": _("Tell us about yourself"),
             "interests": _("What are you into?"),
         }
         help_texts = {
-            "description": lazy(
-                lambda: render_to_string("buddy_system/parts/buddy_request_description_help.html"),
+            "note": lazy(
+                lambda: render_to_string("buddy_system/parts/buddy_request_note_help.html"),
                 str,
             )
         }
@@ -65,9 +64,9 @@ class BuddyRequestEditorForm(BaseModelForm):
         self.fields["issuer"].disabled = True
 
         if self.instance.state != BuddyRequest.State.CREATED:
-            self.fields["matched_by"].disabled = True
-            self.fields["matched_at"].disabled = True
-            self.fields["description"].disabled = True
+            # self.fields["matched_by"].disabled = True
+            # self.fields["matched_at"].disabled = True
+            self.fields["note"].disabled = True
             self.fields["interests"].disabled = True
 
     class Meta:
@@ -75,18 +74,18 @@ class BuddyRequestEditorForm(BaseModelForm):
         fields = (
             "issuer",
             "state",
-            "description",
+            "note",
             "interests",
-            "matched_by",
-            "matched_at",
+            # "matched_by",
+            # "matched_at",
         )
         field_classes = {
             "interests": ChoicedArrayField,
-            "matched_at": DateTimeLocalField,
+            # "matched_at": DateTimeLocalField,
         }
         widgets = {
             "issuer": UserWidget,
-            "matched_by": ActiveLocalMembersFromSectionWidget,
+            # "matched_by": ActiveLocalMembersFromSectionWidget,
         }
 
 
@@ -96,18 +95,11 @@ class QuickBuddyMatchForm(BaseModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields["issuer"].disabled = True
-
-        if self.instance.state != BuddyRequest.State.CREATED:
-            self.fields["matched_by"].disabled = True
+        # self.fields["issuer"].disabled = True
 
     class Meta:
-        model = BuddyRequest
-        fields = (
-            "issuer",
-            "matched_by",
-        )
+        model = BuddyRequestMatch
+        fields = ("matcher",)
         widgets = {
-            "issuer": UserWidget,
-            "matched_by": ActiveLocalMembersFromSectionWidget,
+            "matcher": ActiveLocalMembersFromSectionWidget,
         }

@@ -54,7 +54,7 @@ class User(AbstractUser):
         verbose_name_plural = _("users")
 
     # a few dynamic related models
-    buddy_system_matched_requests: models.QuerySet
+    buddy_system_request_matches: models.QuerySet
     profile: UserProfile
 
 

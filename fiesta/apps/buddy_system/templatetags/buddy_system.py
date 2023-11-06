@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import hashlib
 import re
 
 from django import template
@@ -10,7 +9,6 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
-from apps.utils.models.query import get_single_object_or_none
 
 register = template.Library()
 
@@ -38,11 +36,12 @@ def censor_description(description: str) -> str:
 def get_current_buddy_request_of_user(context):
     request: HttpRequest = context["request"]
 
-    return get_single_object_or_none(
-        request.membership.user.buddy_system_issued_requests.filter(
+    try:
+        return request.membership.user.buddy_system_issued_requests.filter(
             responsible_section=request.membership.section,
-        )
-    )  # TODO: could be more then one?
+        ).latest("created")
+    except BuddyRequest.DoesNotExist:
+        return None
 
 
 @register.simple_tag(takes_context=True)
@@ -76,24 +75,16 @@ def get_matched_buddy_requests(context):
     request: HttpRequest = context["request"]
 
     # TODO: limit by semester / time
-    return request.user.buddy_system_matched_requests.filter(
-        responsible_section=request.membership.section,
-        state=BuddyRequest.State.MATCHED,
-    ).order_by("-matched_at")
+    return request.user.buddy_system_request_matches.filter(
+        request__responsible_section=request.membership.section,
+        request__state=BuddyRequest.State.MATCHED,
+    ).order_by("-created")
 
 
 @register.filter
-def get_color_by_text(name: str) -> str:
-    hash_object = hashlib.md5(name.encode(), usedforsecurity=False)
-    hash_hex = hash_object.hexdigest()
-
-    r = int(hash_hex[0:2], 16)
-    g = int(hash_hex[2:4], 16)
-    b = int(hash_hex[4:6], 16)
-
-    if r + g + b < 100:
-        r += 30
-        g += 30
-        b += 30
-
-    return f"rgb({r}, {g}, {b})"
+def request_state_to_css_variant(state: BuddyRequest.State):
+    return {
+        BuddyRequest.State.CREATED: "info",
+        BuddyRequest.State.MATCHED: "success",
+        BuddyRequest.State.CANCELLED: "danger",
+    }.get(state)

@@ -6,7 +6,7 @@ from ..accounts.models.profile import user_profile_picture_storage
 from .views import BuddySystemIndexView
 from .views.editor import BuddyRequestEditorDetailView, BuddyRequestsEditorView, QuickBuddyMatchView
 from .views.matches import MyBuddies
-from .views.matching import MatchingRequestsView, ProfilePictureServeView, TakeBuddyRequestView
+from .views.matching import IssuerPictureServeView, MatcherPictureServeView, MatchingRequestsView, TakeBuddyRequestView
 from .views.request import BuddySystemEntrance, NewRequestView, SignUpBeforeEntranceView, WannaBuddyView
 
 urlpatterns = [
@@ -30,5 +30,6 @@ urlpatterns = [
     path("detail/<uuid:pk>", BuddyRequestEditorDetailView.as_view(), name="editor-detail"),
     path("quick-match/<uuid:pk>", QuickBuddyMatchView.as_view(), name="quick-match"),
     # serve profile picture with proxy view
-    ProfilePictureServeView.as_url(user_profile_picture_storage, url_name="serve-issuer-profile-picture"),
+    IssuerPictureServeView.as_url(user_profile_picture_storage, url_name="serve-issuer-profile-picture"),
+    MatcherPictureServeView.as_url(user_profile_picture_storage, url_name="serve-matcher-profile-picture"),
 ]
