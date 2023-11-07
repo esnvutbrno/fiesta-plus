@@ -8,7 +8,6 @@ register = template.Library()
 @register.filter
 def get_social_icon(provider: str) -> str:
     if provider == "esnaccounts":
-        # file = static('esn-star-color.svg')
         return """<svg class="w-6 h-6 mr-2 -ml-1" viewBox="0 0 40 40">
                       <use href="/static/esn-star-color.svg#esn-star-color"></use>
                   </svg>"""
