@@ -22,11 +22,11 @@
           action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
           class="btn p-0 flex-grow">
       {% csrf_token %}
-      <button class="{% get_social_button_style provider.id %} w-full h-full rounded-lg px-4 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 focus:ring-4 focus:ring-[#24292F]/50"
+      <button class="{% get_social_button_style provider.id %} w-full h-full rounded-lg px-4 py-2.5 text-center inline-flex justify-center items-center dark:focus:ring-gray-500 focus:ring-4 focus:ring-[#24292F]/50"
               title="{{ provider.name }}"
               name="submit"
               type="submit">
-        {% get_social_icon provider.id %}
+        {% with id=provider.id %}{{ id|get_social_icon|safe }}{% endwith %}
         {{ provider.name }}
       </button>
     </form>

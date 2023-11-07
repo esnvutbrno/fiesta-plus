@@ -6,7 +6,7 @@
 <h1 class="card-title">{{ card_title|default:"Create Account" }}</h1>
 <div class="flex flex-row space-x-2 justify-between">
   {% include "socialaccount/snippets/provider_list.html" with process="Sign up" %}
-<!--      {% include "account/parts/social_login_buttons.html" with process="Log in" %}-->
+  <!--      {% include "account/parts/social_login_buttons.html" with process="Log in" %}-->
 </div>
 <form method="POST"
       action="{{ form_url|default:default_form_url }}"
