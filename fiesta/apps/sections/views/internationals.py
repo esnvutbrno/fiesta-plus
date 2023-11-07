@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.utils.translation import gettext_lazy as _
 
+from apps.fiestatables.filters import exclude_filters
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
@@ -17,7 +18,7 @@ class SectionInternationalsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
     table_class = SectionInternationalsTable
-    filterset_class = SectionMembershipFilter
+    filterset_class = exclude_filters(SectionMembershipFilter, ("role",))
     model = SectionMembership
 
     select_related = (

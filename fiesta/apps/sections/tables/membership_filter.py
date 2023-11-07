@@ -7,7 +7,7 @@ from django_countries.fields import Country
 from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 
 from apps.accounts.models import UserProfile
-from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
+from apps.fiestatables.filters import BaseFilterSet
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.universities.models import Faculty
@@ -34,9 +34,11 @@ class SectionMembershipFilter(BaseFilterSet):
     user__profile__faculty = ModelChoiceFilter(queryset=related_faculties, label=_("Faculty"))
     user__profile__nationality = ChoiceFilter(choices=related_nationalities, label=_("Nationality"))
     state = ChoiceFilter(choices=SectionMembership.State.choices, label=_("State"))
+    role = ChoiceFilter(choices=SectionMembership.Role.choices, label=_("Role"))
 
     # created = DateRangeFilter()
-    created_when = ProperDateFromToRangeFilter(field_name="created", label=_("Joined"))
+    # TODO: needed?
+    # created_when = ProperDateFromToRangeFilter(field_name="created", label=_("Joined"))
 
     class Meta(BaseFilterSet.Meta):
         pass
