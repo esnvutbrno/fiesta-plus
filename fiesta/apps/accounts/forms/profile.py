@@ -31,7 +31,7 @@ class UserProfileForm(BaseModelForm):
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
             if any(conf_field.__get__(c) is not None for c in confs)
         )
-        return cls.Meta.fields + fields_to_include
+        return fields_to_include + cls.Meta.fields
 
     @classmethod
     def get_user_configuration(cls, user: User):
