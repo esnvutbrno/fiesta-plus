@@ -90,7 +90,7 @@
     {% endif %}
     <hr>
     <h2 class="card-title">{% trans 'Add New Social Account' %}:</h2>
-    <div class="btn-group justify-center">
+    <div class="flex flex-grow space-x-2 justify-between">
       {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
     </div>
     {% include "socialaccount/snippets/login_extra.html" %}

@@ -1,28 +1,34 @@
 {% load socialaccount %}
+{% load social_accounts %}
 {% get_providers as socialaccount_providers %}
-{% for provider in socialaccount_providers %}
-  {% if provider.id == "openid" %}
-    {% for brand in provider.get_brands %}
-      {# POST because security #}
-      <form method="POST"
-            action="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-            class="btn btn-sm btn-wide btn-secondary p-0 flex">
-        {% csrf_token %}
-        <button class="w-full h-full"
-                name="submit"
-                title="{{ brand.name }}"
-                type="submit">{{ brand.name }}</button>
-      </form>
-    {% endfor %}
-  {% endif %}
-  {# POST because security #}
-  <form method="POST"
-        action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-        class="btn btn-wide btn-secondary p-0 flex">
-    {% csrf_token %}
-    <button class="w-full h-full"
-            title="{{ provider.name }}"
-            name="submit"
-            type="submit">{{ provider.name }}</button>
-  </form>
-{% endfor %}
+{% with providers_length=socialaccount_providers|length %}
+  {% for provider in socialaccount_providers %}
+    {% if provider.id == "openid" %}
+      {% for brand in provider.get_brands %}
+        {# POST because security #}
+        <form method="POST"
+              action="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
+              class="btn btn-sm btn-wide btn-secondary p-0 flex-grow">
+          {% csrf_token %}
+          <button class="w-full h-full"
+                  name="submit"
+                  title="{{ brand.name }}"
+                  type="submit">{{ brand.name }}</button>
+        </form>
+      {% endfor %}
+    {% endif %}
+    {# POST because security #}
+    <form method="POST"
+          action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+          class="btn p-0 flex-grow">
+      {% csrf_token %}
+      <button class="{% get_social_button_style provider.id %} w-full h-full rounded-lg px-4 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-500 focus:ring-4 focus:ring-[#24292F]/50"
+              title="{{ provider.name }}"
+              name="submit"
+              type="submit">
+        {% get_social_icon provider.id %}
+        {{ provider.name }}
+      </button>
+    </form>
+  {% endfor %}
+{% endwith %}

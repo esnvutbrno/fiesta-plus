@@ -46,7 +46,10 @@
     <button type="submit" class="btn btn-primary btn-block">Log in to your account</button>
     {# social accounts logins do have their own forms, so it cannot be nested #}
   </form>
-  {% include "account/parts/social_login_buttons.html" with process="Log in" %}
+  <div class="flex flex-row space-x-2 justify-between">
+    {% include "socialaccount/snippets/provider_list.html" with process="Log in" %}
+<!--      {% include "account/parts/social_login_buttons.html" with process="Log in" %}-->
+  </div>
   <div class="text-sm font-medium text-gray-500">
     Not registered?
     <a href="{{ signup_url }}" class="link link-hover link-primary">Create account</a>
