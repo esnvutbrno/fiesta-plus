@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
-from django.http import HttpResponse, HttpResponseNotFound
+from django.http import Http404, HttpResponse
 
 from ...utils.models.query import get_single_object_or_none
 from ...utils.request import HttpRequest as BaseHttpRequest
@@ -35,10 +35,10 @@ class SectionSpaceMiddleware:
             return self.get_response(request)
 
         if not request.in_space_of_section:
-            return HttpResponseNotFound("Section space not found.")
+            raise Http404("Section space not found.")
 
         if request.in_space_of_section.system_state != Section.SystemState.ENABLED:
-            return HttpResponseNotFound("Section is not enabled.")
+            raise Http404("Section is not enabled.")
 
         return self.get_response(request)
 

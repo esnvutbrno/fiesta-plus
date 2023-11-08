@@ -64,7 +64,6 @@ class ProjectConfigMixin:
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
         "apps.dashboard.apps.DashboardConfig",
-        "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
@@ -83,8 +82,11 @@ class ProjectConfigMixin:
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        # "allauth.socialaccount.providers.facebook",
-        "allauth.socialaccount.providers.google",
+        "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
+        # "allauth.socialaccount.providers.facebook",  # NOTE: cannot be enabled BEFORE adding SocialApp, otherwise throws an error
+        # "allauth.socialaccount.providers.google",
+        # "allauth.socialaccount.providers.apple",
+        # "allauth.socialaccount.providers.github",
         "allauth_cas",
         # superuser can log in as any user
         "loginas",

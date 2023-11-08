@@ -233,3 +233,41 @@
         @apply font-bold;
     }
 }
+
+/* basically disables all the responsiveness to keep the layout */
+.Forms__form--loginform,
+.Forms__form--resetpasswordform,
+.Forms__form--signupform {
+    @apply flex flex-col flex-wrap;
+
+    .Forms__field {
+        @apply w-full flex-col;
+
+        &.Forms__field--buttons {
+            @apply w-full flex-row;
+        }
+    }
+}
+
+/* loading indicator for buttons with htmx */
+[hx-post] {
+    @apply relative
+}
+
+[hx-post]:not(form).htmx-request:after {
+    @apply right-2 absolute transform text-lg;
+    content: "⏳";
+
+    animation: flipHourglass 1.5s infinite;
+    animation-direction: alternate;
+    animation-delay: 500ms;
+}
+
+@keyframes flipHourglass {
+  from, 20% {
+    transform: rotate(0deg);
+  }
+  80%, to {
+    transform: rotate(180deg);
+  }
+}
