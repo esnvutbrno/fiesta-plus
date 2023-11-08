@@ -4,9 +4,7 @@
 {% load socialaccount %}
 {% url 'account_signup' as default_form_url %}
 <h1 class="card-title">{{ card_title|default:"Create Account" }}</h1>
-<div class="flex flex-row space-x-2 justify-between">
-  {% include "socialaccount/snippets/provider_list.html" with process="Sign up" %}
-</div>
+{% include "socialaccount/snippets/provider_list.html" with process="Sign up" %}
 <form method="POST"
       action="{{ form_url|default:default_form_url }}"
       class="{{ form|get_form_classes }} space-y-2">

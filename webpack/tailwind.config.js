@@ -14,6 +14,9 @@ module.exports = {
             pattern: /(btn-.+)|(badge-.+)/,
             variants: ["checked"],
         },
+        {
+            pattern: /(SocialButton)/,
+        },
     ],
     theme: {
         extend: {},
