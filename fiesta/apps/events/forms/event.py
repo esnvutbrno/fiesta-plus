@@ -47,7 +47,7 @@ class UpdateEventForm(BaseModelForm):
     # section_name = CharField(label=_("ESN section"), disabled=True)
     # author_name = CharField(label=_("Author of the event"), disabled=True)
 
-    add_organizer = MultipleChoiceField(label=_("Add organizer"), required=False, queryset=SectionMembership.objects.none())
+    add_organizer = CharField(label=_("Add organizer"))
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -1,6 +1,29 @@
 {% extends "fiesta/base.html" %}
 <!-- Missing breadcrumbs -->
 {% block main %}
+
+<div class="container mx-auto p-6">
+  <h1 class="text-3xl font-semibold mb-4">Your events</h1>
+  <ul class="divide-y divide-gray-300">
+    {% for participant in request.user.participants.all %}
+    {{ participant }}
+    <li class="py-4">
+      <div class="flex items-center space-x-4">
+        <div class="flex-shrink-0">
+          <div class="h-12 w-12 rounded-full bg-cover bg-center"
+               style=''></div>
+        </div>
+        <div class="flex-grow">
+          <h2 class="text-xl font-semibold"> <a href="{% url "events:event-detail" participant.event.id %}"> {{ participant.event.title }}</a> </h2>
+          <p class="text-gray-600">{{ participant.event.start }}</p>
+          <p class="text-gray-600">{{ participant.event.description }}</p>
+        </div>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+
 <div class="container mx-auto p-6">
   <h1 class="text-3xl font-semibold mb-4">Upcoming Events of {{ request.in_space_of_section }}</h1>
   <ul class="divide-y divide-gray-300">
