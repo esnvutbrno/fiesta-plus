@@ -75,4 +75,4 @@ def get_social_button_style(provider: str) -> str:
 
     if provider == "github":
         return """text-white bg-[#24292F] hover:bg-[#24292F]/90"""
-    return ""
+    return "btn-secondary"
