@@ -1,0 +1,43 @@
+@layer components {
+    .SocialButton__form {
+        @apply btn grow p-0
+    }
+
+    .SocialButton {
+        @apply w-full
+        h-full rounded-lg px-4 py-2.5 text-center
+        inline-flex justify-center items-center
+        bg-base-200 text-base-content
+    }
+
+    .SocialButton--esnaccounts {
+        @apply text-base-content bg-base-100
+    }
+
+    .SocialButton--esnaccounts svg {
+        @apply transform duration-500 ease-in-out
+    }
+    .SocialButton--esnaccounts:hover svg {
+        @apply rotate-180
+    }
+
+    .SocialButton__form--esnaccounts {
+        @apply w-full
+    }
+
+    .SocialButton--facebook {
+        @apply text-white bg-[#3b5998] hover:bg-[#3b5998]/90
+    }
+
+    .SocialButton--google {
+        @apply text-white bg-[#4285F4] hover:bg-[#4285F4]/90
+    }
+
+    .SocialButton--apple {
+        @apply text-white bg-[#050708] hover:bg-[#050708]/90
+    }
+
+    .SocialButton--github {
+        @apply text-white bg-[#24292F] hover:bg-[#24292F]/90
+    }
+}

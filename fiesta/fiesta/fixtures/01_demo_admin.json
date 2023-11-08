@@ -18,5 +18,21 @@
       "groups": [],
       "user_permissions": []
     }
+  },
+    {
+    "model": "socialaccount.socialapp",
+    "pk": 1,
+    "fields": {
+      "provider": "esnaccounts",
+      "name": "default",
+      "client_id": "---",
+      "secret": "",
+      "key": "",
+      "sites": [
+        [
+          "fiesta.test"
+        ]
+      ]
+    }
   }
 ]
