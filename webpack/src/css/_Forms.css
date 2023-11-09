@@ -5,7 +5,7 @@
 
 @layer components {
     .Forms__field {
-        @apply form-control flex-row md:flex-col;
+        @apply form-control flex-col;
     }
 
     .Forms__field--buttons {
@@ -181,7 +181,7 @@
 
     .Forms__field--select .ts-dropdown {
         /* fight versus tom-select styles */
-        @apply rounded shadow-xl -mt-1;
+        @apply rounded shadow -mt-1;
     }
 
     .Forms__field--select .ts-dropdown .option {

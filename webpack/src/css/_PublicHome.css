@@ -4,7 +4,7 @@
 }
 
 .FeatureCard__card {
-    @apply bg-base-100 p-6 rounded-lg shadow relative transition-all duration-200 ease-in-out hover:shadow-xl hover:-translate-y-2 h-full flex flex-col
+    @apply bg-base-100 p-6 rounded-lg shadow relative transition-all duration-200 ease-in-out hover:shadow hover:-translate-y-2 h-full flex flex-col
 }
 .FeatureCard__image {
     @apply h-40 rounded w-full object-cover object-center
