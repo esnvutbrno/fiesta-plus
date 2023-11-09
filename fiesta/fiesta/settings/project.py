@@ -82,9 +82,9 @@ class ProjectConfigMixin:
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
-        # "allauth.socialaccount.providers.facebook",  # NOTE: cannot be enabled BEFORE adding SocialApp, otherwise throws an error
-        # "allauth.socialaccount.providers.google",
+        "apps.esnaccounts",  # cannot have a full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
+        # "allauth.socialaccount.providers.facebook", # NOTE: cannot be enabled BEFORE adding SocialApp, otherwise throws an error
+        "allauth.socialaccount.providers.google",
         # "allauth.socialaccount.providers.apple",
         # "allauth.socialaccount.providers.github",
         "allauth_cas",
