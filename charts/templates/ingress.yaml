@@ -8,29 +8,13 @@ metadata:
     cert-manager.io/issuer: {{ .Values.ingress.certIssuerName | quote }}
 spec:
   ingressClassName: nginx
+  defaultBackend:
+    service:
+      name: web
+      port:
+        number: 80
   tls:
     - hosts:
         - {{ .Values.ingress.host | quote }}
         {{- .Values.ingress.extraHosts | toYaml | nindent 8 }}
       secretName: {{ .Values.ingress.certSecretName | quote }}
-  rules:
-    - host: "*.{{ .Values.ingress.host }}"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: web
-                port:
-                  number: 80
-    - host: "{{ .Values.ingress.host }}"
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: web
-                port:
-                  number: 80
