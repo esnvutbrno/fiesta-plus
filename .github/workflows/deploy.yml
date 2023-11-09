@@ -250,6 +250,9 @@ jobs:
                 accessKey: ${{ secrets.S3_ACCESS_KEY }}
                 regionName: ${{ secrets.S3_REGION_NAME }}
                 bucketName: ${{ secrets.S3_BUCKET_NAME }}
+              dnsWebhook:
+                accessKey: ${{ secrets.SCW_DNS_ACCESS_KEY }}
+                secretKey: ${{ secrets.SCW_DNS_SECRET_KEY }}
           value-files: >-
             [
               "charts/values.yaml"

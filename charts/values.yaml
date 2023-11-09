@@ -1,15 +1,16 @@
 ingress:
   certSecretName: fiesta-cert
-  certIssuerName: letsencrypt
+
+  certIssuerName: scaleway
   certIssuerSecretName: cert-issuer-key
+  dnsWebhookSecretName: scaleway-dns
 
   certContactEmail: dummy@example.com
 
-  host: bf.josefkolar.cz
+  host: fiesta.plus
   extraHosts:
-    - esnvutbrno.bf.josefkolar.cz
-    - esnmunibrno.bf.josefkolar.cz
-    - esnmendelubrno.bf.josefkolar.cz
+    - esnvutbrno.fiesta.plus
+    - esnhawaii.fiesta.plus
 
 web:
   repository: nginxdemos/hello
@@ -32,3 +33,6 @@ secrets:
     accessKey: key
     regionName: region
     bucketName: bucket
+  dnsWebhook:
+    accessKey: key
+    secretKey: key
