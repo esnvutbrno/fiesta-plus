@@ -2,6 +2,16 @@
 {% load humanize %}
 {% load esncards %}
 {% get_current_esncard_application_of_user as application %}
+
+{# TODO: display some overview of applications for privileges users #}
+{% if request.membership.is_privileged and False %}
+  <div class="Dashboard__tiles mb-4">
+    <div class="Dashboard__tile bg-base-300">
+      <div class="Dashboard__tile__title text-primary">Placed applications</div>
+    </div>
+  </div>
+{% endif %}
+
 <div class="Dashboard__tiles">
   <div class="Dashboard__tile bg-lime-400">
     <div class="Dashboard__tile__title text-gray-800">ESNcard Application</div>

@@ -17,6 +17,7 @@
             </svg>
           {% elif membership.state == membership.State.ACTIVE %}
             {% section_membership_activation_url membership as activation_url %}
+            {# TODO: the ?next may be set here, and we're resetting to home url of section -- maybe the option is to respect ?next to keep the same page before section switch #}
             <a href="{{ activation_url }}" type="button" class="btn btn-success">jump in</a>
           {% endif %}
         </div>

@@ -23,7 +23,7 @@ def breadcrumb_items(context: dict):
         view_titles = ()
 
     req.breadcrumbs = [
-        BreadcrumbItem(item, req.build_absolute_uri()) if isinstance(item, str) else item
+        BreadcrumbItem(item, req.build_absolute_uri()) if isinstance(item, str) else item() if callable(item) else item
         for item in filter(None, view_titles)
     ]
 

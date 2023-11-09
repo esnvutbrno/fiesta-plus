@@ -29,17 +29,7 @@ class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, 
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile_or_none
-        university = (
-            (
-                profile.guest_faculty.university
-                if profile.guest_faculty
-                else profile.home_faculty.university
-                if profile.home_faculty
-                else profile.home_university
-            )
-            if profile
-            else None
-        )
+        university = (profile.faculty.university if profile.faculty else profile.university) if profile else None
 
         return dict(
             user=self.request.user,

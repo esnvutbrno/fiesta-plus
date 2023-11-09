@@ -6,6 +6,7 @@ import requests
 from allauth.socialaccount.providers.base import ProviderAccount
 from allauth_cas.providers import CASProvider
 from django.core.files.base import ContentFile
+from django.db import transaction
 from django.http import HttpRequest
 from django.utils.text import slugify
 
@@ -13,6 +14,7 @@ from apps.accounts.models import User, UserProfile
 from apps.accounts.models.profile import user_profile_picture_storage
 from apps.esnaccounts import logger
 from apps.sections.models import Section, SectionMembership
+from apps.sections.models.services.section_plugins_reconciler import SectionPluginsReconciler
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialAccount, SocialLogin
@@ -47,6 +49,7 @@ class ESNAccountsProvider(CASProvider):
     EDITOR_ROLE = "Local.regularBoardMember"
 
     @classmethod
+    @transaction.atomic
     def update_section_membership(
         cls,
         *,
@@ -61,17 +64,21 @@ class ESNAccountsProvider(CASProvider):
         user_nationality = sa.extra_data.get("nationality")
         # national_section = sa.extra_data.get("country")
 
+        section, _ = Section.objects.get_or_create(
+            name=section_name,
+            defaults=dict(
+                code=section_code,
+                # TODO: definitely not, user nationality != section assignment
+                country=user_nationality,
+                space_slug=slugify(section_name).lower().replace("-", ""),
+            ),
+        )
+
+        SectionPluginsReconciler.reconcile(section)
+
         SectionMembership.objects.update_or_create(
             user=user,
-            section=Section.objects.get_or_create(
-                name=section_name,
-                defaults=dict(
-                    code=section_code,
-                    # TODO: definitely not, user nationality != section assignment
-                    country=user_nationality,
-                    space_slug=slugify(section_name).lower().replace("-", ""),
-                ),
-            )[0],
+            section=section,
             defaults=dict(
                 # we trust ESN Acccounts, so directly active membership
                 # TODO: should be as AccountsConfiguration attribute, so section can select
