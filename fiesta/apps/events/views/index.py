@@ -15,9 +15,9 @@ class EventsIndexView(ListView):
         context = super().get_context_data(**kwargs)
 
         # Get the user's confirmed participants
-        participating = self.request.user.participants.filter(state=ParticipantState.CONFIRMED)
+        participations = self.request.user.participants.filter(state=ParticipantState.CONFIRMED)
 
         # Add the confirmed participants to the context
-        context['participating'] = participating
+        context['participations'] = participations
 
         return context
