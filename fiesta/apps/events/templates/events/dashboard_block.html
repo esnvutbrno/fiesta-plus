@@ -8,7 +8,7 @@
     <div class="Dashboard__tile__value">
       {% for participating in participations %}
       <div>
-        <a href="{% url " events:event-detail" participating.event.id %}">
+        <a href="{% url "events:event-detail" participating.event.id %}">
         <span class="text-3xl">{{ participating.event.title }}</span>
         <span class="text-lg text-gray-300">{{ participating.event.start }}</span>
         </a>
@@ -20,7 +20,7 @@
     <div class="Dashboard__tile__value">
       {% for event in request.user.events.all %}
       <div>
-        <a href="{% url " events:event-detail" event.id %}">
+        <a href="{% url "events:event-detail" event.id %}">
         <span class="text-3xl">{{ event.title }}</span>
         <span class="text-lg text-gray-300">{{ event.start }}</span>
         </a>
@@ -29,7 +29,7 @@
     </div>
 
     <div class="Dashboard__tile__actions text-right">
-      <a href="{% url " events:add-event" %}"
+      <a href="{% url "events:add-event" %}"
       class="btn btn-lg btn-outline">Create new event</a>
     </div>
     {% endif %}
