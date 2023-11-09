@@ -9,8 +9,6 @@ ingress:
 
   host: fiesta.plus
   extraHosts:
-    - esnvutbrno.fiesta.plus
-    - esnhawaii.fiesta.plus
     - "*.fiesta.plus"
 
 web:
