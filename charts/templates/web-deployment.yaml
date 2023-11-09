@@ -20,8 +20,8 @@ spec:
       containers:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
-          ports:
-            - containerPort: 80
+{{/*          ports:*/}}
+{{/*            - containerPort: 80*/}}
 {{/*          readinessProbe:*/}}
 {{/*            initialDelaySeconds: 5*/}}
 {{/*            httpGet:*/}}
