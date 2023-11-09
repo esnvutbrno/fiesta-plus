@@ -24,6 +24,8 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = ("name", "country", "space_slug", "all_universities", "memberships_count", "system_state")
     list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
+    list_editable = ("system_state",)
+
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("memberships", "universities")
 
