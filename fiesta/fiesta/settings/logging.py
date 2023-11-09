@@ -43,6 +43,11 @@ class LoggingConfigMixin:
                     "level": self.LOG_LEVEL,
                     "propagate": False,
                 },
+                "django.request": {
+                    "handlers": ["console"],
+                    "level": self.LOG_LEVEL,
+                    "propagate": False,
+                },
                 "django.server": {
                     "handlers": ["console.server"],
                     "level": self.LOG_LEVEL,

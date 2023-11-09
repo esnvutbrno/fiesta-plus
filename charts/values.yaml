@@ -11,6 +11,7 @@ ingress:
   extraHosts:
     - esnvutbrno.fiesta.plus
     - esnhawaii.fiesta.plus
+    - "*.fiesta.plus"
 
 web:
   repository: nginxdemos/hello
