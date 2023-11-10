@@ -39,9 +39,7 @@
       </div>
       <div class="chat-bubble">{{ br.note }}</div>
       <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">
-        {% for interest in br.issuer.profile.get_interests_display %}
-          <span class="mr-2 badge badge-outline">{{ interest }}</span>
-        {% endfor %}
+        {% for interest in br.get_interests_display %}<span class="mr-2 badge badge-outline">{{ interest }}</span>{% endfor %}
       </div>
     </div>
 

@@ -84,20 +84,24 @@ class IssuerPictureServeView(
     NamespacedFilesServeView,
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
-        # is the file in requests, for whose is the related section responsible?
+        # picture is from requests placed on my section
         related_requests = request.membership.section.buddy_system_requests.filter(
             issuer__profile__picture=name,
         )
 
-        # does have the section enabled picture displaying?
-        return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
-            related_requests.filter(
-                state=BuddyRequest.State.MATCHED,
+        return (
+            # does have the section enabled picture displaying?
+            (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture)
+            # or are we in a matched request?
+            or (
+                related_requests.filter(
+                    state=BuddyRequest.State.MATCHED,
+                )
+                .filter(match__matcher=request.user)
+                .exists()
             )
-            .filter(
-                Q(match__matcher=request.user) | Q(issuer=request.user),
-            )
-            .exists()
+            # or am I the issuer?
+            or (related_requests.filter(issuer=request.user).exists())
         )
 
 
