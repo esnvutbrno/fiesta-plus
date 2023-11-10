@@ -185,9 +185,12 @@ class QuickBuddyMatchView(
     def form_valid(self, form):
         br: BuddyRequest = self.get_object()
 
-        if br.match:
-            # could be already matched by someone else
-            br.match.delete()
+        try:
+            if br.match:
+                # could be already matched by someone else
+                br.match.delete()
+        except BuddyRequestMatch.DoesNotExist:
+            pass
 
         match = BuddyRequestMatch(
             request=br,
