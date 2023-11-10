@@ -80,5 +80,10 @@ def get_color_by_text(name: typing.Any) -> str:
 
 @register.simple_tag(takes_context=True)
 def build_absolute_uri(context, location=""):
-    request = context["request"]
+    try:
+        request = context["request"]
+    except KeyError:
+        # best effort? probably rendered also on error pages
+        return location
+
     return request.build_absolute_uri(location)
