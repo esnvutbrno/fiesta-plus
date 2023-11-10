@@ -5,6 +5,7 @@ from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
 from django.db.models.fields.files import FieldFile
 from django.utils.html import format_html
+from django_countries import countries
 from django_countries.fields import Country
 from django_tables2.columns import BoundColumn
 
@@ -21,10 +22,11 @@ class CountryColumn(tables.Column):
     attrs = {"td": {"data-flag": str(True).lower()}}
 
     def render(self, value):
+        c_code = countries.by_name(value)
         return format_html(
             "<span title='{}'>{}</span>",
             value,
-            Country(value).unicode_flag,
+            Country(c_code).unicode_flag if c_code else value,
         )
 
     def value(self, value):
