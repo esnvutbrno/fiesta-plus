@@ -6,7 +6,6 @@ on:
       - main
       - develop
 
-
 jobs:
   build-webpack:
     runs-on: ubuntu-latest
@@ -204,6 +203,7 @@ jobs:
           context: .
           file: nginx/proxy.Dockerfile
           push: true
+          target: proxy-stable
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max

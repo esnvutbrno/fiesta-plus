@@ -6,6 +6,7 @@ metadata:
     {{- include "fiesta.labels" . | nindent 4 }}
   annotations:
     cert-manager.io/issuer: {{ .Values.ingress.certIssuerName | quote }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
 spec:
   ingressClassName: nginx
   tls:

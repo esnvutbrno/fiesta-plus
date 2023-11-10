@@ -38,8 +38,8 @@ services:
   proxy:
     build:
       context: .
-      dockerfile: nginx/proxy.Dockerfile
-      target: base
+      dockerfile: Dockerfile
+      target: proxy-base
     command: [ nginx-debug, '-g', 'daemon off;' ]
     expose:
       - 80
