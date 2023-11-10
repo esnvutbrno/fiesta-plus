@@ -109,6 +109,7 @@ class NewRequestView(
             "responsible_section": self.request.in_space_of_section,
             "issuer": self.request.user,
             "issuer_faculty": p.faculty if p else None,
+            "interests": p.interests if p else None,
         }
 
     def form_valid(self, form):

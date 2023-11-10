@@ -12,15 +12,9 @@
 {% endblock upper_head %}
 
 {% block main %}
-
+  {# international without any requests are redirected to /wanna-buddy by view #}
   {% for br in requests %}
     {% blocktranslate with created=br.created|date asvar title %}Your Request from {{ created }}{% endblocktranslate %}
     {% include "buddy_system/parts/request_match_card.html" with br=br title=title connect_with=br.match.matcher %}
-  {% empty %}
-    <tr>
-      <td>
-        <a href="{% url "buddy_system:new-request" %}">new buddy request</a>
-      </td>
-    </tr>
   {% endfor %}
 {% endblock %}

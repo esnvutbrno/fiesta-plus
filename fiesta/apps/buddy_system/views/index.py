@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import TemplateView
 
 from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
@@ -20,15 +22,17 @@ class BuddySystemIndexView(
         "RequestState": BuddyRequest.State,
     }
 
+    def get(self, request, *args, **kwargs):
+        if not self.request.in_space_of_section.buddy_system_requests.filter(issuer=self.request.user).exists():
+            return HttpResponseRedirect(reverse("buddy_system:wanna-buddy"))
+
+        return super().get(request, *args, **kwargs)
+
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
 
         data.update(
-            {
-                "requests": self.request.user.buddy_system_issued_requests.all().filter(
-                    responsible_section=self.request.in_space_of_section
-                )
-            }
+            {"requests": self.request.in_space_of_section.buddy_system_requests.filter(issuer=self.request.user)}
         )
         return data
 
