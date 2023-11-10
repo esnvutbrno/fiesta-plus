@@ -73,8 +73,8 @@ services:
   webpack:
     build:
       context: .
-      dockerfile: ./webpack/Dockerfile
-      target: base
+      dockerfile: Dockerfile
+      target: webpack-base
     command: yarn dev
     expose:
       - 8003
