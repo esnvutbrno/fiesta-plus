@@ -11,6 +11,7 @@ from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, TemplateView
 
+from apps.accounts.models import UserProfile
 from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
@@ -103,13 +104,25 @@ class NewRequestView(
     success_url = reverse_lazy("buddy_system:index")
 
     def get_initial(self):
+        p: UserProfile = self.request.user.profile_or_none
         return {
             "responsible_section": self.request.in_space_of_section,
             "issuer": self.request.user,
+            "issuer_faculty": p.faculty if p else None,
         }
 
     def form_valid(self, form):
         # override to be sure
         form.instance.responsible_section = self.request.in_space_of_section
         form.instance.issuer = self.request.user
+
+        profile: UserProfile = self.request.user.profile_or_none
+        if not profile.faculty:
+            profile.faculty = form.instance.issuer_faculty
+            profile.save(update_fields=("faculty",))
+
+        if not profile.university:
+            profile.university = form.instance.issuer_faculty.university
+            profile.save(update_fields=("university",))
+
         return super().form_valid(form)

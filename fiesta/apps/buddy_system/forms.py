@@ -9,7 +9,7 @@ from apps.accounts.models import UserProfile
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, UserWidget
+from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, FacultyWidget, UserWidget
 
 USER_PROFILE_CONTACT_FIELDS = fields_for_model(
     UserProfile,
@@ -32,6 +32,7 @@ class NewBuddyRequestForm(BaseModelForm):
             "interests",
             "responsible_section",
             "issuer",
+            "issuer_faculty",
         )
         field_classes = {
             "interests": ChoicedArrayField,
@@ -39,10 +40,12 @@ class NewBuddyRequestForm(BaseModelForm):
         widgets = {
             "responsible_section": HiddenInput,
             "issuer": HiddenInput,
+            "issuer_faculty": FacultyWidget,
         }
         labels = {
             "note": _("Tell us about yourself"),
             "interests": _("What are you into?"),
+            "issuer_faculty": _("Your faculty"),
         }
         help_texts = {
             "note": lazy(
@@ -50,6 +53,12 @@ class NewBuddyRequestForm(BaseModelForm):
                 str,
             )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.initial.get("issuer_faculty"):
+            self.fields["issuer_faculty"].disabled = True
 
 
 #     TODO: add save/load of contacts to/from user_profile
