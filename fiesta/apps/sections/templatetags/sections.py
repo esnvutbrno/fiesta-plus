@@ -36,7 +36,11 @@ def get_section_statistics(context: dict):
     return Stats(
         members=req.in_space_of_section.memberships.filter(
             state=SectionMembership.State.ACTIVE,
-            role=SectionMembership.Role.MEMBER,
+            role__in=(
+                SectionMembership.Role.MEMBER,
+                SectionMembership.Role.EDITOR,
+                SectionMembership.Role.ADMIN,
+            ),
         ).count(),
         unconfirmed_members=req.in_space_of_section.memberships.filter(
             state=SectionMembership.State.UNCONFIRMED,
