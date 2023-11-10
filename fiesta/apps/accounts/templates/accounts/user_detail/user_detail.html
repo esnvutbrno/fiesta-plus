@@ -133,7 +133,14 @@
                 <span class="loading loading-spinner loading-xl htmx-indicator"></span>
                 Reject
               </button>
-              <button class="btn btn-primary grow">Confirm</button>
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.ACTIVE.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator"></span>
+                Confirm
+              </button>
             </div>
             <div class="flex flex-row justify-around [&>p]:w-1/2 [&>p]:px-8 [&>p]:pt-4 text-sm text-justify">
               <p>

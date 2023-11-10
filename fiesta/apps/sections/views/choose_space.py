@@ -5,6 +5,8 @@ from collections import namedtuple
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.http import HttpResponseRedirect
+from django.urls import reverse
+from django.utils.http import urlencode
 from django.views.generic import TemplateView
 
 from apps.plugins.middleware.plugin import HttpRequest
@@ -17,8 +19,10 @@ class ChooseSpaceView(TemplateView):
     template_name = "sections/choose_space.html"
 
     def get(self, request, *args, **kwargs):
-        # maybe we are already in section space accidentally
+        # TODO: temporary hack, have to decide if need to have choosespace page
         next_url = get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or ""
+        return HttpResponseRedirect(reverse("accounts:membership") + "?" + urlencode({REDIRECT_FIELD_NAME: next_url}))
+        # maybe we are already in section space accidentally
 
         if self.request.in_space_of_section:
             return HttpResponseRedirect(self.request.build_absolute_uri(next_url))
