@@ -13,8 +13,8 @@ services:
       - .env
     build:
       context: .
-      dockerfile: fiesta/Dockerfile
-      target: base
+      dockerfile: Dockerfile
+      target: web-base
     depends_on:
       - db
     environment:

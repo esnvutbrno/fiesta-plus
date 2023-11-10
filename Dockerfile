@@ -1,4 +1,4 @@
-FROM python:3.11.3-alpine3.17 as venv-builder
+FROM python:3.11.3-alpine3.17 as web-venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -20,9 +20,9 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
 
 # pull official base image
-FROM python:3.11.3-alpine3.17 as base
+FROM python:3.11.3-alpine3.17 as web-base
 
-COPY --from=venv-builder /venv /venv
+COPY --from=web-venv-builder /venv /venv
 
 # set work directory
 WORKDIR /usr/src/app
@@ -55,7 +55,7 @@ RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]
 
-FROM base as stable
+FROM web-base as web-stable
 
 # stubs to get compatibility with fs storage
 ARG DJANGO_STATIC_ROOT=/usr/src/static
@@ -74,4 +74,4 @@ RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction pyt
 COPY ./webpack-stats.json $DJANGO_BUILD_DIR
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
-CMD ["python -m uvicorn fiesta.asgi:application"]
+CMD ["python -m gunicorn fiesta.wsgi:application"]
