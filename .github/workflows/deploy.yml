@@ -25,7 +25,8 @@ jobs:
         with:
           context: .
           load: true
-          file: webpack/Dockerfile
+          file: Dockerfile
+          target: webpack-stable
           #          TODO: ends with 400
           #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
           #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
@@ -110,6 +111,7 @@ jobs:
           context: .
           file: Dockerfile
           load: true
+          target: web-stable
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
@@ -136,6 +138,7 @@ jobs:
           context: .
           file: Dockerfile
           push: true
+          target: web-stable
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 

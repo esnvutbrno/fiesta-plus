@@ -1,3 +1,8 @@
+#
+# django web app image
+#
+
+# venv builder
 FROM python:3.11.3-alpine3.17 as web-venv-builder
 
 ARG POETRY_EXPORT_ARGS
@@ -19,7 +24,7 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
 
-# pull official base image
+# base runtime image
 FROM python:3.11.3-alpine3.17 as web-base
 
 COPY --from=web-venv-builder /venv /venv
@@ -55,6 +60,7 @@ RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]
 
+# stable image runtime
 FROM web-base as web-stable
 
 # stubs to get compatibility with fs storage
@@ -75,3 +81,34 @@ COPY ./webpack-stats.json $DJANGO_BUILD_DIR
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
 CMD ["python -m gunicorn fiesta.wsgi:application"]
+
+#
+# webpack image
+#
+FROM node:18.15.0-slim as webpack-base
+
+RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY ./webpack/package.json ./webpack/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
+
+COPY ./webpack/ /usr/src/app/
+COPY ./fiesta/ /usr/src/fiesta/
+
+CMD ["yarn", "run"]
+
+# stable image
+FROM webpack-base as webpack-stable
+
+ARG BUILD_DIR=/usr/src/build
+ENV BUILD_DIR=${BUILD_DIR}
+
+ARG PUBLIC_PATH=/static/
+ENV PUBLIC_PATH=${PUBLIC_PATH}
+
+ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
+ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
+
+RUN ["yarn", "build"]
