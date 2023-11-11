@@ -215,6 +215,9 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     concurrency: deploy
+    environment:
+      name: production
+      url: https://fiesta.plus
     needs:
       - build-web
       - build-webpack
