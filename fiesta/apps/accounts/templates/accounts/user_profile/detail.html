@@ -80,6 +80,13 @@
       <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
           <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
+            <td class="flex-grow">
+              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                 href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
+            </td>
+          </tr>
+          <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
             <td class="flex-grow">
               <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
@@ -106,7 +113,7 @@
           </tr>
           <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
-            <td class="flex-grow">{{ user.email_user }}</td>
+            <td class="flex-grow">{{ user.primary_email }}</td>
           </tr>
         {% endwith %}
       </table>

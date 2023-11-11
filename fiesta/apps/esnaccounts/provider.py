@@ -9,9 +9,11 @@ from django.core.files.base import ContentFile
 from django.db import transaction
 from django.http import HttpRequest
 from django.utils.text import slugify
+from phonenumber_field.phonenumber import to_python
 
 from apps.accounts.models import User, UserProfile
 from apps.accounts.models.profile import user_profile_picture_storage
+from apps.accounts.services import UserProfileStateSynchronizer
 from apps.esnaccounts import logger
 from apps.sections.models import Section, SectionMembership
 from apps.sections.models.services.section_plugins_reconciler import SectionPluginsReconciler
@@ -47,6 +49,7 @@ class ESNAccountsProvider(CASProvider):
 
     MEMBER_ROLE = "Local.activeMember"
     EDITOR_ROLE = "Local.regularBoardMember"
+    ADMIN_ROLE = "Local.president"
 
     @classmethod
     @transaction.atomic
@@ -85,18 +88,26 @@ class ESNAccountsProvider(CASProvider):
                 # TODO: should be as AccountsConfiguration attribute, so section can select
                 #  if they want to trust
                 state=SectionMembership.State.ACTIVE,
-                # TODO: check all possible for ESN Accounts roles
                 role=(
-                    SectionMembership.Role.EDITOR
-                    if cls.EDITOR_ROLE in roles
+                    SectionMembership.Role.ADMIN
+                    if cls.ADMIN_ROLE in roles
                     else (
-                        SectionMembership.Role.MEMBER
-                        if cls.MEMBER_ROLE in roles
-                        else SectionMembership.Role.INTERNATIONAL
+                        SectionMembership.Role.EDITOR
+                        if cls.EDITOR_ROLE in roles
+                        else (
+                            SectionMembership.Role.MEMBER
+                            if cls.MEMBER_ROLE in roles
+                            else SectionMembership.Role.INTERNATIONAL
+                        )
                     )
                 ),
             ),
         )
+
+        try:
+            phone_number = to_python(sa.extra_data.get("telephone"))
+        except TypeError:
+            phone_number = None
 
         user_profile, _ = UserProfile.objects.update_or_create(
             user=user,
@@ -107,6 +118,7 @@ class ESNAccountsProvider(CASProvider):
                     "F": "female",
                 }.get(sa.extra_data.get("gender")),
                 state=UserProfile.State.INCOMPLETE,
+                phone_number=phone_number,
             ),
         )
 
@@ -114,6 +126,8 @@ class ESNAccountsProvider(CASProvider):
             profile=user_profile,
             picture_url=sa.extra_data.get("picture"),
         )
+
+        UserProfileStateSynchronizer.on_user_profile_update(user_profile)
 
     @staticmethod
     def sync_profile_picture(profile: UserProfile, picture_url: str | None):
