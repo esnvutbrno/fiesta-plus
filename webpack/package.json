@@ -20,7 +20,7 @@
     "daisyui": "^3.9.3",
     "htmx.org": "^1.8.6",
     "mini-css-extract-plugin": "^2.5.3",
-    "postcss": "^8.4.6",
+    "postcss": "^8.4.31",
     "postcss-import": "^14.0.2",
     "postcss-loader": "^7.0.1",
     "postcss-preset-env": "^8.3.1",
