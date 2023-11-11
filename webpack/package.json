@@ -15,7 +15,7 @@
     "@tailwindcss/forms": "^0.5.2",
     "@tailwindcss/typography": "^0.5.1",
     "alpinejs": "^3.12.0",
-    "autoprefixer": "^10.4.14",
+    "autoprefixer": "^10.4.16",
     "css-loader": "^6.6.0",
     "daisyui": "^3.5.1",
     "htmx.org": "^1.8.6",
