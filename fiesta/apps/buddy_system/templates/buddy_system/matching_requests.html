@@ -74,7 +74,7 @@
             {% if configuration.display_request_creation_date %}
               <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
             {% endif %}
-            <dialog class="modal-box backdrop:opacity-90 backdrop:bg-gray-900"
+            <dialog class="modal-box backdrop:opacity-90 backdrop:bg-gray-900 text-base-content"
                     x-ref="dialog">
               <form action="{% url "buddy_system:take-buddy-request" br.pk %}"
                     method="POST"
