@@ -48,6 +48,15 @@ def breadcrumb_push_item(context: dict, item: str):
     return ""
 
 
+@register.simple_tag(takes_context=True)
+def breadcrumb_push_item_with_url(context: dict, item: str, url: str):
+    request: HttpRequest = context["request"]
+
+    push_breadcrumb_item(request=request, item=BreadcrumbItem(item, url))
+
+    return ""
+
+
 @register.filter
 def join_breadcrumbs(items: Iterable[BreadcrumbItem], sep=" · "):
     return sep.join(map(lambda i: str(i() if callable(i) else i), items[::-1]))

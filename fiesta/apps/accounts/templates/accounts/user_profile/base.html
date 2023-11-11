@@ -5,7 +5,8 @@
 
 {% block upper_head %}
   {% trans "Profile" as title %}
-  {% breadcrumb_push_item title %}
+  {% url "accounts:my-profile" as url %}
+  {% breadcrumb_push_item_with_url title url %}
 {% endblock upper_head %}
 
 {% block main %}
