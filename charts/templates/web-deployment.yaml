@@ -24,23 +24,22 @@ spec:
             - containerPort: {{ .Values.web.port }}
               protocol: TCP
               name: web
-{{/*          readinessProbe:*/}}
-{{/*            initialDelaySeconds: 5*/}}
-{{/*            httpGet:*/}}
-{{/*              path: "/!/web"*/}}
-{{/*              port: web*/}}
-{{/*              httpHeaders:*/}}
-{{/*                - name: Host*/}}
-{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
-{{/*          livenessProbe:*/}}
-{{/*            initialDelaySeconds: 5*/}}
-{{/*            periodSeconds: 20*/}}
-{{/*            httpGet:*/}}
-{{/*              path: "/!/web"*/}}
-{{/*              port: web*/}}
-{{/*              httpHeaders:*/}}
-{{/*                - name: Host*/}}
-{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
+          readinessProbe:
+            initialDelaySeconds: 5
+            {{/* httpget doesn't work, timeouted */}}
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "wget 'http://localhost:{{ .Values.web.port }}/!/web' --header 'Host: {{ .Values.ingress.host | quote }}'"
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "wget 'http://localhost:{{ .Values.web.port }}/!/web' --header 'Host: {{ .Values.ingress.host | quote }}'"
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretName }}
