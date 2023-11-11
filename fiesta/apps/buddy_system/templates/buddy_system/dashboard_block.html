@@ -73,12 +73,12 @@
 
       {% get_matched_buddy_requests as request_matches %}
       {% if not request_matches.exists %}
-        <div class="Dashboard__tile__value">So empty here :(</div>
+        <div class="Dashboard__tile__value dark:text-base-300">So empty here 😔</div>
 
         {% if configuration.matching_policy_instance.can_member_match %}
           <div class="Dashboard__tile__actions text-right">
             <a href="{% url "buddy_system:matching-requests" %}"
-               class="btn btn-lg btn-outline">get your first buddy</a>
+               class="btn btn-lg btn-outline dark:text-base-300">get your first buddy</a>
           </div>
         {% else %}
           <div class="Dashboard__tile__desc">Buddy system team is looking for the best match for you.</div>

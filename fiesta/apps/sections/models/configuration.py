@@ -8,7 +8,7 @@ from apps.plugins.models import BasePluginConfiguration
 
 FLAG_HELP_TEXT = _(
     "Flag if field is needed to fill in user profile: "
-    "True=field is required, False=field is optional, None=field is not available"
+    "Yes=field is required, No=field is optional, Unknown=field is not available"
 )
 
 
