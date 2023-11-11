@@ -29,7 +29,6 @@ spec:
             httpGet:
               path: "/!/web"
               port: web
-              host: {{ .Values.ingress.host | quote }}
               httpHeaders:
                 - name: Host
                   value: {{ .Values.ingress.host | quote }}
