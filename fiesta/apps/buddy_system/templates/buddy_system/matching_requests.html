@@ -139,4 +139,10 @@
       </div>
     {% endfor %}
   </div>
+
+  {% if not object_list.exists %}
+    <div class="alert alert-info mx-auto max-w-xl text-lg py-8 px-8">
+      No waiting requests to match. Please check back later.
+    </div>
+  {% endif %}
 {% endblock %}
