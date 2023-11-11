@@ -24,7 +24,7 @@ spec:
               service:
                 name: web
                 port:
-                  number: 80
+                  name: http
     - host: "{{ .Values.ingress.host }}"
       http:
         paths:
@@ -34,4 +34,4 @@ spec:
               service:
                 name: web
                 port:
-                  number: 80
+                  name: http
