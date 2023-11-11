@@ -52,6 +52,8 @@ class LocalProduction(Base):
 
     ROOT_DOMAIN = "fiesta.test"
 
+    USE_WEBPACK_INTEGRITY = False
+
 
 class Production(S3ConfigMixin, Base):
     DEBUG = False

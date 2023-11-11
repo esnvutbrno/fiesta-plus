@@ -1,4 +1,38 @@
 #
+# webpack image
+#
+FROM node:18.15.0-slim as webpack-base
+
+RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY ./webpack/package.json ./webpack/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
+
+COPY ./webpack/ /usr/src/app/
+COPY ./fiesta/ /usr/src/fiesta/
+
+CMD ["yarn", "run"]
+
+# stable image
+FROM webpack-base as webpack-stable
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+ARG BUILD_DIR=/usr/src/build
+ENV BUILD_DIR=${BUILD_DIR}
+
+ARG PUBLIC_PATH=/static/
+ENV PUBLIC_PATH=${PUBLIC_PATH}
+
+ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
+ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
+
+RUN ["yarn", "build"]
+
+#
 # django web app image
 #
 
@@ -77,42 +111,10 @@ ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
 
 # given by webpack compiled results
-COPY ./webpack-stats.json $DJANGO_BUILD_DIR
+COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
 CMD ["python -m gunicorn fiesta.wsgi:application"]
-
-#
-# webpack image
-#
-FROM node:18.15.0-slim as webpack-base
-
-RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /usr/src/app
-
-COPY ./webpack/package.json ./webpack/yarn.lock ./
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
-
-COPY ./webpack/ /usr/src/app/
-COPY ./fiesta/ /usr/src/fiesta/
-
-CMD ["yarn", "run"]
-
-# stable image
-FROM webpack-base as webpack-stable
-
-ARG BUILD_DIR=/usr/src/build
-ENV BUILD_DIR=${BUILD_DIR}
-
-ARG PUBLIC_PATH=/static/
-ENV PUBLIC_PATH=${PUBLIC_PATH}
-
-ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
-ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
-
-RUN ["yarn", "build"]
-
 
 #
 # proxy image
@@ -126,9 +128,9 @@ COPY ./nginx/nginx.conf.template /etc/nginx/templates/
 
 FROM proxy-base as proxy-stable
 
-# propared by webpack and web builds during CD
-COPY webpack-build/ /var/build/
-COPY web-static/ /var/static/
+# prepared by webpack and web builds during CD
+COPY --from=webpack-stable /usr/src/build/ /var/build/
+COPY --from=web-stable /usr/src/static/ /var/static/
 
 ARG STATIC_LOCATION_PATTERN="^/static/(.*)$$"
 ENV STATIC_LOCATION_PATTERN=${STATIC_LOCATION_PATTERN}
