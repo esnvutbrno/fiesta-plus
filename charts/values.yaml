@@ -18,11 +18,12 @@ web:
   configName: web-config
   secretName: web-secret
 
+  port: 8000
+
 proxy:
   repository: nginxdemos/hello
   tag: latest
 
-service:
   port: 80
 
 secrets:

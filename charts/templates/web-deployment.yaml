@@ -21,19 +21,21 @@ spec:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
           ports:
-            - containerPort: 80
+            - containerPort: {{ .Values.web.port }}
+              protocol: TCP
+              name: web
           readinessProbe:
             initialDelaySeconds: 5
             httpGet:
               path: "/!/web"
-              port: 8000
+              port: web
               host: {{ .Values.ingress.host | quote }}
           livenessProbe:
             initialDelaySeconds: 5
             periodSeconds: 20
             httpGet:
               path: "/!/web"
-              port: 8000
+              port: web
               host: {{ .Values.ingress.host | quote }}
           envFrom:
             - secretRef:
@@ -46,14 +48,14 @@ spec:
             initialDelaySeconds: 3
             httpGet:
               path: "/!/proxy"
-              port: 80
+              port: proxy
           livenessProbe:
             initialDelaySeconds: 3
             periodSeconds: 20
             httpGet:
               path: "/!/proxy"
-              port: 80
+              port: proxy
           ports:
-            - name: http
-              containerPort: {{ .Values.service.port }}
+            - name: proxy
               protocol: TCP
+              containerPort: {{ .Values.proxy.port }}
