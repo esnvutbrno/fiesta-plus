@@ -13,6 +13,20 @@ FLAG_HELP_TEXT = _(
 
 
 class SectionsConfiguration(BasePluginConfiguration):
+    required_university = BooleanField(
+        verbose_name=_("required university"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
+    required_faculty = BooleanField(
+        verbose_name=_("required faculty"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
     required_nationality = BooleanField(
         verbose_name=_("required nationality"),
         default=None,

@@ -1,11 +1,12 @@
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
 from django.forms import BooleanField, HiddenInput, fields_for_model
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import UserProfile
+from apps.accounts.models import User, UserProfile
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
@@ -100,11 +101,10 @@ class BuddyRequestEditorForm(BaseModelForm):
 
 class QuickBuddyMatchForm(BaseModelForm):
     submit_text = _("Match")
+    instance: BuddyRequestMatch
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
-        # self.fields["issuer"].disabled = True
 
     class Meta:
         model = BuddyRequestMatch
@@ -112,3 +112,11 @@ class QuickBuddyMatchForm(BaseModelForm):
         widgets = {
             "matcher": ActiveLocalMembersFromSectionWidget,
         }
+
+    def clean_matcher(self):
+        matcher: User = self.cleaned_data["matcher"]
+
+        if not matcher.profile_or_none.faculty:
+            raise ValidationError(_("This user has not set their faculty. Please ask them to do so or do it yourself."))
+
+        return matcher

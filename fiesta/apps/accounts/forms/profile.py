@@ -13,6 +13,8 @@ from apps.sections.models import SectionMembership, SectionsConfiguration
 
 class UserProfileForm(BaseModelForm):
     FIELDS_TO_CONFIGURATION = {
+        UserProfile.university: SectionsConfiguration.required_university,
+        UserProfile.faculty: SectionsConfiguration.required_faculty,
         UserProfile.nationality: SectionsConfiguration.required_nationality,
         UserProfile.gender: SectionsConfiguration.required_gender,
         UserProfile.picture: SectionsConfiguration.required_picture,

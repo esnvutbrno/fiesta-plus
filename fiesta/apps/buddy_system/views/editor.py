@@ -11,6 +11,7 @@ from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
+from apps.accounts.models import User, UserProfile
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
@@ -175,15 +176,19 @@ class QuickBuddyMatchView(
 
     def get_initial(self):
         try:
+            matcher: User = self.get_object().match.matcher
+            profile: UserProfile = matcher.profile_or_none
             return {
-                "matcher": self.get_object().match.matcher,
+                "matcher": matcher,
+                # SectionPluginsValidator ensures that faculty is required if BuddySystem is enabled
+                "matcher_faculty": profile.faculty if profile else None,
             }
         except BuddyRequestMatch.DoesNotExist:
             return {}
 
     @transaction.atomic
     def form_valid(self, form):
-        br: BuddyRequest = self.get_object()
+        br: BuddyRequest = form.instance
 
         try:
             if br.match:
@@ -192,9 +197,12 @@ class QuickBuddyMatchView(
         except BuddyRequestMatch.DoesNotExist:
             pass
 
+        matcher: User = form.cleaned_data.get("matcher")
+
         match = BuddyRequestMatch(
             request=br,
-            matcher=form.cleaned_data.get("matcher"),
+            matcher=matcher,
+            matcher_faculty=matcher.profile_or_none.faculty,
         )
 
         match.save()
