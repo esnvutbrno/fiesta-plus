@@ -14,7 +14,7 @@
            href="{% url "sections:section-members" %}?state=inactive">{{ stats.unconfirmed_members }} unconfirmed</a>
         <span class="Dashboard__tile__desc text-gray-200">{{ stats.alumni }} alumni</span>
       </div>
-      {% if stats.unprocessed_esncard_applications %}
+      {% if stats.esncard_plugin_enabled and stats.unprocessed_esncard_applications %}
         <div class="flex flex-col justify-end">
           <a class="Dashboard__tile__desc text-gray-200 link"
              href="{% url "esncards:applications" %}">

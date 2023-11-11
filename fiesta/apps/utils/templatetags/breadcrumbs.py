@@ -23,7 +23,7 @@ def breadcrumb_items(context: dict):
         view_titles = ()
 
     req.breadcrumbs = [
-        BreadcrumbItem(item, req.build_absolute_uri()) if isinstance(item, str) else item
+        BreadcrumbItem(item, req.build_absolute_uri()) if isinstance(item, str) else item() if callable(item) else item
         for item in filter(None, view_titles)
     ]
 
@@ -44,6 +44,15 @@ def breadcrumb_push_item(context: dict, item: str):
     request: HttpRequest = context["request"]
 
     push_breadcrumb_item(request=request, item=item)
+
+    return ""
+
+
+@register.simple_tag(takes_context=True)
+def breadcrumb_push_item_with_url(context: dict, item: str, url: str):
+    request: HttpRequest = context["request"]
+
+    push_breadcrumb_item(request=request, item=BreadcrumbItem(item, url))
 
     return ""
 

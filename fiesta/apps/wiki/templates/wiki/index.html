@@ -49,7 +49,7 @@
         <div class="mt-5 text-xs items-center space-y-1 text-gray-600">
           {# TODO: links to conf #}
           Last revision: {{ page.last_change.name }}
-          <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
+          <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
              target="_blank"
              rel="noreferrer nofollow noopener"
              class="hover:underline"
@@ -57,11 +57,11 @@
             {{ page.last_change.at|date_from_iso|naturaltime }}
           </a>
           <div class="border-t border-gray-100"></div>
-          <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_history"
+          <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/{{ page.file|strip_file_extension }}/_history"
              target="_blank"
              rel="noreferrer nofollow noopener">Page History</a>
           {% if request.user.is_superuser %}
-            <a href="https://github.com/esnvutbrno/buena-fiesta/wiki/{{ page.file|strip_file_extension }}/_edit"
+            <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/{{ page.file|strip_file_extension }}/_edit"
                target="_blank"
                rel="noreferrer,nofollow">Edit this Page</a>
           {% endif %}

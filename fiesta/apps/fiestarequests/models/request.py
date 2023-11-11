@@ -1,16 +1,14 @@
 from __future__ import annotations
 
-import datetime
 import typing
 
 from django.db import models
 from django.db.models import TextChoices
-from django.utils.timezone import now
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import BEFORE_SAVE, LifecycleModelMixin, hook
+from django_lifecycle import LifecycleModelMixin
 
 from apps.accounts.models import User
-from apps.fiestarequests.models.managers.request import BaseRequestManager
+from apps.fiestarequests.models.managers.request import BaseRequestManager, BaseRequestMatchManager
 from apps.sections.models import Section
 from apps.utils.models import BaseTimestampedModel
 
@@ -25,14 +23,27 @@ class BaseRequestProtocol(typing.Protocol):
     state: models.CharField | State
     issuer: models.ForeignKey | User
     responsible_section: models.ForeignKey | Section
-    matched_by: models.ForeignKey | User
-    matched_at: models.DateTimeField | datetime.datetime
-    description: models.TextField | str
+    note: models.TextField | str
 
     objects: BaseRequestManager
 
 
-def base_request_model_factory(related_base: str):
+class BaseRequestMatchProtocol(typing.Protocol):
+    request: models.ForeignKey | BaseRequestProtocol
+    matcher: models.ForeignKey | User
+    note: models.TextField | str
+
+    objects: BaseRequestMatchManager
+
+
+def base_request_model_factory(
+    related_base: str,
+    final_request_model_name: str,
+):
+    """
+    Creates a base model for requests-like models.
+    """
+
     class BaseRequest(LifecycleModelMixin, BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
@@ -44,8 +55,8 @@ def base_request_model_factory(related_base: str):
 
         state = models.CharField(
             verbose_name=_("state"),
-            choices=BaseRequestProtocol.State.choices,
-            default=BaseRequestProtocol.State.CREATED,
+            choices=State.choices,
+            default=State.CREATED,
             max_length=16,
         )
         issuer = models.ForeignKey(
@@ -62,27 +73,52 @@ def base_request_model_factory(related_base: str):
             verbose_name=_("responsible section"),
             db_index=True,
         )
-        matched_by = models.ForeignKey(
+
+        note = models.TextField(
+            verbose_name=_("text from issuer"),
+        )
+
+        # fields cloned from issuer/issuer's profile to have consistency over time
+        issuer_faculty = models.ForeignKey(
+            "universities.Faculty",
+            related_name=f"{related_base}_issued_requests",
+            on_delete=models.RESTRICT,
+            verbose_name=_("issuer's faculty"),
+            db_index=True,
+        )
+
+    class BaseRequestMatch(BaseTimestampedModel):
+        class Meta(BaseTimestampedModel.Meta):
+            abstract = True
+            ordering = ("-created",)
+
+        request = models.OneToOneField(
+            final_request_model_name,
+            related_name="match",
+            on_delete=models.CASCADE,
+            verbose_name=_("request"),
+        )
+
+        matcher = models.ForeignKey(
             "accounts.User",
-            related_name=f"{related_base}_matched_requests",
+            related_name=f"{related_base}_request_matches",
             on_delete=models.RESTRICT,
             verbose_name=_("matched by"),
             db_index=True,
-            null=True,
+        )
+
+        note = models.TextField(
+            verbose_name=_("text from matcher"),
             blank=True,
         )
-        matched_at = models.DateTimeField(
-            verbose_name=_("matched at"),
-            null=True,
-            blank=True,
+
+        # fields cloned from issuer/issuer's profile to have consistency over time
+        matcher_faculty = models.ForeignKey(
+            "universities.Faculty",
+            related_name=f"{related_base}_request_matches",
+            on_delete=models.RESTRICT,
+            verbose_name=_("matcher's faculty"),
+            db_index=True,
         )
 
-        description = models.TextField(
-            verbose_name=_("description"),
-        )
-
-        @hook(BEFORE_SAVE, when="matched_by", was=None, is_not=None)
-        def set_matched_at(self):
-            self.matched_at = now()
-
-    return BaseRequest
+    return BaseRequest, BaseRequestMatch

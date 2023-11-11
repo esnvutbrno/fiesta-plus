@@ -17,7 +17,7 @@ from django_countries.fields import Country
 
 from apps.accounts.hashers import LegacyBCryptSHA256PasswordHasher
 from apps.accounts.models import User, UserProfile
-from apps.buddy_system.models import BuddyRequest
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.sections.models import Section, SectionMembership, SectionUniversity
 from apps.universities.models import Faculty, University
 
@@ -73,16 +73,23 @@ def load_requests(*, cursor: CursorWrapper):
 
         responsible_section = Section.objects.filter(universities__abbr=issuer_university).first()
 
-        BuddyRequest.objects.update_or_create(
+        br, _ = BuddyRequest.objects.update_or_create(
             issuer=ID_TO_USER[issuer_email],
             responsible_section=responsible_section,
             defaults=dict(
-                description=description,
-                matched_by=ID_TO_USER.get(matched_by_email),
-                matched_at=make_aware(matched_at) if matched_at else None,
+                note=description,
                 state=BuddyRequest.State.MATCHED if matched_by_email else BuddyRequest.State.CREATED,
             ),
         )
+
+        if matched_by_email:
+            BuddyRequestMatch.objects.create_or_update(
+                request=br,
+                defaults=dict(
+                    matcher=ID_TO_USER[matched_by_email],
+                    created=make_aware(matched_at) if matched_at else None,
+                ),
+            )
 
         secho("Processing {i: >4}: {desc}.".format(i=i, desc=description[:32].replace("\n", " ")))
 
@@ -149,14 +156,12 @@ def process_user_row(row, i):
         section=section,
         user=user,
         role=(
-            highest_role := (
-                SectionMembership.Role.ADMIN
-                if "admin" in roles
-                else (
-                    SectionMembership.Role.EDITOR
-                    if "editor" in roles
-                    else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
-                )
+            SectionMembership.Role.ADMIN
+            if "admin" in roles
+            else (
+                SectionMembership.Role.EDITOR
+                if "editor" in roles
+                else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
             )
         ),
         # TODO: state
@@ -178,14 +183,13 @@ def process_user_row(row, i):
             defaults=dict(name=faculty_name),
         )
 
-    is_international = highest_role == SectionMembership.Role.INTERNATIONAL
+    # is_international = highest_role == SectionMembership.Role.INTERNATIONAL
     user_profile, _ = UserProfile.objects.update_or_create(
         user=user,
         defaults=dict(
             nationality=Country(country_code),
-            home_university=university if not faculty else None,
-            home_faculty=None if is_international else faculty,
-            guest_faculty=faculty if is_international else None,
+            university=university if not faculty else None,
+            faculty=faculty,
         ),
     )
 

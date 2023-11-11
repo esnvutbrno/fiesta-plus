@@ -9,7 +9,22 @@
   >
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1,width=device-width">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+    <meta name="description"
+          content="Fiesta+ is a new generation of your ESN section assistant – includes a buddy system, member management, section statistics and other features to run your section even more easily.">
+
+    {% static "og.png" as og_url %}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{% build_absolute_uri %}" />
+    <meta property="og:site_name" content="Fiesta+" />
+    <meta property="og:description"
+          content="Fiesta+ is a new generation of your ESN section assistant – includes a buddy system, member management, section statistics and other features to run your section even more easily." />
+    <meta property="og:image" content="{% build_absolute_uri og_url %}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {# og:title defined bellow #}
 
     {% block upper_head %}
     {% endblock upper_head %}
@@ -17,12 +32,18 @@
     {% block head_title %}
       {% breadcrumb_items as items %}
       {% if items|length_is:0 %}
-        <title>Buena Fiesta</title>
+        <title>Fiesta+</title>
+        <meta property="og:title" content="Fiesta+" />
+      {% elif request.in_space_of_section %}
+        <title>{{ items|join_breadcrumbs }} · {{ request.in_space_of_section }}</title>
+        <meta property="og:title"
+              content="{{ items|join_breadcrumbs }} · {{ request.in_space_of_section }}" />
       {% else %}
-        <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
+        <title>{{ items|join_breadcrumbs }} · Fiesta+</title>
+        <meta property="og:title" content="{{ items|join_breadcrumbs }} · Fiesta+" />
       {% endif %}
     {% endblock head_title %}
-    <link rel="shortcut icon" href="{% static 'logo.svg' %}" />
+    <link rel="shortcut icon" href="{% static 'single-toucan.svg' %}" />
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {% django_htmx_script %}

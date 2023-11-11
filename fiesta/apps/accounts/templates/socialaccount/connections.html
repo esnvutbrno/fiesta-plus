@@ -15,7 +15,7 @@
     {% for base_account in form.accounts %}
       <form method="POST"
             action="{% url 'socialaccount_connections' %}"
-            class="w-1/2">
+            class="w-full mg:w-1/2">
         {% csrf_token %}
         <input type="hidden"
                name="account"
@@ -90,8 +90,8 @@
     {% endif %}
     <hr>
     <h2 class="card-title">{% trans 'Add New Social Account' %}:</h2>
-    <div class="btn-group justify-center">
-      {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
-    </div>
+
+    {% include "socialaccount/snippets/provider_list.html" with process="connect" %}
+
     {% include "socialaccount/snippets/login_extra.html" %}
   {% endblock %}

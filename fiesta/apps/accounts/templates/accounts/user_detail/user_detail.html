@@ -5,8 +5,8 @@
 {% load humanize %}
 
 {% block main %}
-  <div class="flex flex-row items-start">
-    <div class="w-1/4">
+  <div class="flex flex-col md:flex-row gap-y-6 items-start">
+    <div class="w-full md:w-1/3">
       <div class="card shadow">
         {% if object.user.profile.picture %}
           <figure>
@@ -20,34 +20,145 @@
           <h1 class="card-title">{{ object.user.full_name_official }}</h1>
           <div class="flex flex-row justify-between items-center">
             {{ object.get_role_display }}
-            {% include "sections/parts/change_membership_state_btn.html" with record=object %}
+            {% include "sections/parts/change_membership_state_btn.html" with record=object disable_button=True %}
           </div>
           <div class="flex flex-row justify-between text-sm">
-            {% trans "Joined" %}
-            <span title="{{ object.created|date }}">{{ object.created|naturaltime }}</span>
+            <span>{% trans "Joined" %}</span>
+            <span title="{{ object.created|date }}" class="text-right">{{ object.created|naturaltime }}</span>
           </div>
         </div>
       </div>
 
-      {% if object.user.memberships.count > 2 %}
-        {# TODO: not only this one #}
-        <div class="card shadow">
-          <div class="card-body">
-            <h2 class="card-title">{% trans "Memberships" %}</h2>
-            <table class="table table-compact">
-              {% for m in object.user.memberships.all %}
-                <tr>
-                  <td>{{ m.section }}</td>
-                  <td>{{ m.role }}</td>
-                </tr>
-              {% endfor %}
-            </table>
-          </div>
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title">{% trans "Memberships" %}</h2>
+          <table class="table table-compact [&_td]:px-0">
+            {% for m in object.user.memberships.all %}
+              <tr>
+                <td>{{ m.section }}</td>
+                <td class="text-right">{{ m.role }}</td>
+              </tr>
+            {% endfor %}
+          </table>
         </div>
-      {% endif %}
+      </div>
+
+      <div class="card shadow">
+        <div class="card-body">
+          <h2 class="card-title">{% trans "Actions" %}</h2>
+          {% if object.state == object.State.UNCONFIRMED %}
+            {# done with great panel with more info #}
+          {% elif object.state == object.State.ACTIVE %}
+            {% if object.is_international %}
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-primary btn-outline grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.MEMBER.value }}">Convert to member</button>
+            {% elif not object.is_privileged %}
+              {% if request.membership.is_section_admin %}
+                <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                        class="btn btn-secondary btn-outline grow"
+                        type="submit"
+                        name="role"
+                        value="{{ object.Role.ADMIN.value }}">Promote to editor</button>
+
+                <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                        class="btn btn-warning btn-outline grow"
+                        type="submit"
+                        name="role"
+                        value="{{ object.Role.ADMIN.value }}">Promote to admin</button>
+              {% endif %}
+
+              <hr>
+
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-primary btn-outline grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.INTERNATIONAL.value }}">Convert to international</button>
+            {% elif request.membership.is_section_admin %}
+              <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="role"
+                      value="{{ object.Role.MEMBER.value }}">Demote to member</button>
+            {% endif %}
+
+            <hr>
+
+            {% if not object.is_section_admin %}
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-error grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.BANNED.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator -ml-8"></span>
+                Suspend
+              </button>
+            {% endif %}
+          {% elif object.state == object.State.BANNED %}
+            <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                    class="btn btn-warning grow"
+                    type="submit"
+                    name="state"
+                    value="{{ object.State.ACTIVE.value }}">
+              <span class="loading loading-spinner loading-xl htmx-indicator -ml-8"></span>
+              Unsuspend
+            </button>
+          {% endif %}
+        </div>
+      </div>
     </div>
 
-    <div class="w-3/4">
+    <div class="w-full md:w-2/3">
+
+      {% if object.state == object.State.UNCONFIRMED %}
+        <div class="card bg-base-300 m-6 mt-0">
+          <div class="card-body">
+            <h2 class="card-title flex flex-row items-center justify-between">
+              {% trans "⚠️ Pending membership request" %}
+
+              <span class="text-sm">from {{ object.created|date:"SHORT_DATETIME_FORMAT" }}</span>
+            </h2>
+            <div class="alert alert-info">
+              User has requested to join the section. Please review the request and confirm or reject it.
+            </div>
+            <div class="btn-group w-full">
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.BANNED.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator"></span>
+                Reject
+              </button>
+              <button hx-post="{% url "sections:membership-state-editor" object.pk %}"
+                      class="btn btn-warning grow"
+                      type="submit"
+                      name="state"
+                      value="{{ object.State.ACTIVE.value }}">
+                <span class="loading loading-spinner loading-xl htmx-indicator"></span>
+                Confirm
+              </button>
+            </div>
+            <div class="flex flex-row justify-around [&>p]:w-1/2 [&>p]:px-8 [&>p]:pt-4 text-sm text-justify">
+              <p>
+                After rejection, the user will be notified.
+                The user will not be able to access the section space.
+                It's possible to approve the request later.
+              </p>
+              <p>
+                By confirming the request, the user will be added to the section and will be able to access the section's
+                enabled plugins and features.
+                It's possible to suspend the user later.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      {% endif %}
+
       <div class="card">
         <div class="card-body pt-0">
           <h2 class="card-title">{% trans "👤 Profile Details" %}</h2>
@@ -55,24 +166,17 @@
           <div class="flex flex-row items-start gap-x-4">
             <table class="table table-zebra w-1/2">
               <tr>
-                <th>{% trans "Home University" %}</th>
+                <th>{% trans "University" %}</th>
                 <td>
-                  {{ object.user.profile.home_university.country.unicode_flag }}
-                  {{ object.user.profile.home_university|default:"-" }}
+                  {{ object.user.profile.university.country.unicode_flag }}
+                  {{ object.user.profile.university|default:"-" }}
                 </td>
               </tr>
               <tr>
-                <th>{% trans "Home Faculty" %}</th>
+                <th>{% trans "Faculty" %}</th>
                 <td>
-                  {{ object.user.profile.home_faculty.university.country.unicode_flag }}
-                  {{ object.user.profile.home_faculty|default:"-" }}
-                </td>
-              </tr>
-              <tr>
-                <th>{% trans "Guest Faculty" %}</th>
-                <td>
-                  {{ object.user.profile.guest_faculty.university.country.unicode_flag }}
-                  {{ object.user.profile.guest_faculty|default:"-" }}
+                  {{ object.user.profile.faculty.university.country.unicode_flag }}
+                  {{ object.user.profile.faculty|default:"-" }}
                 </td>
               </tr>
               <tr>
@@ -104,15 +208,17 @@
           </div>
         </div>
       </div>
-      {% for table, title in tables|zip:table_titles %}
-        <div class="card group">
-          <div class="card-body pt-0">
-            <div class="card-title">{{ title }}</div>
-            {% render_table table %}
+      {% if tables and table_titles %}
+        {# check if any table should be rendered #}
+        {% for table, title in tables|zip:table_titles %}
+          <div class="card group">
+            <div class="card-body pt-0">
+              <div class="card-title">{{ title }}</div>
+              {% render_table table %}
+            </div>
           </div>
-        </div>
-      {% endfor %}
-
+        {% endfor %}
+      {% endif %}
     </div>
   </div>
 {% endblock %}

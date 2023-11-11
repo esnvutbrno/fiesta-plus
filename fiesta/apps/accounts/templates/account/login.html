@@ -37,16 +37,17 @@
                  class="w-4 h-4 bg-gray-50 rounded border border-gray-300 focus:ring-3 focus:ring-blue-300">
         </div>
         <div class="ml-3 text-sm">
-          <label for="{{ form.remember.name }}" class="font-medium text-gray-900">Remember me</label>
+          <label for="{{ form.remember.name }}" class="font-medium test-base-content">Remember me</label>
         </div>
       </div>
       <a href="{% url 'account_reset_password' %}"
-         class="link link-neutral link-hover">Lost Password?</a>
+         class="link link-neutral link-hover text-base-content">Lost Password?</a>
     </div>
     <button type="submit" class="btn btn-primary btn-block">Log in to your account</button>
     {# social accounts logins do have their own forms, so it cannot be nested #}
   </form>
-  {% include "account/parts/social_login_buttons.html" with process="Log in" %}
+  {% include "socialaccount/snippets/provider_list.html" with process="Log in" %}
+
   <div class="text-sm font-medium text-gray-500">
     Not registered?
     <a href="{{ signup_url }}" class="link link-hover link-primary">Create account</a>

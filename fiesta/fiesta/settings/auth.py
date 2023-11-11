@@ -79,7 +79,7 @@ class AuthConfigMixin:
     SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
     # general django urls
     LOGIN_URL = "/auth/login"
-    LOGIN_REDIRECT_URL = "/"
+    LOGIN_REDIRECT_URL = "/accounts/after-login"
 
     # fixme: verify it
     ACCOUNT_LOGIN_ON_PASSWORD_RESET = True  # False by default

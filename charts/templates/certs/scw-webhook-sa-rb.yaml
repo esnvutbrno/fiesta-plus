@@ -1,0 +1,33 @@
+{{/* to allow SA of scw-webhook read secrets in fiesta ns with dns api credentials*/}}
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: scaleway-webhook:secrets-reader
+  namespace: fiesta
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - secrets
+  verbs:
+  - get
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: scaleway-webhook:secrets-reader
+  namespace: fiesta
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: scaleway-webhook:secrets-reader
+subjects:
+- kind: ServiceAccount
+  name: scaleway-webhook
+  namespace: cert-manager

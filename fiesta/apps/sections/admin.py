@@ -24,6 +24,8 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = ("name", "country", "space_slug", "all_universities", "memberships_count", "system_state")
     list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
+    list_editable = ("system_state",)
+
     def get_queryset(self, request):
         return super().get_queryset(request).prefetch_related("memberships", "universities")
 
@@ -69,10 +71,9 @@ class SectionMembershipAdmin(admin.ModelAdmin):
         "user__username",
         "user__first_name",
         "user__last_name",
-        "user__profile__home_faculty__name",
-        "user__profile__home_faculty__university__name",
-        "user__profile__home_university__name",
-        "user__profile__guest_faculty__university__name",
+        "user__profile__faculty__name",
+        "user__profile__faculty__university__name",
+        "user__profile__university__name",
         "section__name",
         "section__universities__name",
     )

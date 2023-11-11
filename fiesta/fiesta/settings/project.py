@@ -64,7 +64,6 @@ class ProjectConfigMixin:
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
         "apps.dashboard.apps.DashboardConfig",
-        "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
@@ -83,8 +82,11 @@ class ProjectConfigMixin:
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        # "allauth.socialaccount.providers.facebook",
+        "apps.esnaccounts",  # cannot have a full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
+        # "allauth.socialaccount.providers.facebook", # NOTE: cannot be enabled BEFORE adding SocialApp, otherwise throws an error
         "allauth.socialaccount.providers.google",
+        # "allauth.socialaccount.providers.apple",
+        # "allauth.socialaccount.providers.github",
         "allauth_cas",
         # superuser can log in as any user
         "loginas",
@@ -114,3 +116,8 @@ class ProjectConfigMixin:
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",
     ]
+
+    # setup for django-country
+    # all EU countries first, then the rest
+    COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
+    COUNTRIES_FIRST_REPEAT = True

@@ -8,11 +8,25 @@ from apps.plugins.models import BasePluginConfiguration
 
 FLAG_HELP_TEXT = _(
     "Flag if field is needed to fill in user profile: "
-    "True=field is required, False=field is optional, None=field is not available"
+    "Yes=field is required, No=field is optional, Unknown=field is not available"
 )
 
 
 class SectionsConfiguration(BasePluginConfiguration):
+    required_university = BooleanField(
+        verbose_name=_("required university"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
+    required_faculty = BooleanField(
+        verbose_name=_("required faculty"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
     required_nationality = BooleanField(
         verbose_name=_("required nationality"),
         default=None,

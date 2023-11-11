@@ -13,6 +13,8 @@ from apps.sections.models import SectionMembership, SectionsConfiguration
 
 class UserProfileForm(BaseModelForm):
     FIELDS_TO_CONFIGURATION = {
+        UserProfile.university: SectionsConfiguration.required_university,
+        UserProfile.faculty: SectionsConfiguration.required_faculty,
         UserProfile.nationality: SectionsConfiguration.required_nationality,
         UserProfile.gender: SectionsConfiguration.required_gender,
         UserProfile.picture: SectionsConfiguration.required_picture,
@@ -31,7 +33,7 @@ class UserProfileForm(BaseModelForm):
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
             if any(conf_field.__get__(c) is not None for c in confs)
         )
-        return cls.Meta.fields + fields_to_include
+        return fields_to_include + cls.Meta.fields
 
     @classmethod
     def get_user_configuration(cls, user: User):
@@ -82,9 +84,8 @@ class UserProfileForm(BaseModelForm):
 
         fields = (
             # TODO: think about limiting the choices by country of section, in which is current membership
-            "home_university",
-            "home_faculty",
-            "guest_faculty",
+            "university",
+            "faculty",
             "picture",
             "facebook",
             "instagram",
@@ -94,9 +95,8 @@ class UserProfileForm(BaseModelForm):
         )
 
         widgets = {
-            "home_university": UniversityWidget,
-            "home_faculty": FacultyWidget,
-            "guest_faculty": FacultyWidget,
+            "university": UniversityWidget,
+            "faculty": FacultyWidget,
         }
 
 

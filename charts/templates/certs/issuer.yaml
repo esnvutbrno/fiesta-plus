@@ -9,6 +9,18 @@ spec:
     privateKeySecretRef:
       name: {{ .Values.ingress.certIssuerSecretName }}
     solvers:
-      - http01:
-          ingress:
-            class: nginx
+      - dns01:
+          webhook:
+            groupName: acme.scaleway.com
+            solverName: scaleway
+            config:
+              # Only needed if you don't have default credentials as seen above.
+              accessKeySecretRef:
+                key: SCW_DNS_ACCESS_KEY
+                name: {{ .Values.ingress.dnsWebhookSecretName | quote }}
+              secretKeySecretRef:
+                key: SCW_DNS_SECRET_KEY
+                name: {{ .Values.ingress.dnsWebhookSecretName | quote }}
+{{/*      - http01:*/}}
+{{/*          ingress:*/}}
+{{/*            class: nginx*/}}

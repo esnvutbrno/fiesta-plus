@@ -26,20 +26,20 @@
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <p class="text-sm font-medium text-gray-900 truncate">{{ membership.section }}</p>
+          <p class="text-sm font-medium text-base-content truncate">{{ membership.section }}</p>
           <p class="text-sm text-gray-500 truncate">{{ membership.get_role_display }}</p>
         </div>
         <div class="inline-flex items-end flex-col">
-          <span class="text-sm font-semibold text-gray-900">{{ membership.get_state_display }}</span>
+          <span class="text-sm font-semibold text-base-content">{{ membership.get_state_display }}</span>
           {% if membership.state == membership.State.INACTIVE %}
-            <span class="text-xs text-gray-600">waiting for confirmation</span>
+            <span class="text-xs text-base-content">waiting for confirmation</span>
           {% endif %}
         </div>
       </div>
     </li>
   {% endfor %}
-  <li class="py-6 flex flex-row justify-between items-center">
-    <h1 class="text-gray-900 text-lg font-medium">Your section is not here?</h1>
+  <li class="py-6 flex flex-col md:flex-row justify-between items-center">
+    <h1 class="text-base-content text-lg font-medium">Your section is not here?</h1>
     <a class="btn btn-wide btn-primary"
        href="{% url "accounts:membership-new" %}">Request new membership</a>
   </li>

@@ -12,15 +12,13 @@
   {% if request.all_memberships.exists %}
     {% include "accounts/memberships/membership_list.html" with memberships=request.all_memberships.all %}
   {% else %}
-    <div class="max-w-md flex flex-col mx-auto">
+    <div class="max-w-xl flex flex-col mx-auto">
       <span class="self-center py-4">
-        {#      TODO: show CTA to entry the section space #}
-        no memberships
+        {# TODO: show CTA to entry the section space #}
+        <span class="alert alert-warning">We are sorry: you have no memberships yet.</span>
       </span>
-      <div class="flex flex-row justify-between items-center space-x-4">
-        <h1 class="text-gray-900 text-lg font-medium">Your section is not here?</h1>
-        <a class="bg-primary text-white p-2 rounded inline-block"
-           href="{% url "accounts:membership-new" %}">Request new membership</a>
+      <div class="flex flex-row justify-end items-center space-x-4">
+        <a class="btn btn-primary" href="{% url "accounts:membership-new" %}">Request new membership</a>
       </div>
     </div>
   {% endif %}

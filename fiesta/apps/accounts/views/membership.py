@@ -37,7 +37,7 @@ class NewSectionMembershipForm(BaseModelForm):
         return role
 
 
-class MyMembershipsView(TemplateView):
+class MyMembershipsView(LoginRequiredMixin, TemplateView):
     template_name = "accounts/memberships/my_memberships.html"
 
 

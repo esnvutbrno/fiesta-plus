@@ -4,12 +4,13 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db import transaction
 from django.utils.translation import gettext as _
 from django.views.generic import ListView
 from django.views.generic.detail import BaseDetailView
 from django_htmx.http import HttpResponseClientRedirect
 
-from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
 from apps.files.views import NamespacedFilesServeView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
@@ -55,30 +56,74 @@ class TakeBuddyRequestView(
             membership=self.request.membership,
         )
 
+    @transaction.atomic
     def post(self, request, pk: uuid.UUID):
-        BuddyRequest.objects.match_by(
-            request=self.get_object(),
+        br: BuddyRequest = self.get_object()
+
+        match = BuddyRequestMatch(
+            request=br,
             matcher=self.request.user,
+            # not null since enabling buddy system requires a faculty
+            matcher_faculty=self.request.user.profile.faculty,
+            note=self.request.POST.get("note") or "",
         )
+
+        # TODO: check matcher relation to responsible section
+        # TODO: reset any previous match for this BR
+        match.save()
+
+        br.match = match
+        br.state = BuddyRequest.State.MATCHED
+        br.save(update_fields=["state"])
 
         messages.success(request, _("Request successfully matched!"))
         # TODO: target URL?
         return HttpResponseClientRedirect("/")
 
 
-class ProfilePictureServeView(
+class IssuerPictureServeView(
+    PluginConfigurationViewMixin[BuddySystemConfiguration],
+    NamespacedFilesServeView,
+):
+    def has_permission(self, request: HttpRequest, name: str) -> bool:
+        # picture is from requests placed on my section
+        related_requests = request.membership.section.buddy_system_requests.filter(
+            issuer__profile__picture=name,
+        )
+
+        return (
+            # does have the section enabled picture displaying?
+            (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture)
+            # or are we in a matched request?
+            or (
+                related_requests.filter(
+                    state=BuddyRequest.State.MATCHED,
+                )
+                .filter(match__matcher=request.user)
+                .exists()
+            )
+            # or am I the issuer?
+            or (related_requests.filter(issuer=request.user).exists())
+        )
+
+
+class MatcherPictureServeView(
     PluginConfigurationViewMixin[BuddySystemConfiguration],
     NamespacedFilesServeView,
 ):
     def has_permission(self, request: HttpRequest, name: str) -> bool:
         # is the file in requests, for whose is the related section responsible?
         related_requests = request.membership.section.buddy_system_requests.filter(
-            Q(issuer__profile__picture=name) | Q(matched_by__profile__picture=name)
+            match__matcher__profile__picture=name,
         )
 
         # does have the section enabled picture displaying?
-        return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
+        return (
             related_requests.filter(
-                Q(matched_by=request.user) | Q(issuer=request.user), state=BuddyRequest.State.MATCHED
-            ).exists()
+                state=BuddyRequest.State.MATCHED,
+            )
+            .filter(
+                Q(match__matcher=request.user) | Q(issuer=request.user),
+            )
+            .exists()
         )

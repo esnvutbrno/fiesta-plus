@@ -1,4 +1,43 @@
-FROM python:3.11.3-alpine3.17 as venv-builder
+#
+# webpack image
+#
+FROM node:18.15.0-slim as webpack-base
+
+RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY ./webpack/package.json ./webpack/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
+
+COPY ./webpack/ /usr/src/app/
+COPY ./fiesta/ /usr/src/fiesta/
+
+CMD ["yarn", "run"]
+
+# stable image
+FROM webpack-base as webpack-stable
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+ARG BUILD_DIR=/usr/src/build
+ENV BUILD_DIR=${BUILD_DIR}
+
+ARG PUBLIC_PATH=/static/
+ENV PUBLIC_PATH=${PUBLIC_PATH}
+
+ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
+ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
+
+RUN ["yarn", "build"]
+
+#
+# django web app image
+#
+
+# venv builder
+FROM python:3.11.3-alpine3.17 as web-venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -19,10 +58,10 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.txt
 RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
 
-# pull official base image
-FROM python:3.11.3-alpine3.17 as base
+# base runtime image
+FROM python:3.11.3-alpine3.17 as web-base
 
-COPY --from=venv-builder /venv /venv
+COPY --from=web-venv-builder /venv /venv
 
 # set work directory
 WORKDIR /usr/src/app
@@ -55,7 +94,8 @@ RUN chown 1000:1000 -R /usr/src && chmod a+wrx -R /usr/src
 
 ENTRYPOINT ["./run.sh"]
 
-FROM base as stable
+# stable image runtime
+FROM web-base as web-stable
 
 # stubs to get compatibility with fs storage
 ARG DJANGO_STATIC_ROOT=/usr/src/static
@@ -71,7 +111,31 @@ ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
 
 # given by webpack compiled results
-COPY ./webpack-stats.json $DJANGO_BUILD_DIR
+COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
-CMD ["python -m uvicorn fiesta.asgi:application"]
+CMD ["python -m gunicorn -b [::]:8000 fiesta.wsgi:application"]
+
+#
+# proxy image
+#
+FROM nginx:1.25.0-alpine as proxy-base
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+# https://github.com/docker-library/docs/tree/master/nginx#using-environment-variables-in-nginx-configuration-new-in-119
+COPY ./nginx/nginx.conf.template /etc/nginx/templates/
+
+FROM proxy-base as proxy-stable
+
+# prepared by webpack and web builds during CD
+COPY --from=webpack-stable /usr/src/build/ /var/build/
+COPY --from=web-stable /usr/src/static/ /var/static/
+
+ARG STATIC_LOCATION_PATTERN="^/static/(.*)$$"
+ENV STATIC_LOCATION_PATTERN=${STATIC_LOCATION_PATTERN}
+
+ARG PROXY_HOSTNAME_TARGET="127.0.0.1"
+ENV PROXY_HOSTNAME_TARGET=${PROXY_HOSTNAME_TARGET}
+
+CMD ["nginx", "-g", "daemon off;"]

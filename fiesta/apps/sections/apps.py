@@ -37,20 +37,33 @@ class SectionsConfig(BasePluginAppConfig):
             .as_navigation_item(request, bound_plugin)
             ._replace(
                 url="",
-                children=[
-                    NavigationItemSpec(
-                        _("Members"),
-                        reverse("sections:section-members"),
-                    ),
-                    NavigationItemSpec(
-                        _("Statistics"),
-                        reverse("sections:section-stats"),
-                    ),
-                    NavigationItemSpec(
-                        _("Plugins"),
-                        reverse("sections:section-plugins"),
-                    ),
-                ],
+                children=list(
+                    filter(
+                        None,
+                        [
+                            NavigationItemSpec(
+                                _("Members"),
+                                reverse("sections:section-members"),
+                            ),
+                            NavigationItemSpec(
+                                _("Internationals"),
+                                reverse("sections:section-internationals"),
+                            ),
+                            NavigationItemSpec(
+                                _("Statistics"),
+                                reverse("sections:section-stats"),
+                            ),
+                            (
+                                NavigationItemSpec(
+                                    _("Plugins"),
+                                    reverse("sections:section-plugins"),
+                                )
+                                if request.membership.is_section_admin
+                                else None
+                            ),
+                        ],
+                    )
+                ),
             )
         )
 
