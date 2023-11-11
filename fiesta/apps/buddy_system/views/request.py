@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
@@ -13,21 +13,23 @@ from django.views.generic import CreateView, TemplateView
 
 from apps.accounts.models import UserProfile
 from apps.buddy_system.forms import NewBuddyRequestForm
+from apps.buddy_system.models import BuddySystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.sections.views.mixins.membership import EnsureInternationalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, TemplateView):
+class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         if self.request.membership.is_international:
             return HttpResponseRedirect(reverse("buddy_system:new-request"))
 
-        if self.request.membership.is_local:
+        c: BuddySystemConfiguration = self.configuration
+        if c.matching_policy_instance.can_member_match:
             return HttpResponseRedirect(reverse("buddy_system:matching-requests"))
 
-        raise Http404(_("Nothing to see here"))
+        return HttpResponseRedirect(reverse("buddy_system:index"))
 
 
 class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):

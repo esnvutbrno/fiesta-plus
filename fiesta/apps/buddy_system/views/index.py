@@ -7,7 +7,6 @@ from django.views.generic import TemplateView
 from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.middleware.user_membership import HttpRequest
-from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
@@ -23,7 +22,10 @@ class BuddySystemIndexView(
     }
 
     def get(self, request, *args, **kwargs):
-        if not self.request.in_space_of_section.buddy_system_requests.filter(issuer=self.request.user).exists():
+        if (
+            self.request.membership.is_international
+            and not self.request.in_space_of_section.buddy_system_requests.filter(issuer=self.request.user).exists()
+        ):
             return HttpResponseRedirect(reverse("buddy_system:wanna-buddy"))
 
         return super().get(request, *args, **kwargs)
@@ -40,7 +42,7 @@ class BuddySystemIndexView(
         return [
             (
                 "buddy_system/index_international.html"
-                if self.request.membership.role == SectionMembership.Role.INTERNATIONAL
+                if self.request.membership.is_international
                 else "buddy_system/index_member.html"
             )
         ]
