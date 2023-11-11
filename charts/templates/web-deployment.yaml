@@ -27,18 +27,14 @@ spec:
             httpGet:
               path: "/!/web"
               port: 8000
-              httpHeaders:
-                - name: Host
-                  value: {{ .Values.ingress.host | quote }}
+              host: {{ .Values.ingress.host | quote }}
           livenessProbe:
             initialDelaySeconds: 5
             periodSeconds: 20
             httpGet:
               path: "/!/web"
               port: 8000
-              httpHeaders:
-                - name: Host
-                  value: {{ .Values.ingress.host | quote }}
+              host: {{ .Values.ingress.host | quote }}
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretName }}
