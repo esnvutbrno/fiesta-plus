@@ -30,13 +30,18 @@ spec:
               path: "/!/web"
               port: web
               host: {{ .Values.ingress.host | quote }}
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
           livenessProbe:
             initialDelaySeconds: 5
             periodSeconds: 20
             httpGet:
               path: "/!/web"
               port: web
-              host: {{ .Values.ingress.host | quote }}
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretName }}
@@ -49,12 +54,18 @@ spec:
             httpGet:
               path: "/!/proxy"
               port: proxy
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
           livenessProbe:
             initialDelaySeconds: 3
             periodSeconds: 20
             httpGet:
               path: "/!/proxy"
               port: proxy
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
           ports:
             - name: proxy
               protocol: TCP
