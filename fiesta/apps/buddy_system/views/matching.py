@@ -63,6 +63,8 @@ class TakeBuddyRequestView(
         match = BuddyRequestMatch(
             request=br,
             matcher=self.request.user,
+            # not null since enabling buddy system requires a faculty
+            matcher_faculty=self.request.user.profile.faculty,
             note=self.request.POST.get("note") or "",
         )
 
