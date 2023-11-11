@@ -114,7 +114,7 @@ RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction pyt
 COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
-CMD ["python -m gunicorn fiesta.wsgi:application"]
+CMD ["python -m gunicorn -b :8000 fiesta.wsgi:application"]
 
 #
 # proxy image
