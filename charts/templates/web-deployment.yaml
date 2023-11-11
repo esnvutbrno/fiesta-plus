@@ -20,25 +20,25 @@ spec:
       containers:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
-{{/*          ports:*/}}
-{{/*            - containerPort: 80*/}}
-{{/*          readinessProbe:*/}}
-{{/*            initialDelaySeconds: 5*/}}
-{{/*            httpGet:*/}}
-{{/*              path: "/!/web"*/}}
-{{/*              port: 8000*/}}
-{{/*              httpHeaders:*/}}
-{{/*                - name: Host*/}}
-{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
-{{/*          livenessProbe:*/}}
-{{/*            initialDelaySeconds: 5*/}}
-{{/*            periodSeconds: 20*/}}
-{{/*            httpGet:*/}}
-{{/*              path: "/!/web"*/}}
-{{/*              port: 8000*/}}
-{{/*              httpHeaders:*/}}
-{{/*                - name: Host*/}}
-{{/*                  value: {{ .Values.ingress.host | quote }}*/}}
+          ports:
+            - containerPort: 80
+          readinessProbe:
+            initialDelaySeconds: 5
+            httpGet:
+              path: "/!/web"
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
+          livenessProbe:
+            initialDelaySeconds: 5
+            periodSeconds: 20
+            httpGet:
+              path: "/!/web"
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.ingress.host | quote }}
           envFrom:
             - secretRef:
                 name: {{ .Values.web.secretName }}

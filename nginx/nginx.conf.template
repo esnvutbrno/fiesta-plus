@@ -88,10 +88,6 @@ server {
         add_header Content-Type text/plain;
         return 200 "OK";
     }
-    # to block internal /!/web health check
-    location ~ ^/!/ {
-        return 404;
-    }
 
     location / {
         access_log /dev/null;
