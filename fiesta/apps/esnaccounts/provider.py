@@ -137,7 +137,7 @@ class ESNAccountsProvider(CASProvider):
         picture_response = requests.get(
             picture_url,
             headers={
-                "User-Agent": "Buena Fiesta; @esnvutbrno/buena-fiesta",
+                "User-Agent": "Fiesta+; @esnvutbrno/fiesta-plus",
                 # 'From': 'youremail@domain.com',
             },
         )

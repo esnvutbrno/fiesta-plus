@@ -1,8 +1,8 @@
 {
-  "name": "buena-fiesta-frontend",
+  "name": "fiesta-plus-frontend",
   "version": "0.1.0",
   "description": "New generation of social network for helping international students - used by sections of Erasmus Student Network. By volunteers, for volunteers.",
-  "repository": "git@github.com:esnvutbrno/buena-fiesta.git",
+  "repository": "git@github.com:esnvutbrno/fiesta-plus.git",
   "author": "ESN VUT Brno",
   "license": "GPL-3.0-or-later",
   "scripts": {
