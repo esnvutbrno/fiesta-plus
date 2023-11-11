@@ -9,10 +9,10 @@
     <span class="sr-only">Open user menu</span>
     {% get_user_picture request.user as picture %}
     {% if picture %}
-      <div class="w-10 h-10 rounded-full bg-cover bg-center"
+      <div class="w-10 h-10 rounded-full bg-cover bg-center {% get_user_status_ring_css_for_user request.membership %}"
            style='background-image: url("{{ picture.url }}")'></div>
     {% else %}
-      <span class="w-10 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center group"
+      <span class="w-10 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center {% get_user_status_ring_css_for_user request.membership %}"
             style="background-color: {{ request.user.id|get_color_by_text }}">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
     {% endif %}
   </button>

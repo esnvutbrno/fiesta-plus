@@ -4,6 +4,7 @@ from django import template
 
 from apps.accounts.forms.profile import UserProfileForm
 from apps.accounts.models import User, UserProfile
+from apps.sections.models import SectionMembership
 
 # from apps.plugins.middleware.plugin import HttpRequest
 
@@ -18,6 +19,20 @@ def get_user_picture(user: User | None):
         return None
 
     return profile.picture
+
+
+@register.simple_tag
+def get_user_status_ring_css_for_user(membership: SectionMembership | None):
+    return (
+        {
+            SectionMembership.Role.ADMIN: "ring ring-primary",
+            SectionMembership.Role.EDITOR: "ring ring-secondary",
+            SectionMembership.Role.MEMBER: "ring ring-gray-400",
+            SectionMembership.Role.INTERNATIONAL: "",
+        }.get(membership.role)
+        if membership
+        else ""
+    )
 
 
 @register.simple_tag

@@ -17,6 +17,9 @@ module.exports = {
         {
             pattern: /(SocialButton)/,
         },
+        {
+            pattern: /ring|ring-primary|ring-secondary|ring-gray-400/,
+        },
     ],
     theme: {
         extend: {},
