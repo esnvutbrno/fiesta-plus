@@ -76,7 +76,8 @@ class ESNAccountsProvider(CASProvider):
 
         SectionPluginsReconciler.reconcile(section)
 
-        SectionMembership.objects.update_or_create(
+        # role and activation only for first time
+        SectionMembership.objects.get_or_create(
             user=user,
             section=section,
             defaults=dict(
