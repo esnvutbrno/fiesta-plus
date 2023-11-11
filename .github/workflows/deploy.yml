@@ -31,7 +31,7 @@ jobs:
           registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
 
       - name: Prepare web image metadata
-        id: web-meta
+        id: webMeta
         uses: docker/metadata-action@v4
         with:
           # list of Docker images to use as base name for tags
