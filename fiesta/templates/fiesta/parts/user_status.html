@@ -16,7 +16,7 @@
             style="background-color: {{ request.user.id|get_color_by_text }}">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
     {% endif %}
   </button>
-  <div class="z-30 my-4 text-base list-none bg-base-100 rounded divide-y divide-base-200 shadow w-40 absolute top-full -right-1/2 hidden"
+  <div class="z-30 my-4 text-base list-none bg-base-100 rounded divide-y divide-base-200 shadow w-40 absolute top-full hidden"
        :class="{hidden: !user}">
     <a class="block py-2 px-4 text-base-content hover:bg-base-200"
        href="{% url "accounts:my-profile" %}">
