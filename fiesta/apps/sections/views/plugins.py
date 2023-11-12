@@ -80,7 +80,11 @@ class PluginDetailMixin(
 
         data.update(
             {
-                "form_url": reverse_lazy("sections:change-plugin-state", kwargs={"pk": self.object.pk}),
+                "form_url": (
+                    reverse_lazy("sections:change-plugin-state", kwargs={"pk": self.object.pk})
+                    if self.object
+                    else reverse_lazy("sections:setup-plugin")
+                ),
             }
         )
         return data
