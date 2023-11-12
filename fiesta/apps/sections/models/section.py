@@ -84,7 +84,7 @@ class Section(BaseTimestampedModel):
     def __str__(self):
         return self.name
 
-    def section_base_url(self, request: HttpRequest):
+    def section_base_url(self, request: HttpRequest | None):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
