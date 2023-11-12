@@ -44,7 +44,11 @@ class Page(BaseTreeModel):
         verbose_name=_("url slug"),
     )
     slug_path = models.CharField(
-        max_length=128, editable=False, null=False, default="", verbose_name=_("path from slugs in page tree")
+        max_length=128,
+        editable=False,
+        null=False,
+        default="",
+        verbose_name=_("url path in page tree"),
     )
     content = EditorJsJSONField(
         verbose_name=_("content"),
@@ -58,6 +62,9 @@ class Page(BaseTreeModel):
         verbose_name=_("default page"),
         default=None,
         null=True,
+        help_text=_(
+            "If set, this page will be displayed on section's base URL; only one page can be default for section."
+        ),
     )
 
     def clean(self):
@@ -68,6 +75,7 @@ class Page(BaseTreeModel):
         verbose_name = _("Page")
         verbose_name_plural = _("Pages")
         ordering = (
+            "section",
             "order",
             "title",
         )
