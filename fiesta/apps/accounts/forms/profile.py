@@ -51,7 +51,10 @@ class UserProfileForm(BaseModelForm):
         )
         all_fields = fields_to_include + cls.Meta.fields
         # first all required fields, after them all the rest in original order
-        return sorted(set(all_fields), key=lambda f: (not UserProfileForm.base_fields[f].required, all_fields.index(f)))
+        return sorted(
+            set(all_fields),
+            key=lambda f: (not ((field := UserProfileForm.base_fields.get(f)) and field.required), all_fields.index(f)),
+        )
 
     @classmethod
     def get_user_configuration(cls, user: User):
@@ -103,10 +106,10 @@ class UserProfileForm(BaseModelForm):
             "interests": ChoicedArrayField,
         }
 
+        # fields, which are shown independently on section configurations
         fields = (
             *USER_FIELDS.keys(),
             # TODO: think about limiting the choices by country of section, in which is current membership
-            "nationality",
             "university",
             "faculty",
             "picture",

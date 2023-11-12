@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import logging
+
 from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
 
-from apps.accounts.forms.profile import UserProfileForm
+from apps.accounts.forms.profile import FIELDS_FROM_USER, UserProfileForm
 from apps.accounts.models import UserProfile
 from apps.sections.models import SectionMembership, SectionsConfiguration
+
+logger = logging.getLogger(__name__)
 
 
 class UserProfileStateSynchronizer:
@@ -29,7 +33,15 @@ class UserProfileStateSynchronizer:
         form_class = UserProfileForm.for_user(user=profile.user)
         form = form_class(
             instance=profile,
-            data=model_to_dict(profile, form_class._meta.fields, form_class._meta.exclude),
+            data=model_to_dict(
+                profile,
+                form_class.base_fields,
+                form_class._meta.exclude,
+            )
+            | model_to_dict(
+                profile.user,
+                FIELDS_FROM_USER,
+            ),
         )
 
         # make the form bounded, so it thinks it¨s connected to data
@@ -41,11 +53,13 @@ class UserProfileStateSynchronizer:
             # for this specific accounts conf, profile is not OK,
             # so final state leds to incomplete
             final_state = UserProfile.State.INCOMPLETE
+            logger.info("Profile is not valid: %s", form.errors)
 
         try:
             # validate also model itself
             profile.full_clean()
-        except ValidationError:
+        except ValidationError as e:
+            logger.info("Profile is not valid: %s", e)
             final_state = UserProfile.State.INCOMPLETE
 
         profile.state = final_state
