@@ -28,6 +28,6 @@ def get_navigation_items_for_pages(context: dict):
             ],
             request.path.startswith(url),
         )
-        for p in request.in_space_of_section.pages.filter(level=0).exclude(default=True)
+        for p in request.in_space_of_section.pages.exclude(default=True).filter(parent__isnull=True)
         if (url := p.get_absolute_url(request))
     ]

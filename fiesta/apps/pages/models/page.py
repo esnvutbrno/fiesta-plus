@@ -12,6 +12,7 @@ from django.utils.translation import gettext_lazy as _
 from django_editorjs_fields import EditorJsJSONField
 from mptt.models import TreeForeignKey
 
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models.base import BaseTreeModel
 
 
@@ -92,8 +93,8 @@ class Page(BaseTreeModel):
     def __str__(self):
         return f"{self.title}"
 
-    def get_absolute_url(self) -> str:
-        return self.section.section_base_url(None) + (
+    def get_absolute_url(self, request: HttpRequest = None) -> str:
+        return self.section.section_base_url(request) + (
             reverse("pages:default-page")
             if self.default
             else reverse("pages:single-page", kwargs=dict(slug=self.slug_path))
