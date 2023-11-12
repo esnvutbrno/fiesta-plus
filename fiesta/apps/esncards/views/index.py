@@ -1,12 +1,19 @@
 from __future__ import annotations
 
-from django.views.generic import TemplateView
+from django.views.generic import ListView
+
+from apps.plugins.middleware.plugin import HttpRequest
 
 
-class EsncardsIndexView(TemplateView):
+class EsncardIndexView(ListView):
     template_name = "esncards/index.html"
+    request: HttpRequest
 
-    def get_context_data(self, **kwargs):
-        ctx = super().get_context_data(**kwargs)
-        ctx["applications"] = self.request.user.esncard_applications.all()
-        return ctx
+    def get_queryset(self):
+        return (
+            self.request.user.esncard_applications.filter(
+                section=self.request.in_space_of_section,
+            )
+            if self.request.in_space_of_section
+            else self.request.user.esncard_applications.all()
+        )
