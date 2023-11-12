@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.db.models import Field
-from django.forms import Field as FormField, modelform_factory
+from django.forms import Field as FormField, fields_for_model, modelform_factory
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import User, UserProfile
@@ -9,6 +9,22 @@ from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
 from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
 from apps.sections.models import SectionMembership, SectionsConfiguration
+
+FIELDS_FROM_USER = ("first_name", "last_name")
+REQUIRED_FIELDS_FROM_USER = FIELDS_FROM_USER
+
+
+def _create_user_fields():
+    fields = fields_for_model(
+        User,
+        fields=FIELDS_FROM_USER,
+    )
+    for f in REQUIRED_FIELDS_FROM_USER:
+        fields[f].required = True
+    return fields
+
+
+USER_FIELDS = _create_user_fields()
 
 
 class UserProfileForm(BaseModelForm):
@@ -33,7 +49,9 @@ class UserProfileForm(BaseModelForm):
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
             if any(conf_field.__get__(c) is not None for c in confs)
         )
-        return fields_to_include + cls.Meta.fields
+        all_fields = fields_to_include + cls.Meta.fields
+        # first all required fields, after them all the rest in original order
+        return sorted(set(all_fields), key=lambda f: (not UserProfileForm.base_fields[f].required, all_fields.index(f)))
 
     @classmethod
     def get_user_configuration(cls, user: User):
@@ -75,6 +93,9 @@ class UserProfileForm(BaseModelForm):
             formfield_callback=callback,
         )
 
+    # include pre-generated field from User
+    locals().update(USER_FIELDS)
+
     class Meta:
         model = UserProfile
 
@@ -83,7 +104,9 @@ class UserProfileForm(BaseModelForm):
         }
 
         fields = (
+            *USER_FIELDS.keys(),
             # TODO: think about limiting the choices by country of section, in which is current membership
+            "nationality",
             "university",
             "faculty",
             "picture",
@@ -98,6 +121,22 @@ class UserProfileForm(BaseModelForm):
             "university": UniversityWidget,
             "faculty": FacultyWidget,
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if up := self.instance:  # type: UserProfile
+            for f in USER_FIELDS:
+                self.initial[f] = getattr(up.user, f, None)
+
+    def save(self, commit=True):
+        instance: UserProfile = super().save(commit=commit)
+
+        for f in USER_FIELDS:
+            setattr(instance.user, f, self.cleaned_data.get(f))
+        instance.user.save(update_fields=USER_FIELDS.keys())
+
+        return instance
 
 
 class UserProfileFinishForm(UserProfileForm):

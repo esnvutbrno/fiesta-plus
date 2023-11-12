@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <td class="font-semibold pr-12">Email:</td>
-            <td>{{ user.email_user }}</td>
+            <td>{{ user.primary_email }}</td>
           </tr>
           <tr>
             <td class="font-semibold pr-12">Gender:</td>
@@ -82,8 +82,10 @@
           <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
             <td class="flex-grow">
-              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
-                 href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
+              {% if profile.phone_number %}
+                <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                   href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
+              {% endif %}
             </td>
           </tr>
           <tr>
@@ -109,11 +111,9 @@
           </tr>
           <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
-            <td class="flex-grow">{{ profile.whatsapp }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
-            <td class="flex-grow">{{ user.primary_email }}</td>
+            <td class="flex-grow">
+              {% if profile.whatsapp %}{{ profile.whatsapp }}{% endif %}
+            </td>
           </tr>
         {% endwith %}
       </table>
