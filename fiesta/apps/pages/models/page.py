@@ -93,7 +93,11 @@ class Page(BaseTreeModel):
         return f"{self.title}"
 
     def get_absolute_url(self) -> str:
-        return self.section.section_base_url(None) + reverse("pages:single-page", kwargs=dict(slug=self.slug_path))
+        return self.section.section_base_url(None) + (
+            reverse("pages:default-page")
+            if self.default
+            else reverse("pages:single-page", kwargs=dict(slug=self.slug_path))
+        )
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

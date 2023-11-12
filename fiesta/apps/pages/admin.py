@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.contrib import admin
+from django.utils.html import format_html
 from mptt.admin import DraggableMPTTAdmin
 
 from ..plugins.admin import BaseChildConfigurationAdmin
@@ -20,8 +21,8 @@ class PagesAdmin(DraggableMPTTAdmin):
     list_display = (
         "tree_actions",
         "indented_title",
+        "external_url",
         "default",
-        "slug_path",
         "order",
         "section",
         # ...more fields if you feel like it...
@@ -29,3 +30,12 @@ class PagesAdmin(DraggableMPTTAdmin):
     list_display_links = ("indented_title",)
     list_filter = ["section"]
     expand_tree_by_default = True
+
+    @admin.display(
+        description="Page link",
+    )
+    def external_url(self, obj: Page):
+        return format_html(
+            "<a href='{url}'>{url}</a>",
+            url=obj.get_absolute_url(),
+        )
