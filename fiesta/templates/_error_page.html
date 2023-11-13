@@ -20,7 +20,7 @@
     <main class="p-3 w-full flex flex-col md:flex-row justify-start md:justify-between items-center md:pb-40">
       <div class="sm:w-1/2 m-8 text-center relative">
         <span class="inline-block relative p-2 before:block before:absolute before:-inset-4 before:skew-y-6 before:bg-pink-500 before:border-[#7b3ff4] before:border-8">
-          <span class="relative text-white text-right text-3xl md:text-4xl lg:text-5xl font-bold font-mono">
+          <span class="relative text-white text-right text-2xl md:text-3xl lg:text-4xl font-bold font-mono">
 
             {% block error_left %}{% endblock %}
           </span>
@@ -29,16 +29,16 @@
       <div class="sm:w-1/2 mt-4 md:mt-0">
 
         {% block error_right %}
-          <div class="text-2xl font-semibold relative mb-[6rem]">
+          <div class="md:text-lg lg:text-xl xl:text-2xl font-semibold relative mb-[6rem]">
 
             {% block error_right_text %}{% endblock %}
-            <pre class=" text-xs text-gray-500 font-mono font-normal break-all whitespace-pre-line pt-6 absolute top-full ">
-              {{ request.build_absolute_uri }}
-              {{ request.in_space_of_section }}
-              {{ request.plugin }}
-              {{ request.membership }}
-              {% now "c" %}
-              {{ exception }}
+            <pre class="text-xs text-gray-500 font-mono font-normal break-all whitespace-pre-line pt-6 absolute top-full ">
+              uri: {{ request.build_absolute_uri }}
+              section: {{ request.in_space_of_section|default:"---" }}
+              plugin: {{ request.plugin|default:"---" }}
+              membership: {{ request.membership|default:"---" }}
+              now: {% now "c" %}
+              error: {{ exception|default:"---" }}
             </pre>
           </div>
         {% endblock %}
