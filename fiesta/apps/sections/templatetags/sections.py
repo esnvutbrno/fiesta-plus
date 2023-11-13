@@ -23,6 +23,7 @@ def get_section_statistics(context: dict):
         unconfirmed_members: int
         alumni: int
         internationals: int
+        unconfirmed_internationals: int
         internationals_wo_request: int
         esncard_plugin_enabled: bool
         unprocessed_esncard_applications: int
@@ -45,6 +46,10 @@ def get_section_statistics(context: dict):
         unconfirmed_members=req.in_space_of_section.memberships.filter(
             state=SectionMembership.State.UNCONFIRMED,
             role=SectionMembership.Role.MEMBER,
+        ).count(),
+        unconfirmed_internationals=req.in_space_of_section.memberships.filter(
+            state=SectionMembership.State.UNCONFIRMED,
+            role=SectionMembership.Role.INTERNATIONAL,
         ).count(),
         alumni=req.in_space_of_section.memberships.filter(
             # state=SectionMembership.State.ACTIVE,
