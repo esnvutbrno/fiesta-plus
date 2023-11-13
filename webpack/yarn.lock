@@ -12,10 +12,10 @@
   resolved "https://registry.yarnpkg.com/@alpinejs/collapse/-/collapse-3.13.2.tgz#f14cbcd17d2cc50002de93f314b2e3930b6873f1"
   integrity sha512-0osMzn5yUrnGSbvFoPltwV2UnbFNL0Gn99wfIRPklhkbgWXrwji1dtpklZsHsLwDqzGC6Pp8Kw1FlCU7gEC0Yw==
 
-"@alpinejs/persist@^3.9.1":
-  version "3.12.3"
-  resolved "https://registry.yarnpkg.com/@alpinejs/persist/-/persist-3.12.3.tgz#43f6477e9c55dfa536466e3cb6539cf8ef996885"
-  integrity sha512-TyDzwkFePki6vc+pCdxdNs0cYdBYAJ6W5szXnoQys8iUyshov/6Q9UhKxlXoCE4jvmmXvL+U4vNnnCcnmVD5dg==
+"@alpinejs/persist@^3.13.2":
+  version "3.13.2"
+  resolved "https://registry.yarnpkg.com/@alpinejs/persist/-/persist-3.13.2.tgz#a40bd2c3241d59fd57f3fbe60bd98fe978b76d21"
+  integrity sha512-GWTqFBugNiGq/9E0XCkGnWBUcETrPG8Op2I+aBmiBfjkFCP6P/NLCHEbrEcaqWkok2Wp//0TLz3R2YBsFP0B1Q==
 
 "@babel/code-frame@^7.0.0":
   version "7.22.10"
