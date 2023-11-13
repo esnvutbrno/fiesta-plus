@@ -9,7 +9,7 @@ from apps.sections.models import Section
 from apps.sections.views.choose_space import ChooseSpaceView
 from apps.sections.views.internationals import SectionInternationalsView
 from apps.sections.views.members import ChangeMembershipStateFormView, SectionMembersView
-from apps.sections.views.membership import MembershipDetailView
+from apps.sections.views.membership import MembershipDetailView, UserDetailView
 from apps.sections.views.membership_editor import MembershipRoleEditorView, MembershipStateEditorView
 from apps.sections.views.plugins import (
     ChangePluginConfigurationFormView,
@@ -37,6 +37,7 @@ urlpatterns = [
     ),
     path("membership-form/<uuid:pk>", ChangeMembershipStateFormView.as_view(), name="change-membership-state-form"),
     path("membership/<uuid:pk>", MembershipDetailView.as_view(), name="membership-detail"),
+    path("user/<int:pk>", UserDetailView.as_view(), name="user-detail"),
     path("choose-section", ChooseSpaceView.as_view(), name="choose-space"),
     path("plugin-setup", SetupPluginFormView.as_view(), name="setup-plugin"),
     path("plugin-state/<uuid:pk>", ChangePluginStateFormView.as_view(), name="change-plugin-state"),

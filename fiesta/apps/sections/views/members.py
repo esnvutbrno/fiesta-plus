@@ -44,6 +44,7 @@ class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                     SectionMembership.Role.ADMIN,
                 ),
             )
+            .order_by("-created")
         )
 
 

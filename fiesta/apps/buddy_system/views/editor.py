@@ -79,6 +79,7 @@ class BuddyRequestsTable(tables.Table):
             "match__matcher__first_name",
             "match__matcher__username",
         ),
+        linkify=("sections:user-detail", {"pk": Accessor("match.matcher.pk")}),
     )
     matcher_email = Column(
         accessor="match.matcher.email",

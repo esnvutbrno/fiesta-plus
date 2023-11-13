@@ -41,6 +41,7 @@ class SectionInternationalsView(
                 section=self.request.membership.section,
                 role=SectionMembership.Role.INTERNATIONAL,
             )
+            .order_by("-created")
         )
 
     def get_table_kwargs(self):

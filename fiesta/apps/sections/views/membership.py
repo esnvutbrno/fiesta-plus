@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 from _operator import attrgetter
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, RedirectView
 
+from apps.accounts.models import User
 from apps.buddy_system.apps import BuddySystemConfig
 from apps.buddy_system.models import BuddyRequest
 from apps.buddy_system.views.editor import BuddyRequestsTable
@@ -15,6 +17,7 @@ from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import BreadcrumbItem, with_breadcrumb, with_callable_breadcrumb, with_object_breadcrumb
+from apps.utils.models.query import get_single_object_or_none
 
 
 def page_title(view: DetailView | View) -> BreadcrumbItem:
@@ -98,3 +101,17 @@ class MembershipDetailView(
 
     def get_queryset(self):
         return self.request.in_space_of_section.memberships
+
+
+class UserDetailView(
+    EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
+    RedirectView,
+):
+    def get_redirect_url(self, *args, **kwargs):
+        user = get_object_or_404(User, pk=kwargs.get("pk"))
+        membership = get_single_object_or_none(
+            self.request.in_space_of_section.memberships,
+            user=user,
+        )
+        return reverse("sections:membership-detail", kwargs={"pk": membership.pk})
