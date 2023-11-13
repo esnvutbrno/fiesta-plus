@@ -5,7 +5,7 @@
   {% for membership in memberships %}
     <li class="py-3 sm:py-4">
       <div class="flex flex-row flex-wrap items-center md:space-x-4">
-        <div class="flex-shrink-0 order-4 md:order-2 grow md:grow-0 flex flex-col justify-center items-end md:justify-center">
+        <div class="md:min-w-[25%] flex-shrink-0 order-4 md:order-2 grow md:grow-0 flex flex-col justify-center items-end md:items-center md:justify-center">
           {% if membership == request.membership %}
             <svg class="w-8 h-8 text-lime-500"
                  fill="none"
