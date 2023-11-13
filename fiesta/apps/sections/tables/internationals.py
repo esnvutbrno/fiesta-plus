@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
-from django_tables2 import Column
+from django_tables2 import Column, TemplateColumn
 
 from apps.fiestatables.columns import CountryColumn, ImageColumn, NaturalDatetimeColumn
 from apps.sections.models import SectionMembership
@@ -26,12 +26,12 @@ class SectionInternationalsTable(tables.Table):
 
     created = NaturalDatetimeColumn(verbose_name=_("Joined"))
 
-    # approve_membership = TemplateColumn(
-    #     template_name="sections/parts/change_membership_state_btn.html",
-    #     exclude_from_export=True,
-    #     order_by="state",
-    #     verbose_name=_("Membership"),
-    # )
+    state_button = TemplateColumn(
+        template_name="sections/parts/change_membership_state_btn.html",
+        exclude_from_export=True,
+        order_by="state",
+        verbose_name=_("Membership"),
+    )
 
     class Meta:
         model = SectionMembership

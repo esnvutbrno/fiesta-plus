@@ -28,7 +28,7 @@ class SectionMembershipTable(tables.Table):
 
     created = NaturalDatetimeColumn(verbose_name=_("Joined"))
 
-    approve_membership = TemplateColumn(
+    state_button = TemplateColumn(
         template_name="sections/parts/change_membership_state_btn.html",
         exclude_from_export=True,
         order_by="state",
