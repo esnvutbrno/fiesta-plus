@@ -11,6 +11,7 @@ from apps.fiestatables.filters import BaseFilterSet
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.universities.models import Faculty
+from apps.utils.models.query import Q
 
 
 def related_faculties(request: HttpRequest):
@@ -47,5 +48,8 @@ class SectionMembershipFilter(BaseFilterSet):
         return queryset.annotate(
             search=SearchVector("user__last_name", "user__first_name", "state", "role"),
         ).filter(
-            search=value,
+            # TODO: find out why search vector is not enough to find "Gus Fring" for "Fri"
+            Q(search=value)
+            | Q(user__last_name__icontains=value)
+            | Q(user__first_name__icontains=value),
         )
