@@ -13,7 +13,7 @@
     "@alpinejs/collapse": "^3.13.2",
     "@alpinejs/persist": "^3.9.1",
     "@tailwindcss/forms": "^0.5.2",
-    "@tailwindcss/typography": "^0.5.1",
+    "@tailwindcss/typography": "^0.5.10",
     "alpinejs": "^3.13.2",
     "autoprefixer": "^10.4.16",
     "css-loader": "^6.6.0",
