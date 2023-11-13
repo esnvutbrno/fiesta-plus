@@ -13,7 +13,7 @@ from phonenumber_field.phonenumber import to_python
 
 from apps.accounts.models import User, UserProfile
 from apps.accounts.models.profile import user_profile_picture_storage
-from apps.accounts.services import UserProfileStateSynchronizer
+from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 from apps.esnaccounts import logger
 from apps.sections.models import Section, SectionMembership
 from apps.sections.models.services.section_plugins_reconciler import SectionPluginsReconciler
@@ -127,7 +127,7 @@ class ESNAccountsProvider(CASProvider):
             picture_url=sa.extra_data.get("picture"),
         )
 
-        UserProfileStateSynchronizer.on_user_profile_update(user_profile)
+        synchronizer.revalidate_user_profile(user_profile)
 
     @staticmethod
     def sync_profile_picture(profile: UserProfile, picture_url: str | None):

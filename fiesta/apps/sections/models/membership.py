@@ -98,12 +98,12 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     @hook(AFTER_CREATE)
     @hook(AFTER_SAVE, when_any=["role", "state"], has_changed=True)
     def update_user_profile_state(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
         # revalidate user profile on change of membership --> e.g., if membership is revoked,
         # the user profile is not validated by that section configuration anymore
 
-        UserProfileStateSynchronizer.on_membership_update(membership=self)
+        synchronizer.on_membership_update(membership=self)
 
     @property
     def is_international(self):

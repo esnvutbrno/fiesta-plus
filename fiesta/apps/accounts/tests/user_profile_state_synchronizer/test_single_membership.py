@@ -32,6 +32,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
             app_label="accounts",
         )
         self.country = "CZ"
+        self.synchronizer = UserProfileStateSynchronizer()
 
     def test_required_attr(self):
         """
@@ -48,7 +49,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
         self.configuration.save()
 
         # run synchronizer
-        UserProfileStateSynchronizer.on_user_profile_update(self.profile)
+        self.synchronizer.revalidate_user_profile(self.profile)
         # should be incomplete
         self.assertEqual(self.profile.state, UserProfile.State.INCOMPLETE)
 
@@ -63,7 +64,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
         self.configuration.save()
 
         # run synchronizer
-        UserProfileStateSynchronizer.on_user_profile_update(self.profile)
+        self.synchronizer.revalidate_user_profile(self.profile)
         # should stay complete
         self.assertEqual(self.profile.state, UserProfile.State.COMPLETE)
 
@@ -92,7 +93,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
         self.configuration.save()
 
         # run synchronizer
-        UserProfileStateSynchronizer.on_user_profile_update(self.profile)
+        self.synchronizer.revalidate_user_profile(self.profile)
 
         # should stay complete with filled nationality
         self.assertEqual(self.profile.state, UserProfile.State.COMPLETE)
@@ -109,7 +110,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
         self.configuration.save()
 
         # run synchronizer
-        UserProfileStateSynchronizer.on_user_profile_update(self.profile)
+        self.synchronizer.revalidate_user_profile(self.profile)
 
         # should stay complete with filled nationality
         self.assertEqual(self.profile.state, UserProfile.State.COMPLETE)
@@ -126,7 +127,7 @@ class UserProfileStateSynchronizerSingleMembershipTestCase(TestCase):
         self.configuration.save()
 
         # run synchronizer
-        UserProfileStateSynchronizer.on_user_profile_update(self.profile)
+        self.synchronizer.revalidate_user_profile(self.profile)
 
         # should stay complete with filled nationality
         self.assertEqual(self.profile.state, UserProfile.State.COMPLETE)

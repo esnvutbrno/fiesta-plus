@@ -78,9 +78,9 @@ class SectionsConfiguration(BasePluginConfiguration):
 
     @hook(AFTER_SAVE)
     def on_save(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
-        UserProfileStateSynchronizer.on_accounts_configuration_update(conf=self)
+        synchronizer.on_accounts_configuration_update(conf=self)
 
 
 __all__ = ["SectionsConfiguration"]

@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import functools
 import logging
+from contextlib import contextmanager
 
 from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
@@ -12,14 +14,26 @@ from apps.sections.models import SectionMembership, SectionsConfiguration
 logger = logging.getLogger(__name__)
 
 
+def _if_enabled(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if self.ENABLED:
+            return func(self, *args, **kwargs)
+        return None
+
+    return wrapper
+
+
 class UserProfileStateSynchronizer:
     """
     Defines synchronization behaviour for `UserProfile.state` attribute
     regarding AccountsConfiguration for each Section.
     """
 
-    @staticmethod
-    def on_user_profile_update(profile: UserProfile):
+    ENABLED = True
+
+    @_if_enabled
+    def revalidate_user_profile(self, profile: UserProfile):
         """
         User profile of user was updated, so it's needed to resolve new state for profile.
 
@@ -65,8 +79,8 @@ class UserProfileStateSynchronizer:
         profile.state = final_state
         profile.save(update_fields=["state"], skip_hooks=True)
 
-    @classmethod
-    def on_accounts_configuration_update(cls, conf: SectionsConfiguration):
+    @_if_enabled
+    def on_accounts_configuration_update(self, conf: SectionsConfiguration):
         """
         After change of Accounts configuration, checks all COMPLETED profiles if they're fine for new configuration.
         If not, profile is set to UNCOMPLETED.
@@ -74,22 +88,35 @@ class UserProfileStateSynchronizer:
 
         Implementation with less strict conditions leads to O(n^2).
         """
-        # for each connected user profile
-        for profile in UserProfile.objects.filter(
+        if not self.ENABLED:
+            return
+
+        # for each connected user profile enforce revalidation
+        UserProfile.objects.filter(
             user__memberships__section__plugins__configuration=conf,
             state=UserProfile.State.COMPLETE,
-        ):
-            cls.on_user_profile_update(profile=profile)
+        ).update(enforce_revalidation=True)
 
-    @classmethod
-    def on_membership_update(cls, membership: SectionMembership):
+    @_if_enabled
+    def on_membership_update(self, membership: SectionMembership):
+        if not self.ENABLED:
+            return None
         try:
             # membership could be created for user without profile (usually the first one membership)
             profile: UserProfile = membership.user.profile
         except UserProfile.DoesNotExist:
             return None
 
-        return cls.on_user_profile_update(profile=profile)
+        return self.revalidate_user_profile(profile=profile)
+
+    @contextmanager
+    def without_profile_revalidation(self):
+        prev = self.ENABLED
+        self.ENABLED = False
+        yield
+        self.ENABLED = prev
 
 
-__all__ = ["UserProfileStateSynchronizer"]
+synchronizer = UserProfileStateSynchronizer()
+
+__all__ = ["synchronizer"]
