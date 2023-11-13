@@ -128,9 +128,14 @@ class UserProfileForm(BaseModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if up := self.instance:  # type: UserProfile
+        try:
+            user: User | None = self.instance and self.instance.user
+        except User.DoesNotExist:
+            user = None
+
+        if user:
             for f in USER_FIELDS:
-                self.initial[f] = getattr(up.user, f, None)
+                self.initial[f] = getattr(user, f, None)
 
     def save(self, commit=True):
         instance: UserProfile = super().save(commit=commit)
