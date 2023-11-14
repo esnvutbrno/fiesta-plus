@@ -163,7 +163,7 @@ jobs:
           message="
           👨‍💻 ${{ github.actor }} deployed:
           🌐 [production](https://fiesta.plus)
-          📝 `${{ github.event.commits[0].message }}`
+          📝 \`${{ github.event.commits[0].message }}\`
           🔗 [see commit](https://github.com/${{ github.repository }}/commit/${{github.sha}})
           "
           curl -s \
