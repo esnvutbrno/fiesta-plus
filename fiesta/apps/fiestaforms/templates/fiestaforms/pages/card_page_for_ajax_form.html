@@ -1,0 +1,12 @@
+{# NOTES: #}
+{# 1/ usually used with HtmxFormMixin and AjaxViewMixin #}
+{# 2/ as ajax renders only form #}
+{# 3/ as standard renders as page with card with included ajax template form #}
+{# 4/ base_page_template ready to be set with another card template #}
+{% extends base_page_template|default:"fiesta/base-variants/center-card-2xl.html" %}
+
+{% load i18n %}
+
+{% block card_body %}
+  {% include view.ajax_template_name %}
+{% endblock %}
