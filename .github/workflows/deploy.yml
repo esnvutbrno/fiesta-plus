@@ -157,10 +157,10 @@ jobs:
       - name: Announce deploy to Telegram
         run: |
           message="
-            ${{ github.actor }} deployed:
-            environment: production on https://fiesta.plus
-            commit: ${{ github.event.commits[0].message }}
-            changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}
+          👨‍💻 ${{ github.actor }} deployed:
+          🌐 production on https://fiesta.plus
+          📝 ${{ github.event.commits[0].message }}
+          🔗 [see commit](https://github.com/${{ github.repository }}/commit/${{github.sha}})
           "
           curl -s \
           -X POST \
@@ -171,6 +171,7 @@ jobs:
           --data-urlencode "disable_notification=true"
           --data-urlencode "silent=true"
           --data-urlencode "no_webpage=true"
+          --data-urlencode "disable_web_page_preview=true"
 
 #      - name: Announce deploy to Telegram
 #        uses: enflo/curl-action@master
