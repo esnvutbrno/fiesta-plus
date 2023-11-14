@@ -54,19 +54,13 @@ class NewSectionMembershipFormView(
     def get_success_url(self):
         return reverse("accounts:membership")
 
-    @property
-    def configuration(self) -> SectionsConfiguration:
-        """We cannot use PluginConfigurationViewMixin, since membership is not ready and request.plugin is
-        filled by middleware based on membership (and that's created in form_valid, so too late)."""
-        return SectionsConfiguration.objects.filter(plugins__section=self.request.in_space_of_section).first()
-
     def form_valid(self, form):
         # override to be sure
         sm: SectionMembership = form.instance
-        if (
-            sm.role == SectionMembership.Role.INTERNATIONAL
-            and self.configuration.auto_approved_membership_for_international
-        ):
+
+        configuration = SectionsConfiguration.objects.filter(plugins__section=sm.section).first()
+
+        if sm.role == SectionMembership.Role.INTERNATIONAL and configuration.auto_approved_membership_for_international:
             sm.state = SectionMembership.State.ACTIVE
         else:
             sm.state = SectionMembership.State.UNCONFIRMED
