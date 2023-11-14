@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.utils.translation import gettext_lazy as _
-from django_select2.forms import ModelSelect2Widget
+from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget
 
 from apps.sections.models import SectionMembership
 
@@ -31,9 +31,39 @@ class UserWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     @classmethod
     def label_from_instance(cls, user):
         return f"{user.full_name} ({user.username})"
+    
+class MultipleUserWidget(RemoteModelSelectWidgetMixin, ModelSelect2MultipleWidget):
+    search_fields = [
+        "first_name__icontains",
+        "last_name__icontains",
+        "username__icontains",
+    ]
+
+    @classmethod
+    def label_from_instance(cls, user):
+        return f"{user.full_name} ({user.username})"
+
 
 
 class ActiveLocalMembersFromSectionWidget(UserWidget):
+    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
+        queryset = (
+            (queryset or self.get_queryset())
+            .filter(
+                memberships__section=request.in_space_of_section,
+            )
+            .filter(
+                memberships__role__in=(
+                    SectionMembership.Role.MEMBER,
+                    SectionMembership.Role.ADMIN,
+                    SectionMembership.Role.EDITOR,
+                ),
+            )
+        )
+
+        return super().filter_queryset(request, term, queryset, **dependent_fields)
+    
+class MultipleActiveLocalMembersFromSectionWidget(MultipleUserWidget):
     def filter_queryset(self, request, term, queryset=None, **dependent_fields):
         queryset = (
             (queryset or self.get_queryset())

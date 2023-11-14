@@ -4,6 +4,7 @@ from django.urls import path
 
 from .views import EventsIndexView
 from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView
+from .views.price import PriceView
 
 # Define your urls here
 
@@ -15,5 +16,5 @@ urlpatterns = [
     path('event-update/<uuid:pk>', UpdateEventView.as_view(), name="event-update"),
     path('event-detail/<uuid:pk>', EventDetailView.as_view(), name="event-detail"),
     path("event-detail/<uuid:pk>/participants", ParticipantsView.as_view(), name="participants"), # event-detail/<uuid:pk>/
-
+    path("event-update/<uuid:pk>/price", PriceView.as_view(), name="price")
 ]
