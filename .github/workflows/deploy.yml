@@ -158,8 +158,8 @@ jobs:
         uses: enflo/curl-action@master
         with:
           curl: |
-            -X POST
-            -H 'Content-Type: application/json'
+            -X POST \
+            -H 'Content-Type: application/json' \
             -d '{ \
               "chat_id": "${{ secrets.ANNOUNCE_TELEGRAM_TO }}", \
               "disable_notification": true, \
@@ -169,5 +169,5 @@ jobs:
                 message: ${{ github.event.commits[0].message }} \n \
                 changes: https://github.com/${{ github.repository }}/commit/${{github.sha}} \n \
               " \
-            }'
+            }' \
             https://api.telegram.org/bot${{ secrets.ANNOUNCE_TELEGRAM_TOKEN }}/sendMessage
