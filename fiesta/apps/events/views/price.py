@@ -12,7 +12,7 @@ from django_filters import CharFilter, ChoiceFilter
 from django_tables2 import Column
 from django.db import models
 
-from ..models import Participant
+from ..models import Event, Participant
 from ..models.price_variant import PriceVariant, EventPriceVariantType
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormMixin
@@ -30,39 +30,38 @@ from allauth.account.utils import get_next_redirect_url
 from django.db import transaction
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
-class PriceView(     
+
+class PriceView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,
     AjaxViewMixin,
     UpdateView,
 ):
-    template_name = "events/price.html"
-    ajax_template_name = "events/price_form.html"
-    model = PriceVariant
+    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "events/parts/price_form.html"
+    model = Event
     form_class = PriceForm
 
     success_url = reverse_lazy("events:event-update")
     success_message = _("Priced")
 
-    form_class = PriceForm
-    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "events/price_form.html"
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_url"] = reverse_lazy("events:price", kwargs={"pk": self.object.pk})
+        return context
 
-    success_url = reverse_lazy("events:event-detail")
-    success_message = _("Price created sucessfully")
-
-    extra_context = {
-        "form_url": reverse_lazy("events:price"),
-        # "base_page_template": "fiesta/base-variants/center-card-lg.html",
-    }
+    def get_initial(self):
+        return {
+            "event": self.object,
+        }
 
     @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
 
         PriceVariant.objects.get_or_create(
-            event=self.request.event,
+            event=self.object,
             type=form.instance.type,
         )
 
