@@ -53,6 +53,10 @@ class SectionsConfig(BasePluginAppConfig):
                                 _("Statistics"),
                                 reverse("sections:section-stats"),
                             ),
+                            NavigationItemSpec(
+                                _("Universities"),
+                                reverse("sections:section-universities"),
+                            ),
                             (
                                 NavigationItemSpec(
                                     _("Plugins"),

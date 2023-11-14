@@ -18,9 +18,11 @@ from apps.sections.views.plugins import (
     SetupPluginFormView,
 )
 from apps.sections.views.stats import SectionStatsView
+from apps.sections.views.universities import SectionUniversitiesView
 
 register_model_converter(Section, field="space_slug", base=SlugConverter)
 urlpatterns = [
+    path("universities", SectionUniversitiesView.as_view(), name="section-universities"),
     path("section-members", SectionMembersView.as_view(), name="section-members"),
     path("section-internationals", SectionInternationalsView.as_view(), name="section-internationals"),
     path("section-stats", SectionStatsView.as_view(), name="section-stats"),
