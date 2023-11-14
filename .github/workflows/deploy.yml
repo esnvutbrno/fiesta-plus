@@ -158,7 +158,7 @@ jobs:
         run: |
           message="
           👨‍💻 ${{ github.actor }} deployed:
-          🌐 production on https://fiesta.plus
+          🌐 [production](https://fiesta.plus)
           📝 ${{ github.event.commits[0].message }}
           🔗 [see commit](https://github.com/${{ github.repository }}/commit/${{github.sha}})
           "
