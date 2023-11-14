@@ -82,7 +82,7 @@ class UpdateEventForm(BaseModelForm):
                 user=organizer,
                 state=OrganizerRole.OC
             )
-            
+
         for moc in mocs:
                 Organizer.objects.update_or_create(
                 event=event,
