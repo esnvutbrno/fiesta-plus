@@ -2,6 +2,9 @@
 {% load utils %}
 {% load i18n %}
 {% load user_profile %}
+
+{% get_buddy_system_configuration as configuration %}
+
 <div class="Dashboard__tiles flex flex-col md:flex-row">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
     <div class="Dashboard__tile__title">Buddy System</div>
@@ -56,10 +59,12 @@
           waiting request{{ count|pluralize:"s" }}
         {% endwith %}
       </div>
-      <div class="Dashboard__tile__actions text-right">
-        <a href="{% url "buddy_system:matching-requests" %}"
-           class="btn btn-lg btn-outline">show waiting requests</a>
-      </div>
+      {% if configuration.matching_policy_instance.can_member_match %}
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "buddy_system:matching-requests" %}"
+             class="btn btn-lg btn-outline">show waiting requests</a>
+        </div>
+      {% endif %}
     {% endif %}
   </div>
   {% if request.membership.is_local %}
@@ -68,11 +73,16 @@
 
       {% get_matched_buddy_requests as request_matches %}
       {% if not request_matches.exists %}
-        <div class="Dashboard__tile__value">So empty here :(</div>
-        <div class="Dashboard__tile__actions text-right">
-          <a href="{% url "buddy_system:matching-requests" %}"
-             class="btn btn-lg btn-outline">get your first buddy</a>
-        </div>
+        <div class="Dashboard__tile__value dark:text-base-300">So empty here 😔</div>
+
+        {% if configuration.matching_policy_instance.can_member_match %}
+          <div class="Dashboard__tile__actions text-right">
+            <a href="{% url "buddy_system:matching-requests" %}"
+               class="btn btn-lg btn-outline dark:text-base-300">get your first buddy</a>
+          </div>
+        {% else %}
+          <div class="Dashboard__tile__desc">Buddy system team is looking for the best match for you.</div>
+        {% endif %}
       {% else %}
         <div class="Dashboard__tile__value">
           <div class="avatar-group -space-x-12 justify-center p-2">

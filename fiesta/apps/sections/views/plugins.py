@@ -31,7 +31,10 @@ class SectionPluginsView(
                     app,
                     plugin,
                     (
-                        get_plugin_configuration_form(plugin.configuration)(instance=plugin.configuration)
+                        get_plugin_configuration_form(
+                            configuration=plugin.configuration,
+                            for_section=self.request.in_space_of_section,
+                        )(instance=plugin.configuration)
                         if plugin and plugin.configuration
                         else None
                     ),
@@ -62,6 +65,7 @@ class PluginDetailMixin(
     SuccessMessageMixin,
 ):
     model = Plugin
+    object: Plugin
 
     success_url = reverse_lazy("sections:section-plugins")
 
@@ -69,8 +73,21 @@ class PluginDetailMixin(
 
     extra_context = {
         "PluginState": Plugin.State,
-        "form_url": reverse_lazy("sections:create-plugin"),
     }
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        data.update(
+            {
+                "form_url": (
+                    reverse_lazy("sections:change-plugin-state", kwargs={"pk": self.object.pk})
+                    if self.object
+                    else reverse_lazy("sections:setup-plugin")
+                ),
+            }
+        )
+        return data
 
 
 class ChangePluginStateFormView(
@@ -96,7 +113,10 @@ class ChangePluginConfigurationFormView(
     object: BasePluginConfiguration
 
     def get_form_class(self):
-        return get_plugin_configuration_form(self.object)
+        return get_plugin_configuration_form(
+            configuration=self.object,
+            for_section=self.request.in_space_of_section,
+        )
 
     queryset = BasePluginConfiguration.objects.all()
 

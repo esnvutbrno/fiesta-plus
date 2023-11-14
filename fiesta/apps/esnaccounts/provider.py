@@ -6,13 +6,17 @@ import requests
 from allauth.socialaccount.providers.base import ProviderAccount
 from allauth_cas.providers import CASProvider
 from django.core.files.base import ContentFile
+from django.db import transaction
 from django.http import HttpRequest
 from django.utils.text import slugify
+from phonenumber_field.phonenumber import to_python
 
 from apps.accounts.models import User, UserProfile
 from apps.accounts.models.profile import user_profile_picture_storage
+from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 from apps.esnaccounts import logger
 from apps.sections.models import Section, SectionMembership
+from apps.sections.models.services.section_plugins_reconciler import SectionPluginsReconciler
 
 if typing.TYPE_CHECKING:
     from allauth.socialaccount.models import SocialAccount, SocialLogin
@@ -45,8 +49,10 @@ class ESNAccountsProvider(CASProvider):
 
     MEMBER_ROLE = "Local.activeMember"
     EDITOR_ROLE = "Local.regularBoardMember"
+    ADMIN_ROLE = "Local.president"
 
     @classmethod
+    @transaction.atomic
     def update_section_membership(
         cls,
         *,
@@ -61,34 +67,47 @@ class ESNAccountsProvider(CASProvider):
         user_nationality = sa.extra_data.get("nationality")
         # national_section = sa.extra_data.get("country")
 
-        SectionMembership.objects.update_or_create(
+        section, _ = Section.objects.get_or_create(
+            name=section_name,
+            defaults=dict(
+                code=section_code,
+                # TODO: definitely not, user nationality != section assignment
+                country=user_nationality,
+                space_slug=slugify(section_name).lower().replace("-", ""),
+            ),
+        )
+
+        SectionPluginsReconciler.reconcile(section)
+
+        # role and activation only for first time
+        SectionMembership.objects.get_or_create(
             user=user,
-            section=Section.objects.get_or_create(
-                name=section_name,
-                defaults=dict(
-                    code=section_code,
-                    # TODO: definitely not, user nationality != section assignment
-                    country=user_nationality,
-                    space_slug=slugify(section_name).lower().replace("-", ""),
-                ),
-            )[0],
+            section=section,
             defaults=dict(
                 # we trust ESN Acccounts, so directly active membership
                 # TODO: should be as AccountsConfiguration attribute, so section can select
                 #  if they want to trust
                 state=SectionMembership.State.ACTIVE,
-                # TODO: check all possible for ESN Accounts roles
                 role=(
-                    SectionMembership.Role.EDITOR
-                    if cls.EDITOR_ROLE in roles
+                    SectionMembership.Role.ADMIN
+                    if cls.ADMIN_ROLE in roles
                     else (
-                        SectionMembership.Role.MEMBER
-                        if cls.MEMBER_ROLE in roles
-                        else SectionMembership.Role.INTERNATIONAL
+                        SectionMembership.Role.EDITOR
+                        if cls.EDITOR_ROLE in roles
+                        else (
+                            SectionMembership.Role.MEMBER
+                            if cls.MEMBER_ROLE in roles
+                            else SectionMembership.Role.INTERNATIONAL
+                        )
                     )
                 ),
             ),
         )
+
+        try:
+            phone_number = to_python(sa.extra_data.get("telephone"))
+        except TypeError:
+            phone_number = None
 
         user_profile, _ = UserProfile.objects.update_or_create(
             user=user,
@@ -99,6 +118,7 @@ class ESNAccountsProvider(CASProvider):
                     "F": "female",
                 }.get(sa.extra_data.get("gender")),
                 state=UserProfile.State.INCOMPLETE,
+                phone_number=phone_number,
             ),
         )
 
@@ -106,6 +126,8 @@ class ESNAccountsProvider(CASProvider):
             profile=user_profile,
             picture_url=sa.extra_data.get("picture"),
         )
+
+        synchronizer.revalidate_user_profile(user_profile)
 
     @staticmethod
     def sync_profile_picture(profile: UserProfile, picture_url: str | None):
@@ -115,7 +137,7 @@ class ESNAccountsProvider(CASProvider):
         picture_response = requests.get(
             picture_url,
             headers={
-                "User-Agent": "Buena Fiesta; @esnvutbrno/buena-fiesta",
+                "User-Agent": "Fiesta+; @esnvutbrno/fiesta-plus",
                 # 'From': 'youremail@domain.com',
             },
         )

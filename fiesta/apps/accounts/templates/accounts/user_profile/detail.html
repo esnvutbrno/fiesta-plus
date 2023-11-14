@@ -44,7 +44,7 @@
           </tr>
           <tr>
             <td class="font-semibold pr-12">Email:</td>
-            <td>{{ user.email_user }}</td>
+            <td>{{ user.primary_email }}</td>
           </tr>
           <tr>
             <td class="font-semibold pr-12">Gender:</td>
@@ -63,19 +63,13 @@
     <table class="border-separate gap-4">
       {% with profile=object.user.profile_or_none %}
         <tr>
-          <td class="font-semibold pr-12">Home University:</td>
-          <td>{{ profile.home_faculty.university }}</td>
+          <td class="font-semibold pr-12">University:</td>
+          <td>{{ profile.faculty.university }}</td>
         </tr>
         <tr>
-          <td class="font-semibold pr-12">Home Faculty:</td>
-          <td>{{ profile.home_faculty }}</td>
+          <td class="font-semibold pr-12">Faculty:</td>
+          <td>{{ profile.faculty }}</td>
         </tr>
-        {% if request.membership.is_international %}
-          <tr>
-            <td class="font-semibold pr-12">Quest Faculty:</td>
-            <td>{{ profile.guest_faculty }}</td>
-          </tr>
-        {% endif %}
       {% endwith %}
     </table>
   </div>
@@ -85,6 +79,15 @@
     <div class="overflow-hidden">
       <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
+          <tr>
+            <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
+            <td class="flex-grow">
+              {% if profile.phone_number %}
+                <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                   href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
+              {% endif %}
+            </td>
+          </tr>
           <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
             <td class="flex-grow">
@@ -108,11 +111,9 @@
           </tr>
           <tr>
             <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
-            <td class="flex-grow">{{ profile.whatsapp }}</td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Email:</td>
-            <td class="flex-grow">{{ user.email_user }}</td>
+            <td class="flex-grow">
+              {% if profile.whatsapp %}{{ profile.whatsapp }}{% endif %}
+            </td>
           </tr>
         {% endwith %}
       </table>

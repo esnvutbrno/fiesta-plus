@@ -6,6 +6,9 @@ services:
     volumes:
       - ./fiesta/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
+      - web_static_files:/usr/src/static
+      - web_media_files:/usr/src/media
+      - webpack_build:/usr/src/build
     build:
       args:
         - POETRY_EXPORT_ARGS=--dev
@@ -13,13 +16,19 @@ services:
   proxy:
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/templates/nginx.conf.template
+      - web_static_files:/var/static
+      - webpack_build:/var/build
 
   webpack:
+    environment:
+      PUBLIC_PATH: //webpack.${ROOT_DOMAIN}/static/
+      NODE_ENV: development
     volumes:
       - ./webpack/:/usr/src/app
       # since tailwind need to access templates and all the stuff to dynamically strip classes
       # see more in webpack/tailwind.config.js
       - ./fiesta/:/usr/src/fiesta
+      - webpack_build:/usr/src/build
 
   dockerproxy:
     environment:

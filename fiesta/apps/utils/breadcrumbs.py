@@ -21,7 +21,7 @@ class BreadcrumbItem(NamedTuple):
         return force_str(self.title)
 
 
-def push_breadcrumb_item(request: HttpRequest, item: str | BreadcrumbItem):
+def push_breadcrumb_item(request: HttpRequest, item: str | BreadcrumbItem | Callable[[], BreadcrumbItem]):
     """
     Adds breadcrumb item to current request context.
     """
@@ -59,7 +59,10 @@ def with_breadcrumb(title: str, *, url_name: str = None):
     return inner
 
 
-def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = None):
+USE_DEFAULT_PREFIX = object()
+
+
+def with_object_breadcrumb(prefix: str | None = USE_DEFAULT_PREFIX, getter: Callable[[Model], str] = None):
     """
     Class decorator to register breadcrumbs for detail views.
     Used like:
@@ -69,16 +72,49 @@ def with_object_breadcrumb(prefix: str = None, getter: Callable[[Model], str] = 
         ...
     """
 
-    @wraps(with_breadcrumb)
+    @wraps(with_object_breadcrumb)
     def inner(view_klass: type[View]):
         old_dispatch = view_klass.dispatch
 
         @wraps(view_klass.dispatch)
         def dispatch(self, request, *args, **kwargs):
-            lazy_title = lambda: f"{prefix or _('Detail')}: {(getter or str)(self.object)}"
+            lazy_title = lambda: (
+                f"{(_('Detail') + ': ') if prefix is USE_DEFAULT_PREFIX else (prefix or '')}"
+                f"{(getter or str)(self.object)}"
+            )
             push_breadcrumb_item(
                 request=request,
                 item=lazy(lazy_title, str),
+            )
+            return old_dispatch(self, *args, request=request, **kwargs)
+
+        view_klass.dispatch = dispatch
+        return view_klass
+
+    return inner
+
+
+def with_callable_breadcrumb(getter: Callable[[View], BreadcrumbItem]):
+    """
+    Used like:
+
+    @with_callable_breadcrumb(lambda view: BreadcrumbItem(...))
+    class MyDetailView(...):
+        ...
+    """
+
+    @wraps(with_callable_breadcrumb)
+    def inner(view_klass: type[View]):
+        old_dispatch = view_klass.dispatch
+
+        @wraps(view_klass.dispatch)
+        def dispatch(self, request, *args, **kwargs):
+            def lazy_getter():
+                return getter(self)
+
+            push_breadcrumb_item(
+                request=request,
+                item=lazy_getter,
             )
             return old_dispatch(self, *args, request=request, **kwargs)
 

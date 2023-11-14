@@ -27,13 +27,13 @@ class FiestaExportMixin(ExportMixin):
 
 
 class FiestaSingleTableMixin(HtmxTableMixin, SingleTableMixin, FiestaExportMixin):
-    paginate_by = 20
+    paginate_by = 15
     paginator_class = LazyPaginator
     template_name = "fiestatables/page.html"
 
 
 class FiestaMultiTableMixin(HtmxTableMixin, MultiTableMixin, FiestaExportMixin):
-    paginate_by = 20
+    paginate_by = 15
     paginator_class = LazyPaginator
     template_name = "fiestatables/page.html"
 

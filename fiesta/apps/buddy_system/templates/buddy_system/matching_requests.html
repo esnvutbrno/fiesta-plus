@@ -43,7 +43,7 @@
             {% if configuration.display_issuer_faculty %}
               <tr>
                 <td>{% blocktrans %}faculty on exchange{% endblocktrans %}</td>
-                <td>{{ br.issuer.profile.guest_faculty }}</td>
+                <td>{{ br.issuer.profile.faculty }}</td>
               </tr>
             {% endif %}
             {% if configuration.display_issuer_country %}
@@ -74,7 +74,7 @@
             {% if configuration.display_request_creation_date %}
               <span class="badge badge-outline badge-sm">{{ br.created|date:'SHORT_DATETIME_FORMAT' }}</span>
             {% endif %}
-            <dialog class="modal-box backdrop:opacity-90 backdrop:bg-gray-900"
+            <dialog class="modal-box backdrop:opacity-90 backdrop:bg-gray-900 text-base-content"
                     x-ref="dialog">
               <form action="{% url "buddy_system:take-buddy-request" br.pk %}"
                     method="POST"
@@ -139,4 +139,10 @@
       </div>
     {% endfor %}
   </div>
+
+  {% if not object_list.exists %}
+    <div class="alert alert-info mx-auto max-w-xl text-lg py-8 px-8">
+      No waiting requests to match. Please check back later.
+    </div>
+  {% endif %}
 {% endblock %}

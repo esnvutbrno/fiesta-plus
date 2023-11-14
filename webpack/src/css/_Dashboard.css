@@ -8,7 +8,7 @@
         @apply stats w-full
     }
     .Dashboard__tile {
-        @apply stat shadow-xl
+        @apply stat shadow
     }
     .Dashboard__tile--dark {
         @apply text-white dark:text-gray-900

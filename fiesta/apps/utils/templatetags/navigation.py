@@ -3,7 +3,9 @@ from __future__ import annotations
 import typing
 
 from django import template
+from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.urls import reverse
+from django.utils.http import urlencode
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
@@ -49,9 +51,24 @@ def get_home_url(context):
     try:
         request: HttpRequest = context["request"]
 
-        if request.in_space_of_section:
-            url = request.in_space_of_section.section_home_url(request.membership)
     except KeyError:
-        ...
+        return url
 
-    return url
+    if request.in_space_of_section:
+        url = request.in_space_of_section.section_home_url(request.membership)
+
+    if url:
+        return url
+
+    return (
+        reverse("account_login")
+        + "?"
+        + (
+            urlencode(
+                {
+                    **request.GET,
+                    REDIRECT_FIELD_NAME: request.GET.get(REDIRECT_FIELD_NAME) or request.path,
+                }
+            )
+        )
+    )

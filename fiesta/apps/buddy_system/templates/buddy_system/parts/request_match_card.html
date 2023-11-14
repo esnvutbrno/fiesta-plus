@@ -39,9 +39,7 @@
       </div>
       <div class="chat-bubble">{{ br.note }}</div>
       <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">
-        {% for interest in br.issuer.profile.get_interests_display %}
-          <span class="mr-2 badge badge-outline">{{ interest }}</span>
-        {% endfor %}
+        {% for interest in br.get_interests_display %}<span class="mr-2 badge badge-outline">{{ interest }}</span>{% endfor %}
       </div>
     </div>
 
@@ -147,8 +145,8 @@
             Instagram
           </a>
         {% endif %}
-        {% if connect_with.email %}
-          <a href="mailto:{{ connect_with.email }}"
+        {% if connect_with.primary_email %}
+          <a href="mailto:{{ connect_with.primary_email }}"
              rel="nofollow,noreferer,noopener"
              target="_blank"
              class="btn btn-primary inline-flex items-center gap-x-2">

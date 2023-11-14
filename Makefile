@@ -97,7 +97,7 @@ up: DC_CMD = up
 up: dc ## Runs all needed docker containers
 
 produp: ## Runs fiesta in (local)production mode.
-	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
+	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up
 
 psql: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta"
 psql: dc  ## Runs psql shell in database
@@ -147,14 +147,14 @@ setup-elastic: ## Starts elasticsearch standalone an generates keystore and pass
 		sh -c "elasticsearch-keystore create auto"
 	sudo chown -v 1000 ./conf/elastic/elasticsearch.keystore
 
-	docker container stop buena-fiesta-elastic-setup-run | true
-	docker container rm buena-fiesta-elastic-setup-run | true
+	docker container stop fiesta-plus-elastic-setup-run | true
+	docker container rm fiesta-plus-elastic-setup-run | true
 
-	$(DC) run -d --name buena-fiesta-elastic-setup-run --rm elastic
-	docker container exec -it buena-fiesta-elastic-setup-run bash -c \
+	$(DC) run -d --name fiesta-plus-elastic-setup-run --rm elastic
+	docker container exec -it fiesta-plus-elastic-setup-run bash -c \
 	'sleep 25 && elasticsearch-setup-passwords interactive'
-	docker stop buena-fiesta-elastic-setup-run
-	docker rm buena-fiesta-elastic-setup-run
+	docker stop fiesta-plus-elastic-setup-run
+	docker rm fiesta-plus-elastic-setup-run
 
 # chrome://settings/certificates
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.

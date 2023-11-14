@@ -7,8 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.plugins.utils import all_plugin_apps
 
-admin.site.site_title = _("Buena Fiesta admin")
-admin.site.site_header = _("Buena Fiesta")
+admin.site.site_title = _("Fiesta+ administration")
+admin.site.site_header = _("Fiesta+")
 admin.site.index_title = _("Site administration")
 
 handler403 = "fiesta.views.handler_403"

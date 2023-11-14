@@ -1,5 +1,5 @@
 from __future__ import annotations
 
-from .index import EsncardsIndexView
+from .index import EsncardIndexView
 
-__all__ = ["EsncardsIndexView"]
+__all__ = ["EsncardIndexView"]

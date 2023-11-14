@@ -60,7 +60,7 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
 
     class State(models.TextChoices):
         UNCONFIRMED = "inactive", _("Unconfirmed")
-        ACTIVE = "active", _("Confirmed")
+        ACTIVE = "active", _("Active")
         # TODO: rename BANNED and add "PAUSED"
         BANNED = "suspended", _("Suspended")
 
@@ -98,31 +98,31 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
     @hook(AFTER_CREATE)
     @hook(AFTER_SAVE, when_any=["role", "state"], has_changed=True)
     def update_user_profile_state(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
-        # revalidate user profile on change of membership --> e.g. if membership is revoked,
+        # revalidate user profile on change of membership --> e.g., if membership is revoked,
         # the user profile is not validated by that section configuration anymore
 
-        UserProfileStateSynchronizer.on_membership_update(membership=self)
+        synchronizer.on_membership_update(membership=self)
 
     @property
     def is_international(self):
-        """Is international student in this specific membership."""
+        """Is an international student in this specific membership."""
         return SectionMembership.Role(self.role).is_international
 
     @property
     def is_local(self):
-        """Is local student in this membership == not international."""
+        """Is a local student in this membership == not an international."""
         return not SectionMembership.Role(self.role).is_international
 
     @property
     def is_privileged(self):
-        """Is privileged == has some higher (editor/admin) perms for section."""
+        """Is privileged == has some higher (editor/admin) perms for a section."""
         return SectionMembership.Role(self.role).is_privileged
 
     @property
     def is_section_admin(self):
-        """Is privileged == has some higher perms for section."""
+        """Is privileged == has some higher perms for a section."""
         return SectionMembership.Role(self.role) == SectionMembership.Role.ADMIN
 
 

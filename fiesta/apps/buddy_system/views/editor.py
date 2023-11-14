@@ -11,6 +11,7 @@ from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, TemplateColumn, tables
 from django_tables2.utils import Accessor
 
+from apps.accounts.models import User, UserProfile
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
@@ -42,7 +43,7 @@ class RequestFilter(BaseFilterSet):
     matcher_faculty = ModelChoiceFilter(
         queryset=related_faculties,
         label=_("Faculty of matcher"),
-        field_name="match__matcher__profile__home_faculty",
+        field_name="match__matcher__profile__faculty",
     )
 
     def filter_search(self, queryset, name, value):
@@ -61,14 +62,15 @@ class RequestFilter(BaseFilterSet):
 
 
 class BuddyRequestsTable(tables.Table):
-    issuer__full_name_official = Column(
+    issuer_name = Column(
+        accessor="issuer.full_name_official",
         order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
         linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
         verbose_name=_("Issuer"),
     )
 
-    issuer__profile__picture = ImageColumn(verbose_name="🧑")
+    issuer_picture = ImageColumn(accessor="issuer.profile.picture", verbose_name="🧑")
 
     matcher_name = Column(
         accessor="match.matcher.full_name_official",
@@ -77,6 +79,7 @@ class BuddyRequestsTable(tables.Table):
             "match__matcher__first_name",
             "match__matcher__username",
         ),
+        linkify=("sections:user-detail", {"pk": Accessor("match.matcher.pk")}),
     )
     matcher_email = Column(
         accessor="match.matcher.email",
@@ -106,8 +109,8 @@ class BuddyRequestsTable(tables.Table):
         # TODO: dynamic by section preferences
         fields = ("state",)
         sequence = (
-            "issuer__full_name_official",
-            "issuer__profile__picture",
+            "issuer_name",
+            "issuer_picture",
             "state",
             "matcher_name",
             "matcher_picture",
@@ -174,23 +177,33 @@ class QuickBuddyMatchView(
 
     def get_initial(self):
         try:
+            matcher: User = self.get_object().match.matcher
+            profile: UserProfile = matcher.profile_or_none
             return {
-                "matcher": self.get_object().match.matcher,
+                "matcher": matcher,
+                # SectionPluginsValidator ensures that faculty is required if BuddySystem is enabled
+                "matcher_faculty": profile.faculty if profile else None,
             }
         except BuddyRequestMatch.DoesNotExist:
             return {}
 
     @transaction.atomic
     def form_valid(self, form):
-        br: BuddyRequest = self.get_object()
+        br: BuddyRequest = form.instance
 
-        if br.match:
-            # could be already matched by someone else
-            br.match.delete()
+        try:
+            if br.match:
+                # could be already matched by someone else
+                br.match.delete()
+        except BuddyRequestMatch.DoesNotExist:
+            pass
+
+        matcher: User = form.cleaned_data.get("matcher")
 
         match = BuddyRequestMatch(
             request=br,
-            matcher=form.cleaned_data.get("matcher"),
+            matcher=matcher,
+            matcher_faculty=matcher.profile_or_none.faculty,
         )
 
         match.save()

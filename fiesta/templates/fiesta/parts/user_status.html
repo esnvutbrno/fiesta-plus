@@ -9,14 +9,14 @@
     <span class="sr-only">Open user menu</span>
     {% get_user_picture request.user as picture %}
     {% if picture %}
-      <div class="w-10 h-10 rounded-full bg-cover bg-center"
+      <div class="w-10 h-10 rounded-full bg-cover bg-center {% get_user_status_ring_css_for_user request.membership %}"
            style='background-image: url("{{ picture.url }}")'></div>
     {% else %}
-      <span class="w-10 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center group"
+      <span class="w-10 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center {% get_user_status_ring_css_for_user request.membership %}"
             style="background-color: {{ request.user.id|get_color_by_text }}">{{ request.user.first_name|first }}{{ request.user.last_name|first }}</span>
     {% endif %}
   </button>
-  <div class="z-30 my-4 text-base list-none bg-base-100 rounded divide-y divide-base-200 shadow w-40 absolute top-full -right-1/2 hidden"
+  <div class="z-30 my-4 text-base list-none bg-base-100 rounded divide-y divide-base-200 shadow w-40 absolute top-full hidden"
        :class="{hidden: !user}">
     <a class="block py-2 px-4 text-base-content hover:bg-base-200"
        href="{% url "accounts:my-profile" %}">
@@ -49,7 +49,7 @@
       {#           class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100">Earnings</a>#}
       {#      </li>#}
       <li>
-        <a href="{% url 'account_logout' %}"
+        <a href="{% url 'account_logout' %}?{{ redirect_field_name }}={{ redirect_field_value }}"
            hx-post="{% url 'account_logout' %}"
            {% if redirect_field_value %}hx-vals='{"{{ redirect_field_name }}": "{{ redirect_field_value }}"}'{% endif %}
            class="py-2 px-4 text-sm text-base-content flex flex-row justify-between items-center hover:bg-base-200">

@@ -1,24 +1,25 @@
-
-# Buena Fiesta
+![Fiesta+](https://repository-images.githubusercontent.com/449662711/58004411-af28-4aea-ae52-7f1ae9f0b7b8)
 
 ![python](https://img.shields.io/badge/python-3.11-ffd343?style=flat)
 ![django](https://img.shields.io/badge/Django-4.2-0C4B33?style=flat)
-![kubernetes](https://img.shields.io/badge/Kubernetes-1.26-316ce6?style=flat)
+![kubernetes](https://img.shields.io/badge/Kubernetes-1.28.2-316ce6?style=flat)
 ![tailwind css](https://img.shields.io/badge/Tailwind_CSS-3.3-38BDF8?style=flat)
 ![nginx](https://img.shields.io/badge/Nginx-1.25-009639?style=flat)
 
-![last commit](https://img.shields.io/github/last-commit/esnvutbrno/buena-fiesta)
-![cluster deploy](https://github.com/esnvutbrno/buena-fiesta/actions/workflows/deploy.yml/badge.svg)
-![licence](https://img.shields.io/github/license/esnvutbrno/buena-fiesta)
+![last commit](https://img.shields.io/github/last-commit/esnvutbrno/fiesta-plus)
+![cluster deploy](https://github.com/esnvutbrno/fiesta-plus/actions/workflows/deploy.yml/badge.svg)
+![licence](https://img.shields.io/github/license/esnvutbrno/fiesta-plus)
 
-_Buena means spanish great, so Fiesta is dead, long live Buena Fiesta!_
+# Fiesta+
+
+_Fiesta is dead, long live Fiesta+!_
 
 New generation of social network for helping international students - used by sections of Erasmus Student Network. 💜
 By volunteers, for volunteers.
 
 ## Development
 
-See the [Development wiki page](https://github.com/esnvutbrno/buena-fiesta/wiki/Development#local-development) for more information.
+See the [Development wiki page](https://github.com/esnvutbrno/fiesta-plus/wiki/Development#local-development) for more information.
 
 ## Contributing
 

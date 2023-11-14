@@ -1,13 +1,14 @@
 {% load navigation %}
 {% load static %}
-<a href="{% get_home_url %}" class="flex text-base-content">
-  <svg class="mr-3 h-10" width="48" height="60" viewBox="0 0 48 60">
-    <use href="{% static "logo.svg" %}#logo"></use>
-  </svg>
-  {% if not request.in_space_of_section %}
-    <span class="self-center text-lg font-semibold whitespace-nowrap">Buena Fiesta</span>
-  {% endif %}
+<a href="{% get_home_url %}"
+   class="flex flex-row items-baseline text-base-content group">
+  <span class=" inline-block h-full w-[1lh] ">{% include "single-toucan.svg" %}</span>
   {% if request.in_space_of_section %}
-    <span class="self-center text-lg font-semibold whitespace-nowrap ml-3">{{ request.in_space_of_section }}</span>
+    <span class="text-3xl font-bold whitespace-nowrap ml-2">{{ request.in_space_of_section }}</span>
+  {% else %}
+    <span class="text-3xl font-bold ml-2">Fiesta</span>
   {% endif %}
+  <span class="inline-block h-full w-[1lh] transform transition-transform origin-[50%_33.33%] duration-500 ease-in-out group-hover:rotate-[270deg]">
+    {% include "single-plus.svg" %}
+  </span>
 </a>

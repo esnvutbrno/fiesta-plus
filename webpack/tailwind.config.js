@@ -10,9 +10,15 @@ module.exports = {
             pattern: /Forms__.+/,
         },
         {
-            // TODO: till the https://github.com/esnvutbrno/buena-fiesta/issues/188 is fixed
+            // TODO: till the https://github.com/esnvutbrno/fiesta-plus/issues/188 is fixed
             pattern: /(btn-.+)|(badge-.+)/,
             variants: ["checked"],
+        },
+        {
+            pattern: /(SocialButton)/,
+        },
+        {
+            pattern: /ring|ring-primary|ring-secondary|ring-gray-400/,
         },
     ],
     theme: {

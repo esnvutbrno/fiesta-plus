@@ -156,14 +156,12 @@ def process_user_row(row, i):
         section=section,
         user=user,
         role=(
-            highest_role := (
-                SectionMembership.Role.ADMIN
-                if "admin" in roles
-                else (
-                    SectionMembership.Role.EDITOR
-                    if "editor" in roles
-                    else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
-                )
+            SectionMembership.Role.ADMIN
+            if "admin" in roles
+            else (
+                SectionMembership.Role.EDITOR
+                if "editor" in roles
+                else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
             )
         ),
         # TODO: state
@@ -185,14 +183,13 @@ def process_user_row(row, i):
             defaults=dict(name=faculty_name),
         )
 
-    is_international = highest_role == SectionMembership.Role.INTERNATIONAL
+    # is_international = highest_role == SectionMembership.Role.INTERNATIONAL
     user_profile, _ = UserProfile.objects.update_or_create(
         user=user,
         defaults=dict(
             nationality=Country(country_code),
-            home_university=university if not faculty else None,
-            home_faculty=None if is_international else faculty,
-            guest_faculty=faculty if is_international else None,
+            university=university if not faculty else None,
+            faculty=faculty,
         ),
     )
 

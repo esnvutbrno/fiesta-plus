@@ -13,9 +13,16 @@ from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import UserPassesMembershipTestMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, HtmxFormMixin, CreateView):
+class ApplicationCreateView(
+    UserPassesMembershipTestMixin,
+    EnsureInSectionSpaceViewMixin,
+    SuccessMessageMixin,
+    HtmxFormMixin,
+    CreateView,
+):
     request: HttpRequest
     object: ESNcardApplication
 
@@ -25,21 +32,15 @@ class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, 
     permission_denied_message = _("An ESNcard application for current user for this section already exists.")
 
     def test_membership(self, membership: SectionMembership) -> bool:
-        return not membership.user.esncard_applications.filter(section=membership.section).exists()
+        print(membership.user.esncard_applications.filter(section=membership.section))
+        return (
+            super().test_membership(membership)
+            and not membership.user.esncard_applications.filter(section=membership.section).exists()
+        )
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile_or_none
-        university = (
-            (
-                profile.guest_faculty.university
-                if profile.guest_faculty
-                else profile.home_faculty.university
-                if profile.home_faculty
-                else profile.home_university
-            )
-            if profile
-            else None
-        )
+        university = (profile.faculty.university if profile.faculty else profile.university) if profile else None
 
         return dict(
             user=self.request.user,

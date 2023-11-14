@@ -5,9 +5,10 @@ metadata:
   labels:
     {{- include "fiesta.labels" . | nindent 4 }}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
     cert-manager.io/issuer: {{ .Values.ingress.certIssuerName | quote }}
+    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
 spec:
+  ingressClassName: nginx
   tls:
     - hosts:
         - {{ .Values.ingress.host | quote }}
@@ -23,7 +24,7 @@ spec:
               service:
                 name: web
                 port:
-                  number: 80
+                  name: http
     - host: "{{ .Values.ingress.host }}"
       http:
         paths:
@@ -33,4 +34,4 @@ spec:
               service:
                 name: web
                 port:
-                  number: 80
+                  name: http

@@ -88,3 +88,14 @@ def request_state_to_css_variant(state: BuddyRequest.State):
         BuddyRequest.State.MATCHED: "success",
         BuddyRequest.State.CANCELLED: "danger",
     }.get(state)
+
+
+@register.simple_tag(takes_context=True)
+def get_buddy_system_configuration(context):
+    request: HttpRequest = context["request"]
+
+    buddy_system_plugin: Plugin = request.in_space_of_section.plugins.get(
+        app_label=all_plugins_mapped_to_class().get(BuddySystemConfig).label
+    )
+
+    return buddy_system_plugin.configuration

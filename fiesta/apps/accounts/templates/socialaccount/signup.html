@@ -15,7 +15,7 @@
 
 {% block main_container %}
   <div class="max-w-3xl mx-auto my-auto pb-4 w-full flex flex-col items-center">
-    <div class="card card-bordered shadow-xl max-w-lg">
+    <div class="card card-bordered shadow max-w-lg">
       <form method="POST"
             action="{% url 'socialaccount_signup' %}"
             class="card-body space-y-2 {{ form|get_form_classes }}">

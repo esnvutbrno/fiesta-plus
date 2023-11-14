@@ -76,3 +76,14 @@ def get_color_by_text(name: typing.Any) -> str:
         b += 30
 
     return f"rgb({r}, {g}, {b})"
+
+
+@register.simple_tag(takes_context=True)
+def build_absolute_uri(context, location=""):
+    try:
+        request = context["request"]
+    except KeyError:
+        # best effort? probably rendered also on error pages
+        return location
+
+    return request.build_absolute_uri(location)

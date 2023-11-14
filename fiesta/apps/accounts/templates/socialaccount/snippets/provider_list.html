@@ -1,28 +1,38 @@
 {% load socialaccount %}
-{% get_providers as socialaccount_providers %}
-{% for provider in socialaccount_providers %}
-  {% if provider.id == "openid" %}
-    {% for brand in provider.get_brands %}
-      {# POST because security #}
-      <form method="POST"
-            action="{% provider_login_url provider.id openid=brand.openid_url process=process %}"
-            class="btn btn-sm btn-wide btn-secondary p-0 flex">
-        {% csrf_token %}
-        <button class="w-full h-full"
-                name="submit"
-                title="{{ brand.name }}"
-                type="submit">{{ brand.name }}</button>
-      </form>
-    {% endfor %}
-  {% endif %}
-  {# POST because security #}
-  <form method="POST"
-        action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-        class="btn btn-wide btn-secondary p-0 flex">
-    {% csrf_token %}
-    <button class="w-full h-full"
-            title="{{ provider.name }}"
-            name="submit"
-            type="submit">{{ provider.name }}</button>
-  </form>
-{% endfor %}
+{% load social_accounts %}
+{% get_all_available_social_providers as socialaccount_providers %}
+
+<div class="flex flex-row gap-2 justify-between flex-wrap">
+  {% for provider in socialaccount_providers %}
+    {#  {% if provider.id == "openid" %}#}
+    {#    {% for brand in provider.get_brands %}#}
+    {# POST because security #}
+    {#      <form method="POST"#}
+    {#            action="{% provider_login_url provider.id openid=brand.openid_url process=process %}"#}
+    {#            class="btn btn-sm btn-wide btn-secondary p-0 flex-grow">#}
+    {#        {% csrf_token %}#}
+    {#        <button class="w-full h-full"#}
+    {#                name="submit"#}
+    {#                title="{{ brand.name }}"#}
+    {#                type="submit">{{ brand.name }}</button>#}
+    {#      </form>#}
+    {#    {% endfor %}#}
+    {#  {% endif %}#}
+    {# POST because security #}
+    <form method="POST"
+          action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
+          class="SocialButton__form SocialButton__form--{{ provider.id }}">
+      {% csrf_token %}
+      <button class="SocialButton SocialButton--{{ provider.id }}"
+              title="{{ provider.name }}"
+              name="submit"
+              type="submit">
+        {% with "socialaccount/snippets/icons/"|add:provider.id|add:".html" as tmpl %}
+          {% include tmpl %}
+        {% endwith %}
+
+        {{ provider.name }}
+      </button>
+    </form>
+  {% endfor %}
+</div>

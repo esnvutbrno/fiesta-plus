@@ -2,13 +2,13 @@ from __future__ import annotations
 
 from django.urls import path
 
-from apps.public.views import PublicHomepageView, PublicTeamView
+from apps.public.views import PublicTeamView, RootPageView
 
 app_name = "public"
 urlpatterns = [
     path(
         "",
-        PublicHomepageView.as_view(),
+        RootPageView.as_view(),
         name="home",
     ),
     path(
