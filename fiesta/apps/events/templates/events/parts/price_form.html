@@ -1,0 +1,6 @@
+<form hx-post="{% url "events:price" event.pk %}"
+      id="price-form"
+      hx-swap="outerHTML">
+  {% csrf_token %}
+  {{ form }}
+</form>
