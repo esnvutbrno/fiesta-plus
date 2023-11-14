@@ -155,19 +155,30 @@ jobs:
       - deploy
     steps:
       - name: Announce deploy to Telegram
-        uses: enflo/curl-action@master
-        with:
-          curl: >
-            -X POST
-            -H 'Content-Type: application/json'
-            -d '{ \
-              "chat_id": "${{ secrets.ANNOUNCE_TELEGRAM_TO }}",
-              "disable_notification": true,
-              "text": "
-                ${{ github.actor }} deployed: \\n
-                environment: production on https://fiesta.plus \\n
-                message: ${{ github.event.commits[0].message }} \\n
-                changes: https://github.com/${{ github.repository }}/commit/${{github.sha}} \\n
-              "
-            }'
-            https://api.telegram.org/bot${{ secrets.ANNOUNCE_TELEGRAM_TOKEN }}/sendMessage
+        run: |
+          msg_text='${{ github.actor }} deployed: \n environment: production on https://fiesta.plus \n commit: ${{ github.event.commits[0].message }} \n changes: https://github.com/${{ github.repository }}/commit/${{github.sha}}'
+          curl -s \
+          -X POST \
+          'https://api.telegram.org/bot${{ secrets.ANNOUNCE_TELEGRAM_TOKEN }}/sendMessage' \
+          --data-urlencode "chat_id=${{ secrets.ANNOUNCE_TELEGRAM_CHAT }}" \
+          --data-urlencode "text=${msg_text}" \
+          --data-urlencode "reply_to_message_id=${{ secrets.ANNOUNCE_TELEGRAM_TOPIC }}" \
+          --data-urlencode "disable_notification=true"
+
+#      - name: Announce deploy to Telegram
+#        uses: enflo/curl-action@master
+#        with:
+#          curl: >
+#            -X POST
+#            -H 'Content-Type: application/json'
+#            -d '{ \
+#              "chat_id": "${{ secrets.ANNOUNCE_TELEGRAM_TO }}",
+#              "disable_notification": true,
+#              "text": "
+#                ${{ github.actor }} deployed: \n
+#                environment: production on https://fiesta.plus \\n
+#                message: ${{ github.event.commits[0].message }} \\n
+#                changes: https://github.com/${{ github.repository }}/commit/${{github.sha}} \\n
+#              "
+#            }'
+#            https://api.telegram.org/bot${{ secrets.ANNOUNCE_TELEGRAM_TOKEN }}/sendMessage
