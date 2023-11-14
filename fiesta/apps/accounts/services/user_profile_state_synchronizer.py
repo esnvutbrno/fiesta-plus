@@ -82,15 +82,8 @@ class UserProfileStateSynchronizer:
     @_if_enabled
     def on_accounts_configuration_update(self, conf: SectionsConfiguration):
         """
-        After change of Accounts configuration, checks all COMPLETED profiles if they're fine for new configuration.
-        If not, profile is set to UNCOMPLETED.
-        Implements only change to more strict conditions, which is O(n).
-
-        Implementation with less strict conditions leads to O(n^2).
+        After change of Accounts configuration, mark all related user profiles for revalidation.
         """
-        if not self.ENABLED:
-            return
-
         # for each connected user profile enforce revalidation
         UserProfile.objects.filter(
             user__memberships__section__plugins__configuration=conf,
@@ -99,8 +92,6 @@ class UserProfileStateSynchronizer:
 
     @_if_enabled
     def on_membership_update(self, membership: SectionMembership):
-        if not self.ENABLED:
-            return None
         try:
             # membership could be created for user without profile (usually the first one membership)
             profile: UserProfile = membership.user.profile
