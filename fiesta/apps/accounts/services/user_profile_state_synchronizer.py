@@ -77,7 +77,8 @@ class UserProfileStateSynchronizer:
             final_state = UserProfile.State.INCOMPLETE
 
         profile.state = final_state
-        profile.save(update_fields=["state"], skip_hooks=True)
+        profile.enforce_revalidation = False
+        profile.save(update_fields=["state", "enforce_revalidation"], skip_hooks=True)
 
     @_if_enabled
     def on_accounts_configuration_update(self, conf: SectionsConfiguration):

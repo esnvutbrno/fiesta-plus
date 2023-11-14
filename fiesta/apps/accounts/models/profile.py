@@ -167,6 +167,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     def on_save(self):
         from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
+        # self.user should be saved before the UserProfile form
         synchronizer.revalidate_user_profile(profile=self)
 
     def __str__(self):

@@ -138,13 +138,12 @@ class UserProfileForm(BaseModelForm):
                 self.initial[f] = getattr(user, f, None)
 
     def save(self, commit=True):
-        instance: UserProfile = super().save(commit=commit)
-
+        # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again
         for f in USER_FIELDS:
-            setattr(instance.user, f, self.cleaned_data.get(f))
-        instance.user.save(update_fields=USER_FIELDS.keys())
+            setattr(self.instance.user, f, self.cleaned_data.get(f))
+        self.instance.user.save(update_fields=USER_FIELDS.keys())
 
-        return instance
+        return super().save(commit=commit)
 
 
 class UserProfileFinishForm(UserProfileForm):
