@@ -37,7 +37,7 @@ RUN ["yarn", "build"]
 #
 
 # venv builder
-FROM python:3.11.3-alpine3.17 as web-venv-builder
+FROM python:3.12.0-alpine3.18 as web-venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -59,7 +59,7 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
 
 # base runtime image
-FROM python:3.11.3-alpine3.17 as web-base
+FROM python:3.12.0-alpine3.18 as web-base
 
 COPY --from=web-venv-builder /venv /venv
 
