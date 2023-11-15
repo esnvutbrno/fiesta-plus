@@ -8,7 +8,7 @@ from django_filters import CharFilter, ChoiceFilter
 from django_tables2 import Column
 
 from apps.esncards.models import ESNcardApplication
-from apps.fiestatables.columns import ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
+from apps.fiestatables.columns import AvatarColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.plugins.middleware.plugin import HttpRequest
@@ -47,7 +47,7 @@ class ESNcardApplicationsTable(tables.Table):
         ),
         attrs=dict(a={"hx-disable": True}),  # TODO: do it properly
     )
-    holder_photo = ImageColumn(verbose_name=_("Photo"))
+    holder_photo = AvatarColumn(verbose_name=_("Photo"))
     birth_date = tables.DateColumn(verbose_name=_("Birth date"))
     nationality = Column(verbose_name=_("Nationality"))
     created = NaturalDatetimeColumn()

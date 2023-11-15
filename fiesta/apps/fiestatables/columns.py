@@ -10,12 +10,27 @@ from django_countries.fields import Country
 from django_tables2.columns import BoundColumn
 
 
+# TODO: probably not needed anymore
 class ImageColumn(tables.Column):
     def render(self, value: FieldFile):
         return format_html('<img src="{}" class="h-12" />', value.url)
 
     def value(self, record, value):
         return value.url
+
+
+class AvatarColumn(ImageColumn):
+    def render(self, value: FieldFile):
+        return format_html(
+            """
+<div class="avatar">
+    <div class="w-12 rounded-xl">
+        <img src="{}" />
+    </div>
+</div>
+""",
+            value.url,
+        )
 
 
 class CountryColumn(tables.Column):

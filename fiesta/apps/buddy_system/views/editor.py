@@ -15,7 +15,7 @@ from apps.accounts.models import User, UserProfile
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormMixin
-from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
+from apps.fiestatables.columns import AvatarColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
@@ -70,7 +70,7 @@ class BuddyRequestsTable(tables.Table):
         verbose_name=_("Issuer"),
     )
 
-    issuer_picture = ImageColumn(accessor="issuer.profile.picture", verbose_name="🧑")
+    issuer_picture = AvatarColumn(accessor="issuer.profile.picture", verbose_name="🧑")
 
     matcher_name = Column(
         accessor="match.matcher.full_name_official",
@@ -86,7 +86,7 @@ class BuddyRequestsTable(tables.Table):
         visible=False,
     )
 
-    matcher_picture = ImageColumn(
+    matcher_picture = AvatarColumn(
         accessor="match.matcher.profile.picture",
         verbose_name=_("Matcher"),
     )
