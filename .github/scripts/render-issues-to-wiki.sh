@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo $1 >&2
+cat $1 | jq "." >&2
 # takes a json file as input and renders the issues to the wiki
 
 declare TEMPLATE
