@@ -7,7 +7,7 @@ cat $1 | jq "." >&2
 declare TEMPLATE
 TEMPLATE="[#\(.number)](\(.resourcePath)) \(.titleHTML)"
 
-echo "# Issues"
+#echo "# Issues"
 
 echo
 echo "## Open 🔥"
