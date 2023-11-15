@@ -45,8 +45,14 @@
 
 
 /* TODO: refactor pagination to btn-group */
+.table-container .pagination-container {
+    @apply w-full flex flex-row justify-center items-center;
+}
+
 .table-container ul.pagination {
-    @apply inline-flex -space-x-px mx-auto py-4 relative;
+    @apply
+        inline-flex -space-x-px py-4 relative
+    ;
 }
 
 .table-container ul.pagination li a {
