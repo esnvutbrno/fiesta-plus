@@ -67,7 +67,7 @@ class ESNAccountsProvider(CASProvider):
         user_nationality = sa.extra_data.get("nationality")
         # national_section = sa.extra_data.get("country")
 
-        section, _ = Section.objects.get_or_create(
+        section, is_section_new = Section.objects.get_or_create(
             name=section_name,
             defaults=dict(
                 code=section_code,
@@ -78,6 +78,9 @@ class ESNAccountsProvider(CASProvider):
         )
 
         SectionPluginsReconciler.reconcile(section)
+
+        already_has_admin_user = section.memberships.filter(role=SectionMembership.Role.ADMIN).exists()
+        promote_editor_to_admin = not already_has_admin_user or is_section_new
 
         # role and activation only for first time
         SectionMembership.objects.get_or_create(
@@ -90,7 +93,7 @@ class ESNAccountsProvider(CASProvider):
                 state=SectionMembership.State.ACTIVE,
                 role=(
                     SectionMembership.Role.ADMIN
-                    if cls.ADMIN_ROLE in roles
+                    if cls.ADMIN_ROLE in roles or (promote_editor_to_admin and cls.EDITOR_ROLE in roles)
                     else (
                         SectionMembership.Role.EDITOR
                         if cls.EDITOR_ROLE in roles
