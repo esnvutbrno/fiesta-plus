@@ -5,7 +5,7 @@
 .table-container {
     @apply
         /*overflow-hidden*/
-        overflow-x-scroll
+        overflow-x-auto
         shadow sm:rounded-lg
         /*flex flex-col items-center*/
     ;

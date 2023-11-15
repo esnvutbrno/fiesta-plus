@@ -75,6 +75,11 @@
         {% endblock breadcrumbs_container %}
       </div>
 
+      {% if request.plugin and request.user.is_authenticated %}
+
+        {% include "plugins/feature_state_ribbon.html" %}
+      {% endif %}
+
       {% block main_container %}
         <div class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto mb-auto w-full">
 

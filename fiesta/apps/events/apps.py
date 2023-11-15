@@ -14,5 +14,7 @@ class EventsConfig(BasePluginAppConfig):
 
     configuration_model = "events.EventsConfiguration"
 
+    feature_state = BasePluginAppConfig.FeatureState.EXPERIMENTAL
+
 
 __all__ = ["EventsConfig"]
