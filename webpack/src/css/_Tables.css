@@ -3,7 +3,12 @@
 @tailwind utilities;
 
 .table-container {
-    @apply overflow-hidden shadow sm:rounded-lg flex flex-col items-center;
+    @apply
+        /*overflow-hidden*/
+        overflow-x-visible
+        shadow sm:rounded-lg
+        /*flex flex-col items-center*/
+    ;
 }
 
 .table-container table {
