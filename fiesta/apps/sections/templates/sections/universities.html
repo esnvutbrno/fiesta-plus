@@ -23,25 +23,28 @@
 
 
 {% block main %}
-  {% for university, table in object_list|zip:tables %}
-
-    <div class="mb-4 flex flex-row justify-between items-center">
-      <h2 class="text-2xl font-bold flex flex-row items-center gap-x-4">
-        {{ university.name }}
-        <a href="{% url "sections:update-section-university" university.pk %}"
+  {% if object_list %}
+    {% for university, table in object_list|zip:tables %}
+      <div class="mb-4 flex flex-row justify-between items-center">
+        <h2 class="text-lg md:text-2xl font-bold flex flex-row items-center gap-x-4">
+          {{ university.name }}
+          <a href="{% url "sections:update-section-university" university.pk %}"
+             x-data="modal($el.href)"
+             x-bind="bind"
+             class="btn btn-xs sm:btn-sm btn-outline btn-warning">change</a>
+        </h2>
+        <a class="btn btn-success btn-xs sm:btn-sm btn-outline"
+           href="{% url "sections:new-section-faculty" university.pk %}"
            x-data="modal($el.href)"
-           x-bind="bind"
-           class="btn btn-xs sm:btn-sm btn-outline btn-warning">change</a>
-      </h2>
-      <a class="btn btn-success btn-xs sm:btn-sm btn-outline"
-         href="{% url "sections:new-section-faculty" university.pk %}"
-         x-data="modal($el.href)"
-         x-bind="bind">{% translate "Add faculty" %}</a>
-    </div>
+           x-bind="bind">{% translate "Add faculty" %}</a>
+      </div>
 
-    <div>{% render_table table %}</div>
-    <hr class="my-4">
-    {#    {% include "fiestatables/table.html" with table=table %}#}
-  {% endfor %}
+      <div>{% render_table table %}</div>
+      <hr class="my-4">
+      {#    {% include "fiestatables/table.html" with table=table %}#}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info">{% translate "No universities yet." %}</div>
+  {% endif %}
 
 {% endblock %}
