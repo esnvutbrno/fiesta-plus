@@ -12,12 +12,12 @@ echo "# Issues"
 echo
 echo "## Open 🔥"
 cat $1 | jq -c -r \
-  ".data.repository.issues.nodes[] | select(.state == \"OPEN\") | \"* $TEMPLATE\""
+  ".repository.issues.nodes[] | select(.state == \"OPEN\") | \"* $TEMPLATE\""
 
 echo
 echo "## Closed ✅"
 cat $1 | jq -c -r \
-  ".data.repository.issues.nodes[] | select(.state == \"CLOSED\") | \"* ~~$TEMPLATE~~\""
+  ".repository.issues.nodes[] | select(.state == \"CLOSED\") | \"* ~~$TEMPLATE~~\""
 
 echo
 echo "---"
