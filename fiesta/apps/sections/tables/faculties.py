@@ -9,20 +9,25 @@ from apps.universities.models import Faculty
 
 class UniversityFacultiesTable(tables.Table):
     name = Column(
+        verbose_name=_("Name"),
         linkify=("sections:update-section-faculty", {"pk": tables.Accessor("pk")}),
         # TODO: probably extract to constant in fiestatables
         attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
     )
-    abbr = Column()
+    abbr = Column(
+        verbose_name=_("Abbreviation"),
+    )
 
     members_count = Column(
+        verbose_name=_("Members"),
         linkify=lambda record: reverse("sections:section-members") + f"?user__profile__faculty={record.pk}",
     )
     internationals_count = Column(
+        verbose_name=_("Internationals"),
         linkify=lambda record: reverse("sections:section-internationals") + f"?user__profile__faculty={record.pk}",
     )
     users_count = Column(
-        verbose_name=_("Total count*"),
+        verbose_name=_("Users total*"),
         attrs={"th": {"title": _("Including people from other sections.")}},
     )
 
