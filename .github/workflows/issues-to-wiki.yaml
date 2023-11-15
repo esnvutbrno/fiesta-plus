@@ -52,9 +52,7 @@ jobs:
       env:
         ISSUES: ${{ steps.query.outputs.data }}
       run: |
-        cat <<EOF > issues.json
-        $ISSUES
-        EOF
+        echo "$ISSUES" > issues.json
         ./repository/.github/scripts/render-issues-to-wiki.sh issues.json > wiki/Issues.md
 
     - name: Push to wiki
