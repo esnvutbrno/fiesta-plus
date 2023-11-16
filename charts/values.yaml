@@ -38,3 +38,4 @@ secrets:
     secretKey: key
   sentry:
     dsn: dsn
+    jsLoaderUrl: url

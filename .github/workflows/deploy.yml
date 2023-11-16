@@ -147,6 +147,7 @@ jobs:
                 secretKey: ${{ secrets.SCW_DNS_SECRET_KEY }}
               sentry:
                 dsn: ${{ secrets.SENTRY_DSN }}
+                jsLoaderUrl: ${{ secrets.SENTRY_JS_LOADER_URL }}
           value-files: >-
             [
               "charts/values.yaml"

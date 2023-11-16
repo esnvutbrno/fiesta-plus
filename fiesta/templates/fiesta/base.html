@@ -1,3 +1,4 @@
+{% load sentry %}
 {% load utils %}
 {% load breadcrumbs %}
 {% load static %}
@@ -44,6 +45,9 @@
       {% endif %}
     {% endblock head_title %}
     <link rel="shortcut icon" href="{% static 'single-toucan.svg' %}" />
+
+    {% sentry_js_loader_url as sentry_js_loader_url %}
+    {% if sentry_js_loader_url %}<script src="{{ sentry_js_loader_url }}" crossorigin="anonymous"></script>{% endif %}
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {% django_htmx_script %}

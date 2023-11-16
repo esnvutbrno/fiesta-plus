@@ -62,6 +62,7 @@ class LoggingConfigMixin:
 
 
 class SentryConfigMixin:
+    SENTRY_JS_LOADER_URL = SecretValue(environ_required=False)
     SENTRY_DSN: str = SecretValue(environ_required=False)
 
     @classmethod
