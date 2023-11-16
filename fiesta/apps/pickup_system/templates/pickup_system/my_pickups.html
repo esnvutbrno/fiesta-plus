@@ -1,0 +1,32 @@
+{% extends "fiesta/base.html" %}
+{% load pickup_system %}
+
+{% load pickup_system %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block upper_head %}
+  {% trans "My Buddies" as title %}
+  {% breadcrumb_push_current_plugin %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block main %}
+  {% get_pickup_system_configuration as configuration %}
+
+  {% for match in object_list.all %}
+    {% include "pickup_system/parts/request_match_card.html" with br=match.request title=match.request.issuer.full_name connect_with=match.request.issuer %}
+  {% empty %}
+    <div class="alert alert-link text-xl max-w-2xl mx-auto flex flex-row justify-between py-16 px-8">
+      No matches found.
+
+      {% if configuration.matching_policy_instance.can_member_match %}
+        <a href="{% url "pickup_system:matching-requests" %}"
+           class="btn btn-primary btn-lg">get your first pickup</a>
+      {% else %}
+        Pickup system team is looking for the best match for you.
+      {% endif %}
+
+    </div>
+  {% endfor %}
+{% endblock %}

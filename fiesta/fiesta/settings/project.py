@@ -63,6 +63,7 @@ class ProjectConfigMixin:
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
+        "apps.pickup_system.apps.PickupSystemConfig",
         "apps.dashboard.apps.DashboardConfig",
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
