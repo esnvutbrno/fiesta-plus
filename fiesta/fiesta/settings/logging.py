@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from configurations.values import Value
+from configurations.values import SecretValue, Value
 
 
 class LoggingConfigMixin:
@@ -59,3 +59,25 @@ class LoggingConfigMixin:
                 },
             },
         }
+
+
+class SentryConfigMixin:
+    SENTRY_DSN: str = SecretValue(environ_required=False)
+
+    @classmethod
+    def post_setup(cls):
+        super().post_setup()
+
+        import sentry_sdk
+
+        if cls.SENTRY_DSN:
+            sentry_sdk.init(
+                dsn=cls.SENTRY_DSN,
+                # Set traces_sample_rate to 1.0 to capture 100%
+                # of transactions for performance monitoring.
+                traces_sample_rate=1.0,
+                # Set profiles_sample_rate to 1.0 to profile 100%
+                # of sampled transactions.
+                # We recommend adjusting this value in production.
+                profiles_sample_rate=1.0,
+            )

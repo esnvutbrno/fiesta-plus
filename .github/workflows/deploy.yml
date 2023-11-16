@@ -145,6 +145,8 @@ jobs:
               dnsWebhook:
                 accessKey: ${{ secrets.SCW_DNS_ACCESS_KEY }}
                 secretKey: ${{ secrets.SCW_DNS_SECRET_KEY }}
+              sentry:
+                dsn: ${{ secrets.SENTRY_DSN }}
           value-files: >-
             [
               "charts/values.yaml"
