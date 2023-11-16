@@ -97,8 +97,9 @@ class MatchingPoliciesRegister:
     AVAILABLE_POLICIES = [
         ManualByEditorMatchingPolicy,
         ManualByMemberMatchingPolicy,
-        SameFacultyMatchingPolicy,
-        LimitedSameFacultyMatchingPolicy,
+        # TODO: make it working
+        # SameFacultyMatchingPolicy,
+        # LimitedSameFacultyMatchingPolicy,
         # AutoMatchingPolicy
     ]
 

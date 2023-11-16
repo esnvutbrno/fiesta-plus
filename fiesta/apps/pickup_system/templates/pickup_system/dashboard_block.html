@@ -6,7 +6,7 @@
 {% get_pickup_system_configuration as configuration %}
 
 <div class="Dashboard__tiles flex flex-col">
-  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-red-900">
+  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-secondary">
     <div class="Dashboard__tile__title text-white">Pickup System</div>
     {% if request.membership.is_international %}
       {% get_current_pickup_request_of_user as br %}
@@ -24,32 +24,14 @@
         </div>
       {% elif br.state == br.State.MATCHED %}
         {% get_user_picture br.match.matcher as pickup_picture %}
-        <div class="stat-figure text-secondary flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0">
+        <div class="Dashboard__tile__value">✅ Pickup confirmed</div>
+        <div class="Dashboard__tile__desc text-base-200">{{ br.match.matcher.full_name }} is ready to pick you up.</div>
+        <div class="mt-4 text-right">
           <a href="{% url "pickup_system:index" %}"
              class="btn btn-lg btn-secondary">{% trans "find out about your pickup" %}</a>
-
-          <div class="avatar">
-            <div class="w-24 rounded-full">
-              {% if pickup_picture %}
-                <img src="{% url "pickup_system:serve-matcher-profile-picture" pickup_picture %}"
-                     width="{{ pickup_picture.width }}"
-                     height="{{ pickup_picture.height }}"
-                     alt="Matched pickup picture" />
-              {% else %}
-                <span class="w-24 aspect-square text-white text-3xl flex flex-row justify-center items-center group"
-                      style="background-color: {{ br.match.matcher.id|get_color_by_text }}">{{ br.match.matcher.first_name|first }}{{ br.match.matcher.last_name|first }}</span>
-              {% endif %}
-            </div>
-          </div>
-
         </div>
 
-        <div class="Dashboard__tile__value">✅ Matched</div>
-        <div class="Dashboard__tile__desc">
-          It's a match!
-          <br>
-          You have been matched with {{ br.match.matcher.full_name }}.
-        </div>
+
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}
