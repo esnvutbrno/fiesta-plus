@@ -3,20 +3,19 @@ from __future__ import annotations
 from allauth.account.views import SignupView
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
 from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import TemplateView
 
 from apps.accounts.models import UserProfile
 from apps.buddy_system.forms import NewBuddyRequestForm
 from apps.buddy_system.models import BuddySystemConfiguration
+from apps.fiestarequests.views.request import BaseNewRequestView
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
-from apps.sections.views.mixins.membership import EnsureInternationalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
@@ -93,39 +92,15 @@ class SignUpBeforeEntranceView(
         return response
 
 
-class NewRequestView(
-    EnsureInSectionSpaceViewMixin,
-    EnsureInternationalUserViewMixin,
-    SuccessMessageMixin,
-    CreateView,
-):
-    template_name = "buddy_system/new_buddy_request.html"
+class NewBuddyRequestView(BaseNewRequestView):
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been successfully created!")
 
     success_url = reverse_lazy("buddy_system:index")
 
     def get_initial(self):
+        i = super().get_initial()
         p: UserProfile = self.request.user.profile_or_none
-        return {
-            "responsible_section": self.request.in_space_of_section,
-            "issuer": self.request.user,
-            "issuer_faculty": p.faculty if p else None,
+        return i | {
             "interests": p.interests if p else None,
         }
-
-    def form_valid(self, form):
-        # override to be sure
-        form.instance.responsible_section = self.request.in_space_of_section
-        form.instance.issuer = self.request.user
-
-        profile: UserProfile = self.request.user.profile_or_none
-        if not profile.faculty:
-            profile.faculty = form.instance.issuer_faculty
-            profile.save(update_fields=("faculty",))
-
-        if not profile.university:
-            profile.university = form.instance.issuer_faculty.university
-            profile.save(update_fields=("university",))
-
-        return super().form_valid(form)

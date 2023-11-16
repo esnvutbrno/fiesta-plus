@@ -36,3 +36,6 @@ secrets:
   dnsWebhook:
     accessKey: key
     secretKey: key
+  sentry:
+    dsn: dsn
+    jsLoaderUrl: url

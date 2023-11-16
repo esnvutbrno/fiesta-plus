@@ -17,7 +17,6 @@ from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMix
 
 
 class ApplicationCreateView(
-    UserPassesMembershipTestMixin,
     EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormMixin,
@@ -32,11 +31,7 @@ class ApplicationCreateView(
     permission_denied_message = _("An ESNcard application for current user for this section already exists.")
 
     def test_membership(self, membership: SectionMembership) -> bool:
-        print(membership.user.esncard_applications.filter(section=membership.section))
-        return (
-            super().test_membership(membership)
-            and not membership.user.esncard_applications.filter(section=membership.section).exists()
-        )
+        return membership.user.esncard_applications.filter(section=membership.section).exists()
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile_or_none

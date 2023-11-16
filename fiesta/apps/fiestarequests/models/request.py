@@ -24,6 +24,7 @@ class BaseRequestProtocol(typing.Protocol):
     issuer: models.ForeignKey | User
     responsible_section: models.ForeignKey | Section
     note: models.TextField | str
+    match: BaseRequestMatchProtocol | models.Model
 
     objects: BaseRequestManager
 

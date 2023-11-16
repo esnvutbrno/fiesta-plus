@@ -6,6 +6,8 @@ from ._utils import BaseConfigurationProtocol
 class TemplatesConfigMixin(BaseConfigurationProtocol):
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
+    DJANGO_TABLES2_TEMPLATE = "fiestatables/django_tables2_table.html"
+
     def TEMPLATES(self):
         return [
             {

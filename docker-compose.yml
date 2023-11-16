@@ -92,8 +92,8 @@ services:
       MYSQL_PASSWORD: fiesta
       VIRTUAL_HOST: legacydb.${ROOT_DOMAIN}
       VIRTUAL_PORT: 3306
-    expose:
-      - 3306
+    ports:
+      - "4306:3306"
 
   elastic:
     image: elasticsearch:7.17.0

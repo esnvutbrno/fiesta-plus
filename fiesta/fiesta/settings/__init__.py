@@ -7,7 +7,7 @@ from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
 from .db import DatabaseConfigMixin
 from .files import FilesConfigMixin, S3ConfigMixin
-from .logging import LoggingConfigMixin
+from .logging import LoggingConfigMixin, SentryConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
 from .templates import TemplatesConfigMixin
@@ -55,7 +55,7 @@ class LocalProduction(Base):
     USE_WEBPACK_INTEGRITY = False
 
 
-class Production(S3ConfigMixin, Base):
+class Production(S3ConfigMixin, SentryConfigMixin, Base):
     DEBUG = False
 
     ROOT_DOMAIN = Value(environ_required=True)

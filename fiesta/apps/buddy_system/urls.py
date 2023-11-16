@@ -7,7 +7,7 @@ from .views import BuddySystemIndexView
 from .views.editor import BuddyRequestEditorDetailView, BuddyRequestsEditorView, QuickBuddyMatchView
 from .views.matches import MyBuddies
 from .views.matching import IssuerPictureServeView, MatcherPictureServeView, MatchingRequestsView, TakeBuddyRequestView
-from .views.request import BuddySystemEntrance, NewRequestView, SignUpBeforeEntranceView, WannaBuddyView
+from .views.request import BuddySystemEntrance, NewBuddyRequestView, SignUpBeforeEntranceView, WannaBuddyView
 
 urlpatterns = [
     path("", BuddySystemIndexView.as_view(), name="index"),
@@ -18,7 +18,7 @@ urlpatterns = [
         SignUpBeforeEntranceView.as_view(),
         name="sign-up-before-request",
     ),
-    path("new-request", NewRequestView.as_view(), name="new-request"),
+    path("new-request", NewBuddyRequestView.as_view(), name="new-request"),
     path("requests", BuddyRequestsEditorView.as_view(), name="requests"),
     path("my-buddies", MyBuddies.as_view(), name="my-buddies"),
     path("matching-requests", MatchingRequestsView.as_view(), name="matching-requests"),
