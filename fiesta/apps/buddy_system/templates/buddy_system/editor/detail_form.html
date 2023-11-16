@@ -1,7 +1,0 @@
-<form hx-post="{% url "buddy_system:editor-detail" object.pk %}"
-      id="request-detail-editor-form"
-      hx-swap="outerHTML">
-  <h1 class="card-title">{{ object }}</h1>
-  {% csrf_token %}
-  {{ form }}
-</form>

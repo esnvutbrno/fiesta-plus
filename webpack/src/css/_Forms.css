@@ -275,3 +275,8 @@
     transform: rotate(180deg);
   }
 }
+
+/* TODO: needed after daysiui migration to v4, probably better would be to drop it */
+.btn {
+    @apply uppercase
+}

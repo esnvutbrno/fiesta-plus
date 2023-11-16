@@ -17,6 +17,9 @@ module.exports = {
         main: [
             path.join(__dirname, './src/main.js')
         ],
+        jquery: [
+            path.join(__dirname, './src/jquery.js')
+        ],
     },
     output: {
         publicPath: PUBLIC_PATH,

@@ -1,0 +1,11 @@
+{% load i18n %}
+<a class="btn btn-xs btn-outline btn-primary whitespace-nowrap"
+   x-data="modal($el.href)"
+   x-bind="bind"
+   href="{% url "pickup_system:quick-match" record.pk %}">
+  {% if record.match %}
+    {% trans "Change pickup" %}
+  {% else %}
+    {% trans "Match" %}
+  {% endif %}
+</a>

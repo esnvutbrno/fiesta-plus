@@ -136,6 +136,7 @@ class Section(BaseTimestampedModel):
 
     # only typing of related manager
     buddy_system_requests: models.QuerySet
+    pickup_system_requests: models.QuerySet
 
 
 class SectionUniversity(BaseTimestampedModel):
