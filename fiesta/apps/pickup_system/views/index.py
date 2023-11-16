@@ -26,7 +26,7 @@ class PickupSystemIndexView(
             self.request.membership.is_international
             and not self.request.in_space_of_section.pickup_system_requests.filter(issuer=self.request.user).exists()
         ):
-            return HttpResponseRedirect(reverse("pickup_system:wanna-pickup"))
+            return HttpResponseRedirect(reverse("pickup_system:new-request"))
 
         return super().get(request, *args, **kwargs)
 
