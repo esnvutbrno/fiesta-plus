@@ -93,6 +93,9 @@ class ProjectConfigMixin:
         "loginas",
         # editorjs integration
         "django_editorjs_fields",
+        # location fields
+        "location_field.apps.DefaultConfig",
+        # for trees
         "mptt",
         # health checks
         "health_check",
@@ -122,3 +125,8 @@ class ProjectConfigMixin:
     # all EU countries first, then the rest
     COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
     COUNTRIES_FIRST_REPEAT = True
+
+    LOCATION_FIELD = {
+        "map.provider": "openstreetmap",
+        "search.provider": "nominatim",
+    }

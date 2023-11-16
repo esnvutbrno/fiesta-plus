@@ -1,6 +1,9 @@
 from __future__ import annotations
 
+from django.db import models
+from django.db.models import DateTimeField
 from django.utils.translation import gettext_lazy as _
+from location_field.models.plain import PlainLocationField
 
 from apps.fiestarequests.models import base_request_model_factory
 
@@ -11,7 +14,17 @@ BaseRequestForPickupSystem, BaseRequestMatchForPickupSystem = base_request_model
 
 
 class PickupRequest(BaseRequestForPickupSystem):
-    # TODO: date/time/place
+    time = DateTimeField(
+        verbose_name=_("pickup time"),
+    )
+    place = models.CharField(
+        max_length=256,
+    )
+    location = PlainLocationField(
+        based_fields=["pickup_place"],
+        default="49.1922443,16.6113382",
+        zoom=4,
+    )
 
     class Meta(BaseRequestForPickupSystem.Meta):
         verbose_name = _("pickup request")
@@ -19,6 +32,11 @@ class PickupRequest(BaseRequestForPickupSystem):
 
     def __str__(self):
         return f"Pickup Request {self.issuer}: {self.get_state_display()}"
+
+    @property
+    def location_as_google_maps_link(self):
+        return f"https://www.google.com/maps/place/{self.location}?zoom=15"
+        # return f"https://www.google.com/maps/search/?api=1&query={self.location}"
 
 
 class PickupRequestMatch(BaseRequestMatchForPickupSystem):

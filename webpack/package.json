@@ -19,6 +19,7 @@
     "css-loader": "^6.6.0",
     "daisyui": "^4.0.9",
     "htmx.org": "^1.9.6",
+    "jquery": "^3.7.1",
     "mini-css-extract-plugin": "^2.5.3",
     "postcss": "^8.4.31",
     "postcss-import": "^14.0.2",

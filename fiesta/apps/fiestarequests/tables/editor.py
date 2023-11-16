@@ -94,12 +94,14 @@ class BaseRequestsTable(tables.Table):
             "issuer_name",
             "issuer_picture",
             "state",
+            "...",
             "matcher_name",
             "matcher_picture",
             "requested",
             "matched",
-            "...",
+            "match_request",
         )
+
         empty_text = _("No requests found")
 
         attrs = dict(tbody={"hx-disable": True})

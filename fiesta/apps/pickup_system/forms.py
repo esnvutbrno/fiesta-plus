@@ -6,6 +6,8 @@ from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
+from apps.fiestaforms.fields.datetime import DateTimeLocalField
+from apps.fiestaforms.forms import WebpackMediaFormMixin
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
@@ -16,18 +18,30 @@ USER_PROFILE_CONTACT_FIELDS = fields_for_model(
 )
 
 
-class NewPickupRequestForm(BaseNewRequestForm):
+class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
+    _webpack_bundle = "jquery"
     submit_text = _("Send request for pickup")
 
     class Meta(BaseNewRequestForm.Meta):
         model = PickupRequest
 
-        fields = BaseNewRequestForm.Meta.fields + ()
-        field_classes = BaseNewRequestForm.Meta.field_classes | {}
+        fields = (
+            (
+                "time",
+                "place",
+                "location",
+            )
+            + BaseNewRequestForm.Meta.fields
+            + ()
+        )
+        field_classes = BaseNewRequestForm.Meta.field_classes | {"time": DateTimeLocalField}
+        widgets = BaseNewRequestForm.Meta.widgets | {}
         labels = BaseNewRequestForm.Meta.labels | {
             "note": _("Tell me details TODO"),
             "interests": _("What are you into?"),
             "approving_request": _("I really want a pickup"),
+            "place": _("Where do you want to be picked up?"),
+            "location": _("Place marker as accurately as possible"),
         }
         help_texts = BaseNewRequestForm.Meta.help_texts | {
             "note": lazy(
@@ -40,13 +54,19 @@ class NewPickupRequestForm(BaseNewRequestForm):
 #     TODO: add save/load of contacts to/from user_profile
 
 
-class PickupRequestEditorForm(BaseRequestEditorForm):
+class PickupRequestEditorForm(WebpackMediaFormMixin, BaseRequestEditorForm):
+    _webpack_bundle = "jquery"
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
     class Meta(BaseRequestEditorForm.Meta):
         model = PickupRequest
-        fields = BaseRequestEditorForm.Meta.fields + ()
+        fields = BaseRequestEditorForm.Meta.fields + (
+            "time",
+            "place",
+            "location",
+        )
         field_classes = BaseRequestEditorForm.Meta.field_classes | {}
         widgets = BaseRequestEditorForm.Meta.widgets | {}
 

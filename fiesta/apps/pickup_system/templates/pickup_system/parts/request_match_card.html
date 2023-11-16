@@ -38,9 +38,35 @@
         </div>
       </div>
       <div class="chat-bubble">{{ br.note }}</div>
-      {#      <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">#}
-      {#        {% for interest in br.get_interests_display %}<span class="mr-2 badge badge-outline">{{ interest }}</span>{% endfor %}#}
-      {#      </div>#}
+      <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content min-w-full">
+        <table class="table text-lg [&_th]:pl-0 [&_th]:flex [&_th]:flex-row [&_th]:justify-end [&_th]:items-center [&_th]:gap-x-2 [&_td]:pl-0 w-96 mx-auto">
+          <tbody>
+            <tr class="border-b border-base-300">
+              <th>
+                time <span class="text-3xl">⏱️</span>
+              </th>
+              <td>{{ br.time|date:"SHORT_DATETIME_FORMAT" }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <th>
+                place <span class="text-3xl">📍</span>
+              </th>
+              <td>{{ br.place }}</td>
+            </tr>
+            <tr class="border-b border-base-300">
+              <th>
+                location <span class="text-3xl">🗺️</span>
+              </th>
+              <td>
+                <a class="link link-secondary"
+                   href="{{ br.location_as_google_maps_link }}"
+                   rel="nofollow,noreferrer,noopener"
+                   target="_blank">see on maps</a>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     {% if br.state == br.State.MATCHED %}

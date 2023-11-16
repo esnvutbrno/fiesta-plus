@@ -763,6 +763,17 @@ packaging = ">=21.0"
 urlman = ">=1.2.0"
 
 [[package]]
+name = "django-location-field"
+version = "2.7.2"
+description = "Location field for Django"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django_location_field-2.7.2-py2.py3-none-any.whl", hash = "sha256:cdbb4b7d9f6ba9fb31e3bc2ec59492c77533f4fb5f3eeb7efd01eb3d4dbcf3b7"},
+]
+
+[[package]]
 name = "django-loginas"
 version = "0.3.11"
 description = "An app to add a \"Log in as user\" button in the Django user admin page."
@@ -1954,4 +1965,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "15af9cfd990bad61791c1869168ecad5b40cef70d10d7917e0d47de2a6679057"
+content-hash = "419cfd96bf6d442b1e827dcecd12d490afc81f290a308179246fca1224933f2a"
