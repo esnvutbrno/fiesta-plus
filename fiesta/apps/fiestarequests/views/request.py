@@ -24,15 +24,17 @@ class BaseNewRequestView(
     def get_initial(self):
         p: UserProfile = self.request.user.profile_or_none
         return {
-            "responsible_section": self.request.in_space_of_section,
-            "issuer": self.request.user,
             "issuer_faculty": p.faculty if p else None,
-            # "interests": p.interests if p else None,
         }
 
     def form_valid(self, form):
         # override to be sure
         form.instance.responsible_section = self.request.in_space_of_section
         form.instance.issuer = self.request.user
+
+        p: UserProfile = self.request.user.profile_or_none
+        if p and not p.faculty:
+            p.faculty = form.cleaned_data["issuer_faculty"]
+            p.save(update_fields=["faculty"])
 
         return super().form_valid(form)

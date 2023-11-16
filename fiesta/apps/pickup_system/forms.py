@@ -1,14 +1,15 @@
 from __future__ import annotations
 
 from django.core.exceptions import ValidationError
-from django.forms import BooleanField, HiddenInput, fields_for_model
+from django.forms import fields_for_model
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, FacultyWidget, UserWidget
+from apps.fiestaforms.widgets.models import ActiveLocalMembersFromSectionWidget, UserWidget
+from apps.fiestarequests.forms.request import BaseNewRequestForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
 
 USER_PROFILE_CONTACT_FIELDS = fields_for_model(
@@ -17,46 +18,25 @@ USER_PROFILE_CONTACT_FIELDS = fields_for_model(
 )
 
 
-class NewPickupRequestForm(BaseModelForm):
+class NewPickupRequestForm(BaseNewRequestForm):
     submit_text = _("Send request for pickup")
 
-    # TODO: group field somehow and add group headings
-    facebook, instagram, telegram, whatsapp = USER_PROFILE_CONTACT_FIELDS.values()
-
-    approving_request = BooleanField(required=True, label=_("I really want a pickup"))
-
-    class Meta:
+    class Meta(BaseNewRequestForm.Meta):
         model = PickupRequest
-        fields = (
-            "note",
-            # "interests",
-            "issuer",
-            "issuer_faculty",
-        )
-        field_classes = {
-            # "interests": ChoicedArrayField,
+
+        fields = BaseNewRequestForm.Meta.fields + ()
+        field_classes = BaseNewRequestForm.Meta.field_classes | {}
+        labels = BaseNewRequestForm.Meta.labels | {
+            "note": _("Tell me details TODO"),
+            "interests": _("What are you into?"),
+            "approving_request": _("I really want a pickup"),
         }
-        widgets = {
-            "issuer": HiddenInput,
-            "issuer_faculty": FacultyWidget,
-        }
-        labels = {
-            "note": _("Tell us about yourself"),
-            # "interests": _("What are you into?"),
-            "issuer_faculty": _("Your faculty"),
-        }
-        help_texts = {
+        help_texts = BaseNewRequestForm.Meta.help_texts | {
             "note": lazy(
                 lambda: render_to_string("pickup_system/parts/pickup_request_note_help.html"),
                 str,
             )
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        if self.initial.get("issuer_faculty"):
-            self.fields["issuer_faculty"].disabled = True
 
 
 #     TODO: add save/load of contacts to/from user_profile
