@@ -6,7 +6,7 @@ from django.views.generic import ListView
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
 from apps.fiestarequests.views.matching import BaseTakeRequestView
 from apps.pickup_system.models.files import BaseIssuerPictureServeView, BaseMatcherPictureServeView
-from apps.pickup_system.views.matching import ServeFilesFromPickupsMixin
+from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
@@ -50,12 +50,18 @@ class TakeBuddyRequestView(
         )
 
 
-class IssuerPictureServeView(ServeFilesFromPickupsMixin, BaseIssuerPictureServeView):
+class ServeFilesFromBuddiesMixin:
+    @classmethod
+    def get_request_queryset(cls, request: HttpRequest):
+        return request.membership.section.buddy_system_requests
+
+
+class IssuerPictureServeView(ServeFilesFromBuddiesMixin, BaseIssuerPictureServeView):
     ...
 
 
 class MatcherPictureServeView(
-    ServeFilesFromPickupsMixin,
+    ServeFilesFromBuddiesMixin,
     BaseMatcherPictureServeView,
 ):
     ...

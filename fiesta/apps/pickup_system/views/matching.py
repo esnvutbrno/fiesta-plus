@@ -40,7 +40,8 @@ class TakePickupRequestView(
 
 
 class ServeFilesFromPickupsMixin:
-    def get_request_queryset(self, request: HttpRequest):
+    @classmethod
+    def get_request_queryset(cls, request: HttpRequest):
         return request.membership.section.pickup_system_requests
 
 
