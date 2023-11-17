@@ -27,7 +27,7 @@ jobs:
         id: meta
         run: |
           echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
-          echo "release_name=fiesta-plus@`echo ${GITHUB_SHA}`" >> $GITHUB_OUTPUT
+          echo "release_name=fiesta-plus@$GITHUB_SHA" >> $GITHUB_OUTPUT
 
       - name: Prepare Sentry release
         uses: getsentry/action-release@v1
