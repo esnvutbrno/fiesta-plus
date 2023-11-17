@@ -62,6 +62,7 @@ class LoggingConfigMixin:
 
 
 class SentryConfigMixin:
+    ENVIRONMENT_NAME: str  # from base
     SENTRY_JS_LOADER_URL = SecretValue(environ_required=False)
     SENTRY_DSN: str = SecretValue(environ_required=False)
 
@@ -81,4 +82,5 @@ class SentryConfigMixin:
                 # of sampled transactions.
                 # We recommend adjusting this value in production.
                 profiles_sample_rate=1.0,
+                environment=cls.ENVIRONMENT_NAME,
             )

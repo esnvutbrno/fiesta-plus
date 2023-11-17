@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from configurations.values import Value
+
 from ._utils import PathValue
 
 
@@ -42,6 +44,8 @@ class ProjectConfigMixin:
         # dj admin autocompletion widgets, must be before admin
         "dal",
         "dal_select2",
+        # env ribbon in admin
+        "django_admin_env_notice",
         # Django native
         "django.contrib.admin",
         "phonenumber_field",
@@ -130,3 +134,6 @@ class ProjectConfigMixin:
         "map.provider": "openstreetmap",
         "search.provider": "nominatim",
     }
+
+    ENVIRONMENT_NAME: str = Value(environ_required=False)
+    ENVIRONMENT_COLOR: str = Value(environ_required=False)

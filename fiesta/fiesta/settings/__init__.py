@@ -62,6 +62,9 @@ class Production(S3ConfigMixin, SentryConfigMixin, Base):
 
     DATABASES = DatabaseURLValue(environ_prefix="DJANGO")
 
+    ENVIRONMENT_NAME = Value(default="production")
+    ENVIRONMENT_COLOR = Value(default="#7b3ff4")
+
     def STORAGES(self):
         return {
             "default": {

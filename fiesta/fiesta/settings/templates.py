@@ -26,6 +26,7 @@ class TemplatesConfigMixin(BaseConfigurationProtocol):
                         "django.template.context_processors.request",
                         "django.contrib.auth.context_processors.auth",
                         "django.contrib.messages.context_processors.messages",
+                        "django_admin_env_notice.context_processors.from_settings",
                     ],
                 },
             },
