@@ -8,18 +8,19 @@ config.plugins.push(
     new webpack.DefinePlugin({
         '__DEVELOPMENT__': 'false',
     }),
-    sentryWebpackPlugin({
-        authToken: process.env.SENTRY_WEBPACK_AUTH_TOKEN,
-        org: process.env.SENTRY_ORG,
-        project: process.env.SENTRY_PROJECT,
-        release: {
-            name: process.env.SENTRY_RELEASE_NAME,
-            finalize: false,
-            deploy: {
-                env: process.env.SENTRY_RELEASE_ENVIRONMENT,
-            }
-        },
-    })
+    // TODO: breaks integrity after deploy
+    // sentryWebpackPlugin({
+    //     authToken: process.env.SENTRY_WEBPACK_AUTH_TOKEN,
+    //     org: process.env.SENTRY_ORG,
+    //     project: process.env.SENTRY_PROJECT,
+    //     release: {
+    //         name: process.env.SENTRY_RELEASE_NAME,
+    //         finalize: false,
+    //         deploy: {
+    //             env: process.env.SENTRY_RELEASE_ENVIRONMENT,
+    //         }
+    //     },
+    // })
 );
 
 Object.assign(
