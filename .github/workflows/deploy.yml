@@ -86,12 +86,12 @@ jobs:
           labels: ${{ steps.webMeta.outputs.labels }}
           build-args: |
             DJANGO_RELEASE_NAME: ${{ steps.meta.outputs.release_name }}
-            SENTRY_RELEASE_ENVIRONMENT: production
           secrets: |
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
             SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
             SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
+            SENTRY_RELEASE_ENVIRONMENT: production
 
       - name: Prepare image metadata
         id: proxyMeta
@@ -131,6 +131,7 @@ jobs:
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
             SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
             SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
+            SENTRY_RELEASE_ENVIRONMENT: production
 
   deploy:
     name: Deploy to cluster

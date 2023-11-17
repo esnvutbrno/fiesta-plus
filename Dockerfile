@@ -1,7 +1,3 @@
-# expected to be set during production release
-ARG SENTRY_RELEASE_ENVIRONMENT
-ARG DJANGO_RELASE_NAME
-
 #
 # webpack image
 #
@@ -41,9 +37,13 @@ RUN \
   --mount=type=secret,id=SENTRY_ORG \
   --mount=type=secret,id=SENTRY_PROJECT \
   --mount=type=secret,id=SENTRY_WEBPACK_AUTH_TOKEN \
+  --mount=type=secret,id=SENTRY_RELEASE_NAME \
+  --mount=type=secret,id=SENTRY_RELEASE_ENVIRONMENT \
   export SENTRY_ORG=$(cat /run/secrets/SENTRY_ORG) \
   export SENTRY_PROJECT=$(cat /run/secrets/SENTRY_PROJECT) \
   export SENTRY_WEBPACK_AUTH_TOKEN=$(cat /run/secrets/SENTRY_WEBPACK_AUTH_TOKEN) \
+  export SENTRY_RELEASE_NAME=$(cat /run/secrets/SENTRY_RELEASE_NAME) \
+  export SENTRY_RELEASE_ENVIRONMENT=$(cat /run/secrets/SENTRY_RELEASE_ENVIRONMENT) \
   && yarn build
 
 #
