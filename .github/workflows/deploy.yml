@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       image_tag: ${{ steps.meta.outputs.image_tag }}
-      release_name: ${{ steps.meta.outputs.release_name }}
+      release_version: ${{ steps.meta.outputs.release_version }}
 
     steps:
       -
@@ -27,7 +27,7 @@ jobs:
         id: meta
         run: |
           echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
-          echo "release_name=fiesta-plus@${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          echo "release_version=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
       - name: Prepare Sentry release
         uses: getsentry/action-release@v1
@@ -38,7 +38,7 @@ jobs:
         with:
           environment: production
           finalize: false
-          version: ${{ steps.meta.outputs.release_name }}
+          version: ${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -86,8 +86,8 @@ jobs:
           labels: ${{ steps.webMeta.outputs.labels }}
           build-args: |
             SENTRY_RELEASE_ENVIRONMENT=production
-            SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
-            DJANGO_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
+            SENTRY_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
+            DJANGO_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
           secrets: |
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
@@ -126,7 +126,7 @@ jobs:
           labels: ${{ steps.proxyMeta.outputs.labels }}
           build-args: |
             SENTRY_RELEASE_ENVIRONMENT=production
-            SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
+            SENTRY_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
           secrets: |
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
@@ -220,11 +220,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: |
-          echo "${{ needs.build.outputs.release_name }}"
-          echo "${{join(needs.build.outputs.outputs.*, ' ')}}"
-          echo "${{join(needs.deploy.outputs.outputs.*, ' ')}}"
-
       - name: Finalize Sentry release
         uses: getsentry/action-release@v1
         env:
@@ -234,4 +229,4 @@ jobs:
         with:
           environment: production
           finalize: true
-          version: ${{ needs.build.outputs.release_name }}
+          version: ${{ secrets.SENTRY_PROJECT }}@${{ needs.build.outputs.release_version }}
