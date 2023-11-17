@@ -28,6 +28,7 @@ urlpatterns = [
     path("detail/<uuid:pk>", PickupRequestEditorDetailView.as_view(), name="editor-detail"),
     path("quick-match/<uuid:pk>", QuickPickupMatchView.as_view(), name="quick-match"),
     # serve profile picture with proxy view
+    # TODO: the url name is defined also in issuer/matcher_picture_url, better would be to generalize it
     IssuerPictureServeView.as_url(user_profile_picture_storage, url_name="serve-issuer-profile-picture"),
     MatcherPictureServeView.as_url(user_profile_picture_storage, url_name="serve-matcher-profile-picture"),
 ]

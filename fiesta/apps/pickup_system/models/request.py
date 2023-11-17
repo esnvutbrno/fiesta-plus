@@ -10,6 +10,7 @@ from apps.fiestarequests.models import base_request_model_factory
 BaseRequestForPickupSystem, BaseRequestMatchForPickupSystem = base_request_model_factory(
     final_request_model_name="pickup_system.PickupRequest",
     related_base="pickup_system",
+    url_namespace="pickup_system",
 )
 
 

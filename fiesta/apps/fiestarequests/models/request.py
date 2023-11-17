@@ -5,13 +5,16 @@ import uuid
 
 from django.db import models
 from django.db.models import TextChoices
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModelMixin
 
-from apps.accounts.models import User
 from apps.fiestarequests.models.managers.request import BaseRequestManager, BaseRequestMatchManager
 from apps.sections.models import Section
 from apps.utils.models import BaseTimestampedModel
+
+if typing.TYPE_CHECKING:
+    from apps.accounts.models import User
 
 
 class BaseRequestProtocol(typing.Protocol):
@@ -43,6 +46,7 @@ class BaseRequestMatchProtocol(typing.Protocol):
 def base_request_model_factory(
     related_base: str,
     final_request_model_name: str,
+    url_namespace: str,
 ):
     """
     Creates a base model for requests-like models.
@@ -63,7 +67,7 @@ def base_request_model_factory(
             default=State.CREATED,
             max_length=16,
         )
-        issuer = models.ForeignKey(
+        issuer: User = models.ForeignKey(
             "accounts.User",
             related_name=f"{related_base}_issued_requests",
             on_delete=models.RESTRICT,
@@ -91,6 +95,14 @@ def base_request_model_factory(
             db_index=True,
         )
 
+        @property
+        def issuer_picture_url(self):
+            return (
+                reverse(f"{url_namespace}:serve-issuer-profile-picture", args=(self.issuer.profile_or_none.picture,))
+                if self.issuer.profile_or_none
+                else None
+            )
+
     class BaseRequestMatch(BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
@@ -103,7 +115,7 @@ def base_request_model_factory(
             verbose_name=_("request"),
         )
 
-        matcher = models.ForeignKey(
+        matcher: User = models.ForeignKey(
             "accounts.User",
             related_name=f"{related_base}_request_matches",
             on_delete=models.RESTRICT,
@@ -116,7 +128,7 @@ def base_request_model_factory(
             blank=True,
         )
 
-        # fields cloned from issuer/issuer's profile to have consistency over time
+        # fields cloned from matcher/matcher's profile to have consistency over time
         matcher_faculty = models.ForeignKey(
             "universities.Faculty",
             related_name=f"{related_base}_request_matches",
@@ -124,5 +136,13 @@ def base_request_model_factory(
             verbose_name=_("matcher's faculty"),
             db_index=True,
         )
+
+        @property
+        def matcher_picture_url(self):
+            return (
+                reverse(f"{url_namespace}:serve-matcher-profile-picture", args=(self.matcher.profile_or_none.picture,))
+                if self.matcher.profile_or_none
+                else None
+            )
 
     return BaseRequest, BaseRequestMatch

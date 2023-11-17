@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import re
-
 from django import template
 
 from apps.pickup_system.apps import PickupSystemConfig
@@ -11,25 +9,6 @@ from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
 
 register = template.Library()
-
-# I know, it's not the best regex for emails
-# [\w.] as [a-zA-Z0-9_.]
-CENSOR_REGEX = re.compile(
-    # emails
-    r"^$|\S+@\S+\.\S+"
-    # instagram username
-    r"|@[\w.]+"
-    # european phone numbers
-    r"|\+?\d{1,3}[ \-]?[(]?\d{3,4}[)]?[ \-]?\d{3,4}[ \-]?\d{3,4}",
-    # URL adresses SIMPLIFIED
-    # r"(https?://)?([a-z\d_\-]{3,}\.)+[a-z]{2,4}(/\S*)?"
-    re.VERBOSE | re.IGNORECASE,
-)
-
-
-@register.filter
-def censor_description(description: str) -> str:
-    return CENSOR_REGEX.sub("---censored---", description)
 
 
 @register.simple_tag(takes_context=True)
@@ -77,15 +56,6 @@ def get_matched_pickup_requests(context):
         request__responsible_section=request.membership.section,
         request__state=PickupRequest.State.MATCHED,
     ).order_by("-created")
-
-
-@register.filter
-def request_state_to_css_variant(state: PickupRequest.State):
-    return {
-        PickupRequest.State.CREATED: "info",
-        PickupRequest.State.MATCHED: "success",
-        PickupRequest.State.CANCELLED: "danger",
-    }.get(state)
 
 
 @register.simple_tag(takes_context=True)
