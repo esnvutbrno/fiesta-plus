@@ -124,8 +124,6 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.proxyMeta.outputs.tags }}
           labels: ${{ steps.proxyMeta.outputs.labels }}
-          build-args: |
-            SENTRY_RELEASE_ENVIRONMENT: production
           secrets: |
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
