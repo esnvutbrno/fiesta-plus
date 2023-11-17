@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.forms.membership import ChangeMembershipStateForm
 from apps.sections.middleware.user_membership import HttpRequest
@@ -53,7 +53,7 @@ class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
 class ChangeMembershipStateFormView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

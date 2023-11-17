@@ -7,6 +7,8 @@ from apps.plugins.models import BasePluginConfiguration
 
 
 class BaseRequestSystemConfiguration(BasePluginConfiguration):
+    display_issuer_first_name = models.BooleanField(default=False)
+    display_issuer_last_name = models.BooleanField(default=False)
     display_issuer_picture = models.BooleanField(default=False)
     display_issuer_gender = models.BooleanField(default=False)
     display_issuer_country = models.BooleanField(default=False)

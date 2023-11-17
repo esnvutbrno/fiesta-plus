@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+import uuid
 
 from django.db import models
 from django.db.models import TextChoices
@@ -14,6 +15,8 @@ from apps.utils.models import BaseTimestampedModel
 
 
 class BaseRequestProtocol(typing.Protocol):
+    pk: uuid.UUID
+
     class State(TextChoices):
         CREATED = "created", _("Created")
         MATCHED = "matched", _("Matched")

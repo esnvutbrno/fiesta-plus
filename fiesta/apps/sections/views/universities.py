@@ -8,7 +8,7 @@ from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, UpdateView
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestatables.views.tables import FiestaMultiTableView
 from apps.sections.models import SectionMembership, SectionUniversity
 from apps.sections.tables.faculties import UniversityFacultiesTable
@@ -23,7 +23,7 @@ from apps.utils.views import AjaxViewMixin
 class NewSectionUniversityView(
     EnsureInSectionSpaceViewMixin,
     EnsurePrivilegedUserViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     CreateView,
@@ -55,7 +55,7 @@ class NewSectionUniversityView(
 class UpdateSectionUniversityView(
     EnsureInSectionSpaceViewMixin,
     EnsurePrivilegedUserViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,
@@ -79,7 +79,7 @@ class UpdateSectionUniversityView(
 class NewSectionFacultyView(
     EnsureInSectionSpaceViewMixin,
     EnsurePrivilegedUserViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     CreateView,
@@ -110,7 +110,7 @@ class NewSectionFacultyView(
 class UpdateSectionFacultyView(
     EnsureInSectionSpaceViewMixin,
     EnsurePrivilegedUserViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,

@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.views.generic import UpdateView
 
 from apps.accounts.models import User, UserProfile
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.utils.views import AjaxViewMixin
@@ -16,7 +16,7 @@ from apps.utils.views import AjaxViewMixin
 class BaseQuickRequestMatchView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

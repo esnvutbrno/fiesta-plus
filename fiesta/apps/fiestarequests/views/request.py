@@ -4,7 +4,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import CreateView
 
 from apps.accounts.models import UserProfile
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.sections.views.mixins.membership import EnsureInternationalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.utils.views import AjaxViewMixin
@@ -15,7 +15,7 @@ class BaseNewRequestView(
     EnsureInternationalUserViewMixin,
     SuccessMessageMixin,
     AjaxViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     CreateView,
 ):
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"

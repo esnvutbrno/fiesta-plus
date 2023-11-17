@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
 from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.breadcrumbs import with_breadcrumb
 from apps.utils.views import AjaxViewMixin
@@ -36,7 +36,7 @@ class MyProfileUpdateView(LoginRequiredMixin, UpdateView):
 
 @with_breadcrumb(_("Finish my profile"))
 class ProfileFinishFormView(
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,

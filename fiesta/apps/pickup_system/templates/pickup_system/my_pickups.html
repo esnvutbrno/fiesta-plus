@@ -6,7 +6,7 @@
 {% load i18n %}
 
 {% block upper_head %}
-  {% trans "My Buddies" as title %}
+  {% trans "My Pickups" as title %}
   {% breadcrumb_push_current_plugin %}
   {% breadcrumb_push_item title %}
 {% endblock upper_head %}
@@ -20,12 +20,8 @@
     <div class="alert alert-link text-xl max-w-2xl mx-auto flex flex-row justify-between py-16 px-8">
       No matches found.
 
-      {% if configuration.matching_policy_instance.can_member_match %}
-        <a href="{% url "pickup_system:matching-requests" %}"
-           class="btn btn-primary btn-lg">get your first pickup</a>
-      {% else %}
-        Pickup system team is looking for the best match for you.
-      {% endif %}
+      <a href="{% url "pickup_system:matching-requests" %}"
+         class="btn btn-primary btn-lg">get your first pickup</a>
 
     </div>
   {% endfor %}

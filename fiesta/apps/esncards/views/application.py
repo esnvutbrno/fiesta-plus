@@ -8,7 +8,7 @@ from django.views.generic import CreateView, DetailView
 from apps.accounts.models import User, UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
@@ -19,7 +19,7 @@ from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMix
 class ApplicationCreateView(
     EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     CreateView,
 ):
     request: HttpRequest

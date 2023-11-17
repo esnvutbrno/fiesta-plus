@@ -8,7 +8,7 @@ from django_tables2 import TemplateColumn, tables
 from django_tables2.columns.base import Column, LinkTransform
 from django_tables2.utils import Accessor
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
 from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
 from apps.fiestatables.views.tables import FiestaTableView
@@ -34,6 +34,7 @@ class PickupRequestsTable(BaseRequestsTable):
     )
 
     class Meta(BaseRequestsTable.Meta):
+        model = PickupRequest
         fields = BaseRequestsTable.Meta.fields + ("match_request",)
 
     def __init__(self, *args, **kwargs):
@@ -71,7 +72,7 @@ class PickupRequestsEditorView(
 class PickupRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

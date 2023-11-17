@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.forms import fields_for_model
+from django.forms import Textarea, fields_for_model
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +9,7 @@ from apps.accounts.models import UserProfile
 from apps.fiestaforms.fields.datetime import DateTimeLocalField
 from apps.fiestaforms.forms import WebpackMediaFormMixin
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
+from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
 
@@ -76,3 +77,38 @@ class QuickPickupMatchForm(BaseQuickMatchForm):
 
     class Meta(BaseQuickMatchForm.Meta):
         model = PickupRequestMatch
+
+
+class PickupRequestMatchForm(BaseRequestMatchForm):
+    submit_text = _("Confirm pickup")
+
+    class Meta(BaseRequestMatchForm.Meta):
+        model = PickupRequestMatch
+        labels = BaseRequestMatchForm.Meta.labels | {}
+        help_texts = BaseRequestMatchForm.Meta.help_texts | {
+            "note": lazy(
+                lambda: render_to_string("pickup_system/parts/pickup_request_match_note_help.html"),
+                str,
+            )
+        }
+        widgets = BaseRequestMatchForm.Meta.widgets | {
+            "note": Textarea(
+                attrs={
+                    "rows": 3,
+                    "placeholder": _(
+                        "Hi! I am John and I will pick you up! "
+                        "The best for communication for me is Telegram, but I am basically on all the social platforms. "
+                        "Looking forward to see your and grab a drink together!"
+                    ),
+                }
+            )
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # labels somehow do not work
+        self.fields["approving_request"].label = _(
+            "Are you sure you want to confirm the pickup request, "
+            "acknowledging that you will be responsible for pickup?"
+        )

@@ -9,7 +9,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
@@ -46,7 +46,7 @@ class UpdateMembershipView(EnsureInSectionSpaceViewMixin, EnsurePrivilegedUserVi
 
 class MembershipStateEditorView(
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     UpdateMembershipView,
 ):
     fields = ("state",)
@@ -65,7 +65,7 @@ class MembershipStateEditorView(
 
 class MembershipRoleEditorView(
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     UpdateMembershipView,
 ):
     fields = ("role",)

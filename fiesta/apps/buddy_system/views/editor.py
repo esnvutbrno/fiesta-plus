@@ -10,7 +10,7 @@ from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
 from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
 from apps.fiestatables.views.tables import FiestaTableView
@@ -28,6 +28,7 @@ class BuddyRequestsTable(BaseRequestsTable):
     )
 
     class Meta(BaseRequestsTable.Meta):
+        model = BuddyRequest
         fields = BaseRequestsTable.Meta.fields + ("match_request",)
 
     def __init__(self, *args, **kwargs):
@@ -62,7 +63,7 @@ class BuddyRequestsEditorView(
 class BuddyRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

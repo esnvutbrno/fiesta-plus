@@ -7,7 +7,6 @@ from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
 from django_tables2 import Column, tables
 from django_tables2.utils import Accessor
 
-from apps.buddy_system.models import BuddyRequest
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.fiestatables.columns import AvatarColumn, NaturalDatetimeColumn
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
@@ -87,7 +86,6 @@ class BaseRequestsTable(tables.Table):
     )
 
     class Meta:
-        model = BuddyRequest
         # TODO: dynamic by section preferences
         fields = ("state",)
         sequence = (

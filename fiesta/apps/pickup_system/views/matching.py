@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+from django.urls import reverse_lazy
 from django.views.generic import ListView
 
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.fiestarequests.views.matching import BaseTakeRequestView
+from apps.pickup_system.forms import PickupRequestMatchForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch, PickupSystemConfiguration
 from apps.pickup_system.models.files import BaseIssuerPictureServeView, BaseMatcherPictureServeView
 from apps.plugins.middleware.plugin import HttpRequest
@@ -28,10 +30,15 @@ class MatchingRequestsView(
         )
 
 
-class TakePickupRequestView(
+class MatchPickupRequestFormView(
     BaseTakeRequestView,
 ):
     match_model = PickupRequestMatch
+    form_class = PickupRequestMatchForm
+
+    form_url = "pickup_system:match-pickup-request"
+    success_url = reverse_lazy("pickup_system:my-pickups")
+    buddy_request: PickupRequest
 
     def get_queryset(self):
         return self.request.in_space_of_section.pickup_system_requests.filter(
