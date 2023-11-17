@@ -27,7 +27,7 @@ jobs:
         id: meta
         run: |
           echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
-          echo "release_name=fiesta-plus@`echo ${GITHUB_SHA}` " >> $GITHUB_OUTPUT
+          echo "release_name=fiesta-plus@`echo ${GITHUB_SHA}`" >> $GITHUB_OUTPUT
 
       - name: Prepare Sentry release
         uses: getsentry/action-release@v1
@@ -162,8 +162,6 @@ jobs:
               tag: ${{ needs.build.outputs.image_tag }}
             ingress:
               certContactEmail: ${{ secrets.CERT_CONTACT_EMAIL }}
-            release:
-              name: ${{ needs.build.outputs.release_name }}
             secrets:
               databaseUrl: ${{ secrets.DATABASE_URL }}
               s3:
