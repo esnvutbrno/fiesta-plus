@@ -30,7 +30,14 @@ ENV PUBLIC_PATH=${PUBLIC_PATH}
 ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
 ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
 
-RUN ["yarn", "build"]
+RUN \
+  --mount=type=secret,id=SENTRY_ORG \
+  --mount=type=secret,id=SENTRY_PROJECT \
+  --mount=type=secret,id=SENTRY_WEBPACK_AUTH_TOKEN \
+  export SENTRY_ORG=$(cat /run/secrets/SENTRY_ORG) \
+  export SENTRY_PROJECT=$(cat /run/secrets/SENTRY_PROJECT) \
+  export SENTRY_WEBPACK_AUTH_TOKEN=$(cat /run/secrets/SENTRY_WEBPACK_AUTH_TOKEN) \
+  && yarn build
 
 #
 # django web app image

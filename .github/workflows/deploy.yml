@@ -66,6 +66,10 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.webMeta.outputs.tags }}
           labels: ${{ steps.webMeta.outputs.labels }}
+          secrets: |
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+            SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
 
       - name: Prepare image metadata
         id: proxyMeta
@@ -98,6 +102,10 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.proxyMeta.outputs.tags }}
           labels: ${{ steps.proxyMeta.outputs.labels }}
+          secrets: |
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+            SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
 
   deploy:
     name: Deploy to cluster
