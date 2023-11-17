@@ -7,7 +7,7 @@
 {% block request_card_bottom %}
   {% if fr.interests %}
     <hr>
-    <div class="flex flex-row flex-wrap justify-between">
+    <div class="flex flex-row flex-wrap justify-between mt-2">
       {% for interest in fr.get_interests_display %}
         <span class="badge badge-outline mr-2 mb-2">{{ interest }}</span>
       {% endfor %}
