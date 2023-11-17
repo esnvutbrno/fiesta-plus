@@ -15,6 +15,9 @@ config.plugins.push(
         release: {
             name: process.env.SENTRY_RELEASE_NAME,
             finalize: false,
+            deploy: {
+                env: process.env.SENTRY_RELEASE_ENVIRONMENT,
+            }
         },
     })
 );
