@@ -1,3 +1,7 @@
+# expected to be set during production release
+ARG SENTRY_RELEASE_ENVIRONMENT
+ARG DJANGO_RELASE_NAME
+
 #
 # webpack image
 #
