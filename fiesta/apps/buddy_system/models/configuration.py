@@ -9,6 +9,7 @@ from apps.fiestarequests.models import BaseRequestSystemConfiguration
 
 class BuddySystemConfiguration(BaseRequestSystemConfiguration):
     matching_policy = models.CharField(
+        verbose_name=_("matching policy"),
         default=MatchingPoliciesRegister.DEFAULT_POLICY.id,
         choices=MatchingPoliciesRegister.CHOICES,
         max_length=32,

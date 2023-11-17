@@ -19,9 +19,11 @@ class PickupRequest(BaseRequestForPickupSystem):
         verbose_name=_("pickup time"),
     )
     place = models.CharField(
+        verbose_name=_("pickup place name"),
         max_length=256,
     )
     location = PlainLocationField(
+        verbose_name=_("pickup point"),
         based_fields=["pickup_place"],
         default="49.1922443,16.6113382",
         zoom=4,
