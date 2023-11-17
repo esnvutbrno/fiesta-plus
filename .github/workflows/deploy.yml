@@ -27,7 +27,7 @@ jobs:
         id: meta
         run: |
           echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
-          echo "release_name=fiesta-plus@$GITHUB_SHA" >> $GITHUB_OUTPUT
+          echo "release_name=fiesta-plus@${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
       - name: Prepare Sentry release
         uses: getsentry/action-release@v1
@@ -220,7 +220,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - run: echo "${{ needs.build.outputs.release_name }}"
+      - run: |
+          echo "${{ needs.build.outputs.release_name }}"
+          echo "${{join(needs.build.outputs.outputs.*, ' ')}}"
+          echo "${{join(needs.deploy.outputs.outputs.*, ' ')}}"
 
       - name: Finalize Sentry release
         uses: getsentry/action-release@v1
