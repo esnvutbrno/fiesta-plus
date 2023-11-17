@@ -14,13 +14,31 @@ jobs:
   build:
     name: Build images
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+      release_name: ${{ steps.meta.outputs.release_name }}
+
     steps:
       -
         name: Checkout
         uses: actions/checkout@v3
 
-      - name: Prepare image reference
-        run: echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
+      - name: Prepare references and release
+        id: meta
+        run: |
+          echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
+          echo "release_name=fiesta-plus@`echo ${GITHUB_SHA}` " >> $GITHUB_OUTPUT
+
+      - name: Prepare Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          finalize: false
+          version: ${{ steps.meta.outputs.release_name }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -66,10 +84,13 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.webMeta.outputs.tags }}
           labels: ${{ steps.webMeta.outputs.labels }}
+          build-args: |
+            DJANGO_RELEASE_NAME: ${{ steps.meta.outputs.release_name }}
           secrets: |
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
             SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
+            SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
 
       - name: Prepare image metadata
         id: proxyMeta
@@ -106,6 +127,7 @@ jobs:
             SENTRY_ORG=${{ secrets.SENTRY_ORG }}
             SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
             SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
+            SENTRY_RELEASE_NAME=${{ steps.meta.outputs.release_name }}
 
   deploy:
     name: Deploy to cluster
@@ -123,9 +145,6 @@ jobs:
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
 
-      - name: Prepare image reference
-        run: echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
-
       - name: Deploy
         uses: 'vimeda/helm@v1.7.0'
         with:
@@ -137,12 +156,14 @@ jobs:
           values: >-
             web:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
-              tag: ${{ env.image_tag }}
+              tag: ${{ needs.build.outputs.image_tag }}
             proxy:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/proxy
-              tag: ${{ env.image_tag }}
+              tag: ${{ needs.build.outputs.image_tag }}
             ingress:
               certContactEmail: ${{ secrets.CERT_CONTACT_EMAIL }}
+            release:
+              name: ${{ needs.build.outputs.release_name }}
             secrets:
               databaseUrl: ${{ secrets.DATABASE_URL }}
               s3:
@@ -189,17 +210,18 @@ jobs:
           --data-urlencode "disable_web_page_preview=true" \
           --data-urlencode "parse_mode=MarkdownV2"
 
-  announce-to-sentry:
-    name: Announce Deploy To Sentry
+  finalize-sentry-release:
+    name: Finalize Sentry deploy
     runs-on: ubuntu-latest
     needs:
+      - build
       - deploy
     steps:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Create Sentry release
+      - name: Finalize Sentry release
         uses: getsentry/action-release@v1
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
@@ -207,3 +229,5 @@ jobs:
           SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
         with:
           environment: production
+          finalize: true
+          version: ${{ needs.build.outputs.release_name }}

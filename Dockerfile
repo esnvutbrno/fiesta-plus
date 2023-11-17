@@ -114,6 +114,9 @@ ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
 ARG DJANGO_BUILD_DIR=/usr/src/build/
 ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 
+ARG DJANGO_RELASE_NAME
+ENV DJANGO_RELASE_NAME=${DJANGO_RELASE_NAME}
+
 # need production configuration, but not all values are ready in env
 RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
 
