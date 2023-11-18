@@ -45,16 +45,18 @@
             </li>
           {% endfor %}
         </ul>
-        <div class="Forms__field Forms__field--buttons btn-group flex-wrap">
-          <button class="btn btn-sm btn-primary btn-outline"
-                  type="submit"
-                  name="action_primary">{% trans 'Make Primary' %}</button>
-          <button class="btn btn-sm btn-warning btn-outline"
-                  type="submit"
-                  name="action_send">{% trans 'Re-send Verification' %}</button>
-          <button class="btn btn-sm btn-error btn-outline"
-                  type="submit"
-                  name="action_remove">{% trans 'Remove' %}</button>
+        <div class="Forms__field Forms__field--buttons ">
+          <div class="join join-vertical md:join-horizontal">
+            <button class="btn btn-sm btn-primary btn-outline join-item"
+                    type="submit"
+                    name="action_primary">{% trans 'Make Primary' %}</button>
+            <button class="btn btn-sm btn-warning btn-outline join-item"
+                    type="submit"
+                    name="action_send">{% trans 'Re-send Verification' %}</button>
+            <button class="btn btn-sm btn-error btn-outline join-item"
+                    type="submit"
+                    name="action_remove">{% trans 'Remove' %}</button>
+          </div>
         </div>
       </form>
     {% else %}
