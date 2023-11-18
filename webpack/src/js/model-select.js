@@ -4,10 +4,6 @@ import Select from 'tom-select'
 Alpine.data('modelSelect', (el) => ({
     select: null,
     async init() {
-        if (this.select) {
-            this.select.destroy()
-        }
-
         /*
          * One big WTF, spent three hours on this:
          * In situations, where HTMX is used and just made the swap,
@@ -20,6 +16,13 @@ Alpine.data('modelSelect', (el) => ({
          * I've tried Alpine.nextTick, alpine-moph, promise initialization, and nope :-(
          */
         setTimeout(() => {
+            if (this.select) {
+                this.select.destroy()
+            }
+            if (el.tomselect) {
+                el.tomselect.destroy()
+            }
+
             this.select = this.initSelect(el)
         }, 100)
     },

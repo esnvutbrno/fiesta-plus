@@ -20,7 +20,7 @@ USER_PROFILE_CONTACT_FIELDS = fields_for_model(
 
 
 class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
-    _webpack_bundle = "jquery"
+    _bundle = "jquery"
     submit_text = _("Send request for pickup")
 
     class Meta(BaseNewRequestForm.Meta):
@@ -56,7 +56,7 @@ class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
 
 
 class PickupRequestEditorForm(WebpackMediaFormMixin, BaseRequestEditorForm):
-    _webpack_bundle = "jquery"
+    _bundle = "jquery"
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

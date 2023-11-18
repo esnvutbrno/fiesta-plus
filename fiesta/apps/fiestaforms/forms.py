@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from operator import itemgetter
+
 from django.forms import DateInput as DjDateInput, Form, Media, ModelForm
 from django.utils.translation import gettext_lazy as _
 from webpack_loader.utils import get_files
@@ -28,11 +30,17 @@ class BaseForm(Form):
 
 
 class WebpackMediaFormMixin:
-    _webpack_bundle: str
+    _common_bundle: str = "main"
+    _bundle: str
 
     @property
     def media(self):
         media = super().media
-        media += Media(js=[f["url"] for f in get_files(self._webpack_bundle)])
+        media += Media(
+            js=tuple(
+                set(map(itemgetter("url"), get_files(self._bundle)))
+                # - set(map(itemgetter("url"), get_files(self._common_bundle)))
+            )
+        )
 
         return media

@@ -25,6 +25,14 @@ module.exports = {
         publicPath: PUBLIC_PATH,
         path: BUILD_DIR,
         filename: '[name].[chunkhash:8].js',
+        chunkFilename: "[id]-[chunkhash].js",
+    },
+    optimization: {
+        runtimeChunk: true,
+        splitChunks: {
+
+
+        }
     },
     module: {
         rules: [
