@@ -13,6 +13,9 @@ services:
       target: web-base
     depends_on:
       - db
+    volumes:
+      # for dev and also produp
+      - web_media_files:/usr/src/media
     environment:
       VIRTUAL_HOST: web.${ROOT_DOMAIN}
       VIRTUAL_PORT: 8000
