@@ -9,7 +9,7 @@ from apps.fiestaforms.forms import BaseModelForm
 from apps.plugins.models import Plugin
 from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_label
-from apps.sections.services.sections_plugins_validator import SectionsPluginsValidator
+from apps.sections.services.sections_plugins_validator import SectionPluginsValidator
 
 
 class ChangePluginStateForm(BaseModelForm):
@@ -35,7 +35,7 @@ class ChangePluginStateForm(BaseModelForm):
         super()._post_clean()
 
         try:
-            SectionsPluginsValidator.for_changed_plugin(
+            SectionPluginsValidator.for_changed_plugin(
                 section=self.instance.section,
                 plugin=self.instance,
             ).check_validity()
