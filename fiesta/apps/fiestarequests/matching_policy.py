@@ -57,9 +57,9 @@ class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
     can_member_match = True
 
 
-class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
+class ManualWithSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
-    title = _("Restricted to same faculty")
+    title = _("Manual by members with restriction to same faculty")
     description = _("Matching is done manually by members themselves, but limited to the same faculty.")
     can_member_match = True
 
@@ -69,7 +69,7 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
         member_profile: UserProfile = membership.user.profile_or_none
 
         return qs.filter(self._base_filter(membership=membership)).filter(
-            issuer__profile__faculty=member_profile.faculty,
+            issuer_faculty=member_profile.faculty,
         )
 
 
@@ -97,8 +97,9 @@ class MatchingPoliciesRegister:
     AVAILABLE_POLICIES = [
         ManualByEditorMatchingPolicy,
         ManualByMemberMatchingPolicy,
-        SameFacultyMatchingPolicy,
-        LimitedSameFacultyMatchingPolicy,
+        ManualWithSameFacultyMatchingPolicy,
+        # TODO: make it working
+        # LimitedSameFacultyMatchingPolicy,
         # AutoMatchingPolicy
     ]
 

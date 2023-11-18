@@ -73,8 +73,9 @@
     .Forms__file-state {
         /* status located in right */
         @apply
-        w-auto self-center border-secondary border-[1px] border-b-0 pl-4 rounded-t
-        flex flex-row items-center gap-x-2
+        w-auto self-end md:self-center border-secondary border-[1px] border-b-0 rounded-t
+        pl-2 md:pl-4
+        flex flex-row items-center gap-x-1 md:gap-x-2
         ;
 
         height: 2em;
@@ -93,7 +94,10 @@
 
     .Forms__file-state label {
         /* clear btn */
-        @apply lowercase btn btn-sm btn-link text-gray-700 rounded-none rounded-tr-sm;
+        @apply
+            lowercase btn btn-sm btn-link text-gray-700 rounded-none rounded-tr-sm
+            px-1 md:px-2
+        ;
     }
 
     .Forms__file-state input[type=checkbox]:checked + label {
@@ -270,4 +274,9 @@
   80%, to {
     transform: rotate(180deg);
   }
+}
+
+/* TODO: needed after daysiui migration to v4, probably better would be to drop it */
+.btn {
+    @apply uppercase
 }

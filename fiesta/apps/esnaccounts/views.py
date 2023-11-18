@@ -14,7 +14,7 @@ class ESNAccountsAdapter(CASAdapter):
 
 login = CASLoginView.adapter_view(ESNAccountsAdapter)
 
-# see https://github.com/esnvutbrno/buena-fiesta/issues/228
+# see https://github.com/esnvutbrno/fiesta-plus/issues/228
 callback = csrf_exempt(CASCallbackView.adapter_view(ESNAccountsAdapter))
 
 logout = CASLogoutView.adapter_view(ESNAccountsAdapter)

@@ -4,7 +4,7 @@ import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
 from django_tables2 import Column, TemplateColumn
 
-from apps.fiestatables.columns import CountryColumn, ImageColumn, LabeledChoicesColumn, NaturalDatetimeColumn
+from apps.fiestatables.columns import AvatarColumn, CountryColumn, LabeledChoicesColumn, NaturalDatetimeColumn
 from apps.sections.models import SectionMembership
 
 
@@ -20,7 +20,7 @@ class SectionMembershipTable(tables.Table):
         ),
         attrs=dict(a={"hx-disable": True}),  # TODO: do it properly
     )
-    user__profile__picture = ImageColumn()
+    user__profile__picture = AvatarColumn()
     user__profile__nationality = CountryColumn(verbose_name=_("Nationality"))
     user__profile__faculty__abbr = Column(verbose_name=_("Faculty"))
 
@@ -28,7 +28,7 @@ class SectionMembershipTable(tables.Table):
 
     created = NaturalDatetimeColumn(verbose_name=_("Joined"))
 
-    approve_membership = TemplateColumn(
+    state_button = TemplateColumn(
         template_name="sections/parts/change_membership_state_btn.html",
         exclude_from_export=True,
         order_by="state",

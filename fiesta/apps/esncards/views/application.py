@@ -8,14 +8,20 @@ from django.views.generic import CreateView, DetailView
 from apps.accounts.models import User, UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.membership import UserPassesMembershipTestMixin
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, HtmxFormMixin, CreateView):
+class ApplicationCreateView(
+    EnsureInSectionSpaceViewMixin,
+    SuccessMessageMixin,
+    HtmxFormViewMixin,
+    CreateView,
+):
     request: HttpRequest
     object: ESNcardApplication
 
@@ -25,7 +31,7 @@ class ApplicationCreateView(UserPassesMembershipTestMixin, SuccessMessageMixin, 
     permission_denied_message = _("An ESNcard application for current user for this section already exists.")
 
     def test_membership(self, membership: SectionMembership) -> bool:
-        return not membership.user.esncard_applications.filter(section=membership.section).exists()
+        return membership.user.esncard_applications.filter(section=membership.section).exists()
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile_or_none

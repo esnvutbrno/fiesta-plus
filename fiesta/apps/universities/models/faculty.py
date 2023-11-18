@@ -21,6 +21,7 @@ class Faculty(BaseTimestampedModel):
 
     university = models.ForeignKey(
         "universities.University",
+        related_name="faculties",
         on_delete=models.RESTRICT,
         verbose_name=_("related university"),
         db_index=True,

@@ -5,7 +5,7 @@ from apps.utils.request import HttpRequest
 
 class AjaxViewMixin:  # (TemplateView):
     request: HttpRequest
-    ajax_template_name = None
+    ajax_template_name: str = None
 
     def get_template_names(self):
         if self.request.htmx or any(

@@ -24,6 +24,7 @@ class Plugin(BaseTimestampedModel):
         default=State.ENABLED,
         max_length=16,
         verbose_name=_("plugin state"),
+        db_index=True,
         help_text=_(
             "Current state of plugin - affects, if plugin could be displayed by "
             "international/member/editor/admin/at all."

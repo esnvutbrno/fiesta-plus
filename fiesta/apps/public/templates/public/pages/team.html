@@ -10,24 +10,22 @@
     </h1>
     <p class="lg:w-2/3 mx-auto leading-relaxed text-base">Baked by volunteers for volunteers.</p>
   </div>
-  <div class="flex flex-wrap -m-4">
+  <div class="flex flex-col md:flex-row flex-wrap -m-4 items-center">
     {% for _ in "1234" %}
       <div class="p-4 lg:w-1/4 md:w-1/2">
         <div class="h-full flex flex-col items-center text-center">
-          <img alt="team"
-               class="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4 animate-pulse"
-               src="https://dummyimage.com/200x200?text=%20">
+          <div class="flex-shrink-0 rounded-lg w-full h-56 object-cover object-center mb-4 skeleton"></div>
           <div class="w-full flex flex-col items-center gap-2">
             <h2 class="h-5 bg-slate-200 rounded-xl animate-pulse w-32 mx-auto"></h2>
             <h3 class="h-3 bg-slate-200 rounded-xl animate-pulse w-20 mx-auto"></h3>
-            <div class="space-y-3 w-full animate-pulse">
+            <div class="space-y-3 w-full">
               <div class="grid grid-cols-3 gap-4">
-                <div class="h-2 bg-slate-200 rounded col-span-2"></div>
-                <div class="h-2 bg-slate-200 rounded col-span-1"></div>
+                <div class="h-2 bg-slate-200 animate-pulse rounded col-span-2"></div>
+                <div class="h-2 bg-slate-200 animate-pulse rounded col-span-1"></div>
               </div>
-              <div class="h-2 bg-slate-200 rounded"></div>
+              <div class="h-2 bg-slate-200 animate-pulse rounded"></div>
             </div>
-            <span class="inline-flex animate-pulse">
+            <span class="inline-flex">
               <a class="text-slate-200">
                 <svg fill="none"
                      stroke="currentColor"

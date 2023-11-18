@@ -47,15 +47,25 @@ def get_navigation_items(context):
 
 @register.simple_tag(takes_context=True)
 def get_home_url(context):
+    """Called also from error pages, checks everything potentially set by middlewares."""
     url = reverse("public:home")
     try:
         request: HttpRequest = context["request"]
-
     except KeyError:
         return url
 
-    if request.in_space_of_section:
-        url = request.in_space_of_section.section_home_url(request.membership)
+    try:
+        membership: SectionMembership | None = request.membership
+    except AttributeError:
+        membership = None
+
+    try:
+        section: Section | None = request.in_space_of_section
+    except AttributeError:
+        section = None
+
+    if section:
+        url = request.in_space_of_section.section_home_url(membership)
 
     if url:
         return url

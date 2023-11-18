@@ -15,7 +15,7 @@
     {% for base_account in form.accounts %}
       <form method="POST"
             action="{% url 'socialaccount_connections' %}"
-            class="w-1/2">
+            class="w-full mg:w-1/2">
         {% csrf_token %}
         <input type="hidden"
                name="account"

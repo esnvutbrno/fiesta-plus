@@ -2,6 +2,10 @@
 {% load fiestaforms %}
 {% load as_widget_field as_label from fiestaforms %}
 <div class="{{ form|get_form_classes }}">
+  {{ form.media }}
+
+  {% for f in form.fields.values %}{{ f.widget.media|default:"" }}{% endfor %}
+
   {% for bf, errors in fields %}
     {% include "fiestaforms/parts/field.html" with bf=bf errors=errors %}
   {% endfor %}

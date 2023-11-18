@@ -1,3 +1,55 @@
+# expected to be set during production build
+ARG DJANGO_RELEASE_NAME
+ARG SENTRY_RELEASE_NAME
+ARG SENTRY_RELEASE_ENVIRONMENT
+
+#
+# webpack image
+#
+FROM node:18.15.0-slim as webpack-base
+
+RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY ./webpack/package.json ./webpack/yarn.lock ./
+RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
+
+COPY ./webpack/ /usr/src/app/
+COPY ./fiesta/ /usr/src/fiesta/
+
+CMD ["yarn", "run"]
+
+# stable image
+FROM webpack-base as webpack-stable
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+ARG BUILD_DIR=/usr/src/build
+ENV BUILD_DIR=${BUILD_DIR}
+
+ARG PUBLIC_PATH=/static/
+ENV PUBLIC_PATH=${PUBLIC_PATH}
+
+ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
+ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
+
+ARG SENTRY_RELEASE_NAME
+ENV SENTRY_RELEASE_NAME=${SENTRY_RELEASE_NAME}
+
+ARG SENTRY_RELEASE_ENVIRONMENT
+ENV SENTRY_RELEASE_ENVIRONMENT=${SENTRY_RELEASE_ENVIRONMENT}
+
+RUN \
+  --mount=type=secret,id=SENTRY_ORG \
+  --mount=type=secret,id=SENTRY_PROJECT \
+  --mount=type=secret,id=SENTRY_WEBPACK_AUTH_TOKEN \
+  export SENTRY_ORG=$(cat /run/secrets/SENTRY_ORG) \
+  export SENTRY_PROJECT=$(cat /run/secrets/SENTRY_PROJECT) \
+  export SENTRY_WEBPACK_AUTH_TOKEN=$(cat /run/secrets/SENTRY_WEBPACK_AUTH_TOKEN) \
+  && yarn build
+
 #
 # django web app image
 #
@@ -73,42 +125,38 @@ ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
 ARG DJANGO_BUILD_DIR=/usr/src/build/
 ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
 
+ARG DJANGO_RELEASE_NAME
+ENV DJANGO_RELEASE_NAME=${DJANGO_RELEASE_NAME}
+
 # need production configuration, but not all values are ready in env
 RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
 
 # given by webpack compiled results
-COPY ./webpack-stats.json $DJANGO_BUILD_DIR
+COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
-CMD ["python -m gunicorn fiesta.wsgi:application"]
+CMD ["python -m gunicorn -b [::]:8000 fiesta.wsgi:application"]
 
 #
-# webpack image
+# proxy image
 #
-FROM node:18.15.0-slim as webpack-base
+FROM nginx:1.25.0-alpine as proxy-base
 
-RUN apt-get update && apt-get install -y python python3 gcc g++ make build-essential && rm -rf /var/lib/apt/lists/*
+RUN rm /etc/nginx/conf.d/default.conf
 
-WORKDIR /usr/src/app
+# https://github.com/docker-library/docs/tree/master/nginx#using-environment-variables-in-nginx-configuration-new-in-119
+COPY ./nginx/nginx.conf.template /etc/nginx/templates/
 
-COPY ./webpack/package.json ./webpack/yarn.lock ./
-RUN --mount=type=cache,target=/root/.yarn YARN_CACHE_FOLDER=/root/.yarn npm install yarn && yarn install
+FROM proxy-base as proxy-stable
 
-COPY ./webpack/ /usr/src/app/
-COPY ./fiesta/ /usr/src/fiesta/
+# prepared by webpack and web builds during CD
+COPY --from=webpack-stable /usr/src/build/ /var/build/
+COPY --from=web-stable /usr/src/static/ /var/static/
 
-CMD ["yarn", "run"]
+ARG STATIC_LOCATION_PATTERN="^/static/(.*)$$"
+ENV STATIC_LOCATION_PATTERN=${STATIC_LOCATION_PATTERN}
 
-# stable image
-FROM webpack-base as webpack-stable
+ARG PROXY_HOSTNAME_TARGET="127.0.0.1"
+ENV PROXY_HOSTNAME_TARGET=${PROXY_HOSTNAME_TARGET}
 
-ARG BUILD_DIR=/usr/src/build
-ENV BUILD_DIR=${BUILD_DIR}
-
-ARG PUBLIC_PATH=/static/
-ENV PUBLIC_PATH=${PUBLIC_PATH}
-
-ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
-ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
-
-RUN ["yarn", "build"]
+CMD ["nginx", "-g", "daemon off;"]

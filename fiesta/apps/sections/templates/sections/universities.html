@@ -1,0 +1,50 @@
+{% extends "fiesta/base.html" %}
+{% load django_tables2 %}
+{% load fiestaforms %}
+{% load state %}
+
+{% load breadcrumbs %}
+{% load i18n %}
+{% load static %}
+{% load utils %}
+
+{% block upper_head %}
+  {% trans "Universities" as title %}
+  {% breadcrumb_push_current_plugin %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block breadcrumbs_right %}
+  <a class="btn btn-success btn-xs sm:btn-sm btn-outline"
+     href="{% url "sections:new-section-university" %}"
+     x-data="modal($el.href)"
+     x-bind="bind">{% translate "Add university" %}</a>
+{% endblock breadcrumbs_right %}
+
+
+{% block main %}
+  {% if object_list %}
+    {% for university, table in object_list|zip:tables %}
+      <div class="mb-4 flex flex-row justify-between items-center">
+        <h2 class="text-lg md:text-2xl font-bold flex flex-row items-center gap-x-4">
+          {{ university.name }}
+          <a href="{% url "sections:update-section-university" university.pk %}"
+             x-data="modal($el.href)"
+             x-bind="bind"
+             class="btn btn-xs sm:btn-sm btn-outline btn-warning">change</a>
+        </h2>
+        <a class="btn btn-success btn-xs sm:btn-sm btn-outline"
+           href="{% url "sections:new-section-faculty" university.pk %}"
+           x-data="modal($el.href)"
+           x-bind="bind">{% translate "Add faculty" %}</a>
+      </div>
+
+      <div>{% render_table table %}</div>
+      <hr class="my-4">
+      {#    {% include "fiestatables/table.html" with table=table %}#}
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-info">{% translate "No universities yet." %}</div>
+  {% endif %}
+
+{% endblock %}

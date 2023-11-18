@@ -186,6 +186,10 @@
                   {{ object.user.profile.nationality|default:"-" }}
                 </td>
               </tr>
+              <tr>
+                <th>{% trans "Gender" %}</th>
+                <td>{{ object.user.profile.get_gender_display }}</td>
+              </tr>
             </table>
             <table class="table table-zebra w-1/2">
               <tr>

@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, TemplateView, UpdateView
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.plugins.models import BasePluginConfiguration, Plugin
 from apps.plugins.utils import all_plugin_apps
 from apps.sections.forms.plugin_configuration import get_plugin_configuration_form
@@ -31,7 +31,10 @@ class SectionPluginsView(
                     app,
                     plugin,
                     (
-                        get_plugin_configuration_form(plugin.configuration)(instance=plugin.configuration)
+                        get_plugin_configuration_form(
+                            configuration=plugin.configuration,
+                            for_section=self.request.in_space_of_section,
+                        )(instance=plugin.configuration)
                         if plugin and plugin.configuration
                         else None
                     ),
@@ -57,11 +60,12 @@ class SectionPluginsView(
 
 class PluginDetailMixin(
     EnsureSectionAdminViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
 ):
     model = Plugin
+    object: Plugin
 
     success_url = reverse_lazy("sections:section-plugins")
 
@@ -69,8 +73,21 @@ class PluginDetailMixin(
 
     extra_context = {
         "PluginState": Plugin.State,
-        "form_url": reverse_lazy("sections:create-plugin"),
     }
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+
+        data.update(
+            {
+                "form_url": (
+                    reverse_lazy("sections:change-plugin-state", kwargs={"pk": self.object.pk})
+                    if self.object
+                    else reverse_lazy("sections:setup-plugin")
+                ),
+            }
+        )
+        return data
 
 
 class ChangePluginStateFormView(
@@ -88,7 +105,7 @@ class SetupPluginFormView(PluginDetailMixin, CreateView):
 
 class ChangePluginConfigurationFormView(
     EnsureSectionAdminViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,
@@ -96,7 +113,10 @@ class ChangePluginConfigurationFormView(
     object: BasePluginConfiguration
 
     def get_form_class(self):
-        return get_plugin_configuration_form(self.object)
+        return get_plugin_configuration_form(
+            configuration=self.object,
+            for_section=self.request.in_space_of_section,
+        )
 
     queryset = BasePluginConfiguration.objects.all()
 

@@ -154,15 +154,21 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         default=State.INCOMPLETE,
     )
 
+    enforce_revalidation = models.BooleanField(
+        verbose_name=_("enforce revalidation of profile"),
+        default=False,
+    )
+
     class Meta:
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
 
     @hook(AFTER_SAVE)
     def on_save(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
-        UserProfileStateSynchronizer.on_user_profile_update(profile=self)
+        # self.user should be saved before the UserProfile form
+        synchronizer.revalidate_user_profile(profile=self)
 
     def __str__(self):
         return (

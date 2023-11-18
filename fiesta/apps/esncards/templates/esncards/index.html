@@ -15,7 +15,7 @@
           travel, accommodation, entertainment, and cultural activities, as well as a vibrant community of international
           students.
         </p>
-        {% if not applications.exists %}
+        {% if not obj_list.exists %}
           <a href="{% url "esncards:application_create_form" %}"
              class="btn btn-primary btn-lg">Apply for ESNcard</a>
         {% endif %}
@@ -25,9 +25,9 @@
       </div>
     </div>
   </section>
-  {% if applications.exists %}
+  {% if obj_list.exists %}
     <div class="flex flex-col items-center max-w-md mx-auto">
-      {% for application in applications %}
+      {% for application in obj_list %}
         <div class="card card-side shadow w-full">
           <figure>
             <img src="{{ application.holder_photo.url }}"

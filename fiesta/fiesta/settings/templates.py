@@ -6,6 +6,8 @@ from ._utils import BaseConfigurationProtocol
 class TemplatesConfigMixin(BaseConfigurationProtocol):
     FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
+    DJANGO_TABLES2_TEMPLATE = "fiestatables/django_tables2_table.html"
+
     def TEMPLATES(self):
         return [
             {
@@ -24,6 +26,7 @@ class TemplatesConfigMixin(BaseConfigurationProtocol):
                         "django.template.context_processors.request",
                         "django.contrib.auth.context_processors.auth",
                         "django.contrib.messages.context_processors.messages",
+                        "django_admin_env_notice.context_processors.from_settings",
                     ],
                 },
             },

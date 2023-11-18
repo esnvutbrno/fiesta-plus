@@ -51,7 +51,12 @@ class User(AbstractUser):
 
     # a few dynamic related models
     buddy_system_request_matches: models.QuerySet
+    pickup_system_request_matches: models.QuerySet
     profile: UserProfile
+
+    @property
+    def primary_email(self):
+        return self.emailaddress_set.filter(primary=True).first() or self.email
 
 
 __all__ = ["User"]

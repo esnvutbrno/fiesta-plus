@@ -21,6 +21,8 @@ class PagesConfig(BasePluginAppConfig):
 
     configuration_model = "pages.PagesConfiguration"
 
+    feature_state = BasePluginAppConfig.FeatureState.EXPERIMENTAL
+
     # login not required by default
     login_required = False
 

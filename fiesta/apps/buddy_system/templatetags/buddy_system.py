@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-import re
-
 from django import template
 
 from apps.buddy_system.apps import BuddySystemConfig
@@ -11,25 +9,6 @@ from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
 
 register = template.Library()
-
-# I know, it's not the best regex for emails
-# [\w.] as [a-zA-Z0-9_.]
-CENSOR_REGEX = re.compile(
-    # emails
-    r"^$|\S+@\S+\.\S+"
-    # instagram username
-    r"|@[\w.]+"
-    # european phone numbers
-    r"|\+?\d{1,3}[ \-]?[(]?\d{3,4}[)]?[ \-]?\d{3,4}[ \-]?\d{3,4}",
-    # URL adresses SIMPLIFIED
-    # r"(https?://)?([a-z\d_\-]{3,}\.)+[a-z]{2,4}(/\S*)?"
-    re.VERBOSE | re.IGNORECASE,
-)
-
-
-@register.filter
-def censor_description(description: str) -> str:
-    return CENSOR_REGEX.sub("---censored---", description)
 
 
 @register.simple_tag(takes_context=True)
@@ -81,10 +60,12 @@ def get_matched_buddy_requests(context):
     ).order_by("-created")
 
 
-@register.filter
-def request_state_to_css_variant(state: BuddyRequest.State):
-    return {
-        BuddyRequest.State.CREATED: "info",
-        BuddyRequest.State.MATCHED: "success",
-        BuddyRequest.State.CANCELLED: "danger",
-    }.get(state)
+@register.simple_tag(takes_context=True)
+def get_buddy_system_configuration(context):
+    request: HttpRequest = context["request"]
+
+    buddy_system_plugin: Plugin = request.in_space_of_section.plugins.get(
+        app_label=all_plugins_mapped_to_class().get(BuddySystemConfig).label
+    )
+
+    return buddy_system_plugin.configuration

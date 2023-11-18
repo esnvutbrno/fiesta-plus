@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, TemplateView
 
 from apps.fiestaforms.forms import BaseModelForm
-from apps.sections.models import SectionMembership
+from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.sections.views.mixins.section_space import EnsureNotInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import BreadcrumbItem
 
@@ -56,8 +56,16 @@ class NewSectionMembershipFormView(
 
     def form_valid(self, form):
         # override to be sure
-        form.instance.user = self.request.user
-        form.instance.state = SectionMembership.State.UNCONFIRMED
+        sm: SectionMembership = form.instance
+
+        configuration = SectionsConfiguration.objects.filter(plugins__section=sm.section).first()
+
+        if sm.role == SectionMembership.Role.INTERNATIONAL and configuration.auto_approved_membership_for_international:
+            sm.state = SectionMembership.State.ACTIVE
+        else:
+            sm.state = SectionMembership.State.UNCONFIRMED
+
+        sm.user = self.request.user
         return super().form_valid(form)
 
     def get_form(self, form_class=None):

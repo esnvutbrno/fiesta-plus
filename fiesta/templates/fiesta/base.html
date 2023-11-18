@@ -1,3 +1,4 @@
+{% load release %}
 {% load utils %}
 {% load breadcrumbs %}
 {% load static %}
@@ -9,7 +10,9 @@
   >
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1,width=device-width">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
     <meta name="description"
           content="Fiesta+ is a new generation of your ESN section assistant – includes a buddy system, member management, section statistics and other features to run your section even more easily.">
 
@@ -42,6 +45,9 @@
       {% endif %}
     {% endblock head_title %}
     <link rel="shortcut icon" href="{% static 'single-toucan.svg' %}" />
+
+    {% sentry_js_loader_url as sentry_js_loader_url %}
+    {% if sentry_js_loader_url %}<script src="{{ sentry_js_loader_url }}" crossorigin="anonymous"></script>{% endif %}
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {% django_htmx_script %}
@@ -72,6 +78,10 @@
           <div class="border border-gray-50"></div>
         {% endblock breadcrumbs_container %}
       </div>
+
+      {% if request.plugin and request.user.is_authenticated %}
+        {% include "plugins/feature_state_ribbon.html" %}
+      {% endif %}
 
       {% block main_container %}
         <div class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto mb-auto w-full">

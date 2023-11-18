@@ -7,6 +7,7 @@ from django.urls import reverse
 from ...accounts.models import User, UserProfile
 from ...plugins.utils import target_plugin_app_from_resolver_match
 from ...sections.middleware import UserMembershipMiddleware
+from ..services.user_profile_state_synchronizer import synchronizer
 
 
 class UserProfileMiddleware:
@@ -43,6 +44,9 @@ class UserProfileMiddleware:
                 next=request.get_full_path(),
                 login_url=reverse(cls.FINISH_PROFILE_URL_NAME),
             )
+
+        if profile.enforce_revalidation:
+            synchronizer.revalidate_user_profile(profile=profile)
 
         if profile.state != profile.State.COMPLETE:
             # profile is not complete, so redirect to profile page with next= parameter

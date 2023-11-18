@@ -9,6 +9,7 @@ from apps.fiestaforms.forms import BaseModelForm
 from apps.plugins.models import Plugin
 from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_label
+from apps.sections.services.sections_plugins_validator import SectionsPluginsValidator
 
 
 class ChangePluginStateForm(BaseModelForm):
@@ -29,6 +30,17 @@ class ChangePluginStateForm(BaseModelForm):
             raise ValidationError(_("This plugin is enabled automatically."))
 
         return data
+
+    def _post_clean(self):
+        super()._post_clean()
+
+        try:
+            SectionsPluginsValidator.for_changed_plugin(
+                section=self.instance.section,
+                plugin=self.instance,
+            ).check_validity()
+        except ValidationError as e:
+            self.add_error(None, e)
 
 
 class SetupPluginSettingsForm(ChangePluginStateForm):
