@@ -65,6 +65,8 @@ class Plugin(BaseTimestampedModel):
 
         unique_together = (("app_label", "section"),)
 
+        ordering = ("section", "app_label")
+
     def clean_fields(self, exclude=None) -> None:
         if exclude and "configuration" in exclude:
             return super().clean_fields(exclude=exclude)

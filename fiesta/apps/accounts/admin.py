@@ -53,11 +53,18 @@ class UserAdmin(DjangoUserAdmin):
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "nationality", "gender", "picture")
+    list_display = (
+        "user_name",
+        "user",
+        "nationality",
+        "gender",
+        "faculty",
+        "picture",
+    )
     list_filter = (
         "user__memberships__section",
         "gender",
-        ("nationality", admin.AllValuesFieldListFilter),
+        "nationality",
     )
     autocomplete_fields = ("user",)
     search_fields = [
@@ -65,6 +72,9 @@ class UserProfileAdmin(admin.ModelAdmin):
         "user__first_name",
         "user__last_name",
     ]
+
+    def user_name(self, obj):
+        return obj.user.get_full_name()
 
     def get_queryset(self, request):
         return (
