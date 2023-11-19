@@ -36,19 +36,32 @@ class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
             + ()
         )
         field_classes = BaseNewRequestForm.Meta.field_classes | {"time": DateTimeLocalField}
-        widgets = BaseNewRequestForm.Meta.widgets | {}
+        widgets = BaseNewRequestForm.Meta.widgets | {
+            "note": Textarea(
+                attrs={
+                    "rows": 5,
+                    "placeholder": _(
+                        "I'll come with a flight W94498 with arrival at 12:30. I'll have two bags and I can handle it "
+                        "by myself, but I'm unsure about the final part of the way to the dormitory."
+                    ),
+                }
+            ),
+        }
         labels = BaseNewRequestForm.Meta.labels | {
-            "note": _("Tell me details TODO"),
-            "interests": _("What are you into?"),
-            "approving_request": _("I really want a pickup"),
             "place": _("Where do you want to be picked up?"),
             "location": _("Place marker as accurately as possible"),
+            "note": _("Tell us about your arrival"),
+            "approving_request": _("I really want a pickup"),
         }
         help_texts = BaseNewRequestForm.Meta.help_texts | {
+            "place": lazy(
+                lambda: render_to_string("pickup_system/parts/pickup_request_place_help.html"),
+                str,
+            ),
             "note": lazy(
                 lambda: render_to_string("pickup_system/parts/pickup_request_note_help.html"),
                 str,
-            )
+            ),
         }
 
 
@@ -60,6 +73,9 @@ class PickupRequestEditorForm(WebpackMediaFormMixin, BaseRequestEditorForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
+        # labels somehow do not work
+        self.fields["approving_request"].label = _("Are you sure you want to place a pickup request?")
 
     class Meta(BaseRequestEditorForm.Meta):
         model = PickupRequest
@@ -96,9 +112,8 @@ class PickupRequestMatchForm(BaseRequestMatchForm):
                 attrs={
                     "rows": 3,
                     "placeholder": _(
-                        "Hi! I am John and I will pick you up! "
-                        "The best for communication for me is Telegram, but I am basically on all the social platforms. "
-                        "Looking forward to see your and grab a drink together!"
+                        "Hi! I am John and I will pick you up! The best for communication for me is Telegram, but I am"
+                        " basically on all the social platforms. Looking forward to see your and grab a drink together!"
                     ),
                 }
             )

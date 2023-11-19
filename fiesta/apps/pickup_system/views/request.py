@@ -10,6 +10,7 @@ from apps.pickup_system.forms import NewPickupRequestForm
 from apps.pickup_system.models import PickupSystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
 class PickupSystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationViewMixin, TemplateView):
@@ -24,6 +25,8 @@ class PickupSystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationVie
         return HttpResponseRedirect(reverse("pickup_system:index"))
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("New pickup request"))
 class NewPickupRequestView(BaseNewRequestView):
     form_class = NewPickupRequestForm
     success_message = _("Your pickup request has been successfully created!")

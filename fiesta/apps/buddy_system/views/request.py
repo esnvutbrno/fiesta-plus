@@ -17,6 +17,7 @@ from apps.fiestarequests.views.request import BaseNewRequestView
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
 class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationViewMixin, TemplateView):
@@ -92,6 +93,8 @@ class SignUpBeforeEntranceView(
         return response
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("New buddy request"))
 class NewBuddyRequestView(BaseNewRequestView):
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been successfully created!")

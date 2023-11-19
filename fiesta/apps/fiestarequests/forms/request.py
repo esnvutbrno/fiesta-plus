@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.forms import BooleanField, fields_for_model
+from django.forms import BooleanField, Textarea, fields_for_model
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
@@ -29,6 +29,7 @@ class BaseNewRequestForm(BaseModelForm):
         field_classes = {}
         widgets = {
             "issuer_faculty": FacultyWidget,
+            "note": Textarea(attrs={"rows": 5}),
         }
         labels = {
             "note": _("Tell us about yourself"),

@@ -21,6 +21,12 @@ USER_PROFILE_CONTACT_FIELDS = fields_for_model(
 class NewBuddyRequestForm(BaseNewRequestForm):
     submit_text = _("Send request for buddy")
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # labels somehow do not work
+        self.fields["approving_request"].label = _("Are you sure you want to place a buddy request?")
+
     class Meta(BaseNewRequestForm.Meta):
         model = BuddyRequest
 
@@ -81,9 +87,9 @@ class BuddyRequestMatchForm(BaseRequestMatchForm):
                 attrs={
                     "rows": 3,
                     "placeholder": _(
-                        "Hi! I am John and I will be your buddy! "
-                        "The best for communication for me is Telegram, but I am basically on all the social platforms. "
-                        "Looking forward to see your and grab a drink together!"
+                        "Hi! I am John and I will be your buddy! The best for communication for me is Telegram, but I"
+                        " am basically on all the social platforms. Looking forward to see your and grab a drink"
+                        " together!"
                     ),
                 }
             )

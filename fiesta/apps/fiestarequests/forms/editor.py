@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from django.core.exceptions import ValidationError
+from django.forms import Textarea
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import User
@@ -29,6 +30,7 @@ class BaseRequestEditorForm(BaseModelForm):
         field_classes = {}
         widgets = {
             "issuer": UserWidget,
+            "note": Textarea(attrs={"rows": 5}),
         }
 
 
