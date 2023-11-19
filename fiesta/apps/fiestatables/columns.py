@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from datetime import datetime
+
 import django_tables2 as tables
 from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
@@ -51,10 +53,10 @@ class CountryColumn(tables.Column):
 class NaturalDatetimeColumn(tables.Column):
     attrs = {"td": {"title": lambda bound_column, record: bound_column.accessor.resolve(record)}}
 
-    def value(self, value):
-        return value
+    def value(self, value: datetime):
+        return value.replace(tzinfo=None)
 
-    def render(self, value):
+    def render(self, value: datetime):
         return NaturalTimeFormatter.string_for(value)
 
 
