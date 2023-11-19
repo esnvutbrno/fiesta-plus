@@ -7,7 +7,8 @@ from contextlib import contextmanager
 from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
 
-from apps.accounts.forms.profile import FIELDS_FROM_USER, UserProfileForm
+from apps.accounts.forms.profile import FIELDS_FROM_USER
+from apps.accounts.forms.profile_factory import UserProfileFormFactory
 from apps.accounts.models import UserProfile
 from apps.sections.models import SectionMembership, SectionsConfiguration
 
@@ -44,7 +45,7 @@ class UserProfileStateSynchronizer:
         final_state = UserProfile.State.COMPLETE
 
         # UserProfile form is here as validator
-        form_class = UserProfileForm.for_user(user=profile.user)
+        form_class = UserProfileFormFactory.for_user(user=profile.user)
         form = form_class(
             instance=profile,
             data=model_to_dict(

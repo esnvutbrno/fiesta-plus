@@ -4,7 +4,6 @@ import enum
 import typing
 
 from django.conf import settings
-from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import CharField, TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -117,22 +116,25 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     )
 
     facebook = models.URLField(
-        verbose_name=_("facebook profile"),
+        verbose_name=_("facebook"),
         blank=True,
+        help_text=_("Username or link to profile"),
     )
+
     instagram = models.CharField(
-        verbose_name=_("instagram username"),
-        validators=[RegexValidator(r"^[\w_.]+$")],
+        verbose_name=_("instagram"),
         blank=True,
+        help_text=_("Username or link to profile"),
     )
     telegram = models.CharField(
-        verbose_name=_("telegram contact"),
+        verbose_name=_("telegram"),
         blank=True,
-        help_text=_("Phone number or username"),
+        help_text=_("Phone number, username, or link to profile"),
     )
     whatsapp = PhoneNumberField(
-        verbose_name=_("whatsapp phone number"),
+        verbose_name=_("whatsapp"),
         blank=True,
+        help_text=_("Phone number"),
     )
 
     phone_number = PhoneNumberField(null=True, blank=True, verbose_name=_("phone number"))
