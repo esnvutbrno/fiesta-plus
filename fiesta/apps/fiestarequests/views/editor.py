@@ -4,15 +4,20 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models, transaction
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Quick Match"))
+@with_object_breadcrumb()
 class BaseQuickRequestMatchView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,

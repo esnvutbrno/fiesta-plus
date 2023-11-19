@@ -10,8 +10,10 @@ from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.views.mixins import CheckEnabledPluginsViewMixin
 from apps.sections.models import SectionMembership
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_plugin_home_breadcrumb
 
 
+@with_plugin_home_breadcrumb
 class DashboardIndexView(EnsureInSectionSpaceViewMixin, CheckEnabledPluginsViewMixin, TemplateView):
     template_name = "dashboard/index.html"
 

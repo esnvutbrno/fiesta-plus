@@ -13,7 +13,7 @@ from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
 class ESNcardApplicationsFilter(BaseFilterSet):
@@ -81,7 +81,7 @@ class ESNcardApplicationsTable(tables.Table):
         empty_text = _("No ESNcard Applications")
 
 
-@with_breadcrumb(_("ESNcard"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Applications"))
 class ApplicationsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest

@@ -25,7 +25,7 @@
     }
 
     .Dashboard__tile__desc {
-        @apply stat-desc text-xl
+        @apply stat-desc text-xl whitespace-normal
     }
 
     .Dashboard__tile__actions {

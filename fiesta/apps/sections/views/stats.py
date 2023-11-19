@@ -13,7 +13,7 @@ from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.universities.models import Faculty
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
 class BuddyStatsFilterset(BaseFilterSet):
@@ -72,7 +72,7 @@ class BuddyStatsTable(Table):
         )
 
 
-@with_breadcrumb(_("Section"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Statistics"))
 class SectionStatsView(EnsurePrivilegedUserViewMixin, EnsureInSectionSpaceViewMixin, FiestaTableView):
     model = Faculty

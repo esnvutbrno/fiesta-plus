@@ -11,9 +11,12 @@ from apps.plugins.utils import all_plugin_apps
 from apps.sections.forms.plugin_configuration import get_plugin_configuration_form
 from apps.sections.forms.plugin_state import ChangePluginStateForm, SetupPluginSettingsForm
 from apps.sections.views.mixins.membership import EnsureSectionAdminViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Plugins"))
 class SectionPluginsView(
     EnsureSectionAdminViewMixin,
     TemplateView,

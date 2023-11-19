@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 from apps.buddy_system.forms import BuddyRequestMatchForm
@@ -12,8 +13,11 @@ from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Waiting Requests"))
 class MatchingRequestsView(
     EnsureInSectionSpaceViewMixin,
     EnsureLocalUserViewMixin,

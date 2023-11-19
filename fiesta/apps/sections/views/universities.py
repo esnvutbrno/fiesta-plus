@@ -16,6 +16,7 @@ from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.universities.forms import FacultyForm, UniversityForm
 from apps.universities.models import Faculty, University
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.models.query import Q
 from apps.utils.views import AjaxViewMixin
 
@@ -131,6 +132,8 @@ class UpdateSectionFacultyView(
         return context
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Universities"))
 class SectionUniversitiesView(
     EnsureInSectionSpaceViewMixin,
     EnsurePrivilegedUserViewMixin,

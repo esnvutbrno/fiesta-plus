@@ -16,7 +16,7 @@ from apps.pickup_system.forms import PickupRequestEditorForm, QuickPickupMatchFo
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
@@ -51,7 +51,7 @@ class PickupRequestsTable(BaseRequestsTable):
             )
 
 
-@with_breadcrumb(_("Pickup System"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Requests"))
 class PickupRequestsEditorView(
     EnsurePrivilegedUserViewMixin,
@@ -67,7 +67,7 @@ class PickupRequestsEditorView(
         )
 
 
-@with_breadcrumb(_("Pickup System"))
+@with_plugin_home_breadcrumb
 @with_object_breadcrumb()
 class PickupRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
@@ -90,8 +90,6 @@ class PickupRequestEditorDetailView(
         return context
 
 
-@with_breadcrumb(_("Quick Pickup Match"))
-@with_object_breadcrumb()
 class QuickPickupMatchView(BaseQuickRequestMatchView):
     model = PickupRequest
     form_class = QuickPickupMatchForm

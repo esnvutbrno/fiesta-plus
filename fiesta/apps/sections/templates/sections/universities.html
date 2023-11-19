@@ -8,19 +8,12 @@
 {% load static %}
 {% load utils %}
 
-{% block upper_head %}
-  {% trans "Universities" as title %}
-  {% breadcrumb_push_current_plugin %}
-  {% breadcrumb_push_item title %}
-{% endblock upper_head %}
-
 {% block breadcrumbs_right %}
   <a class="btn btn-success btn-xs sm:btn-sm btn-outline"
      href="{% url "sections:new-section-university" %}"
      x-data="modal($el.href)"
      x-bind="bind">{% translate "Add university" %}</a>
 {% endblock breadcrumbs_right %}
-
 
 {% block main %}
   {% if object_list %}

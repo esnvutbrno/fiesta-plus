@@ -16,7 +16,7 @@ from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
@@ -42,7 +42,7 @@ class BuddyRequestsTable(BaseRequestsTable):
             )
 
 
-@with_breadcrumb(_("Buddy System"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Requests"))
 class BuddyRequestsEditorView(
     EnsurePrivilegedUserViewMixin,
@@ -58,7 +58,7 @@ class BuddyRequestsEditorView(
         )
 
 
-@with_breadcrumb(_("Buddy System"))
+@with_plugin_home_breadcrumb
 @with_object_breadcrumb()
 class BuddyRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
@@ -81,8 +81,6 @@ class BuddyRequestEditorDetailView(
         return context
 
 
-@with_breadcrumb(_("Quick Buddy Match"))
-@with_object_breadcrumb()
 class QuickBuddyMatchView(BaseQuickRequestMatchView):
     model = BuddyRequest
     form_class = QuickBuddyMatchForm

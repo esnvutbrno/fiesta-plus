@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("My Pickups"))
 class MyPickups(EnsureLocalUserViewMixin, ListView):
     request: HttpRequest
 

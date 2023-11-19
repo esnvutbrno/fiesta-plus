@@ -5,12 +5,6 @@
 {% load breadcrumbs %}
 {% load i18n %}
 
-{% block upper_head %}
-  {% trans "My Pickups" as title %}
-  {% breadcrumb_push_current_plugin %}
-  {% breadcrumb_push_item title %}
-{% endblock upper_head %}
-
 {% block main %}
   {% get_pickup_system_configuration as configuration %}
 

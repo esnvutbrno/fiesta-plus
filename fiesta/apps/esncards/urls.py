@@ -10,5 +10,5 @@ urlpatterns = [
     path("create", ApplicationCreateView.as_view(), name="application_create_form"),
     path("detail/<uuid:pk>", ApplicationDetailView.as_view(), name="application_detail"),
     path("list", ApplicationsView.as_view(), name="applications"),
-    path("", EsncardIndexView.as_view()),
+    path("", EsncardIndexView.as_view(), name="index"),
 ]
