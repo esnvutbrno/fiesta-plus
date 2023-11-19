@@ -24,7 +24,7 @@ def _create_user_fields():
     return fields
 
 
-USER_FIELDS = _create_user_fields()
+FORM_FIELDS_FROM_USER = _create_user_fields()
 
 
 class UserProfileForm(BaseModelForm):
@@ -97,7 +97,7 @@ class UserProfileForm(BaseModelForm):
         )
 
     # include pre-generated field from User
-    locals().update(USER_FIELDS)
+    locals().update(FORM_FIELDS_FROM_USER)
 
     class Meta:
         model = UserProfile
@@ -108,7 +108,7 @@ class UserProfileForm(BaseModelForm):
 
         # fields, which are shown independently on section configurations
         fields = (
-            *USER_FIELDS.keys(),
+            *FORM_FIELDS_FROM_USER.keys(),
             # TODO: think about limiting the choices by country of section, in which is current membership
             "university",
             "faculty",
@@ -134,14 +134,14 @@ class UserProfileForm(BaseModelForm):
             user = None
 
         if user:
-            for f in USER_FIELDS:
+            for f in FORM_FIELDS_FROM_USER:
                 self.initial[f] = getattr(user, f, None)
 
     def save(self, commit=True):
         # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again
-        for f in USER_FIELDS:
+        for f in FORM_FIELDS_FROM_USER:
             setattr(self.instance.user, f, self.cleaned_data.get(f))
-        self.instance.user.save(update_fields=USER_FIELDS.keys())
+        self.instance.user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
 
         return super().save(commit=commit)
 

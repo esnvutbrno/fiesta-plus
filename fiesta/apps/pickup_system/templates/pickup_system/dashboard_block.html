@@ -95,8 +95,8 @@
               {% endif %}
             {% endfor %}
             {% if request_matches|length > 3 %}
-              <div class="avatar placeholder">
-                <a class="w-24 bg-neutral-focus text-neutral-content text-3xl flex justify-center items-center"
+              <div class="avatar placeholder hover:scale-105 transition-transform">
+                <a class="w-24 bg-base-300 text-base-content text-3xl flex justify-center items-center"
                    href="{% url "pickup_system:my-pickups" %}">
                   <span>+{{ request_matches|length|add:"-3" }}</span>
                 </a>
