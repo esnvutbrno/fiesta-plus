@@ -49,7 +49,10 @@ class ProfileFinishFormView(
     success_message = _("Your profile has been updated.")
 
     def get_form_class(self):
-        return UserProfileFinishForm.for_user(user=self.request.user)
+        return UserProfileFormFactory.for_user(
+            user=self.request.user,
+            base_form_class=UserProfileFinishForm,
+        )
 
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none

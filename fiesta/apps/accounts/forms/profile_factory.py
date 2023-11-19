@@ -42,6 +42,7 @@ class UserProfileFormFactory:
     def for_user(
         cls,
         user: User,
+        base_form_class: type[UserProfileForm] = UserProfileForm,
     ) -> type[UserProfileForm]:
         """
         Creates the profile form class for specific user.
@@ -59,7 +60,7 @@ class UserProfileFormFactory:
 
         return modelform_factory(
             model=UserProfile,
-            form=UserProfileForm,
+            form=base_form_class,
             fields=cls.get_form_fields(user),
             formfield_callback=callback,
         )
