@@ -95,7 +95,7 @@
     .Forms__file-state label {
         /* clear btn */
         @apply
-            lowercase btn btn-sm btn-link text-gray-700 rounded-none rounded-tr-sm
+            lowercase btn btn-sm btn-link text-base-content rounded-none rounded-tr-sm
             px-1 md:px-2
         ;
     }
@@ -166,7 +166,10 @@
     .Forms__field--select .ts-dropdown,
     .Forms__field--select .ts-control,
     .Forms__field--select .ts-control input {
-        @apply text-inherit;
+        @apply
+            text-inherit
+            dark:!bg-base-300
+        ;
     }
 
     .Forms__field--select .ts-control {
@@ -179,7 +182,7 @@
     }
 
     .Forms__field--select .ts-control .item {
-        @apply text-sm font-bold;
+        @apply text-sm;
         line-height: 2;
     }
 
@@ -190,6 +193,14 @@
 
     .Forms__field--select .ts-dropdown .option {
         @apply px-4 py-4
+    }
+
+    .Forms__field--select .ts-dropdown .active {
+        @apply
+            dark:!bg-base-300
+            dark:!text-primary
+
+        ;
     }
 }
 
