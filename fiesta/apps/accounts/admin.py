@@ -6,6 +6,8 @@ from django.contrib import admin
 from django.contrib.admin import display
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.db.models import QuerySet
+from django.urls import reverse
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from .models import User, UserProfile
@@ -39,16 +41,34 @@ class UserAdmin(DjangoUserAdmin):
         (_("Important dates"), {"fields": ("last_login", "date_joined", "modified")}),
     )
     readonly_fields = ("modified",)
-    list_display = DjangoUserAdmin.list_display + ("memberships",)
+    list_display = (
+        "username",
+        "first_name",
+        "last_name",
+        "user_profile",
+        "memberships",
+    )
+    list_filter = (
+        "memberships__section",
+        "memberships__role",
+    ) + DjangoUserAdmin.list_filter
 
     @display
     def memberships(self, obj):
         return ", ".join(f"{s.section.name}: {s.role}" for s in obj.memberships.all())
 
+    @display
+    def user_profile(self, obj):
+        return format_html(
+            '<a href="{}">{}</a>',
+            reverse("admin:accounts_userprofile_change", args=(obj.profile.pk,)),
+            obj.profile.state,
+        )
+
     def get_queryset(self, request):
         qs: QuerySet = super().get_queryset(request)
 
-        return qs.prefetch_related("memberships__section")
+        return qs.prefetch_related("memberships__section", "profile")
 
 
 @admin.register(UserProfile)
