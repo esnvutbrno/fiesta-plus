@@ -8,8 +8,10 @@ from apps.pickup_system.models import PickupRequest, PickupSystemConfiguration
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.middleware.user_membership import HttpRequest
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_plugin_home_breadcrumb
 
 
+@with_plugin_home_breadcrumb
 class PickupSystemIndexView(
     EnsureInSectionSpaceViewMixin,
     PluginConfigurationViewMixin[PickupSystemConfiguration],
