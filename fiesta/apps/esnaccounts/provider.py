@@ -137,12 +137,16 @@ class ESNAccountsProvider(CASProvider):
         if not picture_url:
             return
 
+        if profile.picture:
+            logger.info("User profile %s already has a picture.", profile)
+            return
+
         picture_response = requests.get(
             picture_url,
             headers={
                 "User-Agent": "Fiesta+; @esnvutbrno/fiesta-plus",
-                # 'From': 'youremail@domain.com',
             },
+            timeout=(3, 5),
         )
 
         if not picture_response.ok:
