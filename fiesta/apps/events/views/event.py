@@ -1,4 +1,9 @@
+import json
+from typing import Any
 from uuid import UUID
+
+from django.http import HttpRequest, HttpResponse
+from django.shortcuts import get_object_or_404
 
 import django_filters
 from django.contrib.postgres.search import SearchVector
@@ -109,6 +114,18 @@ class EventDetailView(DetailView):
     model = Event
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.organizers.all()]
+        print(organizers_data)
+        context['organizers_json'] = json.dumps(organizers_data)
+        return context
+
+
 
 class EventParticipantsFilter(BaseFilterSet):
     search = CharFilter(

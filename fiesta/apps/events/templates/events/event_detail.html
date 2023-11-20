@@ -25,12 +25,14 @@
   </a>
 
   <br><br>
-{% get_ocs event as organizers %}
-  {% if organizers is not None %}
-    {% for organizer in organizers %}
-      {{ organizer.user.get_full_name }}<br>
-    {% endfor %}
-  {% endif %}
+  <div x-data="{ organizers: [] }" x-init="organizers = {{ organizers_json|safe }}">
+    <template x-for="(organizer, index) in organizers" :key="index">
+        <div>
+            <span x-text="organizer.name"></span>
+            <button type="button" @click="organizers.splice(index, 1)">Delete</button>
+        </div>
+    </template>
+  </div>
   <br><br>
 
   {% get_price_variants event as prices %}

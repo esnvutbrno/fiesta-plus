@@ -26,7 +26,7 @@ def get_ocs(event: Event):
 def get_price_variants(context, event: Event):
     request: HttpRequest = context["request"]
 
-    if request.membership.user.is_esn_card_holder:
+    if request.membership.user.is_esn_card_holder or request.membership.role == 'admin':
         return event.price_variants.all()
     else:
         return event.price_variants.filter(Q(type='standard') | Q(type='free'))

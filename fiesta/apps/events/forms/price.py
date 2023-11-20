@@ -6,14 +6,12 @@ class PriceForm(BaseModelForm):
     class Meta:
         model = PriceVariant
         fields = (
-            # TODO: place ?
             'title',
             'type',
             'amount',
             'event',
             'available_from',
             'available_to',
-            'data'
         )
         widgets = {
             "event": HiddenInput,
