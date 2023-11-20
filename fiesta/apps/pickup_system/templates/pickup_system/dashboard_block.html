@@ -1,0 +1,110 @@
+{% load pickup_system %}
+{% load utils %}
+{% load i18n %}
+{% load user_profile %}
+
+{% get_pickup_system_configuration as configuration %}
+
+<div class="Dashboard__tiles flex flex-col">
+  <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-secondary">
+    <div class="Dashboard__tile__title text-white">Pickup System</div>
+    {% if request.membership.is_international %}
+      {% get_current_pickup_request_of_user as br %}
+      {% if not br %}
+        <div class="Dashboard__tile__value">✖️ Not requested yet</div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "pickup_system:new-request" %}"
+             class="btn btn-lg btn-outline text-white">create pickup request</a>
+        </div>
+      {% elif br.state == br.State.CREATED %}
+        <div class="Dashboard__tile__value">⌛ Waiting for match</div>
+        {% get_waiting_pickup_requests_placed_before br as waiting_total %}
+        <div class="Dashboard__tile__desc text-base-200">
+          There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+        </div>
+      {% elif br.state == br.State.MATCHED %}
+        {% get_user_picture br.match.matcher as pickup_picture %}
+        <div class="Dashboard__tile__value">✅ Pickup confirmed</div>
+        <div class="Dashboard__tile__desc text-base-200">{{ br.match.matcher.full_name }} is ready to pick you up.</div>
+        <div class="mt-4 text-right">
+          <a href="{% url "pickup_system:index" %}"
+             class="btn btn-lg btn-secondary">{% trans "find out about your pickup" %}</a>
+        </div>
+
+
+      {% endif %}
+    {% else %}
+      {% get_waiting_requests_to_match as waiting_brs %}
+      <div class="Dashboard__tile__value flex flex-row justify-between items-center">
+
+        {% with waiting_brs.count as count %}
+          {{ count }}
+          waiting request{{ count|pluralize:"s" }}
+        {% endwith %}
+
+        {% if waiting_brs.exists %}
+          <a href="{% url "pickup_system:matching-requests" %}"
+             class="btn btn-lg btn-outline text-white">show</a>
+        {% endif %}
+      </div>
+
+    {% endif %}
+  </div>
+
+  {% if request.membership.is_local %}
+    <div class="Dashboard__tile bg-gray-200">
+      <div class="Dashboard__tile__title">My Pickups</div>
+
+      {% get_matched_pickup_requests as request_matches %}
+      {% if not request_matches.exists %}
+        <div class="Dashboard__tile__value dark:text-base-300">So empty here 😔</div>
+
+        {% if configuration.matching_policy_instance.can_member_match %}
+          <div class="Dashboard__tile__actions text-right">
+            <a href="{% url "pickup_system:matching-requests" %}"
+               class="btn btn-lg btn-outline dark:text-base-300">get your first pickup</a>
+          </div>
+        {% else %}
+          <div class="Dashboard__tile__desc">Pickup system team is looking for the best match for you.</div>
+        {% endif %}
+      {% else %}
+        <div class="Dashboard__tile__value">
+          <div class="avatar-group -space-x-12 justify-center p-2">
+            {% for rm in request_matches|slice:":3" %}
+              {% get_user_picture rm.request.issuer as pickup_picture %}
+
+              {% if pickup_picture %}
+                <a class="avatar hover:scale-105 transition-transform"
+                   href="{% url "pickup_system:my-pickups" %}">
+                  <div class="w-24">
+                    <img src="{% url "pickup_system:serve-issuer-profile-picture" pickup_picture %}"
+                         width="{{ pickup_picture.width }}"
+                         height="{{ pickup_picture.height }}"
+                         alt="{{ rm.request.issuer }}"
+                         title="{{ rm.request.issuer }}" />
+                  </div>
+                </a>
+              {% else %}
+                <a class="w-24 avatar hover:scale-105 transition-transform aspect-square text-white text-3xl flex flex-row justify-center items-center group"
+                   style="background-color: {{ rm.request.issuer.username|get_color_by_text }}"
+                   href="{% url "pickup_system:my-pickups" %}">
+                  <span class="-translate-x-3 group-last:translate-x-0 uppercase">
+                    {{ rm.request.issuer.first_name|first }}{{ rm.request.issuer.last_name|first }}
+                  </span>
+                </a>
+              {% endif %}
+            {% endfor %}
+            {% if request_matches|length > 3 %}
+              <div class="avatar placeholder hover:scale-105 transition-transform">
+                <a class="w-24 bg-base-300 text-base-content text-3xl flex justify-center items-center"
+                   href="{% url "pickup_system:my-pickups" %}">
+                  <span>+{{ request_matches|length|add:"-3" }}</span>
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</div>

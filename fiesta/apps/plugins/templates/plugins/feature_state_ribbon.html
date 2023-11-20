@@ -1,0 +1,17 @@
+<div class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto w-full text-xs md:text-sm text-base-content dark:text-base-300">
+  {% if request.plugin.app_config.feature_state == request.plugin.app_config.FeatureState.STABLE %}
+
+  {% elif request.plugin.app_config.feature_state == request.plugin.app_config.FeatureState.EXPERIMENTAL %}
+    <div class="bg-warning text-center p-2 rounded-b">
+      ⚠️
+      <span class="uppercase font-semibold">warning:</span>
+      the functionality of this plugin is not guaranteed to be stable and may change in the future
+    </div>
+  {% elif request.plugin.app_config.feature_state == request.plugin.app_config.FeatureState.DEPRECATED %}
+    <div class="bg-error text-center py-2 rounded-b">
+      ⚠️
+      <span class="uppercase font-semibold">warning:</span>
+      the functionality of this plugin is deprecated and will be removed in the future
+    </div>
+  {% endif %}
+</div>

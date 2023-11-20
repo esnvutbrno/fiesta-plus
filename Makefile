@@ -97,7 +97,7 @@ up: DC_CMD = up
 up: dc ## Runs all needed docker containers
 
 produp: ## Runs fiesta in (local)production mode.
-	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up
+	$(DC) -f docker-compose.yml -f docker-compose.prod.yml --profile prod up --build
 
 psql: DC_CMD = run --entrypoint bash db -c "PGPASSWORD=fiesta psql --host db --user fiesta --dbname fiesta"
 psql: dc  ## Runs psql shell in database

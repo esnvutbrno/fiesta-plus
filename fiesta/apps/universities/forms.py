@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from django.forms import HiddenInput
-
 from apps.fiestaforms.forms import BaseModelForm
 from apps.universities.models import Faculty, University
 
@@ -22,9 +20,4 @@ class FacultyForm(BaseModelForm):
         fields = (
             "name",
             "abbr",
-            "university",
         )
-
-        widgets = {
-            "university": HiddenInput,
-        }

@@ -24,6 +24,7 @@ class Plugin(BaseTimestampedModel):
         default=State.ENABLED,
         max_length=16,
         verbose_name=_("plugin state"),
+        db_index=True,
         help_text=_(
             "Current state of plugin - affects, if plugin could be displayed by "
             "international/member/editor/admin/at all."
@@ -63,6 +64,8 @@ class Plugin(BaseTimestampedModel):
         verbose_name_plural = _("plugins")
 
         unique_together = (("app_label", "section"),)
+
+        ordering = ("section", "app_label")
 
     def clean_fields(self, exclude=None) -> None:
         if exclude and "configuration" in exclude:

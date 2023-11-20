@@ -79,54 +79,74 @@
     <div class="overflow-hidden">
       <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
-            <td class="flex-grow">
-              {% if profile.phone_number %}
+          {% if profile.phone_number %}
+            <tr>
+              <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
+              <td class="flex-grow">
+                {% if profile.phone_number %}
+                  <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                     href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
+                {% endif %}
+              </td>
+            </tr>
+          {% endif %}
+          {% if profile.facebook %}
+            <tr>
+              <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
+              <td class="flex-grow">
                 <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
-                   href="tel:{{ profile.phone_number }}">{{ profile.phone_number }}</a>
-              {% endif %}
-            </td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
-            <td class="flex-grow">
-              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
-                 href="{{ profile.facebook }}">{{ profile.facebook }}</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
-            <td class="flex-grow">
-              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
-                 href="{{ profile.instagram }}">{{ profile.instagram }}</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
-            <td class="flex-grow">
-              <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
-                 href="{{ profile.telegram }}">{{ profile.telegram }}</a>
-            </td>
-          </tr>
-          <tr>
-            <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
-            <td class="flex-grow">
-              {% if profile.whatsapp %}{{ profile.whatsapp }}{% endif %}
-            </td>
-          </tr>
+                   href="https://facebook.com/{{ profile.facebook }}"
+                   rel="nofollow,noopener,noreferrer"
+                   target="_blank">https://facebook.com/{{ profile.facebook }}</a>
+              </td>
+            </tr>
+          {% endif %}
+          {% if profile.instagram %}
+            <tr>
+              <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
+              <td class="flex-grow">
+                <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                   href="https://instagram.com/{{ profile.instagram }}"
+                   rel="nofollow,noopener,noreferrer"
+                   target="_blank">https://instagram.com/{{ profile.instagram }}</a>
+              </td>
+            </tr>
+          {% endif %}
+          {% if profile.telegram %}
+            <tr>
+              <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
+              <td class="flex-grow">
+                <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                   href="https://t.me/{{ profile.telegram }}"
+                   rel="nofollow,noopener,noreferrer"
+                   target="_blank">https://t.me/{{ profile.telegram }}</a>
+              </td>
+            </tr>
+          {% endif %}
+          {% if profile.whatsapp %}
+            <tr>
+              <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
+              <td class="flex-grow">
+                <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
+                   href="https://wa.me/{{ profile.whatsapp }}"
+                   rel="nofollow,noopener,noreferrer"
+                   target="_blank">https://wa.me/{{ profile.whatsapp }}</a>
+              </td>
+            </tr>
+          {% endif %}
         {% endwith %}
       </table>
     </div>
   </div>
 
-  <div class="bg-base-200 shadow rounded-box p-4 mb-4 md:box-content">
-    <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
-    <div class="inline-flex flex-wrap">
-      {% for interest in object.user.profile.get_interests_display %}
-        <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
-      {% endfor %}
+  {% if object.user.profile.interests %}
+    <div class="bg-base-200 shadow rounded-box p-4 mb-4 md:box-content">
+      <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
+      <div class="inline-flex flex-wrap">
+        {% for interest in object.user.profile.get_interests_display %}
+          <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
+        {% endfor %}
+      </div>
     </div>
-
-  </div>
+  {% endif %}
 {% endblock content %}

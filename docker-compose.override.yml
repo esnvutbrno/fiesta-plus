@@ -7,7 +7,6 @@ services:
       - ./fiesta/:/usr/src/app/
       - ./conf/certs:/usr/share/certs
       - web_static_files:/usr/src/static
-      - web_media_files:/usr/src/media
       - webpack_build:/usr/src/build
     build:
       args:

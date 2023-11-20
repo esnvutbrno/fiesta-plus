@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
 
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.forms.membership import ChangeMembershipStateForm
 from apps.sections.middleware.user_membership import HttpRequest
@@ -13,11 +13,11 @@ from apps.sections.models import SectionMembership
 from apps.sections.tables.members import SectionMembershipTable
 from apps.sections.tables.membership_filter import SectionMembershipFilter
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
-@with_breadcrumb(_("Section"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Members"))
 class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
@@ -48,12 +48,13 @@ class SectionMembersView(EnsurePrivilegedUserViewMixin, FiestaTableView):
         )
 
 
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Membership State"))
 @with_object_breadcrumb()
 class ChangeMembershipStateFormView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

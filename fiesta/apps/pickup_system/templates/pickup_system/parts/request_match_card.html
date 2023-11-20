@@ -1,0 +1,44 @@
+{% extends "fiestarequests/request_match_card.html" %}
+
+{% load i18n %}
+{% load static %}
+{% load utils %}
+{% load user_profile %}
+{% load pickup_system %}
+
+{% block match_card_middle %}
+  <div class="border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content min-w-full !col-start-1 !col-end-10">
+    <div class="text-lg md:text-xl [&>div]:flex [&>div]:flex-row [&>div]:justify-between [&>div]:items-center [&>div]:gap-x-2 [&>div]:py-2  [&>div>span:first-child]:w-1/3 [&>div>span:first-child]:flex [&>div>span:first-child]:justify-end [&>div>span:first-child]:items-center [&>div>span:first-child]:gap-x-2 [&>div>span:first-child]:font-semibold  [&>div>span:last-child]:grow [&>div>span:last-child]:text-center  divide-y divide-base-300 max-w-[24rem] mx-auto">
+      <div>
+        <span>
+          time <span class="text-3xl">⏱️</span>
+        </span>
+        <span>{{ br.time|date:"SHORT_DATETIME_FORMAT" }}</span>
+      </div>
+      <div>
+        <span>
+          place <span class="text-3xl">📍</span>
+        </span>
+        <span>{{ br.place }}</span>
+      </div>
+      <div>
+        <span>
+          location <span class="text-3xl">🗺️</span>
+        </span>
+        <span>
+          <a class="link link-secondary"
+             href="{{ br.location_as_google_maps_link }}"
+             rel="nofollow,noreferrer,noopener"
+             target="_blank">see on maps</a>
+        </span>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block match_card_waiting_for_match_bottom %}
+  {% get_waiting_pickup_requests_placed_before br as waiting_total %}
+  {% if waiting_total %}
+    There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+  {% endif %}
+{% endblock %}

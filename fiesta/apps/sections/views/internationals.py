@@ -10,10 +10,10 @@ from apps.sections.models import SectionMembership, SectionsConfiguration
 from apps.sections.tables.internationals import SectionInternationalsTable
 from apps.sections.tables.membership_filter import SectionMembershipFilter
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
-@with_breadcrumb(_("Section"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Internationals"))
 class SectionInternationalsView(
     EnsurePrivilegedUserViewMixin,

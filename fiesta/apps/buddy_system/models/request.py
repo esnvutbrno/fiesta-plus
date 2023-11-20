@@ -10,6 +10,7 @@ from apps.utils.models.fields import ArrayFieldWithDisplayableChoices
 BaseRequestForBuddySystem, BaseRequestMatchForBuddySystem = base_request_model_factory(
     final_request_model_name="buddy_system.BuddyRequest",
     related_base="buddy_system",
+    url_namespace="buddy_system",
 )
 
 

@@ -1,0 +1,76 @@
+{% extends "fiesta/base.html" %}
+{% load request_system %}
+
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block main %}
+  <div class="gap-x-4 columns-1 md:columns-2 lg:columns-3">
+    {% for fr in object_list %}
+      <div class="card card-bordered shadow h-fit break-inside-avoid-column mb-4 static">
+        <figure>
+          {% if configuration.display_issuer_picture and fr.issuer.profile.picture %}
+            {# TODO: img size #}
+            <img src="{{ fr.issuer_picture_url }}"
+                 alt="{% trans "request issuer photo" %}"
+                 width="{{ fr.issuer.profile.picture.width }}"
+                 height="{{ fr.issuer.profile.picture.height }}">
+          {% else %}
+            <svg version="1.1"
+                 xmlns="http://www.w3.org/2000/svg"
+                 class="bg-white p-4 dark:bg-base-300 dark:text-gray-500"
+                 viewBox="0 0 60 60"
+                 style="enable-background:new 0 0 60 60"
+                 fill="currentColor">
+              <path d="M48.014,42.889l-9.553-4.776C37.56,37.662,37,36.756,37,35.748v-3.381c0.229-0.28,0.47-0.599,0.719-0.951 c1.239-1.75,2.232-3.698,2.954-5.799C42.084,24.97,43,23.575,43,22v-4c0-0.963-0.36-1.896-1-2.625v-5.319 c0.056-0.55,0.276-3.824-2.092-6.525C37.854,1.188,34.521,0,30,0s-7.854,1.188-9.908,3.53C17.724,6.231,17.944,9.506,18,10.056 v5.319c-0.64,0.729-1,1.662-1,2.625v4c0,1.217,0.553,2.352,1.497,3.109c0.916,3.627,2.833,6.36,3.503,7.237v3.309 c0,0.968-0.528,1.856-1.377,2.32l-8.921,4.866C8.801,44.424,7,47.458,7,50.762V54c0,4.746,15.045,6,23,6s23-1.254,23-6v-3.043 C53,47.519,51.089,44.427,48.014,42.889z">
+              </path>
+            </svg>
+          {% endif %}
+        </figure>
+        <div class="card-body flex-grow-0">
+          <div class="flex flex-row flex-wrap justify-between border-b [&>span]:py-2">
+            {% if configuration.display_issuer_first_name or configuration.display_issuer_last_name %}
+              <span class="w-full font-semibold text-center text-lg">
+                {% if configuration.display_issuer_first_name %}{{ fr.issuer.first_name }}{% endif %}
+                {% if configuration.display_issuer_last_name %}{{ fr.issuer.last_name }}{% endif %}
+              </span>
+            {% endif %}
+            {% if configuration.display_issuer_gender and fr.issuer.profile.gender %}
+              <span class="w-1/2 text-center">{{ fr.issuer.profile.get_gender_display }}</span>
+            {% endif %}
+            {% if configuration.display_issuer_faculty and fr.issuer.profile.faculty %}
+              <span class="w-1/2 text-center">{{ fr.issuer.profile.faculty }}</span>
+            {% endif %}
+            {% if configuration.display_issuer_country and fr.issuer.profile.nationality %}
+              <span class="w-1/2 text-center">
+                {{ fr.issuer.profile.nationality.unicode_flag }} {{ fr.issuer.profile.nationality.name }}
+              </span>
+            {% endif %}
+            {% if configuration.display_issuer_university and fr.issuer.profile.home_university %}
+              <span class="w-1/2 text-center">{{ fr.issuer.profile.home_university }}</span>
+            {% endif %}
+          </div>
+          {# <p /> are added by filter #}
+          {{ fr.note|censor_description|linebreaks }}
+
+          {% block request_card_bottom %}{% endblock %}
+
+          <hr>
+          <div class="card-actions justify-between items-center">
+            {% if configuration.display_request_creation_date %}
+              <span class="badge badge-outline badge-sm">{{ fr.created|date:'SHORT_DATETIME_FORMAT' }}</span>
+            {% endif %}
+
+            {% block request_card_actions %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+
+  {% if not object_list.exists %}
+    <div class="alert alert-info mx-auto max-w-xl text-lg py-8 px-8">
+      No waiting requests to match. Please check back later.
+    </div>
+  {% endif %}
+{% endblock %}

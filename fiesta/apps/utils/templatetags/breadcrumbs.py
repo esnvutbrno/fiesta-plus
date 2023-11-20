@@ -9,6 +9,8 @@ from apps.utils.breadcrumbs import BreadcrumbItem, push_breadcrumb_item
 
 register = template.Library()
 
+# Used by breadcrumbs template
+
 
 @register.simple_tag(takes_context=True)
 def breadcrumb_items(context: dict):
@@ -30,13 +32,19 @@ def breadcrumb_items(context: dict):
     return req.breadcrumbs
 
 
-@register.simple_tag(takes_context=True)
-def breadcrumb_push_current_plugin(context: dict):
-    request: HttpRequest = context["request"]
+@register.filter
+def join_breadcrumbs(items: Iterable[BreadcrumbItem], sep=" · "):
+    return sep.join(map(lambda i: str(i() if callable(i) else i), items[::-1]))
 
-    push_breadcrumb_item(request=request, item=request.plugin.app_config.verbose_name)
 
-    return ""
+# Used by templates to push breadcrumbs, usually in template for 3rd party views
+# for own views, use class decorators defined in apps.utils.breadcrumbs:
+#
+#     @with_breadcrumb("My Title")
+#     class MyView(View):
+#         ...
+#
+# or with_plugin_home_breadcrumb/with_callable_breadcrumb/with_object_breadcrumb
 
 
 @register.simple_tag(takes_context=True)
@@ -55,8 +63,3 @@ def breadcrumb_push_item_with_url(context: dict, item: str, url: str):
     push_breadcrumb_item(request=request, item=BreadcrumbItem(item, url))
 
     return ""
-
-
-@register.filter
-def join_breadcrumbs(items: Iterable[BreadcrumbItem], sep=" · "):
-    return sep.join(map(lambda i: str(i() if callable(i) else i), items[::-1]))
