@@ -3,6 +3,7 @@ from __future__ import annotations
 from django.forms import fields_for_model
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_instagram, clean_telegram, clean_whatsapp
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
@@ -74,6 +75,18 @@ class UserProfileForm(BaseModelForm):
         self.instance.user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
 
         return super().save(commit=commit)
+
+    def clean_facebook(self):
+        return clean_facebook(self.cleaned_data["facebook"]) or ""
+
+    def clean_instagram(self):
+        return clean_instagram(self.cleaned_data["instagram"]) or ""
+
+    def clean_telegram(self):
+        return clean_telegram(self.cleaned_data["telegram"]) or ""
+
+    def clean_whatsapp(self):
+        return clean_whatsapp(self.cleaned_data["whatsapp"]) or ""
 
 
 class UserProfileFinishForm(UserProfileForm):

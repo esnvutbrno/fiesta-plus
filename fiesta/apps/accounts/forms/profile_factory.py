@@ -13,6 +13,22 @@ class UserProfileFormFactory:
     Creates UserProfileForm dynamically for specific user -- based on all SectionsConfiguration related to specific user.
     """
 
+    DESIRED_FIELD_ORDER = (
+        "first_name",
+        "last_name",
+        "nationality",
+        "gender",
+        "picture",
+        "university",
+        "faculty",
+        "phone_number",
+        "telegram",
+        "whatsapp",
+        "facebook",
+        "instagram",
+        "interests",
+    )
+
     FIELDS_TO_CONFIGURATION = {
         UserProfile.university: SectionsConfiguration.required_university,
         UserProfile.faculty: SectionsConfiguration.required_faculty,
@@ -75,9 +91,7 @@ class UserProfileFormFactory:
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
             if any(conf_field.__get__(c) is not None for c in confs)
         )
-        all_fields = fields_to_include + UserProfileForm.Meta.fields
-        # first all required fields, after them all the rest in original order
         return sorted(
-            set(all_fields),
-            key=lambda f: (not ((field := UserProfileForm.base_fields.get(f)) and field.required), all_fields.index(f)),
+            set(UserProfileForm.Meta.fields + fields_to_include),
+            key=cls.DESIRED_FIELD_ORDER.index,
         )

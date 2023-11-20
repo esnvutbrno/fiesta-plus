@@ -98,7 +98,7 @@
           </a>
         {% endif %}
         {% if connect_with.profile.whatsapp %}
-          <a href="https://wa.me/{{ connect_with.profile.whatsapp.as_e164 }}"
+          <a href="https://wa.me/{{ connect_with.profile.whatsapp }}"
              rel="nofollow,noreferer,noopener"
              target="_blank"
              class="btn uppercase text-white bg-[#25D366] hover:bg-[#25D366]/90 inline-flex items-center gap-x-2">
@@ -112,7 +112,7 @@
           </a>
         {% endif %}
         {% if connect_with.profile.facebook %}
-          <a href="{{ connect_with.profile.facebook }}"
+          <a href="https://facebook.com/{{ connect_with.profile.facebook }}"
              rel="nofollow,noreferer,noopener"
              target="_blank"
              class="btn uppercase text-white bg-[#3b5998] hover:bg-[#3b5998]/90 focus:ring-4 focus:ring-[#3b5998]/50 inline-flex items-center gap-x-2 dark:focus:ring-[#3b5998]/55">
@@ -129,7 +129,7 @@
           </a>
         {% endif %}
         {% if connect_with.profile.instagram %}
-          <a href="{{ connect_with.profile.instagram }}"
+          <a href="https://instagram.com/{{ connect_with.profile.instagram }}"
              rel="nofollow,noreferer,noopener"
              target="_blank"
              class="btn uppercase text-white bg-gradient-to-r from-orange-400 via-red-500 to-pink-500 inline-flex items-center gap-x-2">

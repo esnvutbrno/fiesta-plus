@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from django import template
 
-from apps.accounts.forms.profile import UserProfileForm
+from apps.accounts.forms.profile_factory import UserProfileFormFactory
 from apps.accounts.models import User, UserProfile
 from apps.sections.models import SectionMembership
 
@@ -37,7 +37,7 @@ def get_user_status_ring_css_for_user(membership: SectionMembership | None):
 
 @register.simple_tag
 def compute_profile_fullness(user: User) -> float:
-    fields = UserProfileForm.get_form_fields(user)  # Get all field names of UserProfile
+    fields = UserProfileFormFactory.get_form_fields(user)  # Get all field names of UserProfile
     empty_fields = 0
 
     for field in fields:

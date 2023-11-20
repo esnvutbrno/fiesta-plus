@@ -85,4 +85,5 @@ class SentryConfigMixin:
                 profiles_sample_rate=1.0,
                 environment=cls.ENVIRONMENT_NAME,
                 release=cls.RELEASE_NAME,
+                enable_tracing=True,
             )
