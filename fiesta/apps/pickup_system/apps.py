@@ -20,6 +20,7 @@ class PickupSystemConfig(BasePluginAppConfig):
     emoji = "🤼"
     description = _("Tools for managing pickup of your students.")
     feature_state = BasePluginAppConfig.FeatureState.EXPERIMENTAL
+    order = 30
 
     configuration_model = "pickup_system.PickupSystemConfiguration"
 

@@ -56,8 +56,11 @@ class BasePluginAppConfig(AppConfig, metaclass=ABCMeta):
     # should the plugin be enforced for all sections?
     auto_enabled = False
 
-    # controls the plugin_feature_state ribbon as warning for users
+    # controls the plugin_feature_state ribbon as a warning for users
     feature_state = FeatureState.STABLE
+
+    # order of plugin in navigation
+    order: int = 1000
 
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""

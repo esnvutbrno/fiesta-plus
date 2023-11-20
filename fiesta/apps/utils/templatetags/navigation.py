@@ -26,6 +26,8 @@ class NavigationItemSpec(typing.NamedTuple):
 
 @register.simple_tag(takes_context=True)
 def get_navigation_items(context):
+    from apps.plugins.utils import all_plugins_to_order
+
     request: HttpRequest = context["request"]
 
     membership: SectionMembership | None = request.membership
@@ -38,7 +40,9 @@ def get_navigation_items(context):
         section.enabled_plugins_for_privileged if membership.is_privileged else section.enabled_plugins
     )
 
-    for plugin in plugins:
+    orders = all_plugins_to_order()
+
+    for plugin in sorted(plugins, key=lambda p: (orders[p.app_label], p.app_label)):
         apps: BasePluginAppConfig = plugin.app_config
         item = apps.as_navigation_item(request=request, bound_plugin=plugin)
         if item:
