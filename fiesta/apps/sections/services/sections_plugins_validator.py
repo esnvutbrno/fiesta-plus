@@ -51,9 +51,13 @@ class SectionPluginsValidator:
             case SectionsConfig():
                 for cfg in (BuddySystemConfig, PickupSystemConfig):
                     app = all_plugins_mapped_to_class().get(cfg)
+                    plugin = self.plugins.get(app.label)
+
+                    if not plugin:
+                        continue
 
                     self._check_field_dependency(
-                        plugin=self.plugins.get(app.label),
+                        plugin=plugin,
                         field_value=sections_conf.required_faculty,
                         err=ValidationError(
                             _(
@@ -69,6 +73,9 @@ class SectionPluginsValidator:
         field_value: bool,
         err: ValidationError,
     ):
+        if not plugin:
+            return
+
         if plugin.state == Plugin.State.DISABLED:
             return
 
