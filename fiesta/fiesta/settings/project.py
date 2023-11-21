@@ -39,7 +39,7 @@ class ProjectConfigMixin:
         return [f".{self.ROOT_DOMAIN}"]
 
     # overwritten by production mixins
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
 
     def DEFAULT_FROM_EMAIL(self):
         return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
