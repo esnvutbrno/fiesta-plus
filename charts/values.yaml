@@ -39,3 +39,9 @@ secrets:
   sentry:
     dsn: dsn
     jsLoaderUrl: url
+  mailer:
+    primary:
+      host: host
+      port: 587
+      user: user
+      password: password

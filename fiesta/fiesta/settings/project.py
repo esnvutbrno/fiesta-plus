@@ -38,7 +38,11 @@ class ProjectConfigMixin:
     def ALLOWED_HOSTS(self):
         return [f".{self.ROOT_DOMAIN}"]
 
+    # overwritten by production mixins
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+    def DEFAULT_FROM_EMAIL(self):
+        return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
 
     INSTALLED_APPS = [
         # dj admin autocompletion widgets, must be before admin
