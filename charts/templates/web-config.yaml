@@ -7,4 +7,3 @@ metadata:
 data:
   DJANGO_CONFIGURATION: "Production"
   DJANGO_ROOT_DOMAIN: {{ .Values.ingress.host | quote }}
-  DJANGO_MAILER_PRIMARY_BACKEND: "django.core.mail.backends.console.EmailBackend"
