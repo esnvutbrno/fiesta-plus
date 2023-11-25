@@ -50,7 +50,7 @@
     }
 
     .Forms__help_text {
-        @apply label-text;
+        @apply label-text flex-grow;
     }
 
     .Forms__field--error .Forms__input {
