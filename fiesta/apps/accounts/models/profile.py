@@ -118,22 +118,22 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     facebook = models.CharField(
         verbose_name=_("facebook"),
         blank=True,
-        help_text=_("Use username or profile link: john.doe or https://www.facebook.com/john.doe"),
+        help_text=_("Username or profile link: john.doe or https://www.facebook.com/john.doe"),
     )
     instagram = models.CharField(
         verbose_name=_("instagram"),
         blank=True,
-        help_text=_("Use username or profile link: john.doe or https://www.instagram.com/john.doe"),
+        help_text=_("Username or profile link: john.doe or https://www.instagram.com/john.doe"),
     )
     telegram = models.CharField(
         verbose_name=_("telegram"),
         blank=True,
-        help_text=_("Use username, phone, or profile: john.doe, +420777888999 or https://t.me/john.doe"),
+        help_text=_("Username, phone, or profile: john.doe, +420777888999 or https://t.me/john.doe"),
     )
     whatsapp = models.CharField(
         verbose_name=_("whatsapp"),
         blank=True,
-        help_text=_("Use phone: +420777888999"),
+        help_text=_("Phone: +420777888999"),
     )
 
     phone_number = PhoneNumberField(null=True, blank=True, verbose_name=_("phone number"))

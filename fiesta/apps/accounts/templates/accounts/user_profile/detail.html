@@ -35,23 +35,23 @@
       <table class="border-separate gap-4">
         {% with user=object.user profile=object.user.profile_or_none %}
           <tr>
-            <td class="font-semibold pr-12">Name:</td>
+            <td class="font-semibold pr-4 md:pr-12">Name:</td>
             <td>{{ user.first_name }}</td>
           </tr>
           <tr>
-            <td class="font-semibold pr-12">Surname:</td>
+            <td class="font-semibold pr-4 md:pr-12">Surname:</td>
             <td>{{ user.last_name }}</td>
           </tr>
           <tr>
-            <td class="font-semibold pr-12">Email:</td>
+            <td class="font-semibold pr-4 md:pr-12">Email:</td>
             <td>{{ user.primary_email }}</td>
           </tr>
           <tr>
-            <td class="font-semibold pr-12">Gender:</td>
+            <td class="font-semibold pr-4 md:pr-12">Gender:</td>
             <td>{{ profile.gender }}</td>
           </tr>
           <tr>
-            <td class="font-semibold pr-12">Joined:</td>
+            <td class="font-semibold pr-4 md:pr-12">Joined:</td>
             <td>{{ user.date_joined }}</td>
           </tr>
         {% endwith %}
@@ -63,11 +63,11 @@
     <table class="border-separate gap-4">
       {% with profile=object.user.profile_or_none %}
         <tr>
-          <td class="font-semibold pr-12">University:</td>
+          <td class="font-semibold pr-4 md:pr-12">University:</td>
           <td>{{ profile.faculty.university }}</td>
         </tr>
         <tr>
-          <td class="font-semibold pr-12">Faculty:</td>
+          <td class="font-semibold pr-4 md:pr-12">Faculty:</td>
           <td>{{ profile.faculty }}</td>
         </tr>
       {% endwith %}
@@ -81,7 +81,7 @@
         {% with user=object.user profile=object.user.profile_or_none %}
           {% if profile.phone_number %}
             <tr>
-              <td class="font-semibold pr-12 flex-shrink-0">Phone number:</td>
+              <td class="font-semibold pr-4 md:pr-12 flex-shrink-0">Phone number:</td>
               <td class="flex-grow">
                 {% if profile.phone_number %}
                   <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
@@ -92,7 +92,7 @@
           {% endif %}
           {% if profile.facebook %}
             <tr>
-              <td class="font-semibold pr-12 flex-shrink-0">Facebook:</td>
+              <td class="font-semibold pr-4 md:pr-12 flex-shrink-0">Facebook:</td>
               <td class="flex-grow">
                 <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                    href="https://facebook.com/{{ profile.facebook }}"
@@ -103,7 +103,7 @@
           {% endif %}
           {% if profile.instagram %}
             <tr>
-              <td class="font-semibold pr-12 flex-shrink-0">Instagram:</td>
+              <td class="font-semibold pr-4 md:pr-12 flex-shrink-0">Instagram:</td>
               <td class="flex-grow">
                 <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                    href="https://instagram.com/{{ profile.instagram }}"
@@ -114,7 +114,7 @@
           {% endif %}
           {% if profile.telegram %}
             <tr>
-              <td class="font-semibold pr-12 flex-shrink-0">Telegram:</td>
+              <td class="font-semibold pr-4 md:pr-12 flex-shrink-0">Telegram:</td>
               <td class="flex-grow">
                 <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                    href="https://t.me/{{ profile.telegram }}"
@@ -125,7 +125,7 @@
           {% endif %}
           {% if profile.whatsapp %}
             <tr>
-              <td class="font-semibold pr-12 flex-shrink-0">Whatsapp:</td>
+              <td class="font-semibold pr-4 md:pr-12 flex-shrink-0">Whatsapp:</td>
               <td class="flex-grow">
                 <a class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600 block"
                    href="https://wa.me/{{ profile.whatsapp }}"

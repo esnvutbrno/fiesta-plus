@@ -31,6 +31,7 @@ def field_modifier(bf: BoundField):
         "select": "Forms__field--select",
         "text": "Forms__field--text",
         "textarea": "Forms__field--textarea",
+        "radio": "Forms__field--radio",
         "unknown": "Forms__field--unknown",
     }.get(bf_type(bf))
 
