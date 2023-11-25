@@ -19,7 +19,7 @@
       "user_permissions": []
     }
   },
-    {
+  {
     "model": "socialaccount.socialapp",
     "pk": 1,
     "fields": {
@@ -33,6 +33,43 @@
           "fiesta.test"
         ]
       ]
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 48,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "email": "admin@fiesta.test",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "a98829f3-549c-4652-be95-07ff025d36d7",
+    "fields": {
+      "created": "2023-11-21T22:18:25.545Z",
+      "modified": "2023-11-21T22:18:25.556Z",
+      "user": [
+        "admin"
+      ],
+      "nationality": null,
+      "gender": "",
+      "university": null,
+      "faculty": null,
+      "picture": "",
+      "interests": "[]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete",
+      "enforce_revalidation": false
     }
   }
 ]
