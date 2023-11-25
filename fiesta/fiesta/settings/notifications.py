@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from configurations.values import BooleanValue, SecretValue, Value
+from configurations.values import BooleanValue, PositiveIntegerValue, SecretValue, Value
 
 from ._utils import BaseConfigurationProtocol
 
 
 class SmtpMailerConfigMixin(BaseConfigurationProtocol):
     MAILER_PRIMARY_BACKEND = Value(default="django.core.mail.backends.smtp.EmailBackend")
-    MAILER_PRIMARY_TIMEOUT = Value(default=5)
+    MAILER_PRIMARY_TIMEOUT = PositiveIntegerValue(default=5, cast=int)
     MAILER_PRIMARY_HOST_USE_TLS = BooleanValue(default=True)
     MAILER_PRIMARY_HOST = SecretValue()
     MAILER_PRIMARY_HOST_PORT = SecretValue()
