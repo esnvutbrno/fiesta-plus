@@ -214,7 +214,7 @@
     }
 
     .Forms__field--select .ts-control .item {
-        @apply text-sm;
+        @apply text-base;
         line-height: 2;
     }
 
