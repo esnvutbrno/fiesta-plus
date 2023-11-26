@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import FacultyWidget
+from apps.fiestaforms.widgets.models import FacultyForCurrentUserWidget
 
 USER_PROFILE_CONTACT_FIELDS = fields_for_model(
     UserProfile,
@@ -28,7 +28,7 @@ class BaseNewRequestForm(BaseModelForm):
         )
         field_classes = {}
         widgets = {
-            "issuer_faculty": FacultyWidget,
+            "issuer_faculty": FacultyForCurrentUserWidget,
             "note": Textarea(attrs={"rows": 5}),
         }
         labels = {

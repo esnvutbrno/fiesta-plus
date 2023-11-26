@@ -7,7 +7,7 @@ from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_ins
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
+from apps.fiestaforms.widgets.models import FacultyForCurrentUserWidget, UniversityForCurrentUserWidget
 
 FIELDS_FROM_USER = ("first_name", "last_name")
 REQUIRED_FIELDS_FROM_USER = FIELDS_FROM_USER
@@ -55,8 +55,8 @@ class UserProfileForm(BaseModelForm):
 
         widgets = {
             # TODO: show only related facultites & universities
-            "university": UniversityWidget,
-            "faculty": FacultyWidget,
+            "university": UniversityForCurrentUserWidget,
+            "faculty": FacultyForCurrentUserWidget,
             "gender": RadioSelect,
         }
 

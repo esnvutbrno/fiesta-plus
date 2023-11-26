@@ -63,6 +63,16 @@ class UniversityWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
         return f"{university.name} ({university.abbr})"
 
 
+class UniversityForCurrentUserWidget(UniversityWidget):
+    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
+        queryset = (queryset or self.get_queryset()).filter(
+            # TODO: filter state?
+            university_sections__section__memberships__user=request.user,
+        )
+
+        return super().filter_queryset(request, term, queryset, **dependent_fields)
+
+
 class FacultyWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [
         "university__name__icontains",
@@ -73,3 +83,13 @@ class FacultyWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     @classmethod
     def label_from_instance(cls, faculty):
         return f"{faculty.name} ({faculty.abbr}) - {UniversityWidget.label_from_instance(faculty.university)}"
+
+
+class FacultyForCurrentUserWidget(FacultyWidget):
+    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
+        queryset = (queryset or self.get_queryset()).filter(
+            # TODO: filter state?
+            university__university_sections__section__memberships__user=request.user,
+        )
+
+        return super().filter_queryset(request, term, queryset, **dependent_fields)
