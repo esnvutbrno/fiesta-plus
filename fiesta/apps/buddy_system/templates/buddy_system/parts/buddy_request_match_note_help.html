@@ -1,7 +1,12 @@
 {% load i18n %}
-<h4 class="text-lg">{% translate 'What to include in message?' %}</h4>
-<ul class="list-disc text-sm">
-  <li>{% translate 'Through which platform you will contact him/her' %}</li>
-  <li>{% translate "That you're looking forward to see her/him" %}</li>
-  <li>{% translate "Kind words to support in their international mobility" %}</li>
-</ul>
+<div class="collapse collapse-arrow bg-base-200 w-full flex-grow">
+  <input type="checkbox" />
+  <label class="collapse-title text-lg font-medium  ">{% translate 'What to include in message?' %}</label>
+  <div class="collapse-content">
+    <ul class="list-disc pl-4">
+      <li>{% translate 'Through which platform you will contact him/her' %}</li>
+      <li>{% translate "That you're looking forward to see her/him" %}</li>
+      <li>{% translate "Kind words to support in their international mobility" %}</li>
+    </ul>
+  </div>
+</div>

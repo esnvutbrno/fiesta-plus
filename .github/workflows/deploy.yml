@@ -178,6 +178,12 @@ jobs:
               sentry:
                 dsn: ${{ secrets.SENTRY_DSN }}
                 jsLoaderUrl: ${{ secrets.SENTRY_JS_LOADER_URL }}
+              mailer:
+                primary:
+                  host: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST }}
+                  port: "${{ secrets.DJANGO_MAILER_PRIMARY_HOST_PORT }}"
+                  user: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST_USER }}
+                  password: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST_PASSWORD }}
           value-files: >-
             [
               "charts/values.yaml"

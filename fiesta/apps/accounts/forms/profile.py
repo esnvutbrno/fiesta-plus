@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from django.forms import fields_for_model
+from django.forms import RadioSelect, fields_for_model
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_instagram, clean_telegram, clean_whatsapp
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
+from apps.fiestaforms.widgets.models import FacultyForCurrentUserWidget, UniversityForCurrentUserWidget
 
 FIELDS_FROM_USER = ("first_name", "last_name")
 REQUIRED_FIELDS_FROM_USER = FIELDS_FROM_USER
@@ -24,6 +24,8 @@ def _create_user_fields():
 
 
 FORM_FIELDS_FROM_USER = _create_user_fields()
+
+CONTACT_FIELDS = ("facebook", "instagram", "telegram", "whatsapp")
 
 
 class UserProfileForm(BaseModelForm):
@@ -52,8 +54,10 @@ class UserProfileForm(BaseModelForm):
         )
 
         widgets = {
-            "university": UniversityWidget,
-            "faculty": FacultyWidget,
+            # TODO: show only related facultites & universities
+            "university": UniversityForCurrentUserWidget,
+            "faculty": FacultyForCurrentUserWidget,
+            "gender": RadioSelect,
         }
 
     def __init__(self, *args, **kwargs):
@@ -67,6 +71,10 @@ class UserProfileForm(BaseModelForm):
         if user:
             for f in FORM_FIELDS_FROM_USER:
                 self.initial[f] = getattr(user, f, None)
+
+        for f in CONTACT_FIELDS:
+            self.fields[f].widget.attrs["placeholder"] = self.fields[f].help_text
+            self.fields[f].help_text = None
 
     def save(self, commit=True):
         # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again

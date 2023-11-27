@@ -2,7 +2,7 @@
 {% load utils %}
 {% if request.user.is_authenticated %}
   <button type="button"
-          class="flex mr-2 md:mr-0 text-sm rounded-full  focus:ring-4 focus:ring-base-300"
+          class="flex text-sm rounded-full focus:ring-4 focus:ring-base-300"
           aria-expanded="false"
           @click="user = !user"
           @click.outside="user = false">

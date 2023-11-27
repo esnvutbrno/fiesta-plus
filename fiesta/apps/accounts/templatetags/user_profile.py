@@ -41,8 +41,8 @@ def compute_profile_fullness(user: User) -> float:
     empty_fields = 0
 
     for field in fields:
-        field_value = getattr(user.profile, field, None)
-        if field_value is None or field_value == "":  # So far it's not possible to have a field with False value
+        field_value = getattr(user.profile, field, getattr(user, field, None))
+        if field_value in (None, ""):  # So far it's not possible to have a field with False value
             empty_fields += 1
 
     return (len(fields) - empty_fields) / len(fields)

@@ -342,5 +342,77 @@
       "role": "member",
       "state": "active"
     }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 42,
+    "fields": {
+      "user": [
+        "aaron.paul"
+      ],
+      "email": "aaron.paul@aaron.paul",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 43,
+    "fields": {
+      "user": [
+        "anna.gunn"
+      ],
+      "email": "anna.gunn@anna.gunn",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 44,
+    "fields": {
+      "user": [
+        "gus.fring"
+      ],
+      "email": "gus.fring@gus.fring",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 45,
+    "fields": {
+      "user": [
+        "hector.salamanca"
+      ],
+      "email": "hector.salamanca@hector.salamanca",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 46,
+    "fields": {
+      "user": [
+        "jesse.pinkman"
+      ],
+      "email": "jesse.pinkman@jesse.pinkman",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 47,
+    "fields": {
+      "user": [
+        "walter.white"
+      ],
+      "email": "walter.white@walter.white",
+      "verified": true,
+      "primary": true
+    }
   }
 ]

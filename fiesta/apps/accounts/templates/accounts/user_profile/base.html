@@ -4,6 +4,7 @@
 {% load i18n %}
 
 {% block upper_head %}
+  {# we use breadcrumbs here in templates, since profile views are also from allauth, so we have not access there #}
   {% trans "Profile" as title %}
   {% url "accounts:my-profile" as url %}
   {% breadcrumb_push_item_with_url title url %}
