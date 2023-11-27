@@ -8,6 +8,10 @@
            value="{{ redirect_field_value }}" />
   {% endif %}
   {{ form }}
+  <a class="btn btn-success btn-sm btn-outline"
+  href="{% url "events:eventplace-add" event.pk %}"
+  x-data="modal($el.href)"
+  x-bind="bind">{% translate "Add new place" %}</a>
   {% include "events/price.html" %}
   
   {% get_price_variants event as prices %}
@@ -32,6 +36,9 @@
   </div>
     {% endfor %}
   {% endif %}
+
+
+
 
   {% for organizer in event.organizers.all %}
     <div>

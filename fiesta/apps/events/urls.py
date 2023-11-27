@@ -3,8 +3,9 @@ from __future__ import annotations
 from django.urls import path
 
 from .views import EventsIndexView
-from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView
+from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView, ConfirmEvent
 from .views.price import PriceView, PriceUpdate, PriceDelete
+from .views.place import PlaceView, AddPlaceView, UpdatePlaceView, DeletePlaceView
 
 # Define your urls here
 
@@ -18,5 +19,11 @@ urlpatterns = [
     path("event-detail/<uuid:pk>/participants", ParticipantsView.as_view(), name="participants"), # event-detail/<uuid:pk>/
     path("event-update/<uuid:pk>/price", PriceView.as_view(), name="price"),
     path("event-update/<uuid:pk>/price/<uuid:pricepk>", PriceUpdate.as_view(), name="price-update"),
-    path("event-update/<uuid:pk>/price-delete/<uuid:pricepk>", PriceDelete.as_view(), name="price-delete")
+    path("event-update/<uuid:pk>/price-delete/<uuid:pricepk>", PriceDelete.as_view(), name="price-delete"),
+    path("place", PlaceView.as_view(), name="place"),
+    path("place/add", AddPlaceView.as_view(), name="place-add"),
+    path("event-update/<uuid:pk>/place/add", AddPlaceView.as_view(), name="eventplace-add"),
+    path("place/update/<uuid:pk>", UpdatePlaceView.as_view(), name="place-update"),
+    path("place/delete/<uuid:pk>", DeletePlaceView.as_view(), name="place-delete"),
+    path("event-detail/<uuid:pk>/confirm", ConfirmEvent.as_view(), name="event-confirm"),
 ]

@@ -1,6 +1,7 @@
 import json
 from typing import Any
 from uuid import UUID
+from django import http
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -79,15 +80,17 @@ class UpdateEventView(
 
     success_message = _("Event updated")
 
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)
+
     def get_initial(self):
         return dict(
             section=self.request.in_space_of_section,
         )
 
-
     def get_object(self, queryset=None):
-        event_id = self.kwargs.get('pk')
-        return self.request.in_space_of_section.events.get(id=event_id)
+        return self.request.in_space_of_section.events.get(id=self.event.pk)
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
@@ -125,6 +128,19 @@ class EventDetailView(DetailView):
         context['organizers_json'] = json.dumps(organizers_data)
         return context
 
+class ConfirmEvent(UpdateView):
+    model = Event
+
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+        print("confirm")
+        self.event.state=EventState.CONFIRMED
+        self.event.save()
+        return super().post(request, *args, **kwargs)
+    def get_success_url(self):
+        return reverse("index")
 
 
 class EventParticipantsFilter(BaseFilterSet):
@@ -205,11 +221,11 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     filterset_class = EventParticipantsFilter
     model = Participant
     
-
+    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
+        self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
+        return super().dispatch(request, *args, **kwargs)
     def get_queryset(self):
-        print(self.request.in_space_of_section.memberships.all())
-        event_id = self.kwargs.get('pk')
-        return self.request.in_space_of_section.events.get(id=event_id).participants.filter(
+        return self.request.in_space_of_section.events.get(id=self.event.pk).participants.filter(
             state__in=(
                 ParticipantState.WAITING,
                 ParticipantState.CONFIRMED,

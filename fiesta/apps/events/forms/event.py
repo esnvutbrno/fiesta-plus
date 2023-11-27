@@ -5,7 +5,7 @@ from apps.accounts.models import User
 from django.forms import CharField, HiddenInput, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, SelectMultiple
 from django_select2.forms import Select2MultipleWidget
 from django.utils.translation import gettext_lazy as _
-from apps.fiestaforms.widgets.models import MultipleActiveLocalMembersFromSectionWidget
+from apps.fiestaforms.widgets.models import MultipleActiveLocalMembersFromSectionWidget, PlaceWidget
 
 from apps.sections.models import SectionMembership
 
@@ -38,11 +38,13 @@ class AddEventForm(BaseModelForm):
             "landscape_cover",
             "portrait_cover",
             "section",
-            "author"
+            "author",
+            "place"
         )
         widgets = {
             "section": HiddenInput,
             "author": HiddenInput,
+            "place": PlaceWidget,
         }
 
 
@@ -106,10 +108,12 @@ class UpdateEventForm(BaseModelForm):
             "portrait_cover",
             "section",
             "author",
-            "add_organizer"
+            "add_organizer",
+            "place"
         )
         widgets = {
             "section": HiddenInput,
             "author": HiddenInput,
+            "place": PlaceWidget,
         }
 

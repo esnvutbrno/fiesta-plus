@@ -1,0 +1,9 @@
+
+{% load i18n %}
+
+{% block main %}
+  <a class="btn btn-sm btn-outline btn-primary"
+     x-data="modal($el.href)"
+     x-bind="bind"
+     href="{% url "events:place-update" record.pk %}">{% trans "Update" %}</a>
+     {% endblock main %}

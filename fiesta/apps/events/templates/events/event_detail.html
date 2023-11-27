@@ -34,6 +34,12 @@
     </template>
   </div>
   <br><br>
+  <a href="#" 
+  class="btn btn-danger btn-sm btn-outline" 
+  hx-get="{% url "events:event-confirm" event.id %}"
+  hx-confirm="Are you sure you want to confirm this event?"
+  hx-target="#event-confirmed-{{ event.pk }}"
+  hx-swap="outerHTML">{% translate "Confirm" %}</a>
 
   {% get_price_variants event as prices %}
   {% if prices is not None %}
@@ -43,5 +49,7 @@
       {{ price.data }}<br>
     {% endfor %}
   {% endif %}
-
+  {% if request.membership.is_international%}
+  <button>Register</button>
+  {% endif %}
 {% endblock main %}

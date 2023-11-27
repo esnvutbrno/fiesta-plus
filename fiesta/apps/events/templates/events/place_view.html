@@ -1,0 +1,13 @@
+{% extends "fiestatables/page.html" %}
+
+{% load i18n %}
+{% block main %}
+ {{ block.super }}
+
+ <a class="btn btn-sm btn-outline btn-primary"
+ x-data="modal($el.href)"
+ x-bind="bind"
+ href="{% url "events:place-add" %}">{% trans "Add" %}</a>
+{% endblock %}
+
+

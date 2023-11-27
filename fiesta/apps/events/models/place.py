@@ -42,6 +42,7 @@ class Place(BaseModel):
     section = models.ForeignKey(
         "sections.Section",
         on_delete=models.CASCADE,
+        related_name="places",
         verbose_name=_("ESN section"),
         db_index=True,
     )

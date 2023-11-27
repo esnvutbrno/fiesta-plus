@@ -80,7 +80,14 @@ class MultipleActiveLocalMembersFromSectionWidget(MultipleUserWidget):
         )
 
         return super().filter_queryset(request, term, queryset, **dependent_fields)
+class PlaceWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+    ]
 
+    @classmethod
+    def label_from_instance(cls, place):
+        return f"{place.name} ({place.link})"
 
 class UniversityWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [
