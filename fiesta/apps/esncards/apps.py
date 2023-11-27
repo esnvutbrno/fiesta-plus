@@ -19,6 +19,8 @@ class ESNcardsConfig(BasePluginAppConfig):
     verbose_name = _("ESNcard")
     emoji = "💳"
     description = _("ESNcard applications, processing and bulk export.")
+    feature_state = BasePluginAppConfig.FeatureState.EXPERIMENTAL
+    order = 40
 
     configuration_model = "esncards.ESNcardsConfiguration"
 

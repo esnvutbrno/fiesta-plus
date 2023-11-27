@@ -122,3 +122,11 @@ def with_callable_breadcrumb(getter: Callable[[View], BreadcrumbItem]):
         return view_klass
 
     return inner
+
+
+def with_plugin_home_breadcrumb(f):
+    return with_callable_breadcrumb(
+        lambda view: BreadcrumbItem(
+            view.request.plugin.app_config.verbose_name, view.request.plugin.app_config.reverse("index")
+        )
+    )(f)

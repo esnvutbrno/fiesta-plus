@@ -8,8 +8,9 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
-from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.accounts.forms.profile import UserProfileFinishForm
+from apps.accounts.forms.profile_factory import UserProfileFormFactory
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.breadcrumbs import with_breadcrumb
 from apps.utils.views import AjaxViewMixin
@@ -31,12 +32,12 @@ class MyProfileUpdateView(LoginRequiredMixin, UpdateView):
         return self.request.user.profile_or_none
 
     def get_form_class(self):
-        return UserProfileForm.for_user(user=self.request.user)
+        return UserProfileFormFactory.for_user(user=self.request.user)
 
 
 @with_breadcrumb(_("Finish my profile"))
 class ProfileFinishFormView(
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,
@@ -48,7 +49,10 @@ class ProfileFinishFormView(
     success_message = _("Your profile has been updated.")
 
     def get_form_class(self):
-        return UserProfileFinishForm.for_user(user=self.request.user)
+        return UserProfileFormFactory.for_user(
+            user=self.request.user,
+            base_form_class=UserProfileFinishForm,
+        )
 
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none

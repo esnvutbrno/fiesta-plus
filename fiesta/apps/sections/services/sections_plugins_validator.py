@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
 from apps.buddy_system.apps import BuddySystemConfig
+from apps.pickup_system.apps import PickupSystemConfig
 from apps.plugins.models import BasePluginConfiguration, Plugin
 from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_class
@@ -14,7 +15,7 @@ from apps.sections.models import Section, SectionsConfiguration
 
 
 @dataclasses.dataclass(frozen=True)
-class SectionsPluginsValidator:
+class SectionPluginsValidator:
     """Defines relations between plugin configurations and validates them."""
 
     section: Section
@@ -28,20 +29,60 @@ class SectionsPluginsValidator:
             self._check_for_plugin(p)
 
     def _check_for_plugin(self, plugin: Plugin):
+        sections_conf: SectionsConfiguration = self.get_configuration(SectionsConfig)
+
+        # TODO: would be better to refactor to some kind of matrix:
+        #  FIELD_DEPENDENCIES = {
+        #      BuddySystemConfig: (SectionsConfig, SectionsConfiguration.required_faculty, lambda v: v),
+        #  }
+
         match plugin.app_config:
-            case BuddySystemConfig() | SectionsConfig():
-                if not self.has_enabled_plugin(BuddySystemConfig):
-                    return
-
-                sections_conf: SectionsConfiguration = self.get_configuration(SectionsConfig)
-
-                if not sections_conf.required_faculty:
-                    raise ValidationError(
+            case (BuddySystemConfig() | PickupSystemConfig()):
+                self._check_field_dependency(
+                    plugin=plugin,
+                    field_value=sections_conf.required_faculty,
+                    err=ValidationError(
                         _(
-                            "With enabled Buddy system plugin, you need to require faculty "
-                            "in Section plugin configuration."
-                        )
+                            "With enabled {plugin} plugin, you need to have enabled "
+                            "faculty requirement in the ESN Section plugin configuration."
+                        ).format(plugin=plugin.app_config.verbose_name),
+                    ),
+                )
+            case SectionsConfig():
+                for cfg in (BuddySystemConfig, PickupSystemConfig):
+                    app = all_plugins_mapped_to_class().get(cfg)
+                    plugin = self.plugins.get(app.label)
+
+                    if not plugin:
+                        continue
+
+                    self._check_field_dependency(
+                        plugin=plugin,
+                        field_value=sections_conf.required_faculty,
+                        err=ValidationError(
+                            _(
+                                "With enabled {plugin} plugin, you need to have enabled "
+                                "faculty requirement in the ESN Section plugin configuration."
+                            ).format(plugin=app.verbose_name),
+                        ),
                     )
+
+    def _check_field_dependency(
+        self,
+        plugin: Plugin,
+        field_value: bool,
+        err: ValidationError,
+    ):
+        if not plugin:
+            return
+
+        if plugin.state == Plugin.State.DISABLED:
+            return
+
+        if field_value:
+            return
+
+        raise err
 
     def has_enabled_plugin(self, app: type[BasePluginAppConfig]):
         """Checks if plugin is enabled."""
@@ -56,7 +97,7 @@ class SectionsPluginsValidator:
         return self.configurations.get(app_obj.label)
 
     @classmethod
-    def for_changed_conf(cls, section: Section, conf: BasePluginConfiguration) -> SectionsPluginsValidator:
+    def for_changed_conf(cls, section: Section, conf: BasePluginConfiguration) -> SectionPluginsValidator:
         """Creates validator for standard state, but a configuration has been changed."""
         plugin = conf.plugins.get(section=section)
         return cls(
@@ -66,7 +107,7 @@ class SectionsPluginsValidator:
         )
 
     @classmethod
-    def for_changed_plugin(cls, section: Section, plugin: Plugin) -> SectionsPluginsValidator:
+    def for_changed_plugin(cls, section: Section, plugin: Plugin) -> SectionPluginsValidator:
         """Creates validator for standard state, but a plugin has been changed."""
         return cls(
             section=section,

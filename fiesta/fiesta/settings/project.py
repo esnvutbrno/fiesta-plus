@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from configurations.values import Value
+
 from ._utils import PathValue
 
 
@@ -42,6 +44,8 @@ class ProjectConfigMixin:
         # dj admin autocompletion widgets, must be before admin
         "dal",
         "dal_select2",
+        # env ribbon in admin
+        "django_admin_env_notice",
         # Django native
         "django.contrib.admin",
         "phonenumber_field",
@@ -63,6 +67,7 @@ class ProjectConfigMixin:
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
+        "apps.pickup_system.apps.PickupSystemConfig",
         "apps.dashboard.apps.DashboardConfig",
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
@@ -92,6 +97,9 @@ class ProjectConfigMixin:
         "loginas",
         # editorjs integration
         "django_editorjs_fields",
+        # location fields
+        "location_field.apps.DefaultConfig",
+        # for trees
         "mptt",
         # health checks
         "health_check",
@@ -121,3 +129,12 @@ class ProjectConfigMixin:
     # all EU countries first, then the rest
     COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
     COUNTRIES_FIRST_REPEAT = True
+
+    LOCATION_FIELD = {
+        "map.provider": "openstreetmap",
+        "search.provider": "nominatim",
+    }
+
+    ENVIRONMENT_NAME: str = Value(environ_required=False)
+    ENVIRONMENT_COLOR: str = Value(environ_required=False)
+    RELEASE_NAME: str = Value(environ_required=False, default="fiesta-plus@dev")

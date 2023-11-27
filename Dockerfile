@@ -1,3 +1,8 @@
+# expected to be set during production build
+ARG DJANGO_RELEASE_NAME
+ARG SENTRY_RELEASE_NAME
+ARG SENTRY_RELEASE_ENVIRONMENT
+
 #
 # webpack image
 #
@@ -30,7 +35,20 @@ ENV PUBLIC_PATH=${PUBLIC_PATH}
 ARG TAILWIND_CONTENT_PATH="/usr/src/fiesta/**/templates/**/*.html:/usr/src/fiesta/**/*.py"
 ENV TAILWIND_CONTENT_PATH=${TAILWIND_CONTENT_PATH}
 
-RUN ["yarn", "build"]
+ARG SENTRY_RELEASE_NAME
+ENV SENTRY_RELEASE_NAME=${SENTRY_RELEASE_NAME}
+
+ARG SENTRY_RELEASE_ENVIRONMENT
+ENV SENTRY_RELEASE_ENVIRONMENT=${SENTRY_RELEASE_ENVIRONMENT}
+
+RUN \
+  --mount=type=secret,id=SENTRY_ORG \
+  --mount=type=secret,id=SENTRY_PROJECT \
+  --mount=type=secret,id=SENTRY_WEBPACK_AUTH_TOKEN \
+  export SENTRY_ORG=$(cat /run/secrets/SENTRY_ORG) \
+  export SENTRY_PROJECT=$(cat /run/secrets/SENTRY_PROJECT) \
+  export SENTRY_WEBPACK_AUTH_TOKEN=$(cat /run/secrets/SENTRY_WEBPACK_AUTH_TOKEN) \
+  && yarn build
 
 #
 # django web app image
@@ -106,6 +124,9 @@ ENV DJANGO_MEDIA_ROOT=${DJANGO_MEDIA_ROOT}
 # TODO: maybe better name?
 ARG DJANGO_BUILD_DIR=/usr/src/build/
 ENV DJANGO_BUILD_DIR=${DJANGO_BUILD_DIR}
+
+ARG DJANGO_RELEASE_NAME
+ENV DJANGO_RELEASE_NAME=${DJANGO_RELEASE_NAME}
 
 # need production configuration, but not all values are ready in env
 RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"

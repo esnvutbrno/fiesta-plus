@@ -1,0 +1,20 @@
+{% extends "fiesta/base.html" %}
+{% load pickup_system %}
+{% load user_profile %}
+{% load utils %}
+
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {% trans "My Requests" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block main %}
+  {# international without any requests are redirected to /wanna-pickup by view #}
+  {% for br in requests %}
+    {% blocktranslate with created=br.created|date asvar title %}Your Request from {{ created }}{% endblocktranslate %}
+    {% include "pickup_system/parts/request_match_card.html" with br=br title=title connect_with=br.match.matcher %}
+  {% endfor %}
+{% endblock %}

@@ -2,10 +2,6 @@
 {% load breadcrumbs %}
 {% load i18n %}
 
-{% block upper_head %}
-  {% breadcrumb_push_current_plugin %}
-{% endblock upper_head %}
-
 {% block breadcrumbs_container %}
 {% endblock breadcrumbs_container %}
 
@@ -78,8 +74,15 @@
       {% if blocks.accounts %}
         <div class="w-full md:w-2/5">{% include blocks.accounts with request=request %}</div>
       {% endif %}
-      {% if blocks.esncards %}
-        <div class="w-full md:w-3/5">{% include blocks.esncards with request=request %}</div>
+      {% if blocks.esncards or blocks.pickup_system %}
+        <div class="w-full md:w-3/5 flex flex-col gap-y-4">
+          {% if blocks.esncards %}
+            {% include blocks.esncards with request=request %}
+          {% endif %}
+          {% if blocks.pickup_system %}
+            {% include blocks.pickup_system with request=request %}
+          {% endif %}
+        </div>
       {% endif %}
       {% if blocks.events %}
         <div class="w-full md:w-3/5">{% include blocks.events with request=request %}</div>

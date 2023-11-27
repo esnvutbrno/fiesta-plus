@@ -31,6 +31,11 @@ def all_plugins_mapped_to_label() -> dict[str, BasePluginAppConfig]:
 
 
 @lru_cache
+def all_plugins_to_order() -> dict[str, int]:
+    return {a.label: a.order for a in all_plugin_apps()}
+
+
+@lru_cache
 def all_plugins_mapped_to_class() -> dict[type[BasePluginAppConfig], BasePluginAppConfig]:
     return {a.__class__: a for a in all_plugin_apps()}
 

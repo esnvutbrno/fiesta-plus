@@ -7,7 +7,7 @@
        x-cloak
        x-collapse
        x-show="$store.tableControls.shown"
-       class="flex flex-col lg:flex-row justify-between items-end gap-2 pb-4">
+       class="flex flex-col lg:flex-row justify-between items-start gap-2 pb-4">
     <form
       hx-get="{{ request.path }}"
       hx-vals='{"page": ""}'
@@ -20,13 +20,13 @@
       {{ filter.form }}
     </form>
     {% if view.export_formats %}
-      <div class="btn-group self-end min-w-max" role="group">
+      <div class="join self-end min-w-max" role="group">
         {% for format in view.export_formats %}
           <a type="button"
              href="{% export_url format %}"
              download
              target="_blank"
-             class="btn btn-outline btn-sm">{{ format|upper }}</a>
+             class="btn btn-outline btn-sm join-item">{{ format|upper }}</a>
         {% endfor %}
       </div>
     {% endif %}

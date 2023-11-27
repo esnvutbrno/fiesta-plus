@@ -136,6 +136,7 @@ class Section(BaseTimestampedModel):
 
     # only typing of related manager
     buddy_system_requests: models.QuerySet
+    pickup_system_requests: models.QuerySet
 
 
 class SectionUniversity(BaseTimestampedModel):
@@ -143,12 +144,14 @@ class SectionUniversity(BaseTimestampedModel):
         "sections.Section",
         on_delete=models.RESTRICT,
         verbose_name=_("ESN section"),
+        related_name="section_universities",
         db_index=False,
     )
     university = models.ForeignKey(
         "universities.University",
         on_delete=models.CASCADE,
         verbose_name=_("university"),
+        related_name="university_sections",
         db_index=False,
     )
 

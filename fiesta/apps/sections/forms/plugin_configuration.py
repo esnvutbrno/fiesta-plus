@@ -6,7 +6,7 @@ from django.forms import modelform_factory
 from apps.fiestaforms.forms import BaseModelForm
 from apps.plugins.models import BasePluginConfiguration
 from apps.sections.models import Section
-from apps.sections.services.sections_plugins_validator import SectionsPluginsValidator
+from apps.sections.services.sections_plugins_validator import SectionPluginsValidator
 
 
 def get_plugin_configuration_form(configuration: BasePluginConfiguration, for_section: Section) -> type[BaseModelForm]:
@@ -17,7 +17,7 @@ def get_plugin_configuration_form(configuration: BasePluginConfiguration, for_se
             super()._post_clean()
 
             try:
-                SectionsPluginsValidator.for_changed_conf(
+                SectionPluginsValidator.for_changed_conf(
                     section=for_section,
                     conf=self.instance,
                 ).check_validity()

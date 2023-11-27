@@ -17,6 +17,11 @@ spec:
       annotations:
         kubectl.kubernetes.io/default-logs-container: web
     spec:
+      {{/* TODO: temp solution for DNS resolve for S3 bucket */}}
+      hostAliases:
+        - ip: "151.115.10.1"
+          hostnames:
+            - "s3.pl-waw.scw.cloud"
       containers:
         - name: web
           image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"

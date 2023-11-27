@@ -1,0 +1,22 @@
+{% extends "fiesta/base.html" %}
+{% load pickup_system %}
+
+{% load pickup_system %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block main %}
+  {% get_pickup_system_configuration as configuration %}
+
+  {% for match in object_list.all %}
+    {% include "pickup_system/parts/request_match_card.html" with br=match.request title=match.request.issuer.full_name connect_with=match.request.issuer %}
+  {% empty %}
+    <div class="alert alert-link text-xl max-w-2xl mx-auto flex flex-row justify-between py-16 px-8">
+      No matches found.
+
+      <a href="{% url "pickup_system:matching-requests" %}"
+         class="btn btn-primary btn-lg">get your first pickup</a>
+
+    </div>
+  {% endfor %}
+{% endblock %}

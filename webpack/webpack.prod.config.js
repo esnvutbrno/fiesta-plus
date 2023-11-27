@@ -1,11 +1,26 @@
 const config = require('./webpack.base.config.js');
 const webpack = require('webpack');
+const {
+    sentryWebpackPlugin
+} = require("@sentry/webpack-plugin");
 
 config.plugins.push(
     new webpack.DefinePlugin({
-        // '__SENTRY_DSN__': '\'' + process.env.SENTRY_DSN + '\'',
         '__DEVELOPMENT__': 'false',
     }),
+    // TODO: breaks integrity after deploy
+    // sentryWebpackPlugin({
+    //     authToken: process.env.SENTRY_WEBPACK_AUTH_TOKEN,
+    //     org: process.env.SENTRY_ORG,
+    //     project: process.env.SENTRY_PROJECT,
+    //     release: {
+    //         name: process.env.SENTRY_RELEASE_NAME,
+    //         finalize: false,
+    //         deploy: {
+    //             env: process.env.SENTRY_RELEASE_ENVIRONMENT,
+    //         }
+    //     },
+    // })
 );
 
 Object.assign(

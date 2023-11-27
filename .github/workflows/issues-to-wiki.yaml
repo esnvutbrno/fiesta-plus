@@ -1,0 +1,64 @@
+on:
+  issues:
+    types: [ opened, edited, deleted, transferred, closed, labeled, reopened, unlabeled, unlocked, locked ]
+
+name: "Issues to Wiki Export"
+
+concurrency:
+  group: "issues-to-wiki"
+  cancel-in-progress: true
+
+jobs:
+  issues-to-wiki:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ github.repository }}
+        path: repository
+
+    - name: Checkout wiki code
+      uses: actions/checkout@v2
+      with:
+        repository: ${{ github.repository }}.wiki
+        path: wiki
+
+    - name: Query issues
+      uses: octokit/graphql-action@v2.2.25
+      id: query
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        variables: |
+          owner: ${{ github.repository_owner }}
+          name: ${{ github.event.repository.name }}
+          label: "🟰 bug"
+        query: '
+          query($owner:String!, $name:String!, $label:String!) {
+            repository(owner: $owner, name: $name) {
+              issues(last: 100, orderBy: {field: CREATED_AT, direction: DESC}, labels: [$label]) {
+                nodes {
+                  number
+                  resourcePath
+                  titleHTML
+                  state
+                }
+              }
+            }
+          }'
+
+    - name: Render issues
+      env:
+        ISSUES: ${{ steps.query.outputs.data }}
+      run: |
+        echo "$ISSUES" > issues.json
+        ./repository/.github/scripts/render-issues-to-wiki.sh issues.json > wiki/Issues.md
+
+    - name: Push to wiki
+      run: |
+        cd wiki
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add Issues.md
+        git diff-index --quiet HEAD || git commit -m "chore: issues update" && git push

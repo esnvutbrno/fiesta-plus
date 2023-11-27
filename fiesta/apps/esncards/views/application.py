@@ -8,35 +8,37 @@ from django.views.generic import CreateView, DetailView
 from apps.accounts.models import User, UserProfile
 from apps.esncards.forms.application import ESNcardApplicationForm
 from apps.esncards.models import ESNcardApplication
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.files.utils import copy_between_storages
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.sections.models import SectionMembership
-from apps.sections.views.mixins.membership import UserPassesMembershipTestMixin
+from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
+from apps.utils.views import AjaxViewMixin
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("New Application"))
 class ApplicationCreateView(
-    UserPassesMembershipTestMixin,
     EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    AjaxViewMixin,
+    HtmxFormViewMixin,
     CreateView,
 ):
     request: HttpRequest
     object: ESNcardApplication
 
     form_class = ESNcardApplicationForm
-    template_name = "esncards/application_create.html"
+    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+
     success_message = _("Application has been created.")
     permission_denied_message = _("An ESNcard application for current user for this section already exists.")
 
     def test_membership(self, membership: SectionMembership) -> bool:
-        print(membership.user.esncard_applications.filter(section=membership.section))
-        return (
-            super().test_membership(membership)
-            and not membership.user.esncard_applications.filter(section=membership.section).exists()
-        )
+        return membership.user.esncard_applications.filter(section=membership.section).exists()
 
     def get_initial(self):
         profile: UserProfile = self.request.user.profile_or_none
@@ -74,21 +76,24 @@ class ApplicationCreateView(
 
         return resp
 
-    def get_template_names(self):
-        return ["esncards/application_create_form.html"] if self.request.htmx else ["esncards/application_create.html"]
-
     def get_success_url(self):
         return reverse("esncards:application_detail", kwargs=dict(pk=self.object.pk))
 
 
-class ApplicationDetailView(UserPassesMembershipTestMixin, DetailView):
-    # TODO: check perms
-    request: HttpRequest
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Application Detail"))
+class ApplicationDetailView(
+    EnsureInSectionSpaceViewMixin,
+    EnsurePrivilegedUserViewMixin,
+    DetailView,
+):
     object: ESNcardApplication
 
     template_name = "esncards/application_detail.html"
-    queryset = ESNcardApplication.objects.all()
+
+    def get_queryset(self):
+        return self.request.in_space_of_section.esncard_applications.all()
 
     def test_membership(self, membership: SectionMembership) -> bool:
         self.object = self.get_object(queryset=self.queryset or self.get_queryset())
-        return membership.is_privileged or membership.user == self.object.user
+        return membership.user == self.object.user or super().test_membership(membership=membership)

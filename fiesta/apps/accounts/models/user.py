@@ -55,6 +55,7 @@ class User(AbstractUser):
 
     # a few dynamic related models
     buddy_system_request_matches: models.QuerySet
+    pickup_system_request_matches: models.QuerySet
     profile: UserProfile
 
     @property
