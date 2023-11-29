@@ -18,4 +18,8 @@ class DatabaseConfigMixin:
             "USER": "root",
             "PASSWORD": "root",
         },
+        "wiki": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": "/usr/wiki/wiki.sqlite3",
+        },
     }

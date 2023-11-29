@@ -54,7 +54,7 @@ db = SQLite3::Database.new db_file
 db.execute <<-SQL
   CREATE VIRTUAL TABLE IF NOT EXISTS
     wiki USING
-    fts5(file, title, content_html, content_plain, toc);
+    fts5(file, title, content_html, content_plain, toc, last_change);
 SQL
 
 git.config("log.date", "unix")
@@ -138,14 +138,22 @@ Dir[WIKI_REPO_PATH + "/**/*"].select {
 
     db.execute(
         "INSERT INTO
-        wiki (file, title, content_html, content_plain, toc)
-        VALUES (?, ?, ?, ?, ?)",
+        wiki (file, title, content_html, content_plain, toc, last_change)
+        VALUES (?, ?, ?, ?, ?, ?)",
         [
             relativepath,
             title,
             rich_result[:output].to_s,
             Sanitize.fragment(rich_result[:output].to_s),
             rich_result[:toc],
+            {
+                # 2022-02-11 10:40:58 +0000
+                at: last_commit.date.iso8601,
+                name: last_commit.author.name,
+                email: last_commit.author.email,
+                sha: last_commit.sha,
+                parent_sha: last_commit.parent.sha,
+            }.to_json
         ]
     )
 

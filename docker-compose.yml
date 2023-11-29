@@ -16,6 +16,7 @@ services:
     volumes:
       # for dev and also produp
       - web_media_files:/usr/src/media
+      - wiki_data:/usr/wiki
     environment:
       VIRTUAL_HOST: web.${ROOT_DOMAIN}
       VIRTUAL_PORT: 8000
@@ -102,8 +103,7 @@ services:
     build: ./wiki
     restart: on-failure
     volumes:
-#      - wiki_data:/usr/src/static
-      - ./wiki/data:/usr/src/static
+      - wiki_data:/usr/src/static
     env_file:
       - .env
       - wiki/.env.base

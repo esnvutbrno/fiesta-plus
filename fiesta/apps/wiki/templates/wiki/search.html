@@ -16,11 +16,7 @@
               {{ hit.score }}
             </span>
           </div>
-          <p class="text-gray-700 text-md">
-            {{ hit.highlight.content_plain|safeseq|join:"
-            <br>
-            "|safe }}
-          </p>
+          <p class="text-gray-700 text-md">{{ hit.highlight|safe }}</p>
         </a>
       {% endwith %}
     {% endfor %}

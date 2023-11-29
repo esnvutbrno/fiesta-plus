@@ -45,21 +45,23 @@
         @apply opacity-100;
     }
 
-    .Wiki__sidebar {
-        @apply mt-3;
-    }
 
-    .Wiki__sidebar ul {
-        @apply space-y-6 lg:space-y-2 border-l border-slate-100 dark:border-slate-800;
-    }
+}
 
-    .Wiki__sidebar li a {
-        @apply block border-l pl-4 -ml-px border-transparent text-slate-700
-        hover:border-slate-400 dark:hover:border-slate-500
-        hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-300
-        ;
-        /*@apply block border-l pl-4 -ml-px text-sky-500 border-current font-semibold dark:text-sky-400;*/
-    }
+.Wiki__sidebar {
+    @apply mt-3 prose prose-sm prose-h2:mt-0 prose-h2:mb-1 prose-img:mx-0;
+}
+
+.Wiki__sidebar ul {
+    @apply space-y-6 lg:space-y-2 border-l border-slate-100 dark:border-slate-800;
+}
+
+.Wiki__sidebar li a {
+
+}
+
+.Wiki__sidebar .Wiki__link-icon {
+    @apply hidden
 }
 
 /* not present in HTML files, so placed outside layer */

@@ -22,6 +22,8 @@ class FilesConfigMixin(BaseConfigurationProtocol):
         return [
             (self.BASE_DIR / "static"),
             (self.BASE_DIR / "templates/static"),
+            # TODO: tmp for development
+            "/usr",
         ]
 
     def USE_WEBPACK_INTEGRITY(self):
