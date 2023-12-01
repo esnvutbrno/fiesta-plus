@@ -144,7 +144,7 @@
       <h1 class="card-title pb-1 mb-3 border-b-2">{% trans "Interests" %}</h1>
       <div class="inline-flex flex-wrap">
         {% for interest in object.user.profile.get_interests_display %}
-          <span class="mr-2 border divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
+          <span class="mr-2 border bg-white divide-gray-100 rounded-full border-gray-400 pt-1 pb-1 pl-2 pr-2 mb-2">{{ interest }}</span>
         {% endfor %}
       </div>
     </div>

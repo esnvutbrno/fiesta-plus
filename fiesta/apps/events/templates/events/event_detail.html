@@ -3,53 +3,195 @@
 {% load event_tags %}
 {% load i18n %}
 
+{% block head %}
+{{form.media}}
+{% endblock %}
 
 {% block main %}
-  <h1>{{ event.title }}</h1>
 
-  Subtitle:{{ event.subtitle }} <br>
-  Description:{{ event.description }}<br>
-  Capacity:{{ event.capacity }}<br>
-  State:{{ event.get_state_display }}<br>
-  Start:{{ event.start }}<br>
-  End:{{ event.end }}<br>
-  Place:{{ event.place }}<br>
-  Author:{{ event.author }}<br>
-  ESN Section {{ event.section }}<br>
-  
-  <a href="{% url "events:event-update" event.id %}" class="button-with-icon">
-    <button class="button-style">Add event</button>
-    <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
-    </svg>
-  </a>
+  <div class="md:flex  lg:grid sm:flex grid-rows-2 grid-cols-2 grid-flow-row flex-wrap gap-0 max-lg:hidden ">
 
-  <br><br>
-  <div x-data="{ organizers: [] }" x-init="organizers = {{ organizers_json|safe }}">
-    <template x-for="(organizer, index) in organizers" :key="index">
-        <div>
-            <span x-text="organizer.name"></span>
-            <button type="button" @click="organizers.splice(index, 1)">Delete</button>
+    <div class="row-span-2 w-full shrink-0 grow-0 basis-auto  lg:ml-[50px] max-lg:hidden">
+      <div class="h-full items-center rounded-lg bg-base-100 p-6 text-left lg:pr-12 lg:text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+        <div class="lg:pr-12">
+          <div class="flex">
+          <div class="flex-shrink-0">
+            <h1 class = "[font-family:'Francois_One-Regular',Helvetica] font-bold text-[30px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
+          </div>
+          <div class="flex-grow">
+            <a href="{% url "events:event-update" event.id %}" class="button-with-icon">
+              <svg class="h-8 w-8 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </a> 
+          </div>
         </div>
-    </template>
-  </div>
-  <br><br>
-  <a href="#" 
-  class="btn btn-danger btn-sm btn-outline" 
-  hx-get="{% url "events:event-confirm" event.id %}"
-  hx-confirm="Are you sure you want to confirm this event?"
-  hx-target="#event-confirmed-{{ event.pk }}"
-  hx-swap="outerHTML">{% translate "Confirm" %}</a>
+        <p class="[font-family:'Francois_One-Regular',Helvetica] font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
+          Capacity: {{ event.participants.all|length}}/{{ event.capacity }}<br>
+          When: {{ event.start.date }}<br>
+          Start: {{ event.start.time }} at {{ event.place }}<br>
+          {% if event.end != None %}
+            End:{{ event.end }}<br>
+          {% endif %}
+         
+          <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
+          <p class="pl-2">{{ event.description }}</p>
 
-  {% get_price_variants event as prices %}
-  {% if prices is not None %}
-    {% for price in prices %}
-      {{ price.title }}
-      {{ price.amount }}
-      {{ price.data }}<br>
-    {% endfor %}
-  {% endif %}
-  {% if request.membership.is_international%}
-  <button>Register</button>
-  {% endif %}
+    
+
+          
+
+          {% if request.membership.is_privileged %}
+            <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold text-[15px] tracking-[0] leading-[normal] pb-1">Organizators</p>
+            {% for organizer in event.organizers.all %}
+                <p class="pl-2">{{organizer.user.first_name}} {{organizer.user.last_name}} {% if organizer.state == "event_leader"%} Event leader - {{ organizer.user.profile_or_none.telegram }}{% endif %}</p>
+            {% endfor %}
+          {%endif%}
+
+          <a href="" 
+          class="btn btn-danger btn-sm btn-outline" 
+          hx-get="{% url "events:event-confirm" event.id %}"
+          hx-confirm="Are you sure you want to confirm this event?"
+          hx-target="#event-confirmed-{{ event.pk }}"
+          hx-swap="outerHTML">{% translate "Confirm" %}</a>
+          <div class="flex grid">
+          {% get_price_variants event as prices %}
+          {% if prices is not None %}
+            {% for price in prices %}
+              {{ price.title }}
+              {{ price.amount }}
+            {% endfor %}
+          {% endif %}
+          </div> 
+
+          {% if request.membership.is_international %}
+          <form action="{% url "events:event-register" event.id %}", method="post">
+            {% csrf_token %}
+            <button type="submit">Register</button>
+          </form>
+          
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <div class=" z-[10] md:mb-12 w-full shrink-0 grow-0 basis-auto max-lg:hidden">
+      <div class="lg:py-12">
+        <img src="{{ event.landscape_cover.url }}"
+          class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
+      </div>
+    </div>
+
+    
+    <div class=" mt-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 max-lg:hidden">
+        <div class="lg:py-12" x-data="mapWidget({ latitude: 49.2071377, longitude: 16.6160413 })" x-init="init">
+          <iframe x-bind:src="mapUrl" class="z-[10] w-full h-80 rounded-lg shadow-lg dark:shadow-black/20" ></iframe>
+        </div>
+    </div>
+  </div>
+
+
+
+
+
+  <div class="flex flex-wrap flex-col gap-0 lg:hidden md:block ">
+
+    <div class="flex z-[10] w-full mb-12 shrink-0 grow-0 basis-auto lg:hidden md:block">
+      <div class="lg:py-12">
+        <img src="{{ event.landscape_cover.url }}"
+          class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
+      </div>
+    </div>
+
+    <div class="row-span-2 w-full shrink-0 grow-0 basis-auto lg:hidden md:block">
+      
+      <div class=" h-full items-center rounded-lg bg-base-100 p-6 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+        <div class="mt-[50px] 2">
+          <div class="flex">
+          <div class="flex-shrink-0">
+            <h1 class = "[font-family:'Francois_One-Regular',Helvetica] font-bold text-[40px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
+          </div>
+          {% can_edit event as rights %}
+          {% if rights %}
+          <div class="flex-grow">
+            <a href="{% url "events:event-update" event.id %}" class="button-with-icon">
+              <svg class="h-8 w-8 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+              </svg>
+            </a> 
+          </div>
+          {% endif %}
+        </div>
+        <p class="[font-family:'Francois_One-Regular',Helvetica] font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
+          Capacity: {{ event.participants.all|length}}/{{ event.capacity }}<br>
+          When: {{ event.start.date }}<br>
+          Start: {{ event.start.time }} at {{ event.place }}<br>
+          {% if event.end != None %}
+            End:{{ event.end }}<br>
+          {% endif %}
+         
+          <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
+          <p class="pl-2">{{ event.description }}</p>
+
+          <a href="" 
+          class="btn btn-danger btn-sm btn-outline" 
+          hx-get="{% url "events:event-confirm" event.id %}"
+          hx-confirm="Are you sure you want to confirm this event?"
+          hx-target="#event-confirmed-{{ event.pk }}"
+          hx-swap="outerHTML">{% translate "Confirm" %}</a>
+
+        {% can_edit event as rights %}
+        {% if rights %}
+          <a href="{% url "events:participants" event.id %}" class="btn btn-danger btn-sm btn-outline" >See participants</a>
+        {% endif %}
+
+          <div class="flex grid">
+
+
+
+          {% get_price_variants event as prices %}
+            {% if prices is not None %}
+              {% for price in prices %}
+                {% if request.user.is_esn_car_holder and price.type == "with_esn_card" %}
+                <p>Your price with ESNcard: {{ price.amount }}</p>
+                {% elif price.type == "standard" %}
+                <p>Your price: {{ price.amount }}</p>
+                You can pay only this price if you get our ESNcard: {% for price in prices %} {% if price.type == "with_esn_card" %} {{ price.amount }} {%endif%} {%endfor%}</p>
+                {%elif price.type == "free" %}
+                <p>Free</p>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            </div> 
+
+          {% if request.membership.is_privileged %}
+            <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold text-[15px] tracking-[0] leading-[normal] pb-1">Organizators</p>
+            {% for organizer in event.organizers.all %}
+                <p class="pl-2">{{organizer.user.first_name}} {{organizer.user.last_name}} {% if organizer.state == "event_leader"%} Event leader - {{ organizer.user.profile_or_none.telegram }}{% endif %}</p>
+            {% endfor %}
+          {%endif%}
+
+
+
+          {% if request.membership.is_international %}
+            <form action="{% url "events:event-register" event.id %}", method="post">
+              {% csrf_token %}
+              <button type="submit">Register</button>
+            </form>
+          {% endif %}
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class=" mt-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:hidden md:block">
+        <div class="lg:py-12" x-data="mapWidget({ latitude: 49.2071377, longitude: 16.6160413 })" x-init="init">
+          <iframe x-bind:src="mapUrl" class="z-[10] w-full h-80 rounded-lg shadow-lg dark:shadow-black/20" ></iframe>
+        </div>
+    </div>
+
+  </div>
+
 {% endblock main %}
+

@@ -8,21 +8,25 @@
   <h1 class="text-3xl font-semibold mb-4">Your events</h1>
   <ul class="divide-y divide-gray-300">
     {% for participating in participations %}
-    <li class="py-4">
+    <a href="{% url "events:event-detail" participating.event.id %}">
+      {% get_event_fullness participating.event as tmp %}
+      {{tmp}}
+    <li class="py-4 bg-base-100  rounded-box p-4 mb-4 md:box-content">
       <div class="flex items-center space-x-4">
         <div class="flex-shrink-0">
           <div class="h-12 w-12 rounded-full bg-cover bg-center"
                style=''></div>
         </div>
         <div class="flex-grow">
-          <h2 class="text-xl font-semibold"><a href="{% url "events:event-detail" participating.event.id %}">
-            {{ participating.event.title }}</a>
+          <h2 class="text-xl font-semibold">
+            {{ participating.event.title }}
           </h2>
           <p class="text-gray-600">{{ participating.event.start }}</p>
           <p class="text-gray-600">{{ participating.event.description }}</p>
         </div>
       </div>
     </li>
+    </a>
     {% endfor %}
   </ul>
 </div>
@@ -33,20 +37,38 @@
     <!-- Event Item -->
     {% for event in request.in_space_of_section.events.all %}
     {% if not event.state == "draft" %}
-    <li class="py-4" id="event-confirmed-{{ event.pk }}">
-      <div class="flex items-center space-x-4">
-        <div class="flex-shrink-0">
-          <div class="h-12 w-12 rounded-full bg-cover bg-center"
-               style='background-image: url("{{ event.portrait_cover }}")'></div>
+    
+    <li class="py-4 bg-base-200 rounded-box p-4 mb-4 md:box-content" id="event-confirmed-{{ event.pk }}">
+      <a href="{% url "events:event-detail" event.id %}">
+        <div class="flex items-center space-x-4">
+
+          <div class="flex-shrink-0">
+            <div class="h-12 w-12 rounded-full bg-cover bg-center"
+                style='background-image: url("{{ event.portrait_cover }}")'></div>
+          </div>
+
+          <div class="flex-grow">
+            <h2 class="text-2xl font-semibold"><a href="{% url "events:event-detail" event.id %}"> {{ event.title }}</a>
+            </h2>
+            <p class="text-gray-600">{{ event.start.date}}</p>
+            <p class="text-gray-600">{{ event.description }}</p>
+          </div>
+
+          <div class="flex-shrink-0">
+            {% get_event_fullness event as tmp %}
+            {% if tmp.0 == "green" %}
+            <span class="bg-green-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">{{tmp.1}}</span>
+            {% elif tmp.0 == "yellow" %}
+            <span class="bg-yellow-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">{{tmp.1}}</span>
+            {% elif tmp.0 == "red" %}
+            <span class="bg-red-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">{{tmp.1}}</span>
+            {%endif%}
+          </div>
+
         </div>
-        <div class="flex-grow">
-          <h2 class="text-xl font-semibold"><a href="{% url "events:event-detail" event.id %}"> {{ event.title }}</a>
-          </h2>
-          <p class="text-gray-600">{{ event.start }}</p>
-          <p class="text-gray-600">{{ event.description }}</p>
-        </div>
-      </div>
+      </a>
     </li>
+   
     {% endif %}
     {% endfor %}
   </ul>
@@ -58,7 +80,7 @@
     <!-- Event Item -->
     {% for event in request.in_space_of_section.events.all %}
     {% if event.state == "draft" %}
-    <li class="py-4" >
+    <li class="py-4 bg-base-200 rounded-box p-4 mb-4 md:box-content shadow" >
       <div class="flex items-center space-x-4" id="event-{{event.pk}}">
         <div class="flex-shrink-0">
           <div class="h-12 w-12 rounded-full bg-cover bg-center"

@@ -3,7 +3,7 @@ from __future__ import annotations
 from django.urls import path
 
 from .views import EventsIndexView
-from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView, ConfirmEvent
+from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView, ConfirmEvent, EventParticipantRegister
 from .views.price import PriceView, PriceUpdate, PriceDelete
 from .views.place import PlaceView, AddPlaceView, UpdatePlaceView, DeletePlaceView
 
@@ -26,4 +26,5 @@ urlpatterns = [
     path("place/update/<uuid:pk>", UpdatePlaceView.as_view(), name="place-update"),
     path("place/delete/<uuid:pk>", DeletePlaceView.as_view(), name="place-delete"),
     path("event-detail/<uuid:pk>/confirm", ConfirmEvent.as_view(), name="event-confirm"),
+    path("event-detail/<uuid:pk>/register", EventParticipantRegister.as_view(), name="event-register"),
 ]

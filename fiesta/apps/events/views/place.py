@@ -21,7 +21,7 @@ from django.shortcuts import get_object_or_404
 from ..models import Event, Participant, Place
 from ..models.price_variant import PriceVariant, EventPriceVariantType
 from apps.utils.views import AjaxViewMixin
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.place import PlaceForm
@@ -103,7 +103,7 @@ class PlaceTable(tables.Table):
         return str(value)
     
 class PlaceView(EnsurePrivilegedUserViewMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     FiestaTableView
 ):
     template_name = "events/place_view.html"
@@ -123,7 +123,7 @@ class PlaceView(EnsurePrivilegedUserViewMixin,
 
 class AddPlaceView(EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     CreateView):
 
@@ -161,7 +161,7 @@ class AddPlaceView(EnsurePrivilegedUserViewMixin,
     
 class DeletePlaceView(EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     DeleteView):
     request: HttpRequest
@@ -184,7 +184,7 @@ class DeletePlaceView(EnsurePrivilegedUserViewMixin,
 
 class UpdatePlaceView(    EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,):
     

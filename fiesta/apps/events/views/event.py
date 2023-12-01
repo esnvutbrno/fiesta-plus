@@ -2,6 +2,7 @@ import json
 from typing import Any
 from uuid import UUID
 from django import http
+from django.forms.models import BaseModelForm
 
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -21,10 +22,11 @@ from django.db import models
 from ..models import Participant
 from ..models.event import Event, EventState
 from apps.utils.views import AjaxViewMixin
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm, UpdateEventForm
+
 from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
@@ -39,7 +41,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 @with_breadcrumb(_("Add"))
 class AddEventView(
     CreateView,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin
 ):
@@ -66,7 +68,7 @@ class AddEventView(
 @with_breadcrumb(_("Update"))
 class UpdateEventView(
     UpdateView,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin
 ):
@@ -117,6 +119,7 @@ class EventDetailView(DetailView):
     model = Event
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
+    form_class = Map
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
@@ -232,3 +235,12 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                 ParticipantState.DELETED,
             )
         )
+    
+class EventParticipantRegister(CreateView):
+    model = Participant
+    def form_valid(self, form: BaseModelForm) -> HttpResponse:
+        Participant.objects.create(
+            user = self.request.user,
+            
+        )
+        return super().form_valid(form)
