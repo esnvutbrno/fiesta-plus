@@ -16,8 +16,6 @@ import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
-from django.db import models
 
 from ..models import Participant
 from ..models.event import Event, EventState
@@ -65,7 +63,6 @@ class AddEventView(
         return reverse("events:index")
 
 @with_breadcrumb(_("Events"))
-@with_breadcrumb(_("Update"))
 class UpdateEventView(
     UpdateView,
     HtmxFormViewMixin,
@@ -109,9 +106,7 @@ class UpdateEventView(
 
 
 
-
 @with_breadcrumb(_("Events"))
-@with_breadcrumb(_("Detail"))
 class EventDetailView(DetailView):
     request: HttpRequest
     object: Event
