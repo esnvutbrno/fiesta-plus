@@ -75,14 +75,16 @@
       </div>
     </div>
 
+
+    {% if event.landscape_cover.url != '' %} <!-- TODO - if there is no photo -->
     <div class=" z-[10] md:mb-12 w-full shrink-0 grow-0 basis-auto max-lg:hidden">
       <div class="lg:py-12">
         <img src="{{ event.landscape_cover.url }}"
           class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
       </div>
     </div>
+    {% endif %}
 
-    
     <div class=" mt-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 max-lg:hidden">
         <div class="lg:py-12" x-data="mapWidget({ latitude: 49.2071377, longitude: 16.6160413 })" x-init="init">
           <iframe x-bind:src="mapUrl" class="z-[10] w-full h-80 rounded-lg shadow-lg dark:shadow-black/20" ></iframe>
@@ -91,17 +93,16 @@
   </div>
 
 
-
-
-
   <div class="flex flex-wrap flex-col gap-0 lg:hidden md:block ">
 
+    {% if event.landscape_cover.url != '' %} <!-- TODO - if there is no photo -->
     <div class="flex z-[10] w-full mb-12 shrink-0 grow-0 basis-auto lg:hidden md:block">
       <div class="lg:py-12">
         <img src="{{ event.landscape_cover.url }}"
           class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
       </div>
     </div>
+    {% endif %}
 
     <div class="row-span-2 w-full shrink-0 grow-0 basis-auto lg:hidden md:block">
       

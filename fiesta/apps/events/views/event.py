@@ -30,12 +30,12 @@ from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledC
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from ...utils.breadcrumbs import with_breadcrumb
+from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
-@with_breadcrumb(_("Events"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Add"))
 class AddEventView(
     CreateView,
@@ -62,7 +62,8 @@ class AddEventView(
     def get_success_url(self):
         return reverse("events:index")
 
-@with_breadcrumb(_("Events"))
+@with_plugin_home_breadcrumb
+@with_object_breadcrumb()
 class UpdateEventView(
     UpdateView,
     HtmxFormViewMixin,
@@ -105,8 +106,8 @@ class UpdateEventView(
         return reverse("events:event-detail", args=[self.object.id])
 
 
-
-@with_breadcrumb(_("Events"))
+@with_plugin_home_breadcrumb
+@with_object_breadcrumb()
 class EventDetailView(DetailView):
     request: HttpRequest
     object: Event
@@ -126,6 +127,8 @@ class EventDetailView(DetailView):
         context['organizers_json'] = json.dumps(organizers_data)
         return context
 
+@with_plugin_home_breadcrumb
+@with_object_breadcrumb()
 class ConfirmEvent(UpdateView):
     model = Event
 
@@ -212,6 +215,9 @@ class EventParticipantsTable(tables.Table):
         return str(value)
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Participants"))
+@with_object_breadcrumb()
 class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
