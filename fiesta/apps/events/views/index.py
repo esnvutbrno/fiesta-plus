@@ -2,8 +2,11 @@ from django.views.generic import ListView
 
 from apps.events.models import Event
 from apps.events.models.participant import ParticipantState
+from apps.utils.breadcrumbs import with_breadcrumb
+from django.utils.translation import gettext_lazy as _
 
 
+@with_breadcrumb(_("Events"))
 class EventsIndexView(ListView):
     template_name = 'events/index.html'
     model = Event
