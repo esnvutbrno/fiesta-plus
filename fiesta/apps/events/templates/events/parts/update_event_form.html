@@ -1,53 +1,31 @@
 {% load event_tags %}
+{% load fiestaforms %}
+{% load as_widget_field as_label from fiestaforms %}
+{% load breadcrumbs %}
 {% load i18n %}
+
+{% block buttons_extra %}
+
+{% endblock buttons_extra %}
+
+
 <form action="{% url "events:event-update" event.pk %}" method="post" {% if form.is_multipart %}enctype="multipart/form-data" hx-encoding="multipart/form-data"{% endif %}>
   {% csrf_token %}
+
   {% if redirect_field_value %}
-    <input type="hidden"
-           name="{{ redirect_field_name }}"
-           value="{{ redirect_field_value }}" />
+  <input type="hidden"
+          name="{{ redirect_field_name }}"
+          value="{{ redirect_field_value }}" />
   {% endif %}
-  {{ form }}
-  <a class="btn btn-success btn-sm btn-outline"
-  href="{% url "events:eventplace-add" event.pk %}"
-  x-data="modal($el.href)"
-  x-bind="bind">{% translate "Add new place" %}</a>
-  {% include "events/price.html" %}
-  
-  {% get_price_variants event as prices %}
-  {% if prices is not None %}
-    {% for price in prices %}
-    <div id="price-{{ price.pk }}">
-      {{ price.title }}
-      {{ price.type }}
-      {{ price.amount }}
-      <a class="btn btn-success btn-sm btn-outline"
-      href="{% url "events:price-update" event.pk price.pk %}"
-      x-data="modal($el.href)"
-      x-bind="bind">{% translate "Update price" %}</a>
+  {{form}}
 
-      <a href="#" 
-      class="btn btn-danger btn-sm btn-outline" 
-      hx-delete="{% url "events:price-delete" event.pk price.pk %}"
-      hx-confirm="Are you sure you want to delete this price?"
-      hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
-      hx-target="#price-{{ price.pk }}"
-      hx-swap="outerHTML">{% translate "Delete price" %}</a>
-  </div>
-    {% endfor %}
-  {% endif %}
+  {% block breadcrumbs_right %}
+    <a class="btn btn-success btn-sm btn-outline"
+    href="{% url "events:eventplace-add" event.pk %}"
+    x-data="modal($el.href)"
+    x-bind="bind">{% translate "Add new place" %}</a>
+  {% endblock breadcrumbs_right %}
 
-
-
-
-  {% for organizer in event.organizers.all %}
-    <div>
-        <form action="" method="post">
-            {% csrf_token %}
-            {{ organizer.user.get_full_name }}
-            <input type="submit" value="Delete" />
-        </form>
-    </div>
-  {% endfor %}
-  <button type="submit" class="btn btn-primary">Save</button>
 </form>
+
+

@@ -9,7 +9,50 @@
 
 {% block main %}
 
-  <div class="md:flex  lg:grid sm:flex grid-rows-2 grid-cols-2 grid-flow-row flex-wrap gap-0 max-lg:hidden ">
+{% can_edit event as rights %}
+{% if rights  or request.membership.is_privileged %}
+
+  {% get_price_variants event as prices %}
+  {% if prices is not None %}
+  {% for price in prices %}
+    <div id="price-{{ price.pk }}" class="flex mb-6 mt-6 w-fit h-full items-center rounded-lg bg-base-150 p-6 text-left lg:pr-12 lg:text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+      {{ price.title }} <br>
+      {{ price.type }}<br>
+      {{ price.amount }}<br>
+      <a class="btn btn-success btn-sm btn-outline"
+      href="{% url "events:price-update" event.pk price.pk %}"
+      x-data="modal($el.href)"
+      x-bind="bind">{% translate "Update price" %}</a>
+
+      <a href="#" 
+      class="btn btn-danger btn-sm btn-outline" 
+      hx-delete="{% url "events:price-delete" event.pk price.pk %}"
+      hx-confirm="Are you sure you want to delete this price?"
+      hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
+      hx-target="#price-{{ price.pk }}"
+      hx-swap="outerHTML">{% translate "Delete price" %}</a>
+    </div>
+  {% endfor %}
+{% endif %}
+
+<a class="btn btn-success btn-sm btn-outline"
+href="{% url "events:price" event.pk %}"
+x-data="modal($el.href)"
+x-bind="bind">{% translate "Add price" %}</a>
+
+<a href="{% url "events:participants" event.id %}" class="btn btn-danger btn-sm btn-outline" >Participants</a>
+<a href="{% url "events:organizers" event.id %}" class="btn btn-danger btn-sm btn-outline" >Organizers</a>
+
+
+<a href="" 
+class="btn btn-danger btn-sm btn-outline" 
+hx-get="{% url "events:event-confirm" event.id %}"
+hx-confirm="Are you sure you want to confirm this event?"
+hx-target="#event-confirmed-{{ event.pk }}"
+hx-swap="outerHTML">{% translate "Confirm" %}</a>
+
+{%endif%}
+  <div class="md:flex  lg:grid sm:flex grid-rows-2 grid-cols-2 grid-flow-row flex-wrap gap-0 max-lg:hidden pt-6">
 
     <div class="row-span-2 w-full shrink-0 grow-0 basis-auto  lg:ml-[50px] max-lg:hidden">
       <div class="h-full items-center rounded-lg bg-base-100 p-6 text-left lg:pr-12 lg:text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
@@ -33,36 +76,32 @@
           {% if event.end != None %}
             End:{{ event.end }}<br>
           {% endif %}
-         
+          <div class="flex grid">
+
+
+          {% get_price_variants event as prices %}
+            {% if prices is not None %}
+              {% for price in prices %}
+
+                {% if price.type == "free" %}
+                
+                <p>Free</p>
+                {% elif request.user.is_esn_car_holder and price.type == "with_esn_card" %}
+                <p>Your price with ESNcard: {{ price.amount }}</p>
+                {%elif price.type == "standard"%}
+                <p>Your price: {{ price.amount }}</p>
+                {% for price in prices %} {% if price.type == "with_esn_card" %} You can pay only this price if you get our ESNcard: {{ price.amount }} {%endif%} {%endfor%}</p>
+                
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            </div> 
           <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
           <p class="pl-2">{{ event.description }}</p>
 
     
 
-          
-
-          {% if request.membership.is_privileged %}
-            <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold text-[15px] tracking-[0] leading-[normal] pb-1">Organizators</p>
-            {% for organizer in event.organizers.all %}
-                <p class="pl-2">{{organizer.user.first_name}} {{organizer.user.last_name}} {% if organizer.state == "event_leader"%} Event leader - {{ organizer.user.profile_or_none.telegram }}{% endif %}</p>
-            {% endfor %}
-          {%endif%}
-
-          <a href="" 
-          class="btn btn-danger btn-sm btn-outline" 
-          hx-get="{% url "events:event-confirm" event.id %}"
-          hx-confirm="Are you sure you want to confirm this event?"
-          hx-target="#event-confirmed-{{ event.pk }}"
-          hx-swap="outerHTML">{% translate "Confirm" %}</a>
-          <div class="flex grid">
-          {% get_price_variants event as prices %}
-          {% if prices is not None %}
-            {% for price in prices %}
-              {{ price.title }}
-              {{ price.amount }}
-            {% endfor %}
-          {% endif %}
-          </div> 
+      
 
           {% if request.membership.is_international %}
           <form action="{% url "events:event-register" event.id %}", method="post">
@@ -77,8 +116,10 @@
 
     <div class=" z-[10] md:mb-12 w-full shrink-0 grow-0 basis-auto max-lg:hidden">
       <div class="lg:py-12">
+        {% if event.landscape_cover %}
         <img src="{{ event.landscape_cover.url }}"
           class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
+        {%endif%}
       </div>
     </div>
 
@@ -98,8 +139,10 @@
 
     <div class="flex z-[10] w-full mb-12 shrink-0 grow-0 basis-auto lg:hidden md:block">
       <div class="lg:py-12">
+        {% if event.landscape_cover %}
         <img src="{{ event.landscape_cover.url }}"
           class="z-[10] w-full rounded-lg shadow-lg dark:shadow-black/20" alt="image" />
+        {%endif%}
       </div>
     </div>
 
@@ -143,32 +186,38 @@
         {% can_edit event as rights %}
         {% if rights %}
           <a href="{% url "events:participants" event.id %}" class="btn btn-danger btn-sm btn-outline" >See participants</a>
-        {% endif %}
-
-          <div class="flex grid">
-
-
-
-          {% get_price_variants event as prices %}
-            {% if prices is not None %}
-              {% for price in prices %}
-                {% if request.user.is_esn_car_holder and price.type == "with_esn_card" %}
-                <p>Your price with ESNcard: {{ price.amount }}</p>
-                {% elif price.type == "standard" %}
-                <p>Your price: {{ price.amount }}</p>
-                You can pay only this price if you get our ESNcard: {% for price in prices %} {% if price.type == "with_esn_card" %} {{ price.amount }} {%endif%} {%endfor%}</p>
-                {%elif price.type == "free" %}
-                <p>Free</p>
-                {% endif %}
-              {% endfor %}
-            {% endif %}
-            </div> 
-
-          {% if request.membership.is_privileged %}
-            <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold text-[15px] tracking-[0] leading-[normal] pb-1">Organizators</p>
+        
+          <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold text-[15px] tracking-[0] leading-[normal] pb-1">Organizators</p>
             {% for organizer in event.organizers.all %}
                 <p class="pl-2">{{organizer.user.first_name}} {{organizer.user.last_name}} {% if organizer.state == "event_leader"%} Event leader - {{ organizer.user.profile_or_none.telegram }}{% endif %}</p>
             {% endfor %}
+            
+            {% if event.price_variants is not None %}
+              {% for price in prices %}
+                <div id="price-{{ price.pk }}">
+                  {{ price.title }} <br>
+                  {{ price.type }} <br>
+                  {{ price.amount }} <br>
+                  <a class="btn btn-success btn-sm btn-outline"
+                  href="{% url "events:price-update" event.pk price.pk %}"
+                  x-data="modal($el.href)"
+                  x-bind="bind">{% translate "Update price" %}</a>
+            
+                  <a href="#" 
+                  class="btn btn-danger btn-sm btn-outline" 
+                  hx-delete="{% url "events:price-delete" event.pk price.pk %}"
+                  hx-confirm="Are you sure you want to delete this price?"
+                  hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
+                  hx-target="#price-{{ price.pk }}"
+                  hx-swap="outerHTML">{% translate "Delete price" %}</a>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            <a class="btn btn-success btn-sm btn-outline"
+            href="{% url "events:price" event.pk %}"
+            x-data="modal($el.href)"
+            x-bind="bind">{% translate "Add price" %}</a>
           {%endif%}
 
 

@@ -1,6 +1,6 @@
 {% load i18n %}
 
-<form action="{% url "events:place-delete" record.pk %}" method="post" hx-confirm="Are you sure?">
+<form action="{% url 'events:organizer-delete' pk=event.pk pko=record.pk %}" method="post" hx-confirm="Are you sure?">
      {% csrf_token %}
      <button type="submit" class="btn btn-sm btn-outline btn-primary">{% translate "Remove" %}</button>
 </form>

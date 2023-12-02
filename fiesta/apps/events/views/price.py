@@ -114,7 +114,7 @@ class PriceUpdate(
         return response
     
     def get_success_url(self):
-        return reverse("events:event-update", args=[self.event.pk])
+        return reverse("events:event-detail", args=[self.event.pk])
     
 class PriceDelete(
     EnsurePrivilegedUserViewMixin,

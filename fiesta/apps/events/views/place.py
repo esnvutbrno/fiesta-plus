@@ -81,7 +81,7 @@ class PlaceTable(tables.Table):
     update_button = tables.TemplateColumn(
         template_name="events/parts/update_place_button.html",
         attrs={"th": {"class": "text-center"}},
-        extra_context={'place': tables.A('place.pk')}
+        extra_context={'place': tables.A('pk')}
     )
 
     class Meta:
@@ -171,9 +171,6 @@ class DeletePlaceView(EnsurePrivilegedUserViewMixin,
         self.place = get_object_or_404(Place, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
 
-    def get_success_url(self) -> str:
-        return reverse("events:place")
-
     def delete(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         response = super().delete(request, *args, **kwargs)
         return response
@@ -182,7 +179,8 @@ class DeletePlaceView(EnsurePrivilegedUserViewMixin,
         return reverse_lazy('events:place')
 
 
-class UpdatePlaceView(    EnsurePrivilegedUserViewMixin,
+class UpdatePlaceView(    
+    EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -190,8 +188,6 @@ class UpdatePlaceView(    EnsurePrivilegedUserViewMixin,
     
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
     ajax_template_name = "events/parts/update_place_form.html"
-   
-
     model = Place
     form_class = PlaceForm
 
@@ -199,12 +195,11 @@ class UpdatePlaceView(    EnsurePrivilegedUserViewMixin,
         self.place = get_object_or_404(Place, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
     
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["form_url"] = reverse_lazy("events:place-update", args=[self.place.id])
-        
-        return context
+    def get_object(self, queryset=None) -> Place:
+        pk = self.kwargs.get('pk')
+        return get_object_or_404(Place, pk=pk)
     
+    @transaction.atomic
     def form_valid(self, form) -> HttpResponse:
         response = super().form_valid(form)
 
@@ -212,4 +207,4 @@ class UpdatePlaceView(    EnsurePrivilegedUserViewMixin,
         return response
     
     def get_success_url(self):
-        return reverse("events:place")
+        return reverse_lazy("events:place")
