@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+import re
 
 from apps.utils.models import BaseModel
 
@@ -38,6 +39,18 @@ class Place(BaseModel):
         blank=True,
         default="",
     )
+    
+    longitude = models.FloatField(
+        verbose_name=_("longitude"),
+        blank=True,
+        default=0
+    )
+    
+    latitude = models.FloatField(
+        verbose_name=_("latitude"),
+        blank=True,
+        default=0
+    )
 
     section = models.ForeignKey(
         "sections.Section",
@@ -49,6 +62,14 @@ class Place(BaseModel):
 
     def __str__(self):
         return self.name
+    
+    def set_coordinates_from_url(self, url):
+        match = re.search(r'([-\d.]+),([-\d.]+)', url)
+        if match:
+            self.latitude, self.longitude = map(float, match.groups())
+            print(self.latitude)
+            return True
+        return False
 
     class Meta:
         verbose_name = _("place")

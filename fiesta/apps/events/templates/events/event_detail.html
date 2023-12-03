@@ -73,7 +73,8 @@ x-bind="bind">{% translate "Add price" %}</a>
         {% get_user_picture oc.user as picture %}
         <a href="#" class="flex items-center px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
           {% if picture %}
-          <img class="w-6 h-6 me-2 rounded-full" src= 'url("{{ picture.url }}")' alt="Jese image">
+          <div class="w-6 h-6 me-2 rounded-full bg-cover bg-center"
+          style='background-image: url("{{ picture.url }}")'></div>
           {% else %}
           <span class="w-6 h-6 me-2 avatar aspect-square rounded-full text-white text-lg flex flex-row justify-center items-center"
           style="background-color: {{ oc.user.id|get_color_by_text }}">{{ oc.user.first_name|first }}{{ oc.user.last_name|first }}</span>
@@ -200,7 +201,7 @@ x-bind="bind">{% translate "Add price" %}</a>
     {% endif %}
 
     <div class=" mt-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 max-lg:hidden">
-        <div class="lg:py-12" x-data="mapWidget({ latitude: 49.2071377, longitude: 16.6160413 })" x-init="init">
+        <div class="lg:py-12" x-data="mapWidget({ latitude: {{event.place.latitude}}, longitude: {{event.place.longitude}} })" x-init="init">
           <iframe x-bind:src="mapUrl" class="z-[10] w-full h-80 rounded-lg shadow-lg dark:shadow-black/20" ></iframe>
         </div>
     </div>
@@ -262,9 +263,9 @@ x-bind="bind">{% translate "Add price" %}</a>
       </div>
     </div>
 
-    
+
     <div class=" mt-12 w-full shrink-0 grow-0 basis-auto lg:mb-0 lg:hidden md:block">
-        <div class="lg:py-12" x-data="mapWidget({ latitude: 49.2071377, longitude: 16.6160413 })" x-init="init">
+        <div class="lg:py-12" x-data="mapWidget({ latitude: {{event.place.latitude}}, longitude: {{event.place.longitude}} })" x-init="init">
           <iframe x-bind:src="mapUrl" class="z-[10] w-full h-80 rounded-lg shadow-lg dark:shadow-black/20" ></iframe>
         </div>
     </div>

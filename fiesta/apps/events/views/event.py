@@ -119,7 +119,6 @@ class EventDetailView(DetailView):
 
     model = Event
     template_name = 'events/event_detail.html'
-    context_object_name = 'event'
 
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
@@ -129,6 +128,7 @@ class EventDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.organizers.all()]
         print(organizers_data)
+        context['event'] = self.event
         context['organizers_json'] = json.dumps(organizers_data)
         context['organizer_roles'] = OrganizerRole.choices
         return context
