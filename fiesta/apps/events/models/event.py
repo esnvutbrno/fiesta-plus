@@ -130,7 +130,7 @@ class Event(BaseTimestampedModel):
 
     def __str__(self):
         # return self.title
-        return f"{self.title} - {self.start}"
+        return f"{self.title} - {self.start.date()}"
 
     def is_oc(self, user: User) -> bool:
         return self.organizers.filter(user=user).exists()
