@@ -12,11 +12,11 @@ class OrganizerRole(models.TextChoices):
 
 
 class Organizer(BaseTimestampedModel):
-    state = models.CharField(
+    role = models.CharField(
         choices=OrganizerRole.choices,
         default=OrganizerRole.OC,
-        verbose_name=_("state"),
-        help_text=_("current state of the event"),
+        verbose_name=_("role"),
+        help_text=_("current role of the user on event"),
     )
 
     user = models.ForeignKey(
