@@ -62,6 +62,7 @@ class AddEventView(
     def get_success_url(self):
         return reverse("events:index")
 
+
 @with_plugin_home_breadcrumb
 @with_object_breadcrumb()
 class UpdateEventView(
@@ -76,7 +77,6 @@ class UpdateEventView(
     form_class = UpdateEventForm
     template_name = 'events/update_event.html'
     ajax_template_name = 'events/parts/update_event_form.html'
-
 
     success_message = _("Event updated")
 
@@ -115,17 +115,46 @@ class EventDetailView(DetailView):
     model = Event
     template_name = 'events/event_detail.html'
     context_object_name = 'event'
-    
+
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
-    
+
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.organizers.all()]
         print(organizers_data)
         context['organizers_json'] = json.dumps(organizers_data)
         return context
+
+    def register(self, price):
+        if price.type == EventPriceVariantType.FREE:
+            Participant.objects.create(
+                user=self.request.user,
+                event=self.event,
+                price=price,
+                state=ParticipantState.CONFIRMED,
+            )
+
+        elif price.type == EventPriceVariantType.WITH_ESN_CARD:
+            if self.request.user.is_esn_card_holder():
+                Participant.objects.create(
+                    user=self.request.user,
+                    event=self.event,
+                    price=price,
+                    state=ParticipantState.WAITING,
+                )
+            else:
+                return "User is not ESN card holder."
+
+        else:
+            Participant.objects.create(
+                user=self.request.user,
+                event=self.event,
+                price=price,
+                state=ParticipantState.WAITING,
+            )
+
 
 @with_plugin_home_breadcrumb
 @with_object_breadcrumb()
@@ -135,11 +164,13 @@ class ConfirmEvent(UpdateView):
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
+
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         print("confirm")
-        self.event.state=EventState.CONFIRMED
+        self.event.state = EventState.CONFIRMED
         self.event.save()
         return super().post(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse("index")
 
@@ -161,7 +192,6 @@ class EventParticipantsFilter(BaseFilterSet):
         return queryset.annotate(search=SearchVector("user__last_name", "user__first_name", "state")).filter(
             search=value
         )
-
 
 
 class EventParticipantsTable(tables.Table):
@@ -197,7 +227,7 @@ class EventParticipantsTable(tables.Table):
         model = Participant
 
         fields = ("created",)
-                  
+
         sequence = (
             "user__full_name",
             "event__title",
@@ -206,7 +236,6 @@ class EventParticipantsTable(tables.Table):
         )
 
         empty_text = _("No p Applications")
-
 
     def render_created(self, value):
         return value.strftime("%d/%m/%Y %H:%M:%S")
@@ -224,10 +253,11 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     table_class = EventParticipantsTable
     filterset_class = EventParticipantsFilter
     model = Participant
-    
+
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         return self.request.in_space_of_section.events.get(id=self.event.pk).participants.filter(
             state__in=(
@@ -236,12 +266,14 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
                 ParticipantState.DELETED,
             )
         )
-    
+
+
 class EventParticipantRegister(CreateView):
     model = Participant
+
     def form_valid(self, form: BaseModelForm) -> HttpResponse:
         Participant.objects.create(
-            user = self.request.user,
-            
+            user=self.request.user,
+
         )
         return super().form_valid(form)
