@@ -113,9 +113,11 @@ x-bind="bind">{% translate "Add price" %}</a>
 <div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
   <h1 class="text-3xl font-semibold mb-4"> Event </h1>
     <a href="{% url "events:participants" event.id %}" class="Forms__button Forms__button--submit" >{% translate "Show participants" %}</a>
-
-    {%%}
-    <button hx-post="{% url "events:event-confirm" event.id %}" hx-swap="none">{% translate "Publish" %}</button>
+    {% if event.state == "publish" %}
+      <button hx-post="{% url "events:event-confirm" event.id %}" hx-swap="none" class="Forms__button Forms__button--submit">{% translate "Publish" %}</button>
+    {% else %}
+      <button hx-post="{% url "events:event-confirm" event.id %}" hx-swap="none" class="Forms__button Forms__button--submit">{% translate "Unpublish" %}</button>
+    {% endif %}
 </div>
 
 

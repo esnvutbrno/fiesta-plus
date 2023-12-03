@@ -29,6 +29,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm, UpdateEventForm
 from apps.events.models.organizer import OrganizerRole
+from apps.events.models.price_variant import EventPriceVariantType
 
 from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
