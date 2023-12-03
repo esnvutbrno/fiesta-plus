@@ -2,15 +2,19 @@ import json
 from typing import Any
 from uuid import UUID
 from django import http
+from django.db import models
 from django.forms.models import BaseModelForm
 
-from django.http import HttpRequest, HttpResponse
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
+import requests
+
 
 import django_filters
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
-from django.views.generic import CreateView, DetailView, UpdateView
+from django.views.generic import CreateView, DetailView, UpdateView, View
 import django_tables2 as tables
 
 from django.utils.translation import gettext_lazy as _
@@ -24,6 +28,7 @@ from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm, UpdateEventForm
+from apps.events.models.organizer import OrganizerRole
 
 from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
@@ -33,7 +38,6 @@ from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
-
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Add"))
@@ -63,7 +67,7 @@ class AddEventView(
         return reverse("events:index")
 
 @with_plugin_home_breadcrumb
-@with_object_breadcrumb()
+@with_breadcrumb(_("Update"))
 class UpdateEventView(
     UpdateView,
     HtmxFormViewMixin,
@@ -107,7 +111,7 @@ class UpdateEventView(
 
 
 @with_plugin_home_breadcrumb
-@with_object_breadcrumb()
+@with_breadcrumb(_("Detail"))
 class EventDetailView(DetailView):
     request: HttpRequest
     object: Event
@@ -125,21 +129,31 @@ class EventDetailView(DetailView):
         organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.organizers.all()]
         print(organizers_data)
         context['organizers_json'] = json.dumps(organizers_data)
+        context['organizer_roles'] = OrganizerRole.choices
         return context
 
 @with_plugin_home_breadcrumb
 @with_object_breadcrumb()
-class ConfirmEvent(UpdateView):
-    model = Event
-
+class ConfirmEvent(EnsurePrivilegedUserViewMixin, AjaxViewMixin, HtmxFormViewMixin, View):
+    model = Event 
+    
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
+    
+    def get_object(self, queryset: None) -> Event:
+        return get_object_or_404(Event, pk=self.kwargs.get("pk"))
+    
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        print("confirm")
-        self.event.state=EventState.CONFIRMED
+        if self.event.state == EventState.PUBLISHED:
+            self.event.state = EventState.DRAFT
+        elif self.event.state == EventState.DRAFT:
+            self.event.state = EventState.PUBLISHED
         self.event.save()
-        return super().post(request, *args, **kwargs)
+        html = render_to_string('events/parts/event_item.html', {'event': self.event})
+
+        return HttpResponse(html)
+    
     def get_success_url(self):
         return reverse("index")
 
@@ -217,7 +231,6 @@ class EventParticipantsTable(tables.Table):
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Participants"))
-@with_object_breadcrumb()
 class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
@@ -245,3 +258,4 @@ class EventParticipantRegister(CreateView):
             
         )
         return super().form_valid(form)
+    

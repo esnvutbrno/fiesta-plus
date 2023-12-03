@@ -38,6 +38,8 @@ class OrganizerForm(BaseModelForm):
         event = self.cleaned_data["event"]	
 
         for organizer in organizers:
+            if Organizer.objects.filter(event=event, user=organizer).exists():
+                continue    
             Organizer.objects.update_or_create(
                 event=event,
                 user=organizer,
@@ -45,7 +47,9 @@ class OrganizerForm(BaseModelForm):
             )
 
         for moc in mocs:
-                Organizer.objects.update_or_create(
+            if Organizer.objects.filter(event=event, user=moc).exists() or moc in organizers:
+                continue  
+            Organizer.objects.update_or_create(
                 event=event,
                 user=moc,
                 state=OrganizerRole.EVENT_LEADER
@@ -62,12 +66,3 @@ class OrganizerForm(BaseModelForm):
             "event": HiddenInput,
         }
         
-class OrganizerRoleForm(BaseModelForm):
-    state = Select(
-        choices=OrganizerRole.choices,
-    )
-    class Meta:
-        model = Organizer
-        fields = (
-            'state',
-        )
