@@ -39,12 +39,12 @@ def get_event_fullness(context, event: Event):
 @register.simple_tag(takes_context=True)
 def is_oc(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return event.organizers.filter(user=request.membership.user).exists()
+    return event.event_organizers.filter(user=request.membership.user).exists()
 
 @register.simple_tag(takes_context=True)
 def is_moc(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return event.organizers.filter(user=request.membership.user, role=Organizer.Role.EVENT_LEADER).exists()
+    return event.event_organizers.filter(user=request.membership.user, role=Organizer.Role.EVENT_LEADER).exists()
 
 @register.simple_tag(takes_context=True)
 def is_participant(context, event: Event) -> bool:

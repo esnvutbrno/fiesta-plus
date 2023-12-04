@@ -1,6 +1,10 @@
 {% load i18n %}
 
-<form action="{% url "events:place-delete" record.pk %}" method="post" hx-confirm="Are you sure?">
-     {% csrf_token %}
-     <button type="submit" class="btn btn-sm btn-outline btn-primary">{% translate "Remove" %}</button>
-</form>
+<a href="#" 
+class="btn btn-sm btn-outline btn-primary"
+hx-post="{% url "events:place-delete" record.pk %}"
+hx-confirm="Are you sure you want to delete this price?"
+hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
+hx-swap="delete">  
+{% translate "Delete" %}
+</a>

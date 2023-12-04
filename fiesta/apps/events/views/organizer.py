@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404
 
 
 
-from django.views.generic import CreateView, DeleteView, View
+from django.views.generic import CreateView, DeleteView, UpdateView
 
 
 from django.utils.translation import gettext_lazy as _
@@ -33,7 +33,8 @@ class UpdateOrganizerRole(
     HtmxFormViewMixin,
     EnsurePrivilegedUserViewMixin, 
     EnsureInSectionSpaceViewMixin,
-    View):
+    UpdateView):
+    fields = ['role']
     model = Organizer
     
     def dispatch(self, request, *args, **kwargs):
@@ -42,13 +43,14 @@ class UpdateOrganizerRole(
         return super().dispatch(request, *args, **kwargs)
     
 
-    def post(self, request, pk, pko):
-        if request.POST.get('role') == "event_leader":
-            self.organizer.role = Organizer.Role.EVENT_LEADER
-        else:
-            self.organizer.role = Organizer.Role.OC
-        self.organizer.save()
-        return HttpResponseRedirect(reverse('events:event-detail', args=[self.event.id]))
+    # def post(self, request, pk, pko):
+    #     if request.POST.get('role') == "event_leader":
+    #         self.organizer.role = Organizer.Role.EVENT_LEADER
+    #     else:
+    #         self.organizer.role = Organizer.Role.OC
+    #     self.organizer.save()
+    #     return HttpResponseRedirect(reverse('events:event-detail', args=[self.event.id]))
+    
     
     def get_object(self, queryset=None):
         return get_object_or_404(Organizer, pk=self.kwargs.get("pko"))
@@ -104,10 +106,6 @@ class DeleteOrganizerView(EnsurePrivilegedUserViewMixin,
 
     def get_object(self, queryset=None):
         return get_object_or_404(Organizer, pk=self.kwargs.get("pko"))
-    
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        self.get_object().delete()
-        return HttpResponse('')
 
     def get_success_url(self):
         return reverse("events:event-detail", args=[self.kwargs.get("pk")])

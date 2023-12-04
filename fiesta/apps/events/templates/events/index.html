@@ -20,7 +20,7 @@
   <ul class="divide-y divide-gray-300" id="events-list" >
     <!-- Event Item -->
     {% for event in request.in_space_of_section.events.all %}
-    {% if not event.state == "draft" %}
+    {% if not event.state == event.State.DRAFT %}
     
     {% include "events/parts/event_item.html" %}
 
@@ -35,7 +35,7 @@
   <ul class="divide-y divide-gray-300" >
     <!-- Event Item -->
     {% for event in request.in_space_of_section.events.all %}
-    {% if event.state == "draft" %}
+    {% if event.state == event.State.DRAFT %}
 
       {% include "events/parts/event_item.html" %}
 

@@ -32,7 +32,7 @@ class Organizer(BaseTimestampedModel):
     event = models.ForeignKey(
         "events.Event",
         on_delete=models.CASCADE,
-        related_name="organizers",
+        related_name="event_organizers",
         verbose_name=_("event"),
         db_index=True,
     )

@@ -88,7 +88,7 @@ class UpdateEventView(
 
     form_class = AddEventForm
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+    ajax_template_name = "events/templates/parts/update_event_form.html"
 
     success_message = _("Event updated")
 
@@ -139,7 +139,7 @@ class EventDetailView(
 
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
-        organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.organizers.all()]
+        organizers_data = [{'name': organizer.user.get_full_name()} for organizer in self.event.event_organizers.all()]
         print(organizers_data)
         context['event'] = self.event
         context['organizers_json'] = json.dumps(organizers_data)
@@ -197,7 +197,7 @@ class EventParticipantsFilter(BaseFilterSet):
 class EventParticipantsTable(tables.Table):
     created = tables.DateTimeColumn(
         verbose_name=_("Created at"),
-        format="d/m/Y H:i:s",
+        format="SHORT_DATETIME_FORMAT",
         attrs={"th": {"class": "text-center"}},
     )
     user__full_name = tables.Column(
@@ -235,10 +235,10 @@ class EventParticipantsTable(tables.Table):
             "state"
         )
 
-        empty_text = _("No p Applications")
+        empty_text = _("There are no participants")
 
     def render_created(self, value):
-        return value.strftime("%d/%m/%Y %H:%M:%S")
+        return value.strftime("SHORT_DATETIME_FORMAT")
 
     def render_price__name(self, value):
         return str(value)
