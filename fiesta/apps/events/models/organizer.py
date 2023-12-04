@@ -22,7 +22,7 @@ class Organizer(BaseTimestampedModel):
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
-        related_name="organizer",
+        related_name="event_organizers",
         verbose_name=_("user"),
         db_index=True,
     )
