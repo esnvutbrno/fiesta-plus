@@ -35,7 +35,7 @@ class Place(BaseModel):
     map_link = models.CharField(
         max_length=256,
         verbose_name=_("map link"),
-        help_text=_("Link to a position to the place on a map"),
+        help_text=_("Link to google maps in format google.com/maps/place/<place>/@<coordinates>/data"),
         blank=True,
         default="",
     )
@@ -67,7 +67,6 @@ class Place(BaseModel):
         match = re.search(r'([-\d.]+),([-\d.]+)', url)
         if match:
             self.latitude, self.longitude = map(float, match.groups())
-            print(self.latitude)
             return True
         return False
 

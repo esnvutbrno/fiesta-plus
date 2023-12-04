@@ -19,14 +19,21 @@ from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 
 
-from ..models.organizer import Organizer, OrganizerRole
+from ..models.organizer import Organizer
 from apps.events.forms.organizer import OrganizerForm
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 
 
-class UpdateOrganizerRole(AjaxViewMixin, SuccessMessageMixin, HtmxFormViewMixin ,EnsurePrivilegedUserViewMixin, View):
+class UpdateOrganizerRole(
+    AjaxViewMixin, 
+    SuccessMessageMixin, 
+    HtmxFormViewMixin,
+    EnsurePrivilegedUserViewMixin, 
+    EnsureInSectionSpaceViewMixin,
+    View):
     model = Organizer
     
     def dispatch(self, request, *args, **kwargs):
@@ -37,9 +44,9 @@ class UpdateOrganizerRole(AjaxViewMixin, SuccessMessageMixin, HtmxFormViewMixin 
 
     def post(self, request, pk, pko):
         if request.POST.get('role') == "event_leader":
-            self.organizer.role = OrganizerRole.EVENT_LEADER
+            self.organizer.role = Organizer.Role.EVENT_LEADER
         else:
-            self.organizer.role = OrganizerRole.OC
+            self.organizer.role = Organizer.Role.OC
         self.organizer.save()
         return HttpResponseRedirect(reverse('events:event-detail', args=[self.event.id]))
     
@@ -51,12 +58,13 @@ class UpdateOrganizerRole(AjaxViewMixin, SuccessMessageMixin, HtmxFormViewMixin 
         return reverse('events:event-detail', args=[self.event.id])
 
 class AddOrganizerView(EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     CreateView):
 
-    ajax_template_name = "events/parts/add_organizer_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
     form_class = OrganizerForm
     model = Organizer
@@ -78,16 +86,11 @@ class AddOrganizerView(EnsurePrivilegedUserViewMixin,
             "event": self.event
         }
     
-    def form_valid(self, form) -> HttpResponse:
-        response = super().form_valid(form)
-
-        form.save()
-        return response
-    
     def get_success_url(self):
         return reverse('events:event-detail', args=[self.event.id])
     
 class DeleteOrganizerView(EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     DeleteView):
     

@@ -15,14 +15,14 @@
 {% can_edit event as rights %}
 {% if rights  or request.membership.is_privileged %}
 
-<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow">
   <h1 class="text-3xl font-semibold mb-4"> Prices </h1>
   {% get_price_variants event as prices %}
   {% if prices %}
   <div class="flex max-[950px]:flex-col">
     {% for price in prices %}
     
-      <div id="price-{{ price.pk }}" class="flex-auto flex grid grid-rows-1 grid-cols-2 gap-0 mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-200 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+      <div id="price-{{ price.pk }}" class="flex-auto flex grid grid-rows-1 grid-cols-2 gap-0 mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-200 text-left shadow">
         <div class="flex flex-col">
           <p class="col-start-1 w-fit h-fit">{{ price.title }}</p>
           <p class="col-start-1">{{ price.type }}</p>
@@ -57,14 +57,14 @@
   </div>
   {% endif %}
 
-  <a class="Forms__button Forms__button--submit"
+  <a class="btn btn-primary btn-outline grow"
 href="{% url "events:price" event.pk %}"
 x-data="modal($el.href)"
 x-bind="bind">{% translate "Add price" %}</a>
 </div>
 
 
-<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow">
   <h1 class="text-3xl font-semibold mb-4"> Organizers </h1>
   <div id="dropdownUsers" class="pb-6 bg-white rounded-lg">
     <ul class="py-2 text-gray-700 dark:text-gray-200" aria-labelledby="dropdownUsersButton">
@@ -105,20 +105,15 @@ x-bind="bind">{% translate "Add price" %}</a>
       {% endfor %}
     </ul>
   </div>
-  <a class="Forms__button Forms__button--submit"
+  <a class="btn btn-primary btn-outline grow"
   x-data="modal($el.href)"
   x-bind="bind"
   href="{% url "events:organizer-add" event.pk%}">{% trans "Add organizer" %}</a>
 </div>
 
-<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+<div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow">
   <h1 class="text-3xl font-semibold mb-4"> Event </h1>
-    <a href="{% url "events:participants" event.id %}" class="Forms__button Forms__button--submit" >{% translate "Show participants" %}</a>
-    {% if event.state == "publish" %}
-      <button hx-post="{% url "events:event-confirm" event.id %}" hx-swap="none" class="Forms__button Forms__button--submit">{% translate "Publish" %}</button>
-    {% else %}
-      <button hx-post="{% url "events:event-confirm" event.id %}" hx-swap="none" class="Forms__button Forms__button--submit">{% translate "Unpublish" %}</button>
-    {% endif %}
+    <a href="{% url "events:participants" event.id %}" class="btn btn-primary btn-outline grow" >{% translate "Show participants" %}</a>
 </div>
 
 
@@ -129,11 +124,11 @@ x-bind="bind">{% translate "Add price" %}</a>
   <div class="md:flex  lg:grid sm:flex grid-rows-2 grid-cols-2 grid-flow-row flex-wrap gap-0 max-lg:hidden pt-6">
 
     <div class="row-span-2 w-full shrink-0 grow-0 basis-auto  lg:ml-[50px] max-lg:hidden">
-      <div class="h-full items-center rounded-lg bg-base-100 p-6 text-left lg:pr-12 lg:text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+      <div class="h-full items-center rounded-lg bg-base-100 p-6 text-left lg:pr-12 lg:text-left shadow">
         <div class="lg:pr-12">
           <div class="flex">
           <div class="flex-shrink-0">
-            <h1 class = "[font-family:'Francois_One-Regular',Helvetica] font-bold text-[30px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
+            <h1 class = "text-base-content font-bold text-[30px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
           </div>
           <div class="flex-grow">
             <a href="{% url "events:event-update" event.id %}" class="button-with-icon">
@@ -143,7 +138,7 @@ x-bind="bind">{% translate "Add price" %}</a>
             </a> 
           </div>
         </div>
-        <p class="[font-family:'Francois_One-Regular',Helvetica] font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
+        <p class="text-base-content font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
           Capacity: {{ event.participants.all|length}}/{{ event.capacity }}<br>
           When: {{ event.start.date }}<br>
           Start: {{ event.start.time }} at {{ event.place }}<br>
@@ -170,7 +165,7 @@ x-bind="bind">{% translate "Add price" %}</a>
               {% endfor %}
             {% endif %}
             </div> 
-          <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
+          <p class="text-base-content font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
           <p class="pl-2">{{ event.description }}</p>
 
     
@@ -223,11 +218,11 @@ x-bind="bind">{% translate "Add price" %}</a>
 
     <div class="row-span-2 w-full shrink-0 grow-0 basis-auto lg:hidden md:block">
       
-      <div class=" h-full items-center rounded-lg bg-base-100 p-6 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
+      <div class=" h-full items-center rounded-lg bg-base-100 p-6 text-left shadow">
         <div class="mt-[50px] 2">
           <div class="flex">
           <div class="flex-shrink-0">
-            <h1 class = "[font-family:'Francois_One-Regular',Helvetica] font-bold text-[40px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
+            <h1 class = "text-base-content font-bold text-[40px] tracking-[0] leading-[normal] pr-2">{{ event.title }}</h1>
           </div>
           {% can_edit event as rights %}
           {% if rights %}
@@ -240,7 +235,7 @@ x-bind="bind">{% translate "Add price" %}</a>
           </div>
           {% endif %}
         </div>
-        <p class="[font-family:'Francois_One-Regular',Helvetica] font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
+        <p class="text-base-content font-normal text-[#b3b3b3] text-[15px] tracking-[0] leading-[normal] pb-4"> {{ event.subtitle }} </p>
           Capacity: {{ event.participants.all|length}}/{{ event.capacity }}<br>
           When: {{ event.start.date }}<br>
           Start: {{ event.start.time }} at {{ event.place }}<br>
@@ -248,7 +243,7 @@ x-bind="bind">{% translate "Add price" %}</a>
             End:{{ event.end }}<br>
           {% endif %}
          
-          <p class="[font-family:'Francois_One-Regular',Helvetica] font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
+          <p class="text-base-content font-semibold  text-[15px] tracking-[0] leading-[normal] pb-1">Description:</p>
           <p class="pl-2">{{ event.description }}</p>
 
 

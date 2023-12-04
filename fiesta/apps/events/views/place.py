@@ -27,6 +27,7 @@ from apps.events.forms.place import PlaceForm
 from ...fiestatables.filters import BaseFilterSet
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.db import transaction
@@ -97,6 +98,7 @@ class PlaceTable(tables.Table):
         return str(value)
     
 class PlaceView(EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     HtmxFormViewMixin,
     FiestaTableView
 ):
@@ -108,7 +110,6 @@ class PlaceView(EnsurePrivilegedUserViewMixin,
     context_object_name = "places"
 
     def get_context_data(self, **kwargs):
-        self.request.session['previous_url'] = "events:place"
         context = super().get_context_data(**kwargs)
         return context
 
@@ -116,13 +117,15 @@ class PlaceView(EnsurePrivilegedUserViewMixin,
         return self.request.in_space_of_section.places.all()
 
 class AddPlaceView(EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     CreateView):
 
-    ajax_template_name = "events/parts/add_place_form.html"
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+    
     form_class = PlaceForm
     model = Place
 
@@ -142,18 +145,13 @@ class AddPlaceView(EnsurePrivilegedUserViewMixin,
             "section": self.request.in_space_of_section
         }
     
-    def form_valid(self, form) -> HttpResponse:
-        response = super().form_valid(form)
-
-        form.save()
-        return response
-    
     def get_success_url(self):
         if self.kwargs.get("pk") is not None:
             return reverse_lazy('events:event-update', args=[self.kwargs.get("pk")])
         return reverse_lazy('events:place')
     
 class DeletePlaceView(EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -165,23 +163,21 @@ class DeletePlaceView(EnsurePrivilegedUserViewMixin,
         self.place = get_object_or_404(Place, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
 
-    def delete(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        response = super().delete(request, *args, **kwargs)
-        return response
-
     def get_success_url(self):
         return reverse_lazy('events:place')
 
 
 class UpdatePlaceView(    
     EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,):
     
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "events/parts/update_place_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+
     model = Place
     form_class = PlaceForm
 
@@ -189,16 +185,14 @@ class UpdatePlaceView(
         self.place = get_object_or_404(Place, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
     
+    def get_context_data(self, **kwargs) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context["form_url"] = reverse_lazy('events:place-update', kwargs={'pk': self.kwargs['pk']})
+        return context
+    
     def get_object(self, queryset=None) -> Place:
         pk = self.kwargs.get('pk')
         return get_object_or_404(Place, pk=pk)
-    
-    @transaction.atomic
-    def form_valid(self, form) -> HttpResponse:
-        response = super().form_valid(form)
-
-        form.save()
-        return response
     
     def get_success_url(self):
         return reverse_lazy("events:place")

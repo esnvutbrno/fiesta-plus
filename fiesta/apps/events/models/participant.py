@@ -6,10 +6,6 @@ from apps.utils.models import BaseModel
 from apps.events.models.price_variant import PriceVariant
 
 
-class ParticipantState(models.TextChoices):  # TODO do we need a state if we have an expiration date
-    WAITING = "waiting", _("Waiting")
-    CONFIRMED = "confirmed", _("Confirmed")
-    DELETED = "deleted", _("Deleted")
 
 
 class Participant(BaseModel):
@@ -44,10 +40,16 @@ class Participant(BaseModel):
         null=True,
         db_index=False,
     )
+    
+    
+    class State(models.TextChoices):  # TODO do we need a state if we have an expiration date
+        WAITING = "waiting", _("Waiting")
+        CONFIRMED = "confirmed", _("Confirmed")
+        DELETED = "deleted", _("Deleted")
 
     state = models.CharField(
-        choices=ParticipantState.choices,
-        default=ParticipantState.WAITING,
+        choices=State.choices,
+        default=State.WAITING,
         verbose_name=_("state"),
         help_text=_("current state of the event"),
     )

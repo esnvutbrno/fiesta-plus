@@ -21,30 +21,32 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django_filters import CharFilter, ChoiceFilter
 
-from ..models import Participant
+from ..models import Participant, Organizer
 from ..models.event import Event
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm
-from apps.events.models.organizer import OrganizerRole
 from apps.events.models.price_variant import EventPriceVariantType
 
-from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
-from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin
+from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin, EnsureInternationalUserViewMixin
 from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
+
+
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Add"))
 class AddEventView(
+    EnsurePrivilegedUserViewMixin,
     EnsureLocalUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     CreateView,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -53,8 +55,8 @@ class AddEventView(
     request: HttpRequest
     object: Event
 
-    template_name = 'events/add_event.html'
-    ajax_template_name = 'events/parts/add_event_form.html'
+    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
 
     form_class = AddEventForm
 
@@ -73,7 +75,9 @@ class AddEventView(
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Update"))
 class UpdateEventView(
+    EnsurePrivilegedUserViewMixin,
     EnsureLocalUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     UpdateView,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -83,8 +87,8 @@ class UpdateEventView(
     object: Event
 
     form_class = AddEventForm
-    template_name = 'events/update_event.html'
-    ajax_template_name = 'events/parts/update_event_form.html'
+    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
 
     success_message = _("Event updated")
 
@@ -139,7 +143,7 @@ class EventDetailView(
         print(organizers_data)
         context['event'] = self.event
         context['organizers_json'] = json.dumps(organizers_data)
-        context['organizer_roles'] = OrganizerRole.choices
+        context['organizer_roles'] = Organizer.Role.choices
         return context
 
     def register(self, price):
@@ -148,7 +152,7 @@ class EventDetailView(
                 user=self.request.user,
                 event=self.event,
                 price=price,
-                state=ParticipantState.CONFIRMED,
+                state=Participant.State.CONFIRMED,
             )
 
         elif price.type == EventPriceVariantType.WITH_ESN_CARD:
@@ -157,7 +161,7 @@ class EventDetailView(
                     user=self.request.user,
                     event=self.event,
                     price=price,
-                    state=ParticipantState.WAITING,
+                    state=Participant.State.WAITING,
                 )
             else:
                 return "User is not ESN card holder."
@@ -167,34 +171,8 @@ class EventDetailView(
                 user=self.request.user,
                 event=self.event,
                 price=price,
-                state=ParticipantState.WAITING,
+                state=Participant.State.WAITING,
             )
-
-
-@with_plugin_home_breadcrumb
-@with_object_breadcrumb()
-class ConfirmEvent(EnsurePrivilegedUserViewMixin, AjaxViewMixin, HtmxFormViewMixin, View):
-    model = Event 
-    
-    def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
-        self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
-        return super().dispatch(request, *args, **kwargs)
-    
-    def get_object(self, queryset: None) -> Event:
-        return get_object_or_404(Event, pk=self.kwargs.get("pk"))
-    
-    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        if self.event.state == Event.State.PUBLISHED:
-            self.event.state = Event.State.DRAFT
-        elif self.event.state == Event.State.DRAFT:
-            self.event.state = Event.State.PUBLISHED
-        self.event.save()
-        html = render_to_string('events/parts/event_item.html', {'event': self.event})
-
-        return HttpResponse(html)
-    
-    def get_success_url(self):
-        return reverse("index")
 
 
 class EventParticipantsFilter(BaseFilterSet):
@@ -203,7 +181,7 @@ class EventParticipantsFilter(BaseFilterSet):
         label=_("Search"),
         widget=TextInput(attrs={"placeholder": _("Petr, Daniel...")}),
     )
-    state = ChoiceFilter(choices=ParticipantState.choices, label=_("State"))
+    state = ChoiceFilter(choices=Participant.State.choices, label=_("State"))
 
     created = ProperDateFromToRangeFilter(label=_("Created"))
 
@@ -268,7 +246,12 @@ class EventParticipantsTable(tables.Table):
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Participants"))
-class ParticipantsView(EnsureLocalUserViewMixin, FiestaTableView):
+class ParticipantsView(
+    EnsurePrivilegedUserViewMixin,
+    EnsureLocalUserViewMixin, 
+    EnsureInSectionSpaceViewMixin, 
+    FiestaTableView):
+    
     request: HttpRequest
     template_name = "fiestatables/page.html"
     table_class = EventParticipantsTable
@@ -282,14 +265,17 @@ class ParticipantsView(EnsureLocalUserViewMixin, FiestaTableView):
     def get_queryset(self):
         return self.request.in_space_of_section.events.get(id=self.event.pk).participants.filter(
             state__in=(
-                ParticipantState.WAITING,
-                ParticipantState.CONFIRMED,
-                ParticipantState.DELETED,
+                Participant.State.WAITING,
+                Participant.State.CONFIRMED,
+                Participant.State.DELETED,
             )
         )
 
 
-class EventParticipantRegister(EnsureInSectionSpaceViewMixin, CreateView):
+class EventParticipantRegister(
+    EnsureInSectionSpaceViewMixin, 
+    CreateView):
+    
     model = Participant
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:

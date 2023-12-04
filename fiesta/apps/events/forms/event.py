@@ -1,8 +1,8 @@
-from apps.events.models.organizer import OrganizerRole
+
 from apps.fiestaforms.forms import BaseModelForm
 from apps.events.models import Event, Organizer
 from apps.accounts.models import User
-from django.forms import CharField, HiddenInput, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, SelectMultiple, Field
+from django.forms import CharField, HiddenInput, DateTimeInput
 from django_select2.forms import Select2MultipleWidget
 from django.utils.translation import gettext_lazy as _
 from apps.fiestaforms.widgets.models import MultipleActiveLocalMembersFromSectionWidget, PlaceWidget
@@ -45,5 +45,7 @@ class AddEventForm(BaseModelForm):
             "section": HiddenInput,
             "author": HiddenInput,
             "place": PlaceWidget,
+            "start": DateTimeInput(attrs={'type': 'datetime-local'}),
+            "end": DateTimeInput(attrs={'type': 'datetime-local'}),
         }
 

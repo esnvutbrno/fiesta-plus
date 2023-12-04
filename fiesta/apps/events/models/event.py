@@ -4,8 +4,6 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import User
-from apps.events.models.organizer import OrganizerRole
-from apps.events.models.participant import ParticipantState
 from apps.files.storage import NamespacedFilesStorage
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
@@ -130,21 +128,6 @@ class Event(BaseTimestampedModel):
     def __str__(self):
         # return self.title
         return f"{self.title} - {self.start.date()}"
-
-    def is_oc(self, user: User) -> bool:
-        return self.organizers.filter(user=user).exists()
-
-    def is_moc(self, user: User) -> bool:
-        return self.organizers.filter(user=user, role=OrganizerRole.EVENT_LEADER).exists()
-
-    def is_participant(self, user: User) -> bool:
-        return self.participants.filter(user=user, role=ParticipantState.CONFIRMED).exists()
-
-    def can_edit(self, user: User) -> bool:
-        return self.is_moc(user) or self.author == user or user.is_superuser
-
-    def can_see_participants(self, user: User) -> bool:
-        return self.is_moc(user) or self.author == user or user.is_superuser
 
     class Meta:
         ordering = ["start"]

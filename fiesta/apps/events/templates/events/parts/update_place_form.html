@@ -1,6 +1,0 @@
-<form hx-post="{% url "events:place-update" place.pk %}"
-      hx-swap="outerHTML"
-      {% if form.is_multipart %}enctype="multipart/form-data" hx-encoding="multipart/form-data"{% endif %}>
-  {% csrf_token %}
-  {{ form }}
-</form>

@@ -3,9 +3,9 @@ from __future__ import annotations
 from django.urls import path
 
 from .views import EventsIndexView
-from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView, ConfirmEvent, EventParticipantRegister
+from .views.event import AddEventView, EventDetailView, ParticipantsView, UpdateEventView, EventParticipantRegister
 from .views.organizer import AddOrganizerView, UpdateOrganizerRole, DeleteOrganizerView
-from .views.price import PriceView, PriceUpdate, PriceDelete
+from .views.price import AddPriceView, UpdatePriceView, DeletePriceView
 from .views.place import PlaceView, AddPlaceView, UpdatePlaceView, DeletePlaceView
 
 # Define your urls here
@@ -21,14 +21,13 @@ urlpatterns = [
     path("event-detail/<uuid:pk>/organizers/<uuid:pko>", UpdateOrganizerRole.as_view(), name="role-change"), # event-detail/<uuid:pk>/
     path("event-detail/<uuid:pk>/organizers/delete/<uuid:pko>", DeleteOrganizerView.as_view(), name="organizer-delete"), # event-detail/<uuid:pk>/
     path("event-detail/<uuid:pk>/organizers/add", AddOrganizerView.as_view(), name="organizer-add"),
-    path("event-update/<uuid:pk>/price", PriceView.as_view(), name="price"),
-    path("event-update/<uuid:pk>/price/<uuid:pricepk>", PriceUpdate.as_view(), name="price-update"),
-    path("event-update/<uuid:pk>/price-delete/<uuid:pricepk>", PriceDelete.as_view(), name="price-delete"),
+    path("event-update/<uuid:pk>/price", AddPriceView.as_view(), name="price"),
+    path("event-update/<uuid:pk>/price/<uuid:pricepk>", UpdatePriceView.as_view(), name="price-update"),
+    path("event-update/<uuid:pk>/price-delete/<uuid:pricepk>", DeletePriceView.as_view(), name="price-delete"),
     path("place", PlaceView.as_view(), name="place"),
     path("place/add", AddPlaceView.as_view(), name="place-add"),
     path("event-update/<uuid:pk>/place/add", AddPlaceView.as_view(), name="eventplace-add"),
     path("place/update/<uuid:pk>", UpdatePlaceView.as_view(), name="place-update"),
     path("place/delete/<uuid:pk>", DeletePlaceView.as_view(), name="place-delete"),
-    path("confirm/<uuid:pk>", ConfirmEvent.as_view(), name="event-confirm"),
     path("event-detail/<uuid:pk>/register", EventParticipantRegister.as_view(), name="event-register"),
 ]

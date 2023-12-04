@@ -8,25 +8,9 @@
   <h1 class="text-3xl font-semibold mb-4">Your events</h1>
   <ul class="divide-y divide-gray-300">
     {% for participating in participations %}
-    <a href="{% url "events:event-detail" participating.event.id %}">
-      {% get_event_fullness participating.event as tmp %}
-      {{tmp}}
-    <li class="py-4 bg-base-100  rounded-box p-4 mb-4 md:box-content">
-      <div class="flex items-center space-x-4">
-        <div class="flex-shrink-0">
-          <div class="h-12 w-12 rounded-full bg-cover bg-center"
-               style=''></div>
-        </div>
-        <div class="flex-grow">
-          <h2 class="text-xl font-semibold">
-            {{ participating.event.title }}
-          </h2>
-          <p class="text-gray-600">{{ participating.event.start }}</p>
-          <p class="text-gray-600">{{ participating.event.description }}</p>
-        </div>
-      </div>
-    </li>
-    </a>
+      {% with event=participating.event %}
+        {% include "events/parts/event_item.html"%}
+      {% endwith %}
     {% endfor %}
   </ul>
 </div>
@@ -39,7 +23,7 @@
     {% if not event.state == "draft" %}
     
     {% include "events/parts/event_item.html" %}
-   
+
     {% endif %}
     {% endfor %}
   </ul>
@@ -52,22 +36,9 @@
     <!-- Event Item -->
     {% for event in request.in_space_of_section.events.all %}
     {% if event.state == "draft" %}
-    <li class="py-4 bg-base-200 rounded-box p-4 mb-4 md:box-content shadow" id="event-uncomfirmed-{{ event.pk }}">
-      <div class="flex items-center space-x-4" id="event-{{event.pk}}">
-        <div class="flex-shrink-0">
-          <div class="h-12 w-12 rounded-full bg-cover bg-center"
-               style='background-image: url("{{ event.portrait_cover }}")'></div>
-        </div>
-        <div class="flex-grow">
-          <h2 class="text-xl font-semibold"><a href="{% url "events:event-detail" event.id %}"> {{ event.title }}</a>
-          </h2>
-          <p class="text-gray-600">{{ event.start }}</p>
-          <p class="text-gray-600">{{ event.description }}</p>
-        </div>
-      </div>
-      {% comment %} <button hx-post="{% url "events:event-confirm" event.id %}" hx-delete="{% url "events:event-confirm" event.id %}" hx-target="#event-uncomfirmed-{{ event.pk }}" hx-swap="outerHTML">{% translate "Confirm" %}</button> {% endcomment %}
-      
-    </li>
+
+      {% include "events/parts/event_item.html" %}
+
     {% endif %}
     {% endfor %}
   </ul>
@@ -78,9 +49,8 @@
 
 <!-- Only allow adding of events to members and admins -->
 {% if not request.membership.is_international %}
-<button><a href="{% url "events:add-event" %}">Add event</a></button>
-<button><a href="{% url "events:place" %}">Places</a></button>
+<button class="btn btn-primary btn-outline grow"><a href="{% url "events:add-event" %}">Add event</a></button>
+<button class="btn btn-primary btn-outline grow"><a href="{% url "events:place" %}">Places</a></button>
 {% endif %}
-<!--  {{ request.in_space_of_section.events }}-->
 
 {% endblock %}

@@ -19,7 +19,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.price import PriceForm
 
-from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureInternationalUserViewMixin
 from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
@@ -27,7 +27,8 @@ from django.db import transaction
 from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
-class PriceView(
+class AddPriceView(
+    EnsurePrivilegedUserViewMixin,
     EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
@@ -35,7 +36,8 @@ class PriceView(
     CreateView,
 ):
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "events/parts/price_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+
     model = Event
     form_class = PriceForm
     success_message = _("Priced")
@@ -58,25 +60,19 @@ class PriceView(
     def get_success_url(self):
         return reverse("events:event-detail", args=[self.event.pk])
 
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        
-        PriceVariant.objects.get_or_create(
-            event=self.event,
-            type=form.instance.type,
-        )
-
         return response
 
-class PriceUpdate(
+class UpdatePriceView(
     EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "events/parts/update_price_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+    
     model = Event
     form_class = PriceForm
 
@@ -95,17 +91,12 @@ class PriceUpdate(
         price_pk = self.kwargs.get('pricepk')
         return get_object_or_404(PriceVariant, pk=price_pk)
     
-    def form_valid(self, form):
-        response = super().form_valid(form)
-        
-        form.save() 
-        return response
-    
     def get_success_url(self):
         return reverse("events:event-detail", args=[self.event.pk])
     
-class PriceDelete(
+class DeletePriceView(
     EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,

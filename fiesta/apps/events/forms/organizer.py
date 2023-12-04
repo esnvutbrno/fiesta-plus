@@ -1,4 +1,4 @@
-from apps.events.models.organizer import OrganizerRole
+
 from apps.fiestaforms.forms import BaseModelForm
 from apps.events.models import Organizer
 from apps.accounts.models import User
@@ -21,7 +21,7 @@ class OrganizerForm(BaseModelForm):
         required=False
     )
     
-    role = Select(choices=OrganizerRole.choices)
+    role = Select(choices=Organizer.Role.choices)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

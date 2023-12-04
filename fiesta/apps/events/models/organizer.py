@@ -6,15 +6,17 @@ from django.utils.translation import gettext_lazy as _
 from apps.utils.models import BaseTimestampedModel
 
 
-class OrganizerRole(models.TextChoices):
-    EVENT_LEADER = "event_leader", _("Event_leader")
-    OC = "oc", _("OC")
+
 
 
 class Organizer(BaseTimestampedModel):
+    
+    class Role(models.TextChoices):
+        EVENT_LEADER = "event_leader", _("Event_leader")
+        OC = "oc", _("OC")
     role = models.CharField(
-        choices=OrganizerRole.choices,
-        default=OrganizerRole.OC,
+        choices=Role.choices,
+        default=Role.OC,
         verbose_name=_("role"),
         help_text=_("current role of the user on event"),
     )

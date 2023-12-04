@@ -1,6 +1,6 @@
 from .index import EventsIndexView
-from .event import AddEventView, EventDetailView, UpdateEventView, ParticipantsView, ConfirmEvent
-from .price import PriceView, PriceUpdate, PriceDelete
+from .event import AddEventView, EventDetailView, UpdateEventView, ParticipantsView
+from .price import AddPriceView, AddPriceView, DeletePriceView
 from .place import PlaceView, AddPlaceView, UpdatePlaceView, DeletePlaceView
 
 __all__ = [
@@ -12,9 +12,8 @@ __all__ = [
     "AddPlaceView",
     "UpdatePlaceView",
     "DeletePlaceView",
-    "PriceView",
-    "PriceUpdate",
+    "AddPriceView",
+    "DeletePriceView",
     "PriceDelete",
     "ParticipantsView",
-    "ConfirmEvent"
 ]
