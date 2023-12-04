@@ -49,7 +49,6 @@
               <a href="#" 
               hx-post="{% url "events:price-delete" event.pk price.pk %}"
               hx-confirm="Are you sure you want to delete this price?"
-              hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
               hx-target="#price-{{ price.pk }}"
               hx-swap="outerHTML">  
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9">
@@ -112,7 +111,6 @@
           class="pl-6"
           hx-post="{% url "events:organizer-delete" event.pk oc.pk %}"
           hx-confirm="Are you sure you want to delete this price?"
-          hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
           hx-target="#oc-{{ oc.pk }}"
           hx-swap="delete">  
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-9 h-9">
