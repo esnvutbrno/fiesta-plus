@@ -20,6 +20,23 @@ class RemoteModelSelectWidgetMixin:
     def media(self):
         return None
 
+class ActiveLocalMembersFromSectionWidgetMixin:
+    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
+        queryset = (
+            (queryset or self.get_queryset())
+            .filter(
+                memberships__section=request.in_space_of_section,
+            )
+            .filter(
+                memberships__role__in=(
+                    SectionMembership.Role.MEMBER,
+                    SectionMembership.Role.ADMIN,
+                    SectionMembership.Role.EDITOR,
+                ),
+            )
+        )
+
+        return super().filter_queryset(request, term, queryset, **dependent_fields)
 
 class UserWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [
@@ -45,41 +62,12 @@ class MultipleUserWidget(RemoteModelSelectWidgetMixin, ModelSelect2MultipleWidge
 
 
 
-class ActiveLocalMembersFromSectionWidget(UserWidget):
-    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
-        queryset = (
-            (queryset or self.get_queryset())
-            .filter(
-                memberships__section=request.in_space_of_section,
-            )
-            .filter(
-                memberships__role__in=(
-                    SectionMembership.Role.MEMBER,
-                    SectionMembership.Role.ADMIN,
-                    SectionMembership.Role.EDITOR,
-                ),
-            )
-        )
-
-        return super().filter_queryset(request, term, queryset, **dependent_fields)
+class ActiveLocalMembersFromSectionWidget(ActiveLocalMembersFromSectionWidgetMixin, UserWidget):
+    pass
     
-class MultipleActiveLocalMembersFromSectionWidget(MultipleUserWidget):
-    def filter_queryset(self, request, term, queryset=None, **dependent_fields):
-        queryset = (
-            (queryset or self.get_queryset())
-            .filter(
-                memberships__section=request.in_space_of_section,
-            )
-            .filter(
-                memberships__role__in=(
-                    SectionMembership.Role.MEMBER,
-                    SectionMembership.Role.ADMIN,
-                    SectionMembership.Role.EDITOR,
-                ),
-            )
-        )
-
-        return super().filter_queryset(request, term, queryset, **dependent_fields)
+class MultipleActiveLocalMembersFromSectionWidget(ActiveLocalMembersFromSectionWidgetMixin, MultipleUserWidget):
+    pass
+    
 class PlaceWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [
         "name__icontains",
@@ -87,7 +75,7 @@ class PlaceWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
 
     @classmethod
     def label_from_instance(cls, place):
-        return f"{place.name} ({place.link})"
+        return f"{place.name}"
 
 class UniversityWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [

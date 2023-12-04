@@ -57,12 +57,12 @@ def is_oc(context, event: Event) -> bool:
 @register.simple_tag(takes_context=True)
 def is_moc(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return event.organizers.filter(user=request.membership.user, state=OrganizerRole.EVENT_LEADER).exists()
+    return event.organizers.filter(user=request.membership.user, role=OrganizerRole.EVENT_LEADER).exists()
 
 @register.simple_tag(takes_context=True)
 def is_participant(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return event.participants.filter(user=request.membership.user, state=ParticipantState.CONFIRMED).exists()
+    return event.participants.filter(user=request.membership.user, role=ParticipantState.CONFIRMED).exists()
 
 @register.simple_tag(takes_context=True)
 def can_edit(context, event: Event) -> bool:

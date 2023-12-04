@@ -27,7 +27,7 @@ from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.events.forms.event import AddEventForm, UpdateEventForm
+from apps.events.forms.event import AddEventForm
 from apps.events.models.organizer import OrganizerRole
 from apps.events.models.price_variant import EventPriceVariantType
 
@@ -35,7 +35,8 @@ from ..models.participant import ParticipantState
 from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
-from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin
+from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
@@ -43,6 +44,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Add"))
 class AddEventView(
+    EnsureLocalUserViewMixin,
     CreateView,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -71,6 +73,7 @@ class AddEventView(
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Update"))
 class UpdateEventView(
+    EnsureLocalUserViewMixin,
     UpdateView,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -79,7 +82,7 @@ class UpdateEventView(
     request: HttpRequest
     object: Event
 
-    form_class = UpdateEventForm
+    form_class = AddEventForm
     template_name = 'events/update_event.html'
     ajax_template_name = 'events/parts/update_event_form.html'
 
@@ -113,7 +116,13 @@ class UpdateEventView(
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Detail"))
-class EventDetailView(DetailView):
+class EventDetailView(
+    EnsureInSectionSpaceViewMixin, 
+    DetailView, 
+    SuccessMessageMixin, 
+    HtmxFormViewMixin,
+    AjaxViewMixin):
+    
     request: HttpRequest
     object: Event
 
@@ -259,7 +268,7 @@ class EventParticipantsTable(tables.Table):
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("Participants"))
-class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
+class ParticipantsView(EnsureLocalUserViewMixin, FiestaTableView):
     request: HttpRequest
     template_name = "fiestatables/page.html"
     table_class = EventParticipantsTable
@@ -280,7 +289,7 @@ class ParticipantsView(EnsurePrivilegedUserViewMixin, FiestaTableView):
         )
 
 
-class EventParticipantRegister(CreateView):
+class EventParticipantRegister(EnsureInSectionSpaceViewMixin, CreateView):
     model = Participant
 
     def form_valid(self, form: BaseModelForm) -> HttpResponse:

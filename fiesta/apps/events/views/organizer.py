@@ -53,9 +53,9 @@ class UpdateOrganizerRole(AjaxViewMixin, SuccessMessageMixin, HtmxFormViewMixin 
 
     def post(self, request, pk, pko):
         if request.POST.get('role') == "event_leader":
-            self.organizer.state = OrganizerRole.EVENT_LEADER
+            self.organizer.role = OrganizerRole.EVENT_LEADER
         else:
-            self.organizer.state = OrganizerRole.OC
+            self.organizer.role = OrganizerRole.OC
         self.organizer.save()
         return HttpResponseRedirect(reverse('events:event-detail', args=[self.event.id]))
     
@@ -118,8 +118,7 @@ class DeleteOrganizerView(EnsurePrivilegedUserViewMixin,
     def get_object(self, queryset=None):
         return get_object_or_404(Organizer, pk=self.kwargs.get("pko"))
     
-    @transaction.atomic
-    def delete(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         self.get_object().delete()
         return HttpResponse('')
 

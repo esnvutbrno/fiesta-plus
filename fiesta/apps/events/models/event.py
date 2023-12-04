@@ -13,13 +13,6 @@ from apps.utils.models import BaseTimestampedModel
 
 # TODO Maybe pre-registration, registration and paused registration for different field.
 
-
-class EventState(models.TextChoices):
-    DRAFT = "draft", _("Draft")
-    PUBLISHED = "published", _("Published")
-    HIDDEN = "hidden", _("Hidden")  # Visible only after invite
-
-
 def has_permission_for_cover_photo_view(request: HttpRequest, name: str) -> bool:  # TODO
     if request.user.is_authenticated:
         return True
@@ -63,10 +56,16 @@ class Event(BaseTimestampedModel):
         verbose_name=_("capacity"),
         help_text=_("capacity of the event"),
     )
+    
+    class State(models.TextChoices):
+        DRAFT = "draft", _("Draft")
+        PUBLISHED = "published", _("Published")
+        HIDDEN = "hidden", _("Hidden")  # Visible only after invite
+
 
     state = models.CharField(
-        choices=EventState.choices,
-        default=EventState.DRAFT,
+        choices=State.choices,
+        default=State.DRAFT,
         max_length=16,
         verbose_name=_("state"),
         help_text=_("current state of the event"),
@@ -136,10 +135,10 @@ class Event(BaseTimestampedModel):
         return self.organizers.filter(user=user).exists()
 
     def is_moc(self, user: User) -> bool:
-        return self.organizers.filter(user=user, state=OrganizerRole.EVENT_LEADER).exists()
+        return self.organizers.filter(user=user, role=OrganizerRole.EVENT_LEADER).exists()
 
     def is_participant(self, user: User) -> bool:
-        return self.participants.filter(user=user, state=ParticipantState.CONFIRMED).exists()
+        return self.participants.filter(user=user, role=ParticipantState.CONFIRMED).exists()
 
     def can_edit(self, user: User) -> bool:
         return self.is_moc(user) or self.author == user or user.is_superuser

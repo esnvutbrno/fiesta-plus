@@ -1,8 +1,8 @@
 from apps.events.models.organizer import OrganizerRole
 from apps.fiestaforms.forms import BaseModelForm
-from apps.events.models import Event, Organizer
+from apps.events.models import Organizer
 from apps.accounts.models import User
-from django.forms import CharField, HiddenInput, MultipleChoiceField, ModelMultipleChoiceField, SelectMultiple, SelectMultiple, Field, Select
+from django.forms import CharField, HiddenInput, MultipleChoiceField, ModelMultipleChoiceField, Select
 from django_select2.forms import Select2MultipleWidget
 from django.utils.translation import gettext_lazy as _
 from apps.fiestaforms.widgets.models import MultipleActiveLocalMembersFromSectionWidget, PlaceWidget
@@ -20,13 +20,8 @@ class OrganizerForm(BaseModelForm):
         widget=MultipleActiveLocalMembersFromSectionWidget,
         required=False
     )
-
-    add_main_organizer = ModelMultipleChoiceField(
-        queryset=User.objects.all(),
-        label=_("Add event leader"),
-        widget=MultipleActiveLocalMembersFromSectionWidget,
-        required=False
-    )
+    
+    role = Select(choices=OrganizerRole.choices)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -34,32 +29,23 @@ class OrganizerForm(BaseModelForm):
 
     def save(self, commit=True):
         organizers = self.cleaned_data["add_organizer"]
-        mocs = self.cleaned_data["add_main_organizer"]
-        event = self.cleaned_data["event"]	
+        event = self.cleaned_data["event"]
+        role = self.cleaned_data['role']	
 
         for organizer in organizers:
-            if Organizer.objects.filter(event=event, user=organizer).exists():
-                continue    
-            Organizer.objects.update_or_create(
+            Organizer.objects.get_or_create(
                 event=event,
                 user=organizer,
-                state=OrganizerRole.OC
+                role=role
             )
 
-        for moc in mocs:
-            if Organizer.objects.filter(event=event, user=moc).exists() or moc in organizers:
-                continue  
-            Organizer.objects.update_or_create(
-                event=event,
-                user=moc,
-                state=OrganizerRole.EVENT_LEADER
-            )
         return 
 
     class Meta:
         model = Organizer
         fields = (
             "add_organizer",
+            "role",
             "event"
         )
         widgets = {

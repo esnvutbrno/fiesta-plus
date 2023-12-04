@@ -18,7 +18,7 @@
 <div class="mx-6 p-6 mb-6 mt-6 w-2/7 h-fit rounded-lg bg-base-150 text-left shadow-[0_2px_15px_-3px_rgba(0,0,0,0.07),0_10px_20px_-2px_rgba(0,0,0,0.04)]">
   <h1 class="text-3xl font-semibold mb-4"> Prices </h1>
   {% get_price_variants event as prices %}
-  {% if prices is not None %}
+  {% if prices %}
   <div class="flex max-[950px]:flex-col">
     {% for price in prices %}
     
@@ -31,7 +31,7 @@
         <div class="flex flex-col col-start-2 row-span-3 text-right items-end">
 
           <a href="#" 
-          hx-delete="{% url "events:price-delete" event.pk price.pk %}"
+          hx-post="{% url "events:price-delete" event.pk price.pk %}"
           hx-confirm="Are you sure you want to delete this price?"
           hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
           hx-target="#price-{{ price.pk }}"
@@ -84,14 +84,14 @@ x-bind="bind">{% translate "Add price" %}</a>
         <div class="flex">
         <select name="role"  hx-post="{% url 'events:role-change' pk=event.pk pko=oc.pk %}" hx-trigger="change" hx-swap="none">
             {% for role_value, role_display in organizer_roles %}
-                <option value="{{ role_value }}" {% if oc.state == role_value %}selected{% endif %}>
+                <option value="{{ role_value }}" {% if oc.role == role_value %}selected{% endif %}>
                     {{ role_display }}
                 </option>
             {% endfor %}
         </select>
         <a href="#" 
         class="pl-6"
-        hx-delete="{% url "events:organizer-delete" event.pk oc.pk %}"
+        hx-post="{% url "events:organizer-delete" event.pk oc.pk %}"
         hx-confirm="Are you sure you want to delete this price?"
         hx-headers="{'X-CSRFToken': '{{ csrf_token }}'}"
         hx-target="#oc-{{ oc.pk }}"

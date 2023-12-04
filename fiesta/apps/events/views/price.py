@@ -30,6 +30,7 @@ from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledC
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
+from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.db import transaction
@@ -37,7 +38,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 
 
 class PriceView(
-    EnsurePrivilegedUserViewMixin,
+    EnsureInSectionSpaceViewMixin,
     SuccessMessageMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
@@ -67,8 +68,6 @@ class PriceView(
     def get_success_url(self):
         return reverse("events:event-detail", args=[self.event.pk])
 
-
-    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
         
@@ -106,7 +105,6 @@ class PriceUpdate(
         price_pk = self.kwargs.get('pricepk')
         return get_object_or_404(PriceVariant, pk=price_pk)
     
-    @transaction.atomic
     def form_valid(self, form):
         response = super().form_valid(form)
         
@@ -141,11 +139,9 @@ class PriceDelete(
         price_pk = self.kwargs.get('pricepk')
 
         return get_object_or_404(PriceVariant, pk=price_pk)
-    
-    #
 
     @transaction.atomic
-    def delete(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
+    def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
         self.price.delete()
         return HttpResponse('')
     
