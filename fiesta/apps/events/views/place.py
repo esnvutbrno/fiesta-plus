@@ -1,41 +1,35 @@
 from typing import Any
-from uuid import UUID
-from django import http
-from django.forms.forms import BaseForm
 
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 
-import django_filters
+from django.http import HttpRequest, HttpResponse
+
+
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, ListView
+from django.views.generic import CreateView, UpdateView, DeleteView
 import django_tables2 as tables
 
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
-from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
+from django_filters import CharFilter
+
 from django.db import models
 from django.shortcuts import get_object_or_404
 
-from ..models import Event, Participant, Place
-from ..models.price_variant import PriceVariant, EventPriceVariantType
+from ..models import Place
+
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.place import PlaceForm
-from apps.events.forms.event import AddEventForm, UpdateEventForm
-from ..models.participant import ParticipantState
-from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
-from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
+
+from ...fiestatables.filters import BaseFilterSet
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.db import transaction
-from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.template.loader import render_to_string
 
 
 class PlaceFilter(BaseFilterSet):

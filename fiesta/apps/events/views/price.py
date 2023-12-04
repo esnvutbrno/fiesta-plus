@@ -4,31 +4,21 @@ from django import http
 
 from django.http import HttpRequest, HttpResponse
 
-import django_filters
-from django.contrib.postgres.search import SearchVector
-from django.forms import TextInput
-from django.views.generic import CreateView, DetailView, UpdateView, DeleteView
-import django_tables2 as tables
+
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
-from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
-from django.db import models
 from django.shortcuts import get_object_or_404
 
-from ..models import Event, Participant
-from ..models.price_variant import PriceVariant, EventPriceVariantType
+from ..models import Event
+from ..models.price_variant import PriceVariant
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.price import PriceForm
-from apps.events.forms.event import AddEventForm, UpdateEventForm
-from ..models.participant import ParticipantState
-from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
-from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
-from ...fiestatables.views.tables import FiestaTableView
+
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb

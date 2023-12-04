@@ -1,45 +1,29 @@
-import json
 from typing import Any
-from uuid import UUID
-from django import http
-from django.forms.models import BaseModelForm
 
 from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 
-import django_filters
-from django.contrib.postgres.search import SearchVector
-from django.forms import TextInput
-from django.views.generic import CreateView, DeleteView, UpdateView, ListView, View
-import django_tables2 as tables
+
+
+from django.views.generic import CreateView, DeleteView, View
+
 
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse, reverse_lazy
-from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
-from django.db import models
 
-from ..models import Participant
-from ..models.event import Event, EventState
+
+from ..models.event import Event
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.events.forms.event import AddEventForm, UpdateEventForm
 
-from ..models.participant import ParticipantState
+
 from ..models.organizer import Organizer, OrganizerRole
-from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
-from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
-from ...fiestatables.views.tables import FiestaTableView
+from apps.events.forms.organizer import OrganizerForm
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from ...utils.breadcrumbs import with_breadcrumb
 from allauth.account.utils import get_next_redirect_url
-from django.contrib.auth import REDIRECT_FIELD_NAME
-from apps.events.forms.organizer import OrganizerForm
-from django.utils.html import format_html
-from django.http import JsonResponse
-from django.db import transaction
 
 
 class UpdateOrganizerRole(AjaxViewMixin, SuccessMessageMixin, HtmxFormViewMixin ,EnsurePrivilegedUserViewMixin, View):

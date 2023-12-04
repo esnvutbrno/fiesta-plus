@@ -22,7 +22,7 @@ from django.urls import reverse
 from django_filters import CharFilter, ChoiceFilter
 
 from ..models import Participant
-from ..models.event import Event, EventState
+from ..models.event import Event
 from apps.utils.views import AjaxViewMixin
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -184,10 +184,10 @@ class ConfirmEvent(EnsurePrivilegedUserViewMixin, AjaxViewMixin, HtmxFormViewMix
         return get_object_or_404(Event, pk=self.kwargs.get("pk"))
     
     def post(self, request: HttpRequest, *args: str, **kwargs: Any) -> HttpResponse:
-        if self.event.state == EventState.PUBLISHED:
-            self.event.state = EventState.DRAFT
-        elif self.event.state == EventState.DRAFT:
-            self.event.state = EventState.PUBLISHED
+        if self.event.state == Event.State.PUBLISHED:
+            self.event.state = Event.State.DRAFT
+        elif self.event.state == Event.State.DRAFT:
+            self.event.state = Event.State.PUBLISHED
         self.event.save()
         html = render_to_string('events/parts/event_item.html', {'event': self.event})
 
