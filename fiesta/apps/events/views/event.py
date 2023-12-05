@@ -146,35 +146,6 @@ class EventDetailView(
         context['organizer_roles'] = Organizer.Role.choices
         return context
 
-    def register(self, price):
-        if price.type == EventPriceVariantType.FREE:
-            Participant.objects.create(
-                user=self.request.user,
-                event=self.event,
-                price=price,
-                state=Participant.State.CONFIRMED,
-            )
-
-        elif price.type == EventPriceVariantType.WITH_ESN_CARD:
-            if self.request.user.is_esn_card_holder():
-                Participant.objects.create(
-                    user=self.request.user,
-                    event=self.event,
-                    price=price,
-                    state=Participant.State.WAITING,
-                )
-            else:
-                return "User is not ESN card holder."
-
-        else:
-            Participant.objects.create(
-                user=self.request.user,
-                event=self.event,
-                price=price,
-                state=Participant.State.WAITING,
-            )
-
-
 class EventParticipantsFilter(BaseFilterSet):
     search = CharFilter(
         method="filter_search",

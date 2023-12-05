@@ -42,16 +42,6 @@ class UpdateOrganizerRole(
         self.organizer = get_object_or_404(Organizer, pk=self.kwargs.get("pko"))
         return super().dispatch(request, *args, **kwargs)
     
-
-    # def post(self, request, pk, pko):
-    #     if request.POST.get('role') == "event_leader":
-    #         self.organizer.role = Organizer.Role.EVENT_LEADER
-    #     else:
-    #         self.organizer.role = Organizer.Role.OC
-    #     self.organizer.save()
-    #     return HttpResponseRedirect(reverse('events:event-detail', args=[self.event.id]))
-    
-    
     def get_object(self, queryset=None):
         return get_object_or_404(Organizer, pk=self.kwargs.get("pko"))
     
