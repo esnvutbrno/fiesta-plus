@@ -1,17 +1,13 @@
 import json
 from typing import Any
-from uuid import UUID
-from django import http
 from django.db import models
-from django.forms.models import BaseModelForm
 
-from django.http import HttpRequest, HttpResponse, HttpResponseRedirect, JsonResponse
+from django.http import HttpRequest, HttpResponse
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
-import requests
+from _operator import attrgetter
 
 
-import django_filters
 from django.contrib.postgres.search import SearchVector
 from django.forms import TextInput
 from django.views.generic import CreateView, DetailView, UpdateView, DeleteView, View
@@ -30,10 +26,9 @@ from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm
 from apps.events.models.price_variant import EventPriceVariantType
 
-from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
-from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin, EnsureInternationalUserViewMixin
+from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin
 from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
@@ -74,6 +69,7 @@ class AddEventView(
 
 
 @with_plugin_home_breadcrumb
+@with_object_breadcrumb(prefix=None, getter=attrgetter("title"))
 @with_breadcrumb(_("Update"))
 class UpdateEventView(
     EnsurePrivilegedUserViewMixin,
@@ -134,7 +130,7 @@ class DeleteEventView(
         return reverse("events:index")
     
 @with_plugin_home_breadcrumb
-@with_breadcrumb(_("Detail"))
+@with_object_breadcrumb(prefix=None, getter=attrgetter("title"))
 class EventDetailView(
     EnsureInSectionSpaceViewMixin, 
     DetailView, 
@@ -249,19 +245,19 @@ class EventParticipantsTable(tables.Table):
 
 
 @with_plugin_home_breadcrumb
-@with_breadcrumb(_("Participants"))
 class ParticipantsView(
     EnsurePrivilegedUserViewMixin,
     EnsureLocalUserViewMixin, 
     EnsureInSectionSpaceViewMixin, 
-    FiestaTableView):
-    
-    request: HttpRequest
-    template_name = "fiestatables/page.html"
-    table_class = EventParticipantsTable
-    filterset_class = EventParticipantsFilter
-    model = Participant
+    FiestaTableView,
+    ):
 
+    model = Participant
+    
+    template_name = "events/participants_table.html"
+    table_class = EventParticipantsTable
+    filterset_class = EventParticipantsFilter    
+    
     def dispatch(self, request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
@@ -277,7 +273,7 @@ class ParticipantsView(
         return kwargs
     
     def get_queryset(self):
-        return self.request.in_space_of_section.events.get(id=self.event.pk).participants.filter(
+        return self.request.in_space_of_section.events.get(id=self.event.pk).event_participants.filter(
             state__in=(
                 Participant.State.WAITING,
                 Participant.State.CONFIRMED,

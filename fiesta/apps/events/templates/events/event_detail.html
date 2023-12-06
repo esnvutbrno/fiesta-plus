@@ -6,14 +6,13 @@
 {% load breadcrumbs %}
 {% load i18n %}
 
-{% block head %}
-{{form.media}}
-{% endblock %}
+
 
 {% block main %}
 
-{% can_edit event as rights %}
-{% if rights  or request.membership.is_privileged %}
+
+{% can_edit event as bool %}
+{% if bool %}
 
 <div class="card rounded-lg bg-base-100 text-left shadow-xl">
 
@@ -45,7 +44,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
                 </svg>
               </a>
-
+              {% if event.state == event.State.DRAFT %}
               <a href="#" 
               hx-post="{% url "events:price-delete" event.pk price.pk %}"
               hx-confirm="Are you sure you want to delete this price?"
@@ -55,13 +54,16 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </a>
+              {% endif %}
             </div>
           </div>
         </div>
       
       {% endfor %}
+      
     </div>
     {% endif %}
+    
 
     <div class="card-actions justify-end">
       <a class="btn btn-primary btn-outline"
@@ -71,6 +73,7 @@
     </div>
   </div>
 </div>
+
 
 
 <div class="card rounded-lg bg-base-100 text-left shadow-xl mt-6">
@@ -134,11 +137,9 @@
   </div>
 </div>
 
-{% can_edit event as bool %}
-{% if bool %}
 <div class="card rounded-lg bg-base-100 text-left shadow-xl mt-6 mb-6">
   <div class="card-body">
-  <h1 class="card-title text-base-content"> Event </h1>
+  <h1 class="card-title text-base-content"> Event configuration </h1>
     <div class="card-actions justify-end">
       <a href="{% url "events:participants" event.id %}" class="btn btn-primary btn-outline">{% translate "Show participants" %}</a>
       <a href="{% url "events:event-update" event.id %}" class="btn btn-warning btn-outline">{% translate "Update event" %}</a> 
@@ -153,8 +154,6 @@
 
 
 
-
-{%endif%}
 
 <div class="md:flex lg:grid sm:flex grid-rows-2 grid-cols-2 grid-flow-row flex-wrap gap-0 max-lg:hidden pt-6">
   <div class="card row-span-2 w-full lg:ml-[50px] max-lg:hidden">

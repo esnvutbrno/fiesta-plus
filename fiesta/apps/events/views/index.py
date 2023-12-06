@@ -14,10 +14,9 @@ class EventsIndexView(EnsureInSectionSpaceViewMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        participants = Participant.objects.filter(user=self.request.membership.user)
+        context['users_events'] = Event.objects.filter(event_participants__user=self.request.membership.user).order_by('start')
+        
+        context['upcoming_events'] = Event.objects.filter(section=self.request.in_space_of_section, state=Event.State.PUBLISHED).exclude(event_participants__user=self.request.membership.user).order_by('start')
 
-        events = [participant.event for participant in participants if participant.event]
-
-        context['users_events'] = events
-
+        context['darft_events'] = Event.objects.filter(section=self.request.in_space_of_section, state=Event.State.DRAFT).order_by('start')
         return context

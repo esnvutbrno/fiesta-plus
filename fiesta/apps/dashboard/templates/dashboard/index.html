@@ -84,9 +84,9 @@
           {% endif %}
         </div>
       {% endif %}
-      {% if blocks.events %}
-        <div class="w-full md:w-3/5">{% include blocks.events with request=request %}</div>
-      {% endif %}
     </div>
+    {% if blocks.events %}
+    <div class="w-full ">{% include blocks.events with request=request %}</div>
+    {% endif %}
   </div>
 {% endblock %}

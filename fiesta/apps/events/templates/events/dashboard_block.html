@@ -1,22 +1,23 @@
 {% load i18n %}
-<div class="Dashboard__tiles flex flex-col md:flex-row">
+<div class="Dashboard__tiles flex flex-row md:flex-row">
   <div class="Dashboard__tile Dashboard__tile--dark shadow-2xl bg-primary">
-    <div class="Dashboard__tile__title">Your Events</div>
+    
     {% if request.membership.is_international %}
-
+    <div class="Dashboard__tile__title">Your Events</div>
 
     <div class="Dashboard__tile__value">
-      {% for participating in participations %}
+      {% for participating in users_events %}
       <div>
-        <a href="{% url "events:event-detail" participating.event.id %}">
-        <span class="text-3xl">{{ participating.event.title }}</span>
-        <span class="text-lg text-gray-300">{{ participating.event.start }}</span>
+        <a href="{% url "events:event-detail" participating.id %}">
+        <span class="text-3xl">{{ participating.title }}</span>
+        <span class="text-lg text-gray-300">{{ participating.start }}</span>
         </a>
       </div>
       {% endfor %}
     </div>
 
     {% else %}
+    <div class="Dashboard__tile__title">Upcoming events</div>
     <div class="Dashboard__tile__value">
       {% for event in request.user.events.all %}
       <div>
@@ -27,12 +28,18 @@
       </div>
       {% endfor %}
     </div>
-
+    {% endif %}
+    {% if request.membership.is_local %}
     <div class="Dashboard__tile__actions text-right">
       <a href="{% url "events:add-event" %}"
       class="btn btn-lg btn-outline">Create new event</a>
     </div>
-    {% endif %}
+    {% elif request.membership.is_international %}
+    <div class="Dashboard__tile__actions text-right">
+      <a href="{% url "events:index" %}"
+      class="btn btn-lg btn-outline">Show events</a>
+    </div>
+    {%endif %}
 
   </div>
 </div>

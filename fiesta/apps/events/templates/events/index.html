@@ -19,12 +19,10 @@
   <h1 class="text-3xl font-semibold mb-4">Upcoming Events of {{ request.in_space_of_section }}</h1>
   <ul class="divide-y divide-gray-300" id="events-list" >
     <!-- Event Item -->
-    {% for event in request.in_space_of_section.events.all %}
-    {% if not event.state == event.State.DRAFT %}
+    {% for event in upcoming_events %}
     
-    {% include "events/parts/event_item.html" %}
+      {% include "events/parts/event_item.html" %}
 
-    {% endif %}
     {% endfor %}
   </ul>
 </div>
@@ -34,12 +32,10 @@
   <h1 class="text-3xl font-semibold mb-4">Waiting confirmation</h1>
   <ul class="divide-y divide-gray-300" >
     <!-- Event Item -->
-    {% for event in request.in_space_of_section.events.all %}
-    {% if event.state == event.State.DRAFT %}
+    {% for event in darft_events %}
 
       {% include "events/parts/event_item.html" %}
 
-    {% endif %}
     {% endfor %}
   </ul>
 </div>

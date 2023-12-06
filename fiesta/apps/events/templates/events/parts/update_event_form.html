@@ -4,11 +4,6 @@
 {% load breadcrumbs %}
 {% load i18n %}
 
-{% block buttons_extra %}
-
-{% endblock buttons_extra %}
-
-
 <form action="{% url "events:event-update" event.pk %}" method="post" {% if form.is_multipart %}enctype="multipart/form-data" hx-encoding="multipart/form-data"{% endif %}>
   {% csrf_token %}
 
@@ -19,13 +14,13 @@
   {% endif %}
   {{form}}
 
-  {% block breadcrumbs_right %}
-    <a class="btn btn-success btn-sm btn-outline"
-    href="{% url "events:eventplace-add" event.pk %}"
-    x-data="modal($el.href)"
-    x-bind="bind">{% translate "Add new place" %}</a>
-  {% endblock breadcrumbs_right %}
-
 </form>
+
+{% block buttons_extra %}
+  <a class="btn btn-primary btn-outline mr-6"
+  href="{% url "events:eventplace-add" event.pk %}"
+  x-data="modal($el.href)"
+  x-bind="bind">{% translate "Add new place" %}</a>
+{% endblock buttons_extra %}
 
 

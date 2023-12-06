@@ -1,0 +1,15 @@
+{% extends "fiestatables/page.html" %}
+
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block upper_head %}
+    {% url "events:event-detail" event.pk as url%}
+    {% breadcrumb_push_item_with_url event.title url%}
+    {% trans "Participants" as participants %}
+    {% breadcrumb_push_item participants %}
+{% endblock upper_head %}
+
+{% block main %}
+{{block.super}}
+{% endblock main %}
