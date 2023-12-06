@@ -14,10 +14,10 @@ class EventsIndexView(EnsureInSectionSpaceViewMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Get the user's confirmed participants
-        participations = self.request.user.participants.filter(state=Participant.State.CONFIRMED)
+        participants = Participant.objects.filter(user=self.request.membership.user)
 
-        # Add the confirmed participants to the context
-        context['participations'] = participations
+        events = [participant.event for participant in participants if participant.event]
+
+        context['users_events'] = events
 
         return context

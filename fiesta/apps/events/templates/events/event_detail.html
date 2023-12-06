@@ -99,7 +99,7 @@
 
           <div class="card-actions justify-end">
 
-          <select name="role"  hx-post="{% url 'events:role-change' pk=event.pk pko=oc.pk %}" hx-trigger="change" hx-swap="none">
+          <select class="select select-bordered max-w-xs" name="role"  hx-post="{% url 'events:role-change' pk=event.pk pko=oc.pk %}" hx-trigger="change" hx-swap="none">
               {% for role_value, role_display in organizer_roles %}
                   <option value="{{ role_value }}" {% if oc.role == role_value %}selected{% endif %}>
                       {{ role_display }}
@@ -124,14 +124,13 @@
         {% endfor %}
       </ul>
     </div>
-
-    <div class="card-actions justify-end">
-      <a class="btn btn-primary btn-outline"
-      x-data="modal($el.href)"
-      x-bind="bind"
-      href="{% url "events:organizer-add" event.pk%}">{% trans "Add organizer" %}</a>
-    </div>
   {% endif %}
+  <div class="card-actions justify-end">
+    <a class="btn btn-primary btn-outline"
+    x-data="modal($el.href)"
+    x-bind="bind"
+    href="{% url "events:organizer-add" event.pk%}">{% trans "Add organizer" %}</a>
+  </div>
   </div>
 </div>
 
@@ -142,7 +141,11 @@
   <h1 class="card-title text-base-content"> Event </h1>
     <div class="card-actions justify-end">
       <a href="{% url "events:participants" event.id %}" class="btn btn-primary btn-outline">{% translate "Show participants" %}</a>
-      <a href="{% url "events:event-update" event.id %}" class="btn btn-primary btn-outline">{% translate "Update event" %}</a> 
+      <a href="{% url "events:event-update" event.id %}" class="btn btn-warning btn-outline">{% translate "Update event" %}</a> 
+      <form action="{% url "events:event-delete" event.id %}" method="post" hx-confirm="Are you sure you want to delete the event ?">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-outline" >{% translate "Delete event" %}</button>
+      </form>
     </div>
   </div>
 </div>
@@ -191,12 +194,16 @@
 
           
           {% if request.membership.is_international %}
-          <form action="{% url "events:event-register" event.id %}", method="post">
-            {% csrf_token %}
-            <button type="submit">Register</button>
-          </form>
-          
+          <a class="btn btn-primary btn-outline"
+          hx-post="{% url "events:event-register" event.pk %}"
+          hx-target="#response"
+          hx-indicator="#loading"
+          hx-swap="outerHTML">  
+          {%translate "Register"%}
+          </a>
+          <div id="response"></div>
           {% endif %}
+
         
     </div>
   </div>
@@ -249,10 +256,14 @@
 
 
           {% if request.membership.is_international %}
-            <form action="{% url "events:event-register" event.id %}", method="post">
-              {% csrf_token %}
-              <button type="submit">Register</button>
-            </form>
+            <a class="btn btn-primary btn-outline"
+            hx-post="{% url "events:event-register" event.pk %}"
+            hx-target="#response"
+            hx-indicator="#loading"
+            hx-swap="outerHTML">  
+            {%translate "Register"%}
+            </a>
+            <div id="response"></div>
           {% endif %}
 
       

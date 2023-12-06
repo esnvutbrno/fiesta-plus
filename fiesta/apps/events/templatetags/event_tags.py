@@ -18,6 +18,7 @@ def show_participants(context, event: Event):
         return event.participants.filter(state='confirmed')
     return None
 
+
 @register.simple_tag(takes_context=True)
 def get_price_variants(context, event: Event):
     request: HttpRequest = context["request"]
@@ -29,11 +30,11 @@ def get_price_variants(context, event: Event):
 
 @register.simple_tag(takes_context=True)
 def get_event_fullness(context, event: Event):
-    if event.participants.all().count() <= event.capacity:
+    if event.event_participants.all().count() <= event.capacity:
         return 0
-    elif event.participants.all().count() < event.capacity & event.participants.all().count() > event.capacity/2:
+    elif event.event_participants.all().count() < event.capacity & event.participants.all().count() > event.capacity/2:
         return 1
-    elif event.participants.all().count() >= event.capacity:
+    elif event.event_participants.all().count() >= event.capacity:
         return 2
     
 @register.simple_tag(takes_context=True)
@@ -54,9 +55,10 @@ def is_participant(context, event: Event) -> bool:
 @register.simple_tag(takes_context=True)
 def can_edit(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return is_moc(context, event) or event.author == request.membership.user or request.membership.user.has_perm("events.change_event")
+    return is_moc(context, event) or event.author == request.membership.user or request.membership.is_privileged or request.membership.user.has_perm('events.change_event')
 
 @register.simple_tag(takes_context=True)
 def can_see_participants(context, event: Event) -> bool:
     request: HttpRequest = context["request"]
-    return is_moc(context, event) or event.author == request.membership.user or request.membership.user.has_perm("events.change_event")
+    return is_moc(context, event) or event.author == request.membership.user or request.membership.is_privileged or request.membership.user.has_perm('events.change_event')
+

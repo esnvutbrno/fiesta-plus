@@ -16,7 +16,7 @@ class Participant(BaseModel):
 
     user = models.ForeignKey(
         to="accounts.User",
-        related_name="participants",
+        related_name="event_participants",
         on_delete=models.SET_NULL,
         null=True,
         db_index=True,
@@ -26,7 +26,7 @@ class Participant(BaseModel):
     event = models.ForeignKey(
         to="events.Event",
         on_delete=models.SET_NULL,
-        related_name="participants",
+        related_name="event_participants",
         null=True,
         db_index=True,
         verbose_name=_("event"),
