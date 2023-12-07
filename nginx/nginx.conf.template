@@ -21,11 +21,11 @@ server {
     client_max_body_size 32M;
 
     # wiki static are always served by nginx
-    location ~ ^/static/wiki/(.*) {
-        root /;
-        add_header Cache-Control "public, max-age=31536000";
-        try_files /var/wiki/$1 =404;
-    }
+    # location ~ ^/static/wiki/(.*) {
+    #     root /;
+    #     add_header Cache-Control "public, max-age=31536000";
+    #     try_files /var/wiki/$1 =404;
+    # }
 
     # wiki gh is pass to GH assets
     location ~ ^/static/gh/(.*) {

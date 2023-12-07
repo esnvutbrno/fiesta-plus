@@ -39,18 +39,6 @@ services:
     volumes:
       - ./legacy.sql:/docker-entrypoint-initdb.d/legacy.sql
 
-  elastic:
-    volumes:
-      - ./elastic/elastic.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./conf/elastic/elasticsearch.keystore:/usr/share/elasticsearch/config/elasticsearch.keystore
-      - ./conf/certs:/usr/share/elasticsearch/config/certs
-
-  kibana:
-    volumes:
-      - ./elastic/kibana.yml:/usr/share/kibana/config/kibana.yml
-      - ./conf/certs:/etc/kibana/certs
-
   wikifetcher:
     volumes:
       - ./wiki/:/usr/src/app/
-      - ./conf/certs:/usr/share/certs

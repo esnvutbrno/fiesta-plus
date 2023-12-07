@@ -4,6 +4,41 @@ ARG SENTRY_RELEASE_NAME
 ARG SENTRY_RELEASE_ENVIRONMENT
 
 #
+# wiki renderer image
+#
+FROM ruby:3.0 as wiki-base
+
+RUN apt-get update && \
+    # pip to install docutils, cmake to build github-linguist
+    apt-get install -y python3-pip cmake && \
+    python3 -m pip install docutils && \
+    apt-get remove -y python3-pip && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY ./wiki/Gemfile ./wiki/Gemfile.lock ./
+RUN bundle install
+
+RUN apt-get remove -y cmake && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/src/app
+
+COPY ./wiki/ .
+
+ENTRYPOINT [ "./fetcher.rb" ]
+
+FROM wiki-base as wiki-stable
+
+ENV WIKI_GIT_URL=https://github.com/esnvutbrno/fiesta-plus.wiki.git
+ENV WIKI_STATIC_ASSETS_URL=/static/gh/
+
+ENV WIKI_DB_NAME=/usr/src/db.sqlite3
+ENV WIKI_STATIC_PATH=/usr/src/static
+ENV WIKI_STATIC_URL=/static/wiki/
+
+RUN mkdir -p $WIKI_STATIC_PATH && ./fetcher.rb
+
+#
 # webpack image
 #
 FROM node:18.15.0-slim as webpack-base
@@ -129,10 +164,12 @@ ARG DJANGO_RELEASE_NAME
 ENV DJANGO_RELEASE_NAME=${DJANGO_RELEASE_NAME}
 
 # need production configuration, but not all values are ready in env
-RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input"
+RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input --verbosity 3"
 
 # given by webpack compiled results
 COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
+
+COPY --from=wiki-stable /usr/src/wiki/db/wiki.sqlite3 /usr/src/wiki/db/wiki.sqlite3
 
 # TODO: check opts https://www.uvicorn.org/#command-line-options
 CMD ["python -m gunicorn -b [::]:8000 fiesta.wsgi:application"]
@@ -152,6 +189,7 @@ FROM proxy-base as proxy-stable
 # prepared by webpack and web builds during CD
 COPY --from=webpack-stable /usr/src/build/ /var/build/
 COPY --from=web-stable /usr/src/static/ /var/static/
+COPY --from=wiki-stable /usr/src/wiki/static /var/static/wiki/
 
 ARG STATIC_LOCATION_PATTERN="^/static/(.*)$$"
 ENV STATIC_LOCATION_PATTERN=${STATIC_LOCATION_PATTERN}
