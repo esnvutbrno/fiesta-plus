@@ -32,8 +32,8 @@ FROM wiki-base as wiki-stable
 ENV WIKI_GIT_URL=https://github.com/esnvutbrno/fiesta-plus.wiki.git
 ENV WIKI_STATIC_ASSETS_URL=/static/gh/
 
-ENV WIKI_DB_NAME=/usr/src/db.sqlite3
-ENV WIKI_STATIC_PATH=/usr/src/static
+ENV WIKI_DB_NAME=/usr/src/wiki/db/wiki.sqlite3
+ENV WIKI_STATIC_PATH=/usr/src/wiki/static
 ENV WIKI_STATIC_URL=/static/wiki/
 
 RUN mkdir -p $WIKI_STATIC_PATH && ./fetcher.rb
