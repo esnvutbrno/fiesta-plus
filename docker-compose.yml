@@ -16,7 +16,8 @@ services:
     volumes:
       # for dev and also produp
       - web_media_files:/usr/src/media
-      - wiki_data:/usr/wiki
+      - wiki_db:/usr/src/wiki/db/
+      - wiki_static:/usr/src/wiki/static/wiki/
     environment:
       VIRTUAL_HOST: web.${ROOT_DOMAIN}
       VIRTUAL_PORT: 8000
@@ -33,7 +34,6 @@ services:
       - web
     volumes:
       - web_media_files:/var/media
-      - wiki_data:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       PROXY_HOSTNAME_TARGET: "web"
@@ -100,10 +100,14 @@ services:
       - "4306:3306"
 
   wikifetcher:
-    build: ./wiki
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: wiki-base
     restart: on-failure
     volumes:
-      - wiki_data:/usr/src/static
+      - wiki_db:/usr/src/wiki/db/
+      - wiki_static:/usr/src/wiki/static/
     env_file:
       - .env
       - wiki/.env.base
@@ -114,4 +118,5 @@ volumes:
   webpack_build:
   web_static_files:
   web_media_files:
-  wiki_data:
+  wiki_db:
+  wiki_static:

@@ -24,6 +24,3 @@ services:
       - "443:443"
     volumes:
       - ./conf/certs:/etc/nginx/certs
-
-#  wikifetcher:
-#    profiles: [ ]

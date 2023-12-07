@@ -20,6 +20,7 @@ class DatabaseConfigMixin:
         },
         "wiki": {
             "ENGINE": "django.db.backends.sqlite3",
-            "NAME": "/usr/wiki/wiki.sqlite3",
+            # TODO: pass from ENV
+            "NAME": "/usr/src/wiki/db/wiki.sqlite3",
         },
     }

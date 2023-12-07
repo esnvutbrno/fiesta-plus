@@ -33,7 +33,7 @@ class VersionedImagesFilter < HTML::Pipeline::Filter
   end
 end
 
-WIKI_REPO_PATH = "/usr/src/wiki"
+WIKI_REPO_PATH = "/var/wiki"
 
 FileUtils.rm_rf(WIKI_REPO_PATH)
 FileUtils.rm_rf(File.join(ENV["WIKI_STATIC_PATH"], "*"))
@@ -45,7 +45,7 @@ git = Git.clone(
   :log => Logger.new(STDOUT)
 )
 
-db_file = File.join(ENV["WIKI_STATIC_PATH"], "wiki.sqlite3")
+db_file = File.join(ENV["WIKI_DB_NAME"])
 File.delete(db_file) if File.exist?(db_file)
 
 db = SQLite3::Database.new db_file
@@ -64,6 +64,7 @@ last_revision = git.object("HEAD^").sha
 rich_pipeline = HTML::Pipeline.new [
   HTML::Pipeline::TableOfContentsFilter,
   VersionedImagesFilter,
+#   TODO: does not work with relative paths
   HTML::Pipeline::AbsoluteSourceFilter,
   HTML::Pipeline::AutolinkFilter,
   HTML::Pipeline::EmojiFilter,
