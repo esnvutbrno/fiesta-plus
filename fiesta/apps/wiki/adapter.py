@@ -5,6 +5,8 @@ from typing import TypedDict
 from django.core.exceptions import ObjectDoesNotExist
 from elasticsearch import Elasticsearch, Transport, Urllib3HttpConnection
 
+from apps.wiki import models
+
 
 class Revision(TypedDict):
     at: str
@@ -30,7 +32,7 @@ class SearchPage(TypedDict):
     highlight: list[str]
 
 
-class WikiElastic:
+class ElasticAdapter:
     def __init__(self, client: Elasticsearch):
         self._client = client
 
@@ -109,6 +111,36 @@ class WikiElastic:
         return None
 
 
+class LocalDbAdapter(ElasticAdapter):
+    def _page_for_filename(self, file_name: str, *, base: str = "") -> Page | None:
+        base = f"{base}/" if base and not file_name.startswith("_") else ""
+        return models.Page.objects.using("wiki").get(file__contains=f"{base}{file_name}.").__dict__
+
+    def search(self, term: str) -> list[SearchPage]:
+        results = models.Page.objects.using("wiki").raw(
+            """
+                SELECT
+                    snippet(wiki, 1, '<b>', '</b>', '...', 64) as highlight,
+                    rank as rank,
+                    w.*
+                FROM wiki AS w
+                WHERE content_plain MATCH %s
+                ORDER BY rank;
+            """,
+            [term.strip()],
+        )
+
+        return [
+            SearchPage(
+                source=page.__dict__,
+                highlight=page.highlight,
+                score=page.rank,
+            )
+            for page in results
+            if not page.file.startswith("_")
+        ]
+
+
 class LocalCATrustedTransportation(Transport):
     # TODO: really here?
     class CATrustedConnection(Urllib3HttpConnection):
@@ -124,4 +156,5 @@ es = Elasticsearch(
     transport_class=LocalCATrustedTransportation,
 )
 
-wiki_elastic = WikiElastic(client=es)
+wiki_adapter = LocalDbAdapter(client=es)
+# wiki_adapter = ElasticAdapter(client=es)

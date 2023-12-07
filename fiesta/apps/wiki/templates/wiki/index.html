@@ -32,8 +32,9 @@
 
       {% block main %}
         {{ page.content_html|safe }}
-        <hr class="mt-10">
-        <div class="mt-5 mb-5 text-sm">{{ footer.content_html|safe }}</div>
+        {#        TODO: consider footer display #}
+        {#        <hr class="mt-10">#}
+        {#        <div class="mt-5 mb-5 text-sm">{{ footer.content_html|safe }}</div>#}
       {% endblock main %}
     </main>
 
@@ -48,14 +49,17 @@
         {% endif %}
         <div class="mt-5 text-xs items-center space-y-1 text-gray-600">
           {# TODO: links to conf #}
-          Last revision: {{ page.last_change.name }}
-          <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
-             target="_blank"
-             rel="noreferrer nofollow noopener"
-             class="hover:underline"
-             title="{{ page.last_change.at|date_from_iso|date }}">
-            {{ page.last_change.at|date_from_iso|naturaltime }}
-          </a>
+          {% if page.last_change %}
+            Last revision:
+            {#          {{ page.last_change.name }}#}
+            <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/_compare/{{ page.last_change.parent_sha }}..{{ page.last_change.sha }}"
+               target="_blank"
+               rel="noreferrer nofollow noopener"
+               class="hover:underline"
+               title="{{ page.last_change.at|date_from_iso|date }}">
+              {{ page.last_change.at|date_from_iso|naturaltime }}
+            </a>
+          {% endif %}
           <div class="border-t border-gray-100"></div>
           <a href="https://github.com/esnvutbrno/fiesta-plus/wiki/{{ page.file|strip_file_extension }}/_history"
              target="_blank"
