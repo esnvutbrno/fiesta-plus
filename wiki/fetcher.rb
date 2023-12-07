@@ -33,6 +33,35 @@ class VersionedImagesFilter < HTML::Pipeline::Filter
   end
 end
 
+class AbsoluteSourceFilter < HTML::Pipeline::Filter
+  # same impl except url join -- replaced by concat (because native uri cannot handle relative urls)
+  def call
+    doc.search("img").each do |element|
+      next if element['src'].nil? || element['src'].empty?
+      src = element['src'].strip
+      unless src.start_with? 'http'
+        if src.start_with? '/'
+          base = image_base_url
+        else
+          base = image_subpage_url
+        end
+        element["src"] = base + src
+      end
+    end
+    doc
+  end
+
+  # Private: the base url you want to use
+  def image_base_url
+    context[:image_base_url] or raise "Missing context :image_base_url for #{self.class.name}"
+  end
+
+  # Private: the relative url you want to use
+  def image_subpage_url
+    context[:image_subpage_url] or raise "Missing context :image_subpage_url for #{self.class.name}"
+  end
+end
+
 WIKI_REPO_PATH = "/var/wiki"
 
 FileUtils.rm_rf(WIKI_REPO_PATH)
@@ -64,8 +93,8 @@ last_revision = git.object("HEAD^").sha
 rich_pipeline = HTML::Pipeline.new [
   HTML::Pipeline::TableOfContentsFilter,
   VersionedImagesFilter,
-#   TODO: does not work with relative paths
-  HTML::Pipeline::AbsoluteSourceFilter,
+  # same impl except url join -- replaced by concat (because native uri cannot handle relative urls)
+  AbsoluteSourceFilter,
   HTML::Pipeline::AutolinkFilter,
   HTML::Pipeline::EmojiFilter,
 ]
