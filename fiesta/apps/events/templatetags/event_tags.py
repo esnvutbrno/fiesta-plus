@@ -6,6 +6,7 @@ from apps.events.models import Event, Organizer, Participant
 from apps.events.models.price_variant import EventPriceVariantType
 from apps.plugins.middleware.plugin import HttpRequest
 from django.utils.translation import gettext_lazy as _
+from django.utils.safestring import mark_safe
 
 register = template.Library()
 
@@ -29,13 +30,13 @@ def get_price_variants(context, event: Event):
         return event.price_variants.filter(Q(type=EventPriceVariantType.STANDARD) | Q(type=EventPriceVariantType.FREE))
 
 @register.simple_tag(takes_context=True)
-def get_event_fullness(context, event: Event):
-    if event.event_participants.all().count() <= event.capacity:
-        return 0
-    elif event.event_participants.all().count() < event.capacity & event.participants.all().count() > event.capacity/2:
-        return 1
+def get_event_fullness(context, event: Event):    
+    if event.event_participants.all().count() < event.capacity/2:
+        return mark_safe('<span class="bg-green-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Opened</span>')
+    elif event.event_participants.all().count() < event.capacity & event.event_participants.all().count() > event.capacity/2:
+        return mark_safe('<span class="bg-yellow-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Almost full</span>')
     elif event.event_participants.all().count() >= event.capacity:
-        return 2
+        return mark_safe('<span class="bg-red-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Full</span>')
     
 @register.simple_tag(takes_context=True)
 def is_oc(context, event: Event) -> bool:

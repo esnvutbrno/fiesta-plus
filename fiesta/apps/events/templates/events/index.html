@@ -4,9 +4,10 @@
 {% load event_tags %}
 {% block main %}
 
-<div class="container mx-auto p-6">
-  <h1 class="text-3xl font-semibold mb-4">Your events</h1>
-  <ul class="divide-y divide-gray-300">
+{% if users_events %}
+<div class="container">
+  <h1 class="text-xl font-semibold text-base-content mb-6 border-b-2">Your events</h1>
+  <ul>
     {% for event in users_events %}
 
       {% include "events/parts/event_item.html"%}
@@ -14,10 +15,11 @@
     {% endfor %}
   </ul>
 </div>
+{%endif%}
 
-<div class="container mx-auto p-6">
-  <h1 class="text-3xl font-semibold mb-4">Upcoming Events of {{ request.in_space_of_section }}</h1>
-  <ul class="divide-y divide-gray-300" id="events-list" >
+<div class="container">
+  <h1 class="text-xl font-semibold text-base-content mb-6 border-b-2">Upcoming Events</h1>
+  <ul>
     <!-- Event Item -->
     {% for event in upcoming_events %}
     
@@ -28,9 +30,9 @@
 </div>
 
 {% if request.membership.is_privileged %}
-<div class="container mx-auto p-6">
-  <h1 class="text-3xl font-semibold mb-4">Waiting confirmation</h1>
-  <ul class="divide-y divide-gray-300" >
+<div class="container">
+  <h1 class="text-xl font-semibold text-base-content mb-6 border-b-2">Waiting confirmation</h1>
+  <ul>
     <!-- Event Item -->
     {% for event in darft_events %}
 

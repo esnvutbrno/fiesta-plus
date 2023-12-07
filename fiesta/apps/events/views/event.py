@@ -6,6 +6,7 @@ from django.http import HttpRequest, HttpResponse
 from django.template.loader import render_to_string
 from django.shortcuts import get_object_or_404
 from _operator import attrgetter
+from django.conf import settings
 
 
 from django.contrib.postgres.search import SearchVector
@@ -28,13 +29,14 @@ from apps.events.models.price_variant import EventPriceVariantType
 
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
-from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin
+from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin, EnsureLocalUserViewMixin, EnsureInternationalUserViewMixin
 from ...sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from ...utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb, with_object_breadcrumb
 from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 import datetime
-
+from apps.events.services.participant_validator import ParticipantValidator
+from django.core.exceptions import ValidationError
 
 
 @with_plugin_home_breadcrumb
@@ -184,11 +186,7 @@ class EventKickButtonColumn(tables.TemplateColumn):
         return super().render(record, extra_context={'event': self.event}, *args, **kwargs)
 
 class EventParticipantsTable(tables.Table):
-    created = tables.DateTimeColumn(
-        verbose_name=_("Created at"),
-        format="SHORT_DATETIME_FORMAT",
-        attrs={"th": {"class": "text-center"}},
-    )
+    created = tables.DateTimeColumn(verbose_name=_("Created"))
     user__full_name = tables.Column(
         verbose_name=_("User"),
         accessor="user.get_full_name",
@@ -220,20 +218,18 @@ class EventParticipantsTable(tables.Table):
     class Meta:
         model = Participant
 
-        fields = ("created",)
+        fields = ("created", )
 
         sequence = (
             "user__full_name",
             "event__title",
             "price__amount",
             "state",
-            "kick_button"
+            "kick_button",
+            "created"
         )
 
         empty_text = _("There are no participants")
-
-    def render_created(self, value):
-        return value.strftime("SHORT_DATETIME_FORMAT")
 
     def render_price__name(self, value):
         return str(value)
@@ -284,7 +280,8 @@ class ParticipantsView(
 
 class EventParticipantRegister(
     EnsureInSectionSpaceViewMixin, 
-    View):
+    EnsureInternationalUserViewMixin,
+    CreateView):
 
     model = Participant
     
@@ -292,27 +289,22 @@ class EventParticipantRegister(
         self.event = get_object_or_404(Event, pk=self.kwargs.get("pk"))
         return super().dispatch(request, *args, **kwargs)
     
-    def choose_price(self):
-        if PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.FREE).exists():
-            return PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.FREE).get()
-        elif self.request.user.is_esn_card_holder & PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.WITH_ESN_CARD).exists():
-            return PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.WITH_ESN_CARD).get()
-        elif PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.STANDARD).exists():
-            return PriceVariant.objects.filter(event=self.event, type=EventPriceVariantType.STANDARD).get()
-        return None
-    
+
     def post(self, request, *args, **kwargs):
-        if Participant.objects.filter(user=self.request.user, event=self.event).exists():
-            return HttpResponse("You are already registered for this event.")
-        if self.choose_price() is None:
-            return HttpResponse("You can't register for this event yet.")
-        Participant.objects.create(
+        validator = ParticipantValidator()
+        try:
+            price = validator.register_for_event(self.request.user, self.event)
+            Participant.objects.create(
             created=datetime.datetime.now(),
             user=self.request.user,
             event=self.event,
-            price=self.choose_price()
+            price=price
         )
-        return HttpResponse("Sucsessfully registered for this event.")
+            return HttpResponse("Sucsessfully registered for this event.")
+        except ValidationError as e:
+            
+            return HttpResponse(e.message)
+
     
 class EventParticipantKick(
     EnsurePrivilegedUserViewMixin, 

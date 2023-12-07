@@ -3,10 +3,8 @@ from __future__ import annotations
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from apps.utils.models import BaseModel
-from apps.events.models.price_variant import PriceVariant
-
-
-
+import datetime 
+from django.http import HttpResponse
 
 class Participant(BaseModel):
     created = models.DateTimeField(
@@ -57,12 +55,38 @@ class Participant(BaseModel):
     def __str__(self):
         return f"{self.user} - {self.event}"
 
+    @classmethod
+    def register_for_event(self, user, event, price):
+        """
+        Class method to handle registration for an event.
+        """
+
+        if self.objects.filter(event=event).count() >= event.capacity:
+            return HttpResponse("This event is full.")
+
+
+        if self.objects.filter(user=user, event=event).exists():
+            return HttpResponse("You are already registered for this event.")
+
+        if price is None:
+            return HttpResponse("You can't register for this event yet.")
+
+
+        self.objects.create(
+            created=datetime.datetime.now(),
+            user=user,
+            event=event,
+            price=price,
+            state=self.State.WAITING
+        )
+        return HttpResponse("Successfully registered for this event.")
+    
     class Meta:
         unique_together = (("event", "user"),)
         verbose_name = _("participant")
         verbose_name_plural = _("participants")
         ordering = ["created"]
-
+        
 
 __all__ = ["Participant"]
 

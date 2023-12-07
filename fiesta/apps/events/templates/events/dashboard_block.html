@@ -10,7 +10,7 @@
       <div>
         <a href="{% url "events:event-detail" participating.id %}">
         <span class="text-3xl">{{ participating.title }}</span>
-        <span class="text-lg text-gray-300">{{ participating.start }}</span>
+        <p class="text-lg text-gray-300">{{ participating.start }}</p>
         </a>
       </div>
       {% endfor %}
@@ -23,7 +23,7 @@
       <div>
         <a href="{% url "events:event-detail" event.id %}">
         <span class="text-3xl">{{ event.title }}</span>
-        <span class="text-lg text-gray-300">{{ event.start }}</span>
+        <p class="text-lg text-gray-300">{{ event.start }}</p>
         </a>
       </div>
       {% endfor %}

@@ -2,7 +2,7 @@
 {% load event_tags %}
 
 <a href="{% url 'events:event-detail' event.id %}">
-<div class="card bg-base-100 hover:bg-base-200 shadow-xl rounded-xl mb-6">
+<div class="card card-compact bg-base-100 hover:bg-base-200 shadow-xl rounded-xl mb-6">
 
       <div class="card-body flex flex-row">
 
@@ -13,20 +13,13 @@
         {% endif %}
 
         <div class="flex-grow">
-            <h2 class="text-2xl card-title">{{ event.title }}</h2>
+            <h2 class="text-xl card-title">{{ event.title }}</h2>
             <p class="text-gray-600">{{ event.start.date }}</p>
         </div>
 
         {% if event.state == "published" %}
         <div class="flex-none">
-            {% get_event_fullness event as tmp %}
-            {% if tmp == 0 %}
-            <span class="bg-green-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Registrations opened</span>
-            {% elif tmp == 1 %}
-            <span class="bg-yellow-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Some spots left</span>
-            {% elif tmp == 2 %}
-            <span class="bg-red-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Registrations closed</span>
-            {% endif %}
+            {% get_event_fullness event %}
         </div>
         {% endif %}
     </div>
