@@ -1,23 +1,35 @@
+{% load navigation %}
 {% load socialaccount %}
 {% load static %}
 {% load i18n %}
 {% load navigation %}
 <nav
-  class="navbar px-0"
+  class="navbar px-0 min-h-0"
   x-data="{mobileMenuShown: false, user: false}"
   {# TODO: cannot be so general #}
   {# hx-boost="true" #}
   >
-  <div class="container flex flex-wrap justify-between items-center mx-auto">
-    {% include "fiesta/parts/logo.html" %}
-    <div class="flex items-center md:order-2 relative">
+  <div class="container mx-auto grid auto-cols-auto">
+    {# brand part: ESN Section or Fiesta+ #}
+    <a href="{% get_home_url %}"
+       class="flex flex-row items-baseline text-base-content group">{% include "fiesta/parts/logo.html" %}</a>
+
+    {# user/theme/nav part #}
+    <div class="col-start-3 row-start-1 flex justify-end items-center relative gap-x-2">
       {% include "fiesta/parts/theme_switch.html" %}
       {% include "fiesta/parts/user_status.html" %}
       {% include "fiesta/parts/navigation_toggle.html" %}
     </div>
+
+    {# menu part #}
     {% if not hide_navigation %}
       {% get_navigation_items as items %}
-      {% include "fiesta/parts/navigation_items.html" with item=items %}
+      <div class="col-start-1 col-span-3 md:col-span-1 md:row-start-1 md:col-start-2 md:flex {# has to be here to have specificity over :class #} justify-between items-center"
+           x-data="{expand: undefined}"
+           @click.outside="expand = undefined"
+           :class="mobileMenuShown ? 'block' : 'hidden'">
+        {% include "fiesta/parts/navigation_items.html" with item=items %}
+      </div>
     {% endif %}
   </div>
 </nav>

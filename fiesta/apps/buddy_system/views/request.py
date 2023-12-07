@@ -3,30 +3,33 @@ from __future__ import annotations
 from allauth.account.views import SignupView
 from django.contrib import messages
 from django.contrib.auth import REDIRECT_FIELD_NAME
-from django.contrib.messages.views import SuccessMessageMixin
 from django.db import transaction
-from django.http import Http404, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.http import urlencode
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import CreateView, TemplateView
+from django.views.generic import TemplateView
 
+from apps.accounts.models import UserProfile
 from apps.buddy_system.forms import NewBuddyRequestForm
+from apps.buddy_system.models import BuddySystemConfiguration
+from apps.fiestarequests.views.request import BaseNewRequestView
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.models import SectionMembership, SectionsConfiguration
-from apps.sections.views.mixins.membership import EnsureInternationalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
-class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, TemplateView):
+class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationViewMixin, TemplateView):
     def get(self, request, *args, **kwargs):
         if self.request.membership.is_international:
             return HttpResponseRedirect(reverse("buddy_system:new-request"))
 
-        if self.request.membership.is_local:
+        c: BuddySystemConfiguration = self.configuration
+        if c.matching_policy_instance.can_member_match:
             return HttpResponseRedirect(reverse("buddy_system:matching-requests"))
 
-        raise Http404(_("Nothing to see here"))
+        return HttpResponseRedirect(reverse("buddy_system:index"))
 
 
 class WannaBuddyView(EnsureInSectionSpaceViewMixin, TemplateView):
@@ -90,26 +93,17 @@ class SignUpBeforeEntranceView(
         return response
 
 
-class NewRequestView(
-    EnsureInSectionSpaceViewMixin,
-    EnsureInternationalUserViewMixin,
-    SuccessMessageMixin,
-    CreateView,
-):
-    template_name = "buddy_system/new_buddy_request.html"
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("New buddy request"))
+class NewBuddyRequestView(BaseNewRequestView):
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been successfully created!")
 
     success_url = reverse_lazy("buddy_system:index")
 
     def get_initial(self):
-        return {
-            "responsible_section": self.request.in_space_of_section,
-            "issuer": self.request.user,
+        i = super().get_initial()
+        p: UserProfile = self.request.user.profile_or_none
+        return i | {
+            "interests": p.interests if p else None,
         }
-
-    def form_valid(self, form):
-        # override to be sure
-        form.instance.responsible_section = self.request.in_space_of_section
-        form.instance.issuer = self.request.user
-        return super().form_valid(form)

@@ -14,7 +14,7 @@
            href="{% url "sections:section-members" %}?state=inactive">{{ stats.unconfirmed_members }} unconfirmed</a>
         <span class="Dashboard__tile__desc text-gray-200">{{ stats.alumni }} alumni</span>
       </div>
-      {% if stats.unprocessed_esncard_applications %}
+      {% if stats.esncard_plugin_enabled and stats.unprocessed_esncard_applications %}
         <div class="flex flex-col justify-end">
           <a class="Dashboard__tile__desc text-gray-200 link"
              href="{% url "esncards:applications" %}">
@@ -24,6 +24,10 @@
       {% endif %}
       <div class="flex flex-col items-start md:items-end">
         <span class="Dashboard__tile__value">{{ stats.internationals }} international{{ stats.internationals|pluralize }}</span>
+        {% if stats.unconfirmed_internationals %}
+          <a class="Dashboard__tile__desc text-gray-200 link"
+             href="{% url "sections:section-internationals" %}?state=inactive">{{ stats.unconfirmed_internationals }} unconfirmed</a>
+        {% endif %}
         <span class="Dashboard__tile__desc text-gray-200">{{ stats.internationals_wo_request }} without interaction</span>
       </div>
     </div>

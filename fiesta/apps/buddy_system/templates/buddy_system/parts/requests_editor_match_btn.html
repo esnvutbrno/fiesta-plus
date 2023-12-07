@@ -1,7 +1,11 @@
 {% load i18n %}
-{% if not record.matched_by %}
-  <a class="btn btn-sm btn-outline btn-primary"
-     x-data="modal($el.href)"
-     x-bind="bind"
-     href="{% url "buddy_system:quick-match" record.pk %}">{% trans "Match" %}</a>
-{% endif %}
+<a class="btn btn-xs btn-outline btn-primary whitespace-nowrap"
+   x-data="modal($el.href)"
+   x-bind="bind"
+   href="{% url "buddy_system:quick-match" record.pk %}">
+  {% if record.match %}
+    {% trans "Change buddy" %}
+  {% else %}
+    {% trans "Match" %}
+  {% endif %}
+</a>

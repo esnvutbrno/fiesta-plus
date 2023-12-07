@@ -3,6 +3,7 @@ from __future__ import annotations
 import typing
 from abc import ABCMeta
 from collections.abc import Iterable
+from enum import StrEnum
 from importlib import import_module
 
 from django.apps import AppConfig
@@ -13,9 +14,10 @@ from apps.utils.templatetags.navigation import NavigationItemSpec
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
+    from apps.plugins.models.plugin import Plugin
 
 
-class PluginAppConfig(AppConfig, metaclass=ABCMeta):
+class BasePluginAppConfig(AppConfig, metaclass=ABCMeta):
     """
     Base app config for all pluginable applications.
 
@@ -23,15 +25,42 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
     plugin could be linked to model configuration. Otherwise, no configuration is provided.
     """
 
+    class FeatureState(StrEnum):
+        STABLE = "stable"
+        EXPERIMENTAL = "experimental"
+        DEPRECATED = "deprecated"
+
+    FeatureState.do_not_call_in_templates = True  # django tweak to smooth usage in templates
+
+    # name of plugin
     verbose_name: str
 
+    # emoji for plugin
+    emoji: str = ""
+
+    # short description of plugin
+    description: str = ""
+
+    # model of configuration
     configuration_model: str | None = None
 
+    # login required by default
     login_required = True
 
+    # url names with access without login
     login_not_required_urls: list[str] = []
 
+    # url names with access without membership
     membership_not_required_urls: list[str] = []
+
+    # should the plugin be enforced for all sections?
+    auto_enabled = False
+
+    # controls the plugin_feature_state ribbon as a warning for users
+    feature_state = FeatureState.STABLE
+
+    # order of plugin in navigation
+    order: int = 1000
 
     def reverse(self, viewname, args=None, kwargs=None):
         """URL reverse for urls from this specific app (implicit namespaced)."""
@@ -65,7 +94,7 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         """Defines prefix, under which are all urls included."""
         return self.label.replace("_", "-") + "/"
 
-    def as_navigation_item(self, request: HttpRequest) -> NavigationItemSpec | None:
+    def as_navigation_item(self, request: HttpRequest, bound_plugin: Plugin) -> NavigationItemSpec | None:
         return NavigationItemSpec(
             self.verbose_name,
             f"/{self.url_prefix}",
@@ -74,4 +103,4 @@ class PluginAppConfig(AppConfig, metaclass=ABCMeta):
         )
 
 
-__all__ = ["PluginAppConfig"]
+__all__ = ["BasePluginAppConfig"]

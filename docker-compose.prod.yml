@@ -1,32 +1,26 @@
 version: '3.3'
 services:
   web:
-    command: [ sh, "-c", "python manage.py collectstatic && python manage.py runserver 0.0.0.0:8000" ]
+    build:
+      # collectstatic done be dockerfile
+      target: web-stable
     environment:
       DJANGO_CONFIGURATION: LocalProduction
 
   proxy:
+    build:
+      target: proxy-stable
     command: [ nginx, '-g', 'daemon off;' ]
     environment:
       STATIC_LOCATION_PATTERN: '^/static/(.*)$$'
 
   webpack:
-    command: yarn build
-    environment:
-      NODE_ENV: production
-      PUBLIC_PATH: https://${ROOT_DOMAIN}/static/
+    profiles:
+      - do-not-start
 
   dockerproxy:
     ports:
       - "80:80"
       - "443:443"
-    # TODO: figure out before deployment, whereever/where should be certs stored
     volumes:
       - ./conf/certs:/etc/nginx/certs
-
-  # remove profiles so production env does have filled elastic search
-#  elastic:
-#    profiles: [ ]
-
-#  wikifetcher:
-#    profiles: [ ]

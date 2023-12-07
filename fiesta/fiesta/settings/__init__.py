@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import dj_database_url
 from configurations import Configuration
-from configurations.values import DatabaseURLValue, Value
+from configurations.values import SecretValue, Value
 
 from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
 from .db import DatabaseConfigMixin
 from .files import FilesConfigMixin, S3ConfigMixin
-from .logging import LoggingConfigMixin
+from .logging import LoggingConfigMixin, SentryConfigMixin
+from .notifications import SmtpMailerConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
 from .templates import TemplatesConfigMixin
@@ -52,13 +54,30 @@ class LocalProduction(Base):
 
     ROOT_DOMAIN = "fiesta.test"
 
+    USE_WEBPACK_INTEGRITY = False
 
-class Production(S3ConfigMixin, Base):
+
+class Production(
+    SmtpMailerConfigMixin,
+    S3ConfigMixin,
+    SentryConfigMixin,
+    Base,
+):
     DEBUG = False
 
     ROOT_DOMAIN = Value(environ_required=True)
 
-    DATABASES = DatabaseURLValue(environ_prefix="DJANGO")
+    DATABASE_URL = SecretValue(environ_prefix="DJANGO")
+
+    @property
+    def DATABASES(self):
+        return {
+            "default": dj_database_url.parse(self.DATABASE_URL),
+            "wiki": DatabaseConfigMixin.DATABASES["wiki"],
+        }
+
+    ENVIRONMENT_NAME = Value(default="production")
+    ENVIRONMENT_COLOR = Value(default="#7b3ff4")
 
     def STORAGES(self):
         return {

@@ -3,8 +3,9 @@ from __future__ import annotations
 from django.db import models
 from django.db.models import Count, OuterRef, Subquery
 from django.db.models.functions import Coalesce
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
-from django_tables2 import Column, Table, TemplateColumn
+from django_tables2 import Column, Table
 
 from apps.buddy_system.models import BuddyRequest
 from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
@@ -12,7 +13,7 @@ from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.universities.models import Faculty
-from apps.utils.breadcrumbs import with_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
 class BuddyStatsFilterset(BaseFilterSet):
@@ -29,7 +30,7 @@ class BuddyStatsFilterset(BaseFilterSet):
         qs = super().qs
 
         request_counting_qs = BuddyRequest.objects.filter(
-            matched_by__profile__home_faculty=OuterRef("pk"),
+            match__matcher_faculty=OuterRef("pk"),
         )
 
         # TODO: weird, filtering via self.filters keeps lookup_expr as exact
@@ -43,9 +44,7 @@ class BuddyStatsFilterset(BaseFilterSet):
         return qs.annotate(
             matched_buddy_requests=Coalesce(
                 Subquery(
-                    request_counting_qs.values("matched_by__profile__home_faculty")
-                    .annotate(count=Count("pk"))
-                    .values("count"),
+                    request_counting_qs.values("match__matcher_faculty").annotate(count=Count("pk")).values("count"),
                     output_field=models.IntegerField(),
                 ),
                 0,
@@ -54,22 +53,26 @@ class BuddyStatsFilterset(BaseFilterSet):
 
 
 class BuddyStatsTable(Table):
-    abbr = Column(verbose_name=_("Faculty"), attrs=dict(td=dict(title=lambda record: record.name)))
-    matched_buddy_requests = Column(verbose_name=_("Matched requests"))
-
-    actions = TemplateColumn(template_name="sections/parts/section_stats_buddy_btn.html")
+    university = Column(
+        verbose_name=_("University"), accessor="university.name", attrs=dict(td=dict(title=lambda record: record.name))
+    )
+    faculty = Column(verbose_name=_("Faculty"), accessor="abbr", attrs=dict(td=dict(title=lambda record: record.name)))
+    matched_buddy_requests = Column(
+        verbose_name=_("Matched requests"),
+        linkify=lambda record: reverse("buddy_system:requests") + f"?matcher_faculty={record.pk}",
+    )
 
     class Meta:
         model = Faculty
-        fields = ("abbr",)
 
-        sequence = (
-            "abbr",
-            "...",
+        fields = (
+            "university",
+            "faculty",
+            "matched_buddy_requests",
         )
 
 
-@with_breadcrumb(_("Section"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Statistics"))
 class SectionStatsView(EnsurePrivilegedUserViewMixin, EnsureInSectionSpaceViewMixin, FiestaTableView):
     model = Faculty

@@ -4,6 +4,8 @@
 {% load i18n %}
 {% load breadcrumbs %}
 
+{% block breadcrumbs_container %}{% endblock %}
+
 {% block main %}
   <div>
     <img src="{% static "buddy-system/buddies-1.svg" %}" alt="buddies" class="mx-auto w-2/5 mt-8">
@@ -19,7 +21,7 @@
            href="{% url "buddy_system:matching-requests" %}">{% trans "Show buddy requests" %}</a>
       {% else %}
         <div class="alert alert-info">
-          {% trans "Wait for match by coordinator" %}
+          {% trans "Please, wait for match by coordinator." %}
           {# TODO: display matches or link to them #}
         </div>
       {% endif %}

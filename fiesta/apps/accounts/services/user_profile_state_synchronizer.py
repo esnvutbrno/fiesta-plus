@@ -1,11 +1,28 @@
 from __future__ import annotations
 
+import functools
+import logging
+from contextlib import contextmanager
+
 from django.core.exceptions import ValidationError
 from django.forms import model_to_dict
 
-from apps.accounts.forms.profile import UserProfileForm
+from apps.accounts.forms.profile import FIELDS_FROM_USER
+from apps.accounts.forms.profile_factory import UserProfileFormFactory
 from apps.accounts.models import UserProfile
 from apps.sections.models import SectionMembership, SectionsConfiguration
+
+logger = logging.getLogger(__name__)
+
+
+def _if_enabled(func):
+    @functools.wraps(func)
+    def wrapper(self, *args, **kwargs):
+        if self.ENABLED:
+            return func(self, *args, **kwargs)
+        return None
+
+    return wrapper
 
 
 class UserProfileStateSynchronizer:
@@ -14,8 +31,10 @@ class UserProfileStateSynchronizer:
     regarding AccountsConfiguration for each Section.
     """
 
-    @staticmethod
-    def on_user_profile_update(profile: UserProfile):
+    ENABLED = True
+
+    @_if_enabled
+    def revalidate_user_profile(self, profile: UserProfile):
         """
         User profile of user was updated, so it's needed to resolve new state for profile.
 
@@ -26,10 +45,18 @@ class UserProfileStateSynchronizer:
         final_state = UserProfile.State.COMPLETE
 
         # UserProfile form is here as validator
-        form_class = UserProfileForm.for_user(user=profile.user)
+        form_class = UserProfileFormFactory.for_user(user=profile.user)
         form = form_class(
             instance=profile,
-            data=model_to_dict(profile, form_class._meta.fields, form_class._meta.exclude),
+            data=model_to_dict(
+                profile,
+                form_class.base_fields,
+                form_class._meta.exclude,
+            )
+            | model_to_dict(
+                profile.user,
+                FIELDS_FROM_USER,
+            ),
         )
 
         # make the form bounded, so it thinks it¨s connected to data
@@ -41,41 +68,48 @@ class UserProfileStateSynchronizer:
             # for this specific accounts conf, profile is not OK,
             # so final state leds to incomplete
             final_state = UserProfile.State.INCOMPLETE
+            logger.info("Profile is not valid: %s", form.errors)
 
         try:
             # validate also model itself
             profile.full_clean()
-        except ValidationError:
+        except ValidationError as e:
+            logger.info("Profile is not valid: %s", e)
             final_state = UserProfile.State.INCOMPLETE
 
         profile.state = final_state
-        profile.save(update_fields=["state"], skip_hooks=True)
+        profile.enforce_revalidation = False
+        profile.save(update_fields=["state", "enforce_revalidation"], skip_hooks=True)
 
-    @classmethod
-    def on_accounts_configuration_update(cls, conf: SectionsConfiguration):
+    @_if_enabled
+    def on_accounts_configuration_update(self, conf: SectionsConfiguration):
         """
-        After change of Accounts configuration, checks all COMPLETED profiles if they're fine for new configuration.
-        If not, profile is set to UNCOMPLETED.
-        Implements only change to more strict conditions, which is O(n).
-
-        Implementation with less strict conditions leads to O(n^2).
+        After change of Accounts configuration, mark all related user profiles for revalidation.
         """
-        # for each connected user profile
-        for profile in UserProfile.objects.filter(
+        # for each connected user profile enforce revalidation
+        UserProfile.objects.filter(
             user__memberships__section__plugins__configuration=conf,
             state=UserProfile.State.COMPLETE,
-        ):
-            cls.on_user_profile_update(profile=profile)
+        ).update(enforce_revalidation=True)
 
-    @classmethod
-    def on_membership_update(cls, membership: SectionMembership):
+    @_if_enabled
+    def on_membership_update(self, membership: SectionMembership):
         try:
             # membership could be created for user without profile (usually the first one membership)
             profile: UserProfile = membership.user.profile
         except UserProfile.DoesNotExist:
             return None
 
-        return cls.on_user_profile_update(profile=profile)
+        return self.revalidate_user_profile(profile=profile)
+
+    @contextmanager
+    def without_profile_revalidation(self):
+        prev = self.ENABLED
+        self.ENABLED = False
+        yield
+        self.ENABLED = prev
 
 
-__all__ = ["UserProfileStateSynchronizer"]
+synchronizer = UserProfileStateSynchronizer()
+
+__all__ = ["synchronizer"]

@@ -1,3 +1,4 @@
+{% load release %}
 {% load utils %}
 {% load breadcrumbs %}
 {% load static %}
@@ -9,7 +10,22 @@
   >
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="initial-scale=1,width=device-width">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+
+    <meta name="description"
+          content="Fiesta+ is a new generation of your ESN section assistant – includes a buddy system, member management, section statistics and other features to run your section even more easily.">
+
+    {% static "og.png" as og_url %}
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="{% build_absolute_uri %}" />
+    <meta property="og:site_name" content="Fiesta+" />
+    <meta property="og:description"
+          content="Fiesta+ is a new generation of your ESN section assistant – includes a buddy system, member management, section statistics and other features to run your section even more easily." />
+    <meta property="og:image" content="{% build_absolute_uri og_url %}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {# og:title defined bellow #}
 
     {% block upper_head %}
     {% endblock upper_head %}
@@ -17,12 +33,21 @@
     {% block head_title %}
       {% breadcrumb_items as items %}
       {% if items|length_is:0 %}
-        <title>Buena Fiesta</title>
+        <title>Fiesta+</title>
+        <meta property="og:title" content="Fiesta+" />
+      {% elif request.in_space_of_section %}
+        <title>{{ items|join_breadcrumbs }} · {{ request.in_space_of_section }}</title>
+        <meta property="og:title"
+              content="{{ items|join_breadcrumbs }} · {{ request.in_space_of_section }}" />
       {% else %}
-        <title>{{ items|join_breadcrumbs }} · Buena Fiesta</title>
+        <title>{{ items|join_breadcrumbs }} · Fiesta+</title>
+        <meta property="og:title" content="{{ items|join_breadcrumbs }} · Fiesta+" />
       {% endif %}
     {% endblock head_title %}
-    <link rel="shortcut icon" href="{% static 'logo.svg' %}" />
+    <link rel="shortcut icon" href="{% static 'single-toucan.svg' %}" />
+
+    {% sentry_js_loader_url as sentry_js_loader_url %}
+    {% if sentry_js_loader_url %}<script src="{{ sentry_js_loader_url }}" crossorigin="anonymous"></script>{% endif %}
     {% render_bundle 'main' 'js' attrs='defer' %}
     {% render_bundle 'main' 'css' %}
     {% django_htmx_script %}
@@ -36,7 +61,7 @@
     {% block body %}
       {% include "fiesta/parts/messages.html" %}
       <div class="sticky top-0 z-20 bg-white dark:bg-base-300">
-        <header class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto w-full px-4 sm:px-2">
+        <header class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto w-full px-4">
 
           {% block header_container %}
             {% include "fiesta/parts/header.html" %}
@@ -54,12 +79,15 @@
         {% endblock breadcrumbs_container %}
       </div>
 
+      {% if request.plugin and request.user.is_authenticated %}
+        {% include "plugins/feature_state_ribbon.html" %}
+      {% endif %}
+
       {% block main_container %}
         <div class="max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto mb-auto w-full">
 
           {% block main_columns %}
-            <main class="p-2 pb-4">
-
+            <main class="p-4">
               {% block main %}
               {% endblock main %}
             </main>
@@ -75,6 +103,7 @@
       <div class="border border-gray-50"></div>
       {% include "fiesta/parts/footer.html" %}
     {% endblock body %}
+    {# TODO: modal is now replaced by native html5 dialog, so we can probably drop this after checking all usages of modal #}
     {% include "fiesta/parts/modal.html" %}
   </body>
 </html>

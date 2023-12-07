@@ -1,9 +1,13 @@
 from __future__ import annotations
 
 from django.contrib import admin
+from django.db.models import Prefetch
+from django.urls import reverse
+from django.utils.html import format_html, format_html_join
 from django.utils.translation import gettext_lazy as _
 
 from ..plugins.admin import BaseChildConfigurationAdmin
+from ..plugins.models import Plugin
 from .models import Section, SectionMembership, SectionsConfiguration, SectionUniversity
 
 
@@ -21,11 +25,48 @@ class SectionsConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(Section)
 class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "country", "space_slug", "all_universities", "memberships_count", "system_state")
+    list_display = (
+        "name",
+        "country",
+        "space_slug",
+        "all_universities",
+        "all_plugins",
+        "memberships_count",
+        "system_state",
+    )
     list_filter = (("country", admin.AllValuesFieldListFilter), "system_state")
 
+    list_editable = ("system_state",)
+
     def get_queryset(self, request):
-        return super().get_queryset(request).prefetch_related("memberships", "universities")
+        return (
+            super()
+            .get_queryset(request)
+            .prefetch_related(
+                "memberships",
+                "universities",
+                Prefetch("plugins", queryset=Plugin.objects.exclude(state=Plugin.State.DISABLED)),
+            )
+        )
+
+    @admin.display(
+        description=_("Plugins"),
+    )
+    def all_plugins(self, obj: Section):
+        return format_html(
+            "<ul>{}</ul>",
+            format_html_join(
+                "\n",
+                "<li><a href='{}'>{}</a></li>",
+                (
+                    (
+                        reverse("admin:plugins_plugin_change", args=(p.pk,)),
+                        p,
+                    )
+                    for p in obj.plugins.all()
+                ),
+            ),
+        )
 
     @admin.display(
         description=_("Memberships"),
@@ -37,7 +78,14 @@ class SectionAdmin(admin.ModelAdmin):
         description=_("Universities"),
     )
     def all_universities(self, obj: Section):
-        return ", ".join(map(str, obj.universities.all()))
+        return format_html(
+            "<ul>{}</ul>",
+            format_html_join(
+                "\n",
+                "<li>{}</li>",
+                ((p,) for p in obj.universities.all()),
+            ),
+        )
 
     class SectionUniversityInline(admin.StackedInline):
         model = SectionUniversity
@@ -69,10 +117,9 @@ class SectionMembershipAdmin(admin.ModelAdmin):
         "user__username",
         "user__first_name",
         "user__last_name",
-        "user__profile__home_faculty__name",
-        "user__profile__home_faculty__university__name",
-        "user__profile__home_university__name",
-        "user__profile__guest_faculty__university__name",
+        "user__profile__faculty__name",
+        "user__profile__faculty__university__name",
+        "user__profile__university__name",
         "section__name",
         "section__universities__name",
     )

@@ -1,22 +1,23 @@
 from __future__ import annotations
 
-import uuid
-
-from django.contrib import messages
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.utils.translation import gettext as _
+from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
-from django.views.generic.detail import BaseDetailView
-from django_htmx.http import HttpResponseClientRedirect
 
-from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
-from apps.files.views import NamespacedFilesServeView
+from apps.buddy_system.forms import BuddyRequestMatchForm
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
+from apps.fiestarequests.views.matching import BaseTakeRequestView
+from apps.pickup_system.models.files import BaseIssuerPictureServeView, BaseMatcherPictureServeView
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
+from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
 
 
+@with_plugin_home_breadcrumb
+@with_breadcrumb(_("Waiting Requests"))
 class MatchingRequestsView(
     EnsureInSectionSpaceViewMixin,
     EnsureLocalUserViewMixin,
@@ -38,13 +39,17 @@ class MatchingRequestsView(
         )
 
 
-class TakeBuddyRequestView(
-    EnsureInSectionSpaceViewMixin,
-    EnsureLocalUserViewMixin,
+class MatchBuddyRequestFormView(
     PermissionRequiredMixin,
-    PluginConfigurationViewMixin[BuddySystemConfiguration],
-    BaseDetailView,
+    BaseTakeRequestView,
 ):
+    match_model = BuddyRequestMatch
+    form_class = BuddyRequestMatchForm
+
+    form_url = "buddy_system:match-buddy-request"
+    success_url = reverse_lazy("buddy_system:my-buddies")
+    buddy_request: BuddyRequest
+
     def has_permission(self):
         return self.configuration.matching_policy_instance.can_member_match
 
@@ -54,26 +59,19 @@ class TakeBuddyRequestView(
             membership=self.request.membership,
         )
 
-    def post(self, request, pk: uuid.UUID):
-        BuddyRequest.objects.match_by(
-            request=self.get_object(),
-            matcher=self.request.user,
-        )
 
-        messages.success(request, _("Request successfully matched!"))
-        # TODO: target URL?
-        return HttpResponseClientRedirect("/")
+class ServeFilesFromBuddiesMixin:
+    @classmethod
+    def get_request_queryset(cls, request: HttpRequest):
+        return request.membership.section.buddy_system_requests
 
 
-class ProfilePictureServeView(
-    PluginConfigurationViewMixin[BuddySystemConfiguration],
-    NamespacedFilesServeView,
+class IssuerPictureServeView(ServeFilesFromBuddiesMixin, BaseIssuerPictureServeView):
+    ...
+
+
+class MatcherPictureServeView(
+    ServeFilesFromBuddiesMixin,
+    BaseMatcherPictureServeView,
 ):
-    def has_permission(self, request: HttpRequest, name: str) -> bool:
-        # is the file in requests, for whose is the related section responsible?
-        related_requests = request.membership.section.buddy_system_requests.filter(issuer__profile__picture=name)
-
-        # does have the section enabled picture displaying?
-        return (related_requests.exists() and self.configuration and self.configuration.display_issuer_picture) or (
-            related_requests.filter(matched_by=request.user, state=BuddyRequest.State.MATCHED).exists()
-        )
+    ...

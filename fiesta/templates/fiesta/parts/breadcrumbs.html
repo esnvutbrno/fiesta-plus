@@ -1,5 +1,5 @@
 {% load breadcrumbs %}
-<nav class="flex my-1" aria-label="Breadcrumb" hx-boost="true">
+<nav class="my-1 mr-1" aria-label="Breadcrumb">
   <ol class="inline-flex items-center space-x-1 md:space-x-3">
     {% breadcrumb_items as items %}
     {% for item in items %}
@@ -7,8 +7,8 @@
         <div class="inline-flex items-center">
           {% if forloop.first %}
             <a href="{{ item.url }}"
-               class="inline-flex items-center text-sm font-medium text-base-content hover:text-primary-focus">
-              <svg class="mr-2 w-6 h-6"
+               class="inline-flex items-center text-xs md:text-sm font-medium text-base-content hover:text-primary whitespace-nowrap">
+              <svg class="mr-2 w-4 h-4 md:w-6 md:h-6"
                    fill="currentColor"
                    viewBox="0 0 22 20"
                    xmlns="http://www.w3.org/2000/svg">
@@ -18,7 +18,7 @@
               {{ item }}
             </a>
           {% else %}
-            <svg class="w-6 h-6 text-gray-400"
+            <svg class="w-4 h-4 md:w-6 md:h-6 text-base-content"
                  fill="currentColor"
                  viewBox="0 0 20 20"
                  xmlns="http://www.w3.org/2000/svg">
@@ -26,7 +26,7 @@
               </path>
             </svg>
             <a href="{{ item.url }}"
-               class="ml-1 text-sm font-medium md:ml-2 text-base-content hover:text-primary-focus">{{ item.title }}</a>
+               class="ml-1 font-medium md:ml-2 text-base-content hover:text-primary text-xs md:text-sm">{{ item.title }}</a>
           {% endif %}
         </div>
       </li>

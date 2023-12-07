@@ -4,7 +4,7 @@ default_language_version:
 repos:
   # basic hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -36,9 +36,9 @@ repos:
         name: check security by Bandit
         args: [ '-iii', '-ll' ]
 
-  - repo: https://github.com/charliermarsh/ruff-pre-commit
+  - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.0.275'
+    rev: 'v0.1.6'
     hooks:
       - id: ruff
         name: lint by Ruff
@@ -46,14 +46,14 @@ repos:
 
   # uncompromise python formatter
   - repo: https://github.com/psf/black
-    rev: 23.3.0
+    rev: 23.11.0
     hooks:
       - id: black
         name: format by black
         exclude: ^.*\b(migrations)\b.*$
 
   - repo: https://github.com/Riverside-Healthcare/djlint
-    rev: 'v1.31.1'  # replace with the latest tag on GitHub
+    rev: 'v1.34.0'  # replace with the latest tag on GitHub
     hooks:
       - id: djlint-django
         entry: djlint  --reformat

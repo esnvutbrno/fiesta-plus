@@ -20,7 +20,7 @@ class ESNcardApplicationForm(BaseModelForm):
         self.fields["university"].disabled = True
 
         self.initial["section_name"] = self.initial["section"].name
-        self.initial["university_name"] = self.initial["university"].name
+        self.initial["university_name"] = self.initial["university"].name if self.initial["university"] else None
 
     class Meta:
         model = ESNcardApplication

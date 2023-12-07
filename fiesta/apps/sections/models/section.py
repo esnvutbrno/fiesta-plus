@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 import typing
 
 from _operator import attrgetter
@@ -12,7 +13,7 @@ from django_countries.fields import CountryField
 from apps.dashboard.apps import DashboardConfig
 from apps.pages.apps import PagesConfig
 from apps.plugins.models import Plugin
-from apps.plugins.plugin import PluginAppConfig
+from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugins_mapped_to_class
 from apps.sections.models.managers.section import SectionsManager
 from apps.utils.models import BaseTimestampedModel
@@ -21,6 +22,8 @@ from apps.utils.models.validators import validate_plain_slug_lowercase
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
     from apps.sections.models import SectionMembership
+
+logger = logging.getLogger(__name__)
 
 
 class Section(BaseTimestampedModel):
@@ -81,12 +84,19 @@ class Section(BaseTimestampedModel):
     def __str__(self):
         return self.name
 
-    def section_base_url(self, request: HttpRequest):
+    def section_base_url(self, request: HttpRequest | None):
         site = get_current_site(request)
 
         return f"//{self.space_slug}.{site.domain}"
 
     def section_home_url(self, for_membership: SectionMembership = None) -> str | None:
+        """
+        Returns home URL page of a section, if available:
+            - for non-members, it's always pages (if enabled, available for a current role and has default page)
+            - for members, it's always dashboard (if available and enabled for a current role)
+            - otherwise, None
+        """
+        # TODO: refactor to share code from CheckEnabledPluginsViewMixin
         plugins = (
             self.enabled_plugins_for_privileged
             if for_membership and for_membership.is_privileged
@@ -95,17 +105,27 @@ class Section(BaseTimestampedModel):
 
         available_plugins = tuple(map(attrgetter("app_label"), plugins))
 
-        pages_app = all_plugins_mapped_to_class().get(PagesConfig)
-        dashboard_app = all_plugins_mapped_to_class().get(DashboardConfig)
+        pages_app: PagesConfig | None = all_plugins_mapped_to_class().get(PagesConfig)
+        dashboard_app: DashboardConfig | None = all_plugins_mapped_to_class().get(DashboardConfig)
 
-        target_app: PluginAppConfig | None = None
+        target_app: BasePluginAppConfig | None = None
 
         if for_membership and dashboard_app and dashboard_app.label in available_plugins:
+            # in active membership, dashboard is always preferred
             target_app = dashboard_app
         elif not for_membership and pages_app and pages_app.label in available_plugins:
-            target_app = pages_app
+            # for non-members, pages are preferred (if available)
+            has_default_page = self.pages.filter(default=True).exists()
+            if has_default_page:
+                target_app = pages_app
 
-        # TODO: what to do if user is logged and dashboard is not available?
+        if not target_app:
+            logger.warning(
+                "No home URL found for section %s to membership %s.",
+                self,
+                for_membership,
+            )
+
         return f"/{target_app.url_prefix}" if target_app else None
 
     # prefetched for request.in_space_of_section
@@ -116,6 +136,7 @@ class Section(BaseTimestampedModel):
 
     # only typing of related manager
     buddy_system_requests: models.QuerySet
+    pickup_system_requests: models.QuerySet
 
 
 class SectionUniversity(BaseTimestampedModel):
@@ -123,12 +144,14 @@ class SectionUniversity(BaseTimestampedModel):
         "sections.Section",
         on_delete=models.RESTRICT,
         verbose_name=_("ESN section"),
+        related_name="section_universities",
         db_index=False,
     )
     university = models.ForeignKey(
         "universities.University",
         on_delete=models.CASCADE,
         verbose_name=_("university"),
+        related_name="university_sections",
         db_index=False,
     )
 

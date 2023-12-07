@@ -22,8 +22,8 @@ class MatchingPolicyProtocol(typing.Protocol):
         return qs.filter(self._base_filter(membership=membership)).select_related(
             "issuer",
             "issuer__profile",
-            "issuer__profile__guest_faculty",
-            "issuer__profile__home_university",
+            "issuer__profile__faculty",
+            "issuer__profile__university",
         )
 
     def on_created_request(
@@ -39,7 +39,7 @@ class MatchingPolicyProtocol(typing.Protocol):
         return Q(
             responsible_section=membership.section,
             state=BuddyRequest.State.CREATED,
-            matched_by=None,  # to be sure
+            match__isnull=True,  # to be sure
         )
 
 
@@ -57,9 +57,9 @@ class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
     can_member_match = True
 
 
-class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
+class ManualWithSameFacultyMatchingPolicy(MatchingPolicyProtocol):
     id = "same-faculty"
-    title = _("Restricted to same faculty")
+    title = _("Manual by members with restriction to same faculty")
     description = _("Matching is done manually by members themselves, but limited to the same faculty.")
     can_member_match = True
 
@@ -69,7 +69,7 @@ class SameFacultyMatchingPolicy(MatchingPolicyProtocol):
         member_profile: UserProfile = membership.user.profile_or_none
 
         return qs.filter(self._base_filter(membership=membership)).filter(
-            issuer__profile__guest_faculty=member_profile.home_faculty,
+            issuer_faculty=member_profile.faculty,
         )
 
 
@@ -97,8 +97,9 @@ class MatchingPoliciesRegister:
     AVAILABLE_POLICIES = [
         ManualByEditorMatchingPolicy,
         ManualByMemberMatchingPolicy,
-        SameFacultyMatchingPolicy,
-        LimitedSameFacultyMatchingPolicy,
+        ManualWithSameFacultyMatchingPolicy,
+        # TODO: make it working
+        # LimitedSameFacultyMatchingPolicy,
         # AutoMatchingPolicy
     ]
 

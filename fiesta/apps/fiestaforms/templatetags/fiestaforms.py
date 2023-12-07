@@ -31,6 +31,7 @@ def field_modifier(bf: BoundField):
         "select": "Forms__field--select",
         "text": "Forms__field--text",
         "textarea": "Forms__field--textarea",
+        "radio": "Forms__field--radio",
         "unknown": "Forms__field--unknown",
     }.get(bf_type(bf))
 
@@ -48,8 +49,10 @@ def as_widget_field(bf: BoundField):
         "text": "Forms__text",
         "url": "Forms__text",
         "textarea": "Forms__textarea",
+        "number": "Forms__number",
         "date": "Forms__date",
         "datetime-local": "Forms__datetime-local",
+        "radio": "Forms__radio",
         "unknown": "Forms__unknown",
     }
     return bf.as_widget(attrs={"class": f"Forms__input {ext_class[bf_type(bf)]}"})

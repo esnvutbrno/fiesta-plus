@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
-from ..plugin import PluginAppConfig
+from ..plugin import BasePluginAppConfig
 from ..utils import all_plugins_as_choices
 from .managers import PluginManager
 from apps.utils.models import BaseTimestampedModel
@@ -24,6 +24,7 @@ class Plugin(BaseTimestampedModel):
         default=State.ENABLED,
         max_length=16,
         verbose_name=_("plugin state"),
+        db_index=True,
         help_text=_(
             "Current state of plugin - affects, if plugin could be displayed by "
             "international/member/editor/admin/at all."
@@ -64,19 +65,22 @@ class Plugin(BaseTimestampedModel):
 
         unique_together = (("app_label", "section"),)
 
-    def clean(self) -> None:
-        super().clean()
+        ordering = ("section", "app_label")
+
+    def clean_fields(self, exclude=None) -> None:
+        if exclude and "configuration" in exclude:
+            return super().clean_fields(exclude=exclude)
 
         if not self.configuration and not self.app_config.configuration_model:
             # not needed and not filled
-            return
+            return None
 
         if self.configuration and not self.app_config.configuration_model:
             raise ValidationError({"configuration": _("Selected plugin does not support configuration.")})
 
         if self.app_config.configuration_model and not self.configuration:
             raise ValidationError(
-                {"configuration": _("Selected plugin does requires configuration.")},
+                {"configuration": _("Selected plugin does require configuration.")},
                 code="required",
             )
 
@@ -97,12 +101,13 @@ class Plugin(BaseTimestampedModel):
                     )
                 }
             )
+        return None
 
     def __str__(self):
         return f"{self.get_app_label_display()}: {self.get_state_display()}"
 
     @property
-    def app_config(self) -> PluginAppConfig:
+    def app_config(self) -> BasePluginAppConfig:
         return apps.app_configs[self.app_label]
 
 

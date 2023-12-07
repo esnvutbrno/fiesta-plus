@@ -7,11 +7,26 @@ from django_lifecycle import AFTER_SAVE, hook
 from apps.plugins.models import BasePluginConfiguration
 
 FLAG_HELP_TEXT = _(
-    "Flag if field is needed to fill in user profile: True=is required, False=is optional, None=not available"
+    "Flag if field is needed to fill in user profile: "
+    "Yes=field is required, No=field is optional, Unknown=field is not available"
 )
 
 
 class SectionsConfiguration(BasePluginConfiguration):
+    required_university = BooleanField(
+        verbose_name=_("required university"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
+    required_faculty = BooleanField(
+        verbose_name=_("required faculty"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
     required_nationality = BooleanField(
         verbose_name=_("required nationality"),
         default=None,
@@ -63,9 +78,9 @@ class SectionsConfiguration(BasePluginConfiguration):
 
     @hook(AFTER_SAVE)
     def on_save(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
-        UserProfileStateSynchronizer.on_accounts_configuration_update(conf=self)
+        synchronizer.on_accounts_configuration_update(conf=self)
 
 
 __all__ = ["SectionsConfiguration"]

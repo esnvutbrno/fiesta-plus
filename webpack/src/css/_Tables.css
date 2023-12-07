@@ -3,11 +3,16 @@
 @tailwind utilities;
 
 .table-container {
-    @apply overflow-hidden shadow-md sm:rounded-lg flex flex-col items-center;
+    @apply
+        /*overflow-hidden*/
+        overflow-x-auto
+        shadow sm:rounded-lg
+        /*flex flex-col items-center*/
+    ;
 }
 
 .table-container table {
-    @apply min-w-full table table-compact;
+    @apply min-w-full table table-sm;
 }
 
 .table-container table tbody a {
@@ -40,8 +45,14 @@
 
 
 /* TODO: refactor pagination to btn-group */
+.table-container .pagination-container {
+    @apply w-full flex flex-row justify-center items-center;
+}
+
 .table-container ul.pagination {
-    @apply inline-flex -space-x-px mx-auto py-4 relative;
+    @apply
+        inline-flex -space-x-px py-4 relative
+    ;
 }
 
 .table-container ul.pagination li a {

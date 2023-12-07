@@ -1,0 +1,75 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$dZlume4o0i91xvo6Ylf8x5$SYejmkfhvT6hogieLLBukebiZNfpiNCZ8eRIRb6d24s=",
+      "last_login": "2023-08-13T09:13:34.453Z",
+      "is_superuser": true,
+      "username": "admin",
+      "first_name": "",
+      "last_name": "",
+      "email": "",
+      "is_staff": true,
+      "is_active": true,
+      "date_joined": "2023-08-13T09:13:28.100Z",
+      "state": "registered",
+      "modified": "2023-08-13T09:13:28.320Z",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "socialaccount.socialapp",
+    "pk": 1,
+    "fields": {
+      "provider": "esnaccounts",
+      "name": "default",
+      "client_id": "---",
+      "secret": "",
+      "key": "",
+      "sites": [
+        [
+          "fiesta.test"
+        ]
+      ]
+    }
+  },
+  {
+    "model": "account.emailaddress",
+    "pk": 48,
+    "fields": {
+      "user": [
+        "admin"
+      ],
+      "email": "admin@fiesta.test",
+      "verified": true,
+      "primary": true
+    }
+  },
+  {
+    "model": "accounts.userprofile",
+    "pk": "a98829f3-549c-4652-be95-07ff025d36d7",
+    "fields": {
+      "created": "2023-11-21T22:18:25.545Z",
+      "modified": "2023-11-21T22:18:25.556Z",
+      "user": [
+        "admin"
+      ],
+      "nationality": null,
+      "gender": "",
+      "university": null,
+      "faculty": null,
+      "picture": "",
+      "interests": "[]",
+      "facebook": "",
+      "instagram": "",
+      "telegram": "",
+      "whatsapp": "",
+      "phone_number": null,
+      "preferences": 0,
+      "state": "complete",
+      "enforce_revalidation": false
+    }
+  }
+]

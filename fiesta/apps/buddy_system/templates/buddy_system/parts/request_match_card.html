@@ -1,0 +1,16 @@
+{% extends "fiestarequests/request_match_card.html" %}
+{% load buddy_system %}
+
+{% load i18n %}
+{% load static %}
+{% load utils %}
+{% load user_profile %}
+
+{% block match_card_middle %}{#  nothing needed here #}{% endblock %}
+
+{% block match_card_waiting_for_match_bottom %}
+  {% get_waiting_buddy_requests_placed_before br as waiting_total %}
+  {% if waiting_total %}
+    There is {{ waiting_total }} waiting request{{ waiting_total|pluralize:"s" }} before yours.
+  {% endif %}
+{% endblock %}

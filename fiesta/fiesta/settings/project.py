@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from configurations.values import Value
+
 from ._utils import PathValue
 
 
@@ -31,17 +33,23 @@ class ProjectConfigMixin:
 
     ROOT_URLCONF = "fiesta.urls"
 
-    ROOT_DOMAIN = "xxx"  # TODO: fill from environ
+    ROOT_DOMAIN = "fiesta.test"  # TODO: fill from environ
 
     def ALLOWED_HOSTS(self):
         return [f".{self.ROOT_DOMAIN}"]
 
-    EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    # overwritten by production mixins
+    EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
+
+    def DEFAULT_FROM_EMAIL(self):
+        return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
 
     INSTALLED_APPS = [
         # dj admin autocompletion widgets, must be before admin
         "dal",
         "dal_select2",
+        # env ribbon in admin
+        "django_admin_env_notice",
         # Django native
         "django.contrib.admin",
         "phonenumber_field",
@@ -63,13 +71,14 @@ class ProjectConfigMixin:
         # Fiesta apps
         "apps.accounts.apps.AccountsConfig",
         "apps.buddy_system.apps.BuddySystemConfig",
+        "apps.pickup_system.apps.PickupSystemConfig",
         "apps.dashboard.apps.DashboardConfig",
-        "apps.esnaccounts",  # cannot have full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
         "apps.esncards.apps.ESNcardsConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
         "apps.pages.apps.PagesConfig",
+        "apps.events.apps.EventsConfig",
         "apps.plugins.apps.PluginsConfig",
         "apps.public.apps.PublicConfig",
         "apps.sections.apps.SectionsConfig",
@@ -82,13 +91,19 @@ class ProjectConfigMixin:
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
-        # "allauth.socialaccount.providers.facebook",
+        "apps.esnaccounts",  # cannot have a full config Path, since allauth/socialaccount/providers/__init__.py:38 sucks
+        # "allauth.socialaccount.providers.facebook", # NOTE: cannot be enabled BEFORE adding SocialApp, otherwise throws an error
         "allauth.socialaccount.providers.google",
+        # "allauth.socialaccount.providers.apple",
+        # "allauth.socialaccount.providers.github",
         "allauth_cas",
         # superuser can log in as any user
         "loginas",
         # editorjs integration
         "django_editorjs_fields",
+        # location fields
+        "location_field.apps.DefaultConfig",
+        # for trees
         "mptt",
         # health checks
         "health_check",
@@ -113,3 +128,17 @@ class ProjectConfigMixin:
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",
     ]
+
+    # setup for django-country
+    # all EU countries first, then the rest
+    COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
+    COUNTRIES_FIRST_REPEAT = True
+
+    LOCATION_FIELD = {
+        "map.provider": "openstreetmap",
+        "search.provider": "nominatim",
+    }
+
+    ENVIRONMENT_NAME: str = Value(environ_required=False)
+    ENVIRONMENT_COLOR: str = Value(environ_required=False)
+    RELEASE_NAME: str = Value(environ_required=False, default="fiesta-plus@dev")

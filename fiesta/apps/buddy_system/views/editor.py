@@ -1,118 +1,48 @@
 from __future__ import annotations
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.postgres.search import SearchVector
-from django.forms import TextInput
-from django.urls import reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
-from django_filters import CharFilter, ChoiceFilter, ModelChoiceFilter
-from django_tables2 import Column, TemplateColumn, tables
+from django_tables2 import TemplateColumn
+from django_tables2.columns.base import LinkTransform
 from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
-from apps.buddy_system.models import BuddyRequest
-from apps.fiestaforms.views.htmx import HtmxFormMixin
-from apps.fiestatables.columns import ImageColumn, NaturalDatetimeColumn
-from apps.fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
+from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
+from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
-from apps.universities.models import Faculty
-from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb
+from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
-def related_faculties(request: HttpRequest):
-    return Faculty.objects.filter(university__section=request.in_space_of_section)
-
-
-class RequestFilter(BaseFilterSet):
-    search = CharFilter(
-        method="filter_search",
-        label=_("Search"),
-        widget=TextInput(attrs={"placeholder": _("Hannah, Diego, Joe...")}),
-    )
-    state = ChoiceFilter(choices=BuddyRequest.State.choices)
-    matched_when = ProperDateFromToRangeFilter(field_name="matched_at")
-
-    matched_by_faculty = ModelChoiceFilter(
-        queryset=related_faculties,
-        label=_("Faculty of matcher"),
-        field_name="matched_by__profile__home_faculty",
-    )
-
-    def filter_search(self, queryset, name, value):
-        return queryset.annotate(
-            search=SearchVector(
-                "issuer__last_name",
-                "issuer__first_name",
-                "matched_by__last_name",
-                "matched_by__first_name",
-                "state",
-            )
-        ).filter(search=value)
-
-    class Meta(BaseFilterSet.Meta):
-        pass
-
-
-class BuddyRequestsTable(tables.Table):
-    issuer__full_name_official = Column(
-        order_by=("issuer__last_name", "issuer__first_name", "issuer__username"),
-        attrs={"a": {"x-data": lambda: "modal($el.href)", "x-bind": "bind"}},
-        linkify=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
-        verbose_name=_("Request from"),
-    )
-
-    issuer__profile__picture = ImageColumn(verbose_name="🧑")
-
-    matched_by_name = Column(
-        accessor="matched_by.full_name_official",
-        order_by=(
-            "matched_by__last_name",
-            "matched_by__first_name",
-            "matched_by__username",
-        ),
-    )
-    matched_by_email = Column(
-        accessor="matched_by.email",
-        visible=False,
-    )
-
-    matched_by_picture = ImageColumn(
-        accessor="matched_by.profile.picture",
-        verbose_name=_("Buddy"),
-    )
-
+class BuddyRequestsTable(BaseRequestsTable):
     match_request = TemplateColumn(
         template_name="buddy_system/parts/requests_editor_match_btn.html",
         exclude_from_export=True,
-        order_by="matched_at",
+        order_by="match",
     )
 
-    matched_at = NaturalDatetimeColumn()
-
-    class Meta:
+    class Meta(BaseRequestsTable.Meta):
         model = BuddyRequest
-        # TODO: dynamic by section preferences
-        fields = ("state",)
-        sequence = (
-            "issuer__full_name_official",
-            "issuer__profile__picture",
-            "state",
-            "matched_by_name",
-            "matched_by_picture",
-            "matched_at",
-            "match_request",
-            "...",
-        )
-        empty_text = _("No buddy requests found")
+        fields = BaseRequestsTable.Meta.fields + ("match_request",)
 
-        attrs = dict(tbody={"hx-disable": True})
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if "issuer_name" in self.columns:
+            # sometimes excluded
+            self.columns["issuer_name"].link = LinkTransform(
+                attrs={"x-data": lambda: "modal($el.href)", "x-bind": "bind"},
+                reverse_args=("buddy_system:editor-detail", {"pk": Accessor("pk")}),
+            )
 
 
-@with_breadcrumb(_("Buddy System"))
+@with_plugin_home_breadcrumb
 @with_breadcrumb(_("Requests"))
 class BuddyRequestsEditorView(
     EnsurePrivilegedUserViewMixin,
@@ -120,7 +50,7 @@ class BuddyRequestsEditorView(
 ):
     request: HttpRequest
     table_class = BuddyRequestsTable
-    filterset_class = RequestFilter
+    filterset_class = BaseRequestsFilter
 
     def get_queryset(self):
         return self.request.in_space_of_section.buddy_system_requests.select_related(
@@ -128,42 +58,35 @@ class BuddyRequestsEditorView(
         )
 
 
-@with_breadcrumb(_("Buddy System"))
+@with_plugin_home_breadcrumb
 @with_object_breadcrumb()
 class BuddyRequestEditorDetailView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):
-    template_name = "buddy_system/editor/detail.html"
-    ajax_template_name = "buddy_system/editor/detail_form.html"
+    template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
     model = BuddyRequest
     form_class = BuddyRequestEditorForm
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been updated.")
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form_url"] = reverse("pickup_system:editor-detail", kwargs={"pk": self.object.pk})
+        return context
 
-@with_breadcrumb(_("Quick Buddy Match"))
-@with_object_breadcrumb()
-class QuickBuddyMatchView(
-    EnsurePrivilegedUserViewMixin,
-    SuccessMessageMixin,
-    HtmxFormMixin,
-    AjaxViewMixin,
-    UpdateView,
-):
-    template_name = "buddy_system/editor/quick_match.html"
-    ajax_template_name = "buddy_system/editor/quick_match_form.html"
+
+class QuickBuddyMatchView(BaseQuickRequestMatchView):
     model = BuddyRequest
     form_class = QuickBuddyMatchForm
 
     success_url = reverse_lazy("buddy_system:requests")
     success_message = _("Buddy request has been matched.")
 
-    def form_valid(self, form):
-        form.instance.state = BuddyRequest.State.MATCHED
-        form.instance.save(update_fields=["state"])
-        return super().form_valid(form)
+    form_url = "buddy_system:quick-match"
+    match_model = BuddyRequestMatch

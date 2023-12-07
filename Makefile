@@ -1,5 +1,7 @@
 include .env
 
+export DOCKER_BUILDKIT=1
+
 MATCH_LOCAL_USER = --entrypoint 'sh -c' --user $(shell id -u):$(shell id -g)
 DCRUNFLAGS = --rm $(MATCH_LOCAL_USER)
 DCFLAGS =
@@ -15,7 +17,7 @@ DC_CMD = $(cmd)
 ARG =
 
 MODELS_PNG = models.png
-GRAPH_MODELS_CMD = graph_models accounts plugins auth sections \
+GRAPH_MODELS_CMD = graph_models accounts plugins auth sections events \
 	universities esncards buddy_system \
 	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
@@ -42,6 +44,9 @@ shell_plus: da
 migrate: DA_CMD = migrate ## Runs manage.py migrate for all apps
 migrate: da
 
+showmigrations: DA_CMD = showmigrations ## Runs manage.py showmigrations for all apps
+showmigrations: da
+
 optimizemigration: DA_CMD = optimizemigration ## Optimize last migration by optimizemigration: app= migration=
 optimizemigration: ARG = $(name) $(migration)
 optimizemigration: da
@@ -52,9 +57,16 @@ check: da
 makemigrations: DA_CMD = makemigrations ## Runs manage.py makemigrations for all apps
 makemigrations: da
 
-loadlegacydata: DA_CMD = loadlegacydata ## Loads all data from legacydb run from ./legacy.sql.
+loadlegacydata: DA_CMD = loadlegacydata  ## Loads all data from legacydb run from ./legacy.sql.
 loadlegacydata: DCFLAGS = --profile migration
 loadlegacydata: da
+
+dumpdata: DA_CMD = dumpdata --exclude auth --exclude contenttypes --exclude sessions --exclude sites --exclude admin --natural-foreign
+dumpdata: da
+
+fixture ?=
+loaddata: DA_CMD = loaddata $(subst fiesta/fiesta,fiesta,$(fixture)) ## Loads all fixtures data from fixture= file
+loaddata: da
 
 test: DA_CMD = test --keepdb --parallel --verbosity 1 ## Runs django test cases.
 test: da
@@ -135,14 +147,14 @@ setup-elastic: ## Starts elasticsearch standalone an generates keystore and pass
 		sh -c "elasticsearch-keystore create auto"
 	sudo chown -v 1000 ./conf/elastic/elasticsearch.keystore
 
-	docker container stop buena-fiesta-elastic-setup-run | true
-	docker container rm buena-fiesta-elastic-setup-run | true
+	docker container stop fiesta-plus-elastic-setup-run | true
+	docker container rm fiesta-plus-elastic-setup-run | true
 
-	$(DC) run -d --name buena-fiesta-elastic-setup-run --rm elastic
-	docker container exec -it buena-fiesta-elastic-setup-run bash -c \
+	$(DC) run -d --name fiesta-plus-elastic-setup-run --rm elastic
+	docker container exec -it fiesta-plus-elastic-setup-run bash -c \
 	'sleep 25 && elasticsearch-setup-passwords interactive'
-	docker stop buena-fiesta-elastic-setup-run
-	docker rm buena-fiesta-elastic-setup-run
+	docker stop fiesta-plus-elastic-setup-run
+	docker rm fiesta-plus-elastic-setup-run
 
 # chrome://settings/certificates
 trust-localhost-ca: ## Copies generted CA cert to trusted CA certs and updates database -- requires sudo.

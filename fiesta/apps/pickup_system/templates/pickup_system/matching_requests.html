@@ -1,0 +1,40 @@
+{% extends "fiestarequests/matching_requests.html" %}
+
+{% load buddy_system %}
+{% load breadcrumbs %}
+{% load i18n %}
+
+{% block request_card_bottom %}
+  <hr>
+  <div class="flex flex-col">
+    <span class="flex flex-row justify-between items-center">
+      <span class="text-3xl" aria-label="{% trans "pickup time" %}">⏱️</span>
+      <time>{{ fr.time|date:"SHORT_DATETIME_FORMAT" }}</time>
+    </span>
+    <span class="flex flex-row justify-between items-center">
+      <span class="text-3xl" aria-label="{% trans "place" %}">📍</span>
+      <address>{{ fr.place }}</address>
+    </span>
+    <span class="flex flex-row justify-between items-center">
+      <span class="text-3xl" aria-label="{% trans "exact point" %}">🗺️</span>
+      <a class="link link-secondary"
+         href="{{ fr.location_as_google_maps_link }}"
+         rel="nofollow,noreferrer,noopener"
+         target="_blank">see on maps</a>
+    </span>
+
+
+
+  </div>
+
+
+
+{% endblock %}
+
+
+{% block request_card_actions %}
+  <a class="btn btn-primary"
+     href="{% url "pickup_system:match-pickup-request" fr.pk %}"
+     x-data="modal($el.href)"
+     x-bind="bind">take</a>
+{% endblock %}

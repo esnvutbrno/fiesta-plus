@@ -35,6 +35,8 @@ Alpine.data('modelSelect', (el) => ({
                 valueField: 'id',
                 labelField: 'text',
                 searchField: 'text',
+                // overwrite default ".loading" since it has conflict with DaisyUI loading component
+                loadingClass: 'ts-loading',
                 shouldLoad(term) {
                     return term.trim().length >= minimumInputLength
                 },

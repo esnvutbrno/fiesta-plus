@@ -16,42 +16,47 @@
   {% if user.emailaddress_set.all %}
     <p>{% trans 'The following e-mail addresses are associated with your account:' %}</p>
     <form action="{% url 'account_email' %}"
-          class="{{ form|get_form_classes }}"
-          method="post">
+          method="post"
+          class="{{ form|get_form_classes }}">
       {% csrf_token %}
-      <table class="table table-compact mx-auto">
+      <ul class="max-w-md mx-auto">
         {% for emailaddress in user.emailaddress_set.all %}
-          <tr>
-            <td>
-              <label for="email_radio_{{ forloop.counter }}"
-                     class="flex flex-row items-center gap-x-2
-                            {% if emailaddress.primary %}text-secondary{% endif %}">
-                <input id="email_radio_{{ forloop.counter }}"
-                       type="radio"
-                       name="email"
-                       class="radio radio-xs"
-                       {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
-                       value="{{ emailaddress.email }}" />
-                {{ emailaddress.email }}
-              </label>
-            </td>
-            <td>
+          <li class="w-full inline-flex flex-col md:flex-row justify-between mb-2">
+            <label for="email_radio_{{ forloop.counter }}"
+                   class="flex flex-row items-center gap-x-2">
+              <input id="email_radio_{{ forloop.counter }}"
+                     type="radio"
+                     name="email"
+                     class="radio"
+                     {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
+                     value="{{ emailaddress.email }}" />
+              {{ emailaddress.email }}
+            </label>
+            <span>
+              {% if emailaddress.primary %}
+                <span class="badge badge-primary">{% trans "Primary" %}</span>
+              {% endif %}
               {% if emailaddress.verified %}
                 <span class="badge badge-success">{% trans "Verified" %}</span>
               {% else %}
                 <span class="badge badge-warning">{% trans "Unverified" %}</span>
               {% endif %}
-              {% if emailaddress.primary %}
-                <span class="badge badge-secondary">{% trans "Primary" %}</span>
-              {% endif %}
-            </td>
-          </tr>
+            </span>
+          </li>
         {% endfor %}
-      </table>
-      <div class="Forms__field Forms__field--buttons btn-group">
-        <button class="btn btn-sm btn-secondary" type="submit" name="action_primary">{% trans 'Make Primary' %}</button>
-        <button class="btn btn-sm btn-warning" type="submit" name="action_send">{% trans 'Re-send Verification' %}</button>
-        <button class="btn btn-sm btn-primary" type="submit" name="action_remove">{% trans 'Remove' %}</button>
+      </ul>
+      <div class="Forms__field Forms__field--buttons ">
+        <div class="join join-vertical md:join-horizontal">
+          <button class="btn btn-sm btn-primary btn-outline join-item"
+                  type="submit"
+                  name="action_primary">{% trans 'Make Primary' %}</button>
+          <button class="btn btn-sm btn-warning btn-outline join-item"
+                  type="submit"
+                  name="action_send">{% trans 'Re-send Verification' %}</button>
+          <button class="btn btn-sm btn-error btn-outline join-item"
+                  type="submit"
+                  name="action_remove">{% trans 'Remove' %}</button>
+        </div>
       </div>
     </form>
   {% else %}
@@ -59,9 +64,9 @@
       <strong>{% trans 'Warning:' %}</strong> {% trans "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}
     </p>
   {% endif %}
+
   {% if can_add_email %}
-    <hr>
-    <h2 class="card-title">{% trans "Add New E-mail Address" %}</h2>
+    <h2 class="card-title mt-6">{% trans "Add New E-mail Address" %}</h2>
     <form method="post"
           action="{% url 'account_email' %}"
           class="{{ form|get_form_classes }}">

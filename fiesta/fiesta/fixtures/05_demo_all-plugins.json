@@ -1,0 +1,148 @@
+[
+  {
+    "model": "buddy_system.buddysystemconfiguration",
+    "pk": "f1896350-356b-4b52-8337-7a53f7ae8063",
+    "fields": {
+      "display_issuer_picture": true,
+      "display_issuer_gender": false,
+      "display_issuer_country": false,
+      "display_issuer_university": false,
+      "display_issuer_faculty": false,
+      "display_request_creation_date": true,
+      "rolling_limit": 0,
+      "matching_policy": "manual-by-member"
+    }
+  },
+  {
+    "model": "dashboard.dashboardconfiguration",
+    "pk": "087340c2-bbc1-4ec1-8861-a2d937889094",
+    "fields": {}
+  },
+  {
+    "model": "esncards.esncardsconfiguration",
+    "pk": "880a4f9d-2e32-45a9-94d5-7286f5aef367",
+    "fields": {}
+  },
+  {
+    "model": "pages.pagesconfiguration",
+    "pk": "9bb5cecc-feca-4d5a-905b-c870fec74207",
+    "fields": {}
+  },
+  {
+    "model": "plugins.basepluginconfiguration",
+    "pk": "880a4f9d-2e32-45a9-94d5-7286f5aef367",
+    "fields": {
+      "polymorphic_ctype": [
+        "esncards",
+        "esncardsconfiguration"
+      ],
+      "created": "2023-08-13T14:49:19.458Z",
+      "modified": "2023-08-13T14:49:19.458Z",
+      "name": "default",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "shared": false
+    }
+  },
+  {
+    "model": "plugins.basepluginconfiguration",
+    "pk": "9bb5cecc-feca-4d5a-905b-c870fec74207",
+    "fields": {
+      "polymorphic_ctype": [
+        "pages",
+        "pagesconfiguration"
+      ],
+      "created": "2023-08-13T14:49:35.217Z",
+      "modified": "2023-08-13T14:49:35.217Z",
+      "name": "default",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "shared": false
+    }
+  },
+  {
+    "model": "plugins.basepluginconfiguration",
+    "pk": "f1896350-356b-4b52-8337-7a53f7ae8063",
+    "fields": {
+      "polymorphic_ctype": [
+        "buddy_system",
+        "buddysystemconfiguration"
+      ],
+      "created": "2023-08-13T14:48:57.228Z",
+      "modified": "2023-08-13T14:49:02.847Z",
+      "name": "default",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8",
+      "shared": false
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "5dab58b1-232c-4d4e-98bd-ceec184408e2",
+    "fields": {
+      "created": "2023-08-13T12:43:20.838Z",
+      "modified": "2023-08-13T12:43:20.838Z",
+      "state": "enabled",
+      "app_label": "sections",
+      "configuration": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "7b274336-ae1d-4d88-be8a-c04cf151c67f",
+    "fields": {
+      "created": "2023-08-13T14:49:03.671Z",
+      "modified": "2023-08-13T14:49:03.671Z",
+      "state": "enabled",
+      "app_label": "buddy_system",
+      "configuration": "f1896350-356b-4b52-8337-7a53f7ae8063",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "85058529-9c21-486f-ad13-a9ef06ac3fb0",
+    "fields": {
+      "created": "2023-08-13T14:49:21.130Z",
+      "modified": "2023-08-13T14:49:21.131Z",
+      "state": "enabled",
+      "app_label": "esncards",
+      "configuration": "880a4f9d-2e32-45a9-94d5-7286f5aef367",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "c566aff8-8273-4bed-8cc7-6edcf7dbf2b8",
+    "fields": {
+      "created": "2023-08-13T10:38:46.550Z",
+      "modified": "2023-08-13T10:38:46.550Z",
+      "state": "enabled",
+      "app_label": "dashboard",
+      "configuration": "087340c2-bbc1-4ec1-8861-a2d937889094",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "plugins.plugin",
+    "pk": "e71b6069-3de6-4669-b519-5d9d0b8e2d96",
+    "fields": {
+      "created": "2023-08-13T14:49:36.552Z",
+      "modified": "2023-08-13T14:49:36.552Z",
+      "state": "enabled",
+      "app_label": "pages",
+      "configuration": "9bb5cecc-feca-4d5a-905b-c870fec74207",
+      "section": "246d11df-0076-40aa-9ba3-4afdfeae78f8"
+    }
+  },
+  {
+    "model": "sections.sectionsconfiguration",
+    "pk": "e6e785ea-9662-4b15-9b6f-27d1fc149693",
+    "fields": {
+      "required_nationality": null,
+      "required_gender": null,
+      "required_picture": null,
+      "required_phone_number": null,
+      "required_interests": null,
+      "auto_approved_membership_for_international": true
+    }
+  }
+]

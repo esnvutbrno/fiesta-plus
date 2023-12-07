@@ -4,10 +4,8 @@ import enum
 import typing
 
 from django.conf import settings
-from django.core.exceptions import ValidationError
-from django.core.validators import RegexValidator
 from django.db import models
-from django.db.models import CharField, CheckConstraint, TextChoices
+from django.db.models import CharField, TextChoices
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import AFTER_SAVE, LifecycleModelMixin, hook
@@ -17,7 +15,6 @@ from apps.accounts.conf import INTERESTS_CHOICES
 from apps.files.storage import NamespacedFilesStorage
 from apps.utils.models import BaseTimestampedModel
 from apps.utils.models.fields import ArrayFieldWithDisplayableChoices
-from apps.utils.models.query import Q
 
 if typing.TYPE_CHECKING:
     from apps.plugins.middleware.plugin import HttpRequest
@@ -79,36 +76,22 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         max_length=16,
     )
 
-    home_university = models.ForeignKey(
+    university = models.ForeignKey(
         "universities.University",
         on_delete=models.RESTRICT,
-        verbose_name=_("home university"),
-        help_text=_("home university for all users"),
-        related_name="home_university_user_profiles",
+        verbose_name=_("university"),
+        related_name="university_user_profiles",
         null=True,
         blank=True,
         db_index=True,
     )
-    home_faculty = models.ForeignKey(
+    faculty = models.ForeignKey(
         "universities.Faculty",
         on_delete=models.RESTRICT,
-        verbose_name=_("home faculty"),
-        # TODO: help, not description
-        help_text=_("home faculty for members, empty for internationals"),
-        related_name="home_faculty_user_profiles",
+        verbose_name=_("faculty"),
+        related_name="faculty_user_profiles",
         null=True,
         blank=True,
-        db_index=True,
-    )
-
-    guest_faculty = models.ForeignKey(
-        "universities.Faculty",
-        on_delete=models.RESTRICT,
-        verbose_name=_("guest faculty"),
-        help_text=_("guest faculty for international students, empty for members"),
-        related_name="guest_user_profiles",
-        blank=True,
-        null=True,
         db_index=True,
     )
 
@@ -132,23 +115,25 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         blank=True,
     )
 
-    facebook = models.URLField(
-        verbose_name=_("facebook profile"),
+    facebook = models.CharField(
+        verbose_name=_("facebook"),
         blank=True,
+        help_text=_("Username or profile link: john.doe or https://www.facebook.com/john.doe"),
     )
     instagram = models.CharField(
-        verbose_name=_("instagram username"),
-        validators=[RegexValidator(r"^[\w_-.]+$")],
+        verbose_name=_("instagram"),
         blank=True,
+        help_text=_("Username or profile link: john.doe or https://www.instagram.com/john.doe"),
     )
     telegram = models.CharField(
-        verbose_name=_("telegram contact"),
+        verbose_name=_("telegram"),
         blank=True,
-        help_text=_("Phone number or username"),
+        help_text=_("Username, phone, or profile: john.doe, +420777888999 or https://t.me/john.doe"),
     )
-    whatsapp = PhoneNumberField(
-        verbose_name=_("whatsapp phone number"),
+    whatsapp = models.CharField(
+        verbose_name=_("whatsapp"),
         blank=True,
+        help_text=_("Phone: +420777888999"),
     )
 
     phone_number = PhoneNumberField(null=True, blank=True, verbose_name=_("phone number"))
@@ -170,41 +155,30 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         default=State.INCOMPLETE,
     )
 
+    enforce_revalidation = models.BooleanField(
+        verbose_name=_("enforce revalidation of profile"),
+        default=False,
+    )
+
     class Meta:
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
-        constraints = (
-            CheckConstraint(
-                # home university XOR home faculty
-                check=Q(state=UserProfileState.INCOMPLETE.value) | (Q(home_university=None) ^ Q(home_faculty=None)),
-                name="home_university_or_faculty",
-            ),
-        )
-
-    def clean(self):
-        super().clean()
-
-        if not (bool(self.home_university) ^ bool(self.home_faculty)):
-            raise ValidationError(
-                {
-                    "home_university": _(
-                        # TODO: weird, basically it's exactly one of these
-                        "At least one from home university/faculty has to be set."
-                    )
-                }
-            )
 
     @hook(AFTER_SAVE)
     def on_save(self):
-        from apps.accounts.services import UserProfileStateSynchronizer
+        from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
-        UserProfileStateSynchronizer.on_user_profile_update(profile=self)
+        # self.user should be saved before the UserProfile form
+        synchronizer.revalidate_user_profile(profile=self)
 
     def __str__(self):
         return (
             f"{self.user} {self.nationality} "
-            f"{self.home_university or (self.home_faculty.university if self.home_faculty else None) or ''} "
+            f"{self.university or (self.faculty.university if self.faculty else None) or ''} "
         )
+
+    def is_esn_card_holder(self):
+        return False
 
 
 __all__ = [

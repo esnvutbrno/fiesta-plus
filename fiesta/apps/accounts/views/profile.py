@@ -4,14 +4,14 @@ from allauth.account.utils import get_next_redirect_url
 from django.contrib.auth import REDIRECT_FIELD_NAME
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, UpdateView
 
-from apps.accounts.forms.profile import UserProfileFinishForm, UserProfileForm
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.accounts.forms.profile import UserProfileFinishForm
+from apps.accounts.forms.profile_factory import UserProfileFormFactory
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.plugins.middleware.plugin import HttpRequest
-from apps.utils.breadcrumbs import with_breadcrumb
 from apps.utils.views import AjaxViewMixin
 
 
@@ -23,32 +23,41 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
         return self.request.user.profile_or_none
 
 
-class MyProfileUpdateView(LoginRequiredMixin, UpdateView):
+class MyProfileUpdateView(
+    LoginRequiredMixin,
+    UpdateView,
+):
     request: HttpRequest
     template_name = "accounts/user_profile/update.html"
+
+    extra_context = {"form_url": reverse_lazy("accounts:profile-finish")}
 
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none
 
     def get_form_class(self):
-        return UserProfileForm.for_user(user=self.request.user)
+        return UserProfileFormFactory.for_user(user=self.request.user)
 
 
-@with_breadcrumb(_("Finish my profile"))
 class ProfileFinishFormView(
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
     UpdateView,
 ):
     # form_class = UserProfileForm
     template_name = "accounts/user_profile/profile_finish.html"
-    ajax_template_name = "accounts/user_profile/profile_form.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
 
     success_message = _("Your profile has been updated.")
 
+    extra_context = {"form_url": reverse_lazy("accounts:profile-finish")}
+
     def get_form_class(self):
-        return UserProfileFinishForm.for_user(user=self.request.user)
+        return UserProfileFormFactory.for_user(
+            user=self.request.user,
+            base_form_class=UserProfileFinishForm,
+        )
 
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none

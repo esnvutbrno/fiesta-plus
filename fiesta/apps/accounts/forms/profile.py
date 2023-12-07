@@ -1,67 +1,36 @@
 from __future__ import annotations
 
-from django.db.models import Field
-from django.forms import Field as FormField, modelform_factory
+from django.forms import RadioSelect, fields_for_model
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_instagram, clean_telegram, clean_whatsapp
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestaforms.forms import BaseModelForm
-from apps.fiestaforms.widgets.models import FacultyWidget, UniversityWidget
-from apps.sections.models import SectionMembership, SectionsConfiguration
+from apps.fiestaforms.widgets.models import FacultyForCurrentUserWidget, UniversityForCurrentUserWidget
+
+FIELDS_FROM_USER = ("first_name", "last_name")
+REQUIRED_FIELDS_FROM_USER = FIELDS_FROM_USER
+
+
+def _create_user_fields():
+    fields = fields_for_model(
+        User,
+        fields=FIELDS_FROM_USER,
+    )
+    for f in REQUIRED_FIELDS_FROM_USER:
+        fields[f].required = True
+    return fields
+
+
+FORM_FIELDS_FROM_USER = _create_user_fields()
+
+CONTACT_FIELDS = ("facebook", "instagram", "telegram", "whatsapp")
 
 
 class UserProfileForm(BaseModelForm):
-    FIELDS_TO_CONFIGURATION = {
-        UserProfile.nationality: SectionsConfiguration.required_nationality,
-        UserProfile.gender: SectionsConfiguration.required_gender,
-        UserProfile.picture: SectionsConfiguration.required_picture,
-        UserProfile.phone_number: SectionsConfiguration.required_phone_number,
-        UserProfile.interests: SectionsConfiguration.required_interests,
-    }
-    _FIELD_NAMES_TO_CONFIGURATION = {f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()}
-
-    @classmethod
-    def for_user(
-        cls,
-        user: User,
-    ) -> type[UserProfileForm]:
-        """
-        Creates the profile form class for specific user.
-        Fields and configuration are constructed from all SectionsConfiguration from
-        all sections from all memberships of that specific user.
-        """
-        # all related configurations
-        confs = SectionsConfiguration.objects.filter(
-            # from all user's memberships sections
-            plugins__section__memberships__in=user.memberships.filter(
-                # with waiting for confirmation or already active membership
-                state__in=(
-                    SectionMembership.State.UNCONFIRMED,  # waiting for confirmation
-                    SectionMembership.State.ACTIVE,  # already active, need to have a valid profile
-                )
-            )
-        )
-
-        # TODO: what to do, when no specific configuration is found?
-
-        def callback(f: Field, **kwargs) -> FormField:
-            if conf_field := cls._FIELD_NAMES_TO_CONFIGURATION.get(f.name):
-                return f.formfield(required=any(conf_field.__get__(c) for c in confs), **kwargs)
-            return f.formfield(**kwargs)
-
-        fields_to_include = tuple(
-            field_name
-            for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
-            if any(conf_field.__get__(c) is not None for c in confs)
-        )
-
-        return modelform_factory(
-            model=UserProfile,
-            form=cls,
-            fields=cls.Meta.fields + fields_to_include,
-            formfield_callback=callback,
-        )
+    # include pre-generated field from User
+    locals().update(FORM_FIELDS_FROM_USER)
 
     class Meta:
         model = UserProfile
@@ -70,11 +39,12 @@ class UserProfileForm(BaseModelForm):
             "interests": ChoicedArrayField,
         }
 
+        # fields, which are shown independently on section configurations
         fields = (
+            *FORM_FIELDS_FROM_USER.keys(),
             # TODO: think about limiting the choices by country of section, in which is current membership
-            "home_university",
-            "home_faculty",
-            "guest_faculty",
+            "university",
+            "faculty",
             "picture",
             "facebook",
             "instagram",
@@ -84,10 +54,47 @@ class UserProfileForm(BaseModelForm):
         )
 
         widgets = {
-            "home_university": UniversityWidget,
-            "home_faculty": FacultyWidget,
-            "guest_faculty": FacultyWidget,
+            # TODO: show only related facultites & universities
+            "university": UniversityForCurrentUserWidget,
+            "faculty": FacultyForCurrentUserWidget,
+            "gender": RadioSelect,
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        try:
+            user: User | None = self.instance and self.instance.user
+        except User.DoesNotExist:
+            user = None
+
+        if user:
+            for f in FORM_FIELDS_FROM_USER:
+                self.initial[f] = getattr(user, f, None)
+
+        for f in CONTACT_FIELDS:
+            self.fields[f].widget.attrs["placeholder"] = self.fields[f].help_text
+            self.fields[f].help_text = None
+
+    def save(self, commit=True):
+        # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again
+        for f in FORM_FIELDS_FROM_USER:
+            setattr(self.instance.user, f, self.cleaned_data.get(f))
+        self.instance.user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
+
+        return super().save(commit=commit)
+
+    def clean_facebook(self):
+        return clean_facebook(self.cleaned_data["facebook"]) or ""
+
+    def clean_instagram(self):
+        return clean_instagram(self.cleaned_data["instagram"]) or ""
+
+    def clean_telegram(self):
+        return clean_telegram(self.cleaned_data["telegram"]) or ""
+
+    def clean_whatsapp(self):
+        return clean_whatsapp(self.cleaned_data["whatsapp"]) or ""
 
 
 class UserProfileFinishForm(UserProfileForm):

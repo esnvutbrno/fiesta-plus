@@ -7,7 +7,11 @@ from apps.accounts.conf import INTERESTS_CHOICES
 from apps.fiestarequests.models import base_request_model_factory
 from apps.utils.models.fields import ArrayFieldWithDisplayableChoices
 
-BaseRequestForBuddySystem = base_request_model_factory(related_base="buddy_system")
+BaseRequestForBuddySystem, BaseRequestMatchForBuddySystem = base_request_model_factory(
+    final_request_model_name="buddy_system.BuddyRequest",
+    related_base="buddy_system",
+    url_namespace="buddy_system",
+)
 
 
 class BuddyRequest(BaseRequestForBuddySystem):
@@ -29,3 +33,12 @@ class BuddyRequest(BaseRequestForBuddySystem):
 
     def __str__(self):
         return f"Buddy Request {self.issuer}: {self.get_state_display()}"
+
+
+class BuddyRequestMatch(BaseRequestMatchForBuddySystem):
+    class Meta(BaseRequestForBuddySystem.Meta):
+        verbose_name = _("buddy request match")
+        verbose_name_plural = _("buddy request matches")
+
+    def __str__(self):
+        return f"Buddy Request Match {self.matcher}: {self.request}"

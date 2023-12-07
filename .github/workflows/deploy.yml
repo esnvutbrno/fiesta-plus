@@ -6,13 +6,39 @@ on:
       - main
       - develop
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build-webpack:
+  build:
+    name: Build images
     runs-on: ubuntu-latest
+    outputs:
+      image_tag: ${{ steps.meta.outputs.image_tag }}
+      release_version: ${{ steps.meta.outputs.release_version }}
+
     steps:
-      - name: Checkout
+      -
+        name: Checkout
         uses: actions/checkout@v3
+
+      - name: Prepare references and release
+        id: meta
+        run: |
+          echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
+          echo "release_version=${GITHUB_SHA}" >> $GITHUB_OUTPUT
+
+      - name: Prepare Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          finalize: false
+          version: ${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -20,52 +46,15 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Build
-        uses: docker/build-push-action@v4
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
         with:
-          context: .
-          load: true
-          file: webpack/Dockerfile
-          #          TODO: ends with 400
-          #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
-          #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          tags: webpack:latest
+          username: nologin
+          password: ${{ secrets.SCW_SECRET_KEY }}
+          registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
 
-      - name: Extract compiled results
-        run: |
-          docker cp $(docker create --name webpack webpack:latest):/usr/src/build/ ./build
-          docker rm webpack
-
-      - uses: actions/upload-artifact@v3
-        name: Upload compiled results stats file
-        with:
-          name: webpack-build-stats
-          path: ./build/webpack-stats.json
-          if-no-files-found: error
-
-      - uses: actions/upload-artifact@v3
-        name: Upload compiled results
-        with:
-          name: webpack-build
-          path: ./build/
-          if-no-files-found: error
-
-  build-web:
-    runs-on: ubuntu-latest
-    needs:
-      - build-webpack
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Prepare image reference
-        run: echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
-
-      - name: Prepare image metadata
-        id: meta
+      - name: Prepare web image metadata
+        id: webMeta
         uses: docker/metadata-action@v4
         with:
           # list of Docker images to use as base name for tags
@@ -81,76 +70,31 @@ jobs:
             type=sha
 
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: nologin
-          password: ${{ secrets.SCW_SECRET_KEY }}
-          registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
-
-      -
-        name: Prepare webpack build stats file
-        uses: actions/download-artifact@v3
-        with:
-          name: webpack-build-stats
-          path: webpack-stats.json
-
-      -
-        name: Build image
+        name: Build and push web
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: fiesta/Dockerfile
-          load: true
+          file: Dockerfile
+          push: true
+          target: web-stable
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-      - name: Extract collectstatic results
-        run: |
-          docker cp $(docker create --name web ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:${{ env.image_tag }}):/usr/src/static/ ./static
-          docker rm web
-
-      - uses: actions/upload-artifact@v3
-        name: Upload collectstatic results
-        with:
-          name: web-static
-          path: ./static/
-          if-no-files-found: error
-
-      - name: Push image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: fiesta/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-
-  build-proxy:
-    runs-on: ubuntu-latest
-    needs:
-      - build-webpack
-      - build-web
-    steps:
-      -
-        name: Checkout
-        uses: actions/checkout@v3
+          tags: ${{ steps.webMeta.outputs.tags }}
+          labels: ${{ steps.webMeta.outputs.labels }}
+          build-args: |
+            SENTRY_RELEASE_ENVIRONMENT=production
+            SENTRY_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
+            DJANGO_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
+          secrets: |
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+            SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
 
       - name: Prepare image metadata
-        id: meta
+        id: proxyMeta
         uses: docker/metadata-action@v4
         with:
           # list of Docker images to use as base name for tags
@@ -166,65 +110,43 @@ jobs:
             type=sha
 
       -
-        name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      -
-        name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      -
-        name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: nologin
-          password: ${{ secrets.SCW_SECRET_KEY }}
-          registry: ${{ secrets.SCW_REGISTRY_ENDPOINT }}
-
-      -
-        name: Prepare webpack build files
-        uses: actions/download-artifact@v3
-        with:
-          name: webpack-build
-          path: webpack-build/
-      -
-        name: Prepare web static files
-        uses: actions/download-artifact@v3
-        with:
-          name: web-static
-          path: web-static/
-
-      -
-        name: Build and push
+        name: Build and push proxy
         uses: docker/build-push-action@v4
         with:
           context: .
-          file: nginx/proxy.Dockerfile
+          file: Dockerfile
           push: true
+          target: proxy-stable
 #          TODO: ends with 400
 #          cache-from: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache
 #          cache-to: type=registry,ref=${{ secrets.SCW_REGISTRY_ENDPOINT }}/web:buildcache,mode=max
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+          tags: ${{ steps.proxyMeta.outputs.tags }}
+          labels: ${{ steps.proxyMeta.outputs.labels }}
+          build-args: |
+            SENTRY_RELEASE_ENVIRONMENT=production
+            SENTRY_RELEASE_NAME=${{ secrets.SENTRY_PROJECT }}@${{ steps.meta.outputs.release_version }}
+          secrets: |
+            SENTRY_ORG=${{ secrets.SENTRY_ORG }}
+            SENTRY_PROJECT=${{ secrets.SENTRY_PROJECT }}
+            SENTRY_WEBPACK_AUTH_TOKEN=${{ secrets.SENTRY_WEBPACK_AUTH_TOKEN }}
 
   deploy:
+    name: Deploy to cluster
     runs-on: ubuntu-latest
     concurrency: deploy
+    environment:
+      name: production
+      url: https://fiesta.plus
     needs:
-      - build-web
-      - build-webpack
-      - build-proxy
+      - build
     steps:
       - uses: actions/checkout@v1
 
       - name: Setup k8s context
         run: |
           echo "${{ secrets.KUBECONFIG }}" > kubeconfig.yaml
-
-      - name: Prepare image reference
-        run: echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_ENV
 
       - name: Deploy
         uses: 'vimeda/helm@v1.7.0'
@@ -237,10 +159,10 @@ jobs:
           values: >-
             web:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/web
-              tag: ${{ env.image_tag }}
+              tag: ${{ needs.build.outputs.image_tag }}
             proxy:
               repository: ${{ secrets.SCW_REGISTRY_ENDPOINT }}/proxy
-              tag: ${{ env.image_tag }}
+              tag: ${{ needs.build.outputs.image_tag }}
             ingress:
               certContactEmail: ${{ secrets.CERT_CONTACT_EMAIL }}
             secrets:
@@ -250,9 +172,67 @@ jobs:
                 accessKey: ${{ secrets.S3_ACCESS_KEY }}
                 regionName: ${{ secrets.S3_REGION_NAME }}
                 bucketName: ${{ secrets.S3_BUCKET_NAME }}
+              dnsWebhook:
+                accessKey: ${{ secrets.SCW_DNS_ACCESS_KEY }}
+                secretKey: ${{ secrets.SCW_DNS_SECRET_KEY }}
+              sentry:
+                dsn: ${{ secrets.SENTRY_DSN }}
+                jsLoaderUrl: ${{ secrets.SENTRY_JS_LOADER_URL }}
+              mailer:
+                primary:
+                  host: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST }}
+                  port: "${{ secrets.DJANGO_MAILER_PRIMARY_HOST_PORT }}"
+                  user: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST_USER }}
+                  password: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST_PASSWORD }}
           value-files: >-
             [
               "charts/values.yaml"
             ]
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+
+  announce-on-telegram:
+    name: Announce Deploy on Telegram
+    runs-on: ubuntu-latest
+    needs:
+      - deploy
+    steps:
+      - name: Announce deploy to Telegram
+        run: |
+          message="
+          👨‍💻 ${{ github.actor }} deployed:
+          🌐 [production](https://fiesta.plus)
+          📝 \`${{ github.event.commits[0].message }}\`
+          🔗 [see commit](https://github.com/${{ github.repository }}/commit/${{github.sha}})
+          "
+          curl -s \
+          -X POST \
+          'https://api.telegram.org/bot${{ secrets.ANNOUNCE_TELEGRAM_TOKEN }}/sendMessage' \
+          --data-urlencode "chat_id=${{ secrets.ANNOUNCE_TELEGRAM_CHAT }}" \
+          --data-urlencode "text=${message}" \
+          --data-urlencode "reply_to_message_id=${{ secrets.ANNOUNCE_TELEGRAM_TOPIC }}" \
+          --data-urlencode "disable_notification=true" \
+          --data-urlencode "silent=true" \
+          --data-urlencode "no_webpage=true" \
+          --data-urlencode "disable_web_page_preview=true" \
+          --data-urlencode "parse_mode=MarkdownV2"
+
+  finalize-sentry-release:
+    name: Finalize Sentry deploy
+    runs-on: ubuntu-latest
+    needs: [build, deploy]
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Finalize Sentry release
+        uses: getsentry/action-release@v1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG }}
+          SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT }}
+        with:
+          environment: production
+          finalize: true
+          version: ${{ secrets.SENTRY_PROJECT }}@${{ needs.build.outputs.release_version }}

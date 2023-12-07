@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "buena-fiesta"
+name = "fiesta-plus"
 version = "0.0.1"
 description = "New generation of social network for helping international students - used by sections of Erasmus Student Network."
 authors = ["ESN VUT BRNO"]
@@ -8,7 +8,7 @@ authors = ["ESN VUT BRNO"]
 python = "^3.11"
 Django = "^4.2"
 
-Pillow = "^9.0.1"
+Pillow = "^10.1.0"
 bcrypt = "^3.2.0"
 django-allauth = "^0.47.0"
 # support for dj4.0
@@ -42,11 +42,15 @@ beautifulsoup4 = "^4.12.1"
 django-editorjs = "^0.2.1"
 django-editorjs-fields = "^0.2.7"
 django-mptt = "^0.14.0"
-uvicorn = {extras = ["standard"], version = "^0.22.0"}
 django-storages = "^1.13.2"
 boto3 = "^1.26.123"
 dj-database-url = "^2.0.0"
 django-health-check = "^3.17.0"
+django-money = "^3.2.0"
+gunicorn = "^21.2.0"
+django-location-field = "^2.7.2"
+sentry-sdk = {extras = ["django"], version = "^1.35.0"}
+django-admin-env-notice = "^1.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.17.0"

@@ -5,7 +5,10 @@
 @import "_Forms.css";
 @import "_Menu.css";
 @import "_Tables.css";
+@import "_SocialButton.css";
 @import "_Dashboard.css";
+@import "_Flags.css";
+@import "_PublicHome.css";
 
 @tailwind base;
 @tailwind components;
