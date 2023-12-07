@@ -16,6 +16,8 @@ services:
     volumes:
       # for dev and also produp
       - web_media_files:/usr/src/media
+      - wiki_db:/usr/src/wiki/db/
+      - wiki_static:/usr/src/wiki/static/wiki/
     environment:
       VIRTUAL_HOST: web.${ROOT_DOMAIN}
       VIRTUAL_PORT: 8000
@@ -32,7 +34,6 @@ services:
       - web
     volumes:
       - web_media_files:/var/media
-      - wiki_static_files:/var/wiki
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
       PROXY_HOSTNAME_TARGET: "web"
@@ -98,46 +99,24 @@ services:
     ports:
       - "4306:3306"
 
-  elastic:
-    image: elasticsearch:7.17.0
-    profiles: [ "wiki" ]
-    volumes:
-      - elastic_data:/usr/share/elasticsearch/data
-    ports:
-      - "9200"
-
-  kibana:
-    image: kibana:7.17.0
-    profiles: [ "wiki" ]
-    depends_on:
-      - elastic
-    ports:
-      - "5601"
-    env_file:
-      - ./wiki/.env.base
-      - ./.env
-    environment:
-      VIRTUAL_HOST: kibana.${ROOT_DOMAIN}
-      VIRTUAL_PORT: 5601
-
   wikifetcher:
-    build: ./wiki
-    profiles: [ "wiki" ]
-    # when elastic is not ready yet, try it again
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: wiki-base
     restart: on-failure
-    depends_on:
-      - elastic
     volumes:
-      - wiki_static_files:/usr/src/static
+      - wiki_db:/usr/src/wiki/db/
+      - wiki_static:/usr/src/wiki/static/
     env_file:
       - .env
       - wiki/.env.base
 
 volumes:
   postgres15_data:
-  elastic_data:
   legacydb_data:
   webpack_build:
   web_static_files:
   web_media_files:
-  wiki_static_files:
+  wiki_db:
+  wiki_static:
