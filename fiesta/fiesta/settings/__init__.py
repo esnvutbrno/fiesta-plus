@@ -1,7 +1,8 @@
 from __future__ import annotations
 
+import dj_database_url
 from configurations import Configuration
-from configurations.values import DatabaseURLValue, Value
+from configurations.values import SecretValue, Value
 
 from .admin import AdminConfigMixin
 from .auth import AuthConfigMixin
@@ -66,7 +67,14 @@ class Production(
 
     ROOT_DOMAIN = Value(environ_required=True)
 
-    DATABASES = DatabaseURLValue(environ_prefix="DJANGO")
+    DATABASE_URL = SecretValue(environ_prefix="DJANGO")
+
+    @property
+    def DATABASES(self):
+        return {
+            "default": dj_database_url.parse(self.DATABASE_URL),
+            "wiki": DatabaseConfigMixin.DATABASES["wiki"],
+        }
 
     ENVIRONMENT_NAME = Value(default="production")
     ENVIRONMENT_COLOR = Value(default="#7b3ff4")
