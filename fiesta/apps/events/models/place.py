@@ -35,7 +35,7 @@ class Place(BaseModel):
     map_link = models.CharField(
         max_length=256,
         verbose_name=_("map link"),
-        help_text=_("Link to google maps in format google.com/maps/place/<place>/@<coordinates>/data"),
+        help_text=_("Link to google maps in format google.com/maps/place/<place>/\@<coordinates>/data"),
         blank=True,
         default="",
     )
@@ -43,13 +43,13 @@ class Place(BaseModel):
     longitude = models.FloatField(
         verbose_name=_("longitude"),
         blank=True,
-        default=0
+        default=0.0
     )
     
     latitude = models.FloatField(
         verbose_name=_("latitude"),
         blank=True,
-        default=0
+        default=0.0
     )
 
     section = models.ForeignKey(

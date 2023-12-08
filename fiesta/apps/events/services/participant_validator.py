@@ -19,7 +19,7 @@ class ParticipantValidator:
         Method to validate registration for an event.
         """
 
-        if Participant.objects.filter(event=event).count() >= event.capacity:
+        if Participant.objects.filter(event=event, state=Participant.State.CONFIRMED).count() >= event.capacity:
             raise ValidationError("This event is full.")
 
         if Participant.objects.filter(user=user, event=event).exists():

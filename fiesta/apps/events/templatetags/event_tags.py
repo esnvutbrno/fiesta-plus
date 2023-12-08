@@ -30,13 +30,13 @@ def get_price_variants(context, event: Event):
         return event.price_variants.filter(Q(type=EventPriceVariantType.STANDARD) | Q(type=EventPriceVariantType.FREE))
 
 @register.simple_tag(takes_context=True)
-def get_event_fullness(context, event: Event):    
-    if event.event_participants.all().count() < event.capacity/2:
-        return mark_safe('<span class="bg-green-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Opened</span>')
-    elif event.event_participants.all().count() < event.capacity & event.event_participants.all().count() > event.capacity/2:
-        return mark_safe('<span class="bg-yellow-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Almost full</span>')
-    elif event.event_participants.all().count() >= event.capacity:
-        return mark_safe('<span class="bg-red-400 mr-2 border divide-gray-100 rounded-full pt-2 pb-2 pl-3 pr-3 mb-2">Full</span>')
+def get_event_fullness(context, event: Event):  
+    if Participant.objects.filter(event=event, state=Participant.State.CONFIRMED).count() < event.capacity/2:
+        return mark_safe('<span class="bg-success p-2 rounded-full">Opened</span>')
+    elif Participant.objects.filter(event=event, state=Participant.State.CONFIRMED).count() < event.capacity and Participant.objects.filter(event=event, state=Participant.State.CONFIRMED).count() >= event.capacity/2:
+        return mark_safe('<span class="bg-warning p-2  rounded-full">Almost full</span>')
+    elif Participant.objects.filter(event=event, state=Participant.State.CONFIRMED).count() >= event.capacity:
+        return mark_safe('<span class="bg-error p-2  rounded-full">Full</span>')
     
 @register.simple_tag(takes_context=True)
 def is_oc(context, event: Event) -> bool:

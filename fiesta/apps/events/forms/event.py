@@ -1,4 +1,5 @@
 
+from typing import Any
 from apps.fiestaforms.forms import BaseModelForm
 from apps.events.models import Event, Organizer
 from apps.accounts.models import User
@@ -22,6 +23,14 @@ class AddEventForm(BaseModelForm):
 
         self.initial["section_name"] = self.initial["section"].name
         self.initial["author_name"] = self.initial["author"].full_name
+        
+    def clean(self) -> dict[str, Any]:
+        clean_data = super().clean()
+        state = clean_data.get("state")
+        
+        if state == Event.State.PUBLISHED and not clean_data.get("price_variants"):
+            self.add_error("state", _("You can't publish event without price variants."))
+        return clean_data
 
 
     class Meta:

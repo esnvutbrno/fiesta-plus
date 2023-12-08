@@ -2,27 +2,27 @@
 {% load event_tags %}
 
 <a href="{% url 'events:event-detail' event.id %}">
-<div class="card card-compact bg-base-100 hover:bg-base-200 shadow-xl rounded-xl mb-6">
-
-      <div class="card-body flex flex-row">
-
-        {% if event.portrait_cover%}
-        <div class="flex-shrink-0">
-            <div class="h-12 w-12 rounded-full bg-cover bg-center" style='background-image: url("{{ event.portrait_cover.url }}")'></div>
-        </div>  
-        {% endif %}
-
-        <div class="flex-grow">
-            <h2 class="text-xl card-title">{{ event.title }}</h2>
-            <p class="text-gray-600">{{ event.start.date }}</p>
+    <div class="card card-compact bg-base-100 hover:bg-base-200 shadow-xl rounded-xl mb-6">
+    
+          <div class="card-body flex flex-row">
+    
+            {% if event.portrait_cover%}
+            <div class="flex-shrink-0">
+                <div class="h-12 w-12 rounded-full bg-cover bg-center" style='background-image: url("{{ event.portrait_cover.url }}")'></div>
+            </div>  
+            {% endif %}
+    
+            <div class="flex-grow">
+                <h2 class="text-xl card-title">{{ event.title }}</h2>
+                <p class="text-gray-600">{{ event.start.date }}</p>
+            </div>
+    
+            {% if event.state == event.State.PUBLISHED %}
+            <div class="flex-none">
+                {% get_event_fullness event %}
+            </div>
+            {% endif %}
         </div>
-
-        {% if event.state == "published" %}
-        <div class="flex-none">
-            {% get_event_fullness event %}
-        </div>
-        {% endif %}
+     
     </div>
- 
-</div>
-</a>
+    </a>
