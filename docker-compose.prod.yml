@@ -22,13 +22,5 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    # TODO: figure out before deployment, whereever/where should be certs stored
     volumes:
       - ./conf/certs:/etc/nginx/certs
-
-  # remove profiles so production env does have filled elastic search
-#  elastic:
-#    profiles: [ ]
-
-#  wikifetcher:
-#    profiles: [ ]

@@ -4,11 +4,11 @@ require "git"
 require "logger"
 require "linguist"
 require "github/markup"
-require "elasticsearch"
 require "html/pipeline"
 require "fileutils"
 require "facets/string/titlecase"
 require "sanitize"
+require "sqlite3"
 
 class String
   def titleize
@@ -33,9 +33,36 @@ class VersionedImagesFilter < HTML::Pipeline::Filter
   end
 end
 
-require_relative "wait-for-port"
+class AbsoluteSourceFilter < HTML::Pipeline::Filter
+  # same impl except url join -- replaced by concat (because native uri cannot handle relative urls)
+  def call
+    doc.search("img").each do |element|
+      next if element['src'].nil? || element['src'].empty?
+      src = element['src'].strip
+      unless src.start_with? 'http'
+        if src.start_with? '/'
+          base = image_base_url
+        else
+          base = image_subpage_url
+        end
+        element["src"] = base + src
+      end
+    end
+    doc
+  end
 
-WIKI_REPO_PATH = "/usr/src/wiki"
+  # Private: the base url you want to use
+  def image_base_url
+    context[:image_base_url] or raise "Missing context :image_base_url for #{self.class.name}"
+  end
+
+  # Private: the relative url you want to use
+  def image_subpage_url
+    context[:image_subpage_url] or raise "Missing context :image_subpage_url for #{self.class.name}"
+  end
+end
+
+WIKI_REPO_PATH = "/var/wiki"
 
 FileUtils.rm_rf(WIKI_REPO_PATH)
 FileUtils.rm_rf(File.join(ENV["WIKI_STATIC_PATH"], "*"))
@@ -47,69 +74,27 @@ git = Git.clone(
   :log => Logger.new(STDOUT)
 )
 
+db_file = File.join(ENV["WIKI_DB_NAME"])
+File.delete(db_file) if File.exist?(db_file)
+
+db = SQLite3::Database.new db_file
+
+# Create a table
+db.execute <<-SQL
+  CREATE VIRTUAL TABLE IF NOT EXISTS
+    wiki USING
+    fts5(file, title, content_html, content_plain, toc, last_change);
+SQL
+
 git.config("log.date", "unix")
 
 last_revision = git.object("HEAD^").sha
 
-wait_for_port("elastic", 9200)
-
-elastic = Elasticsearch::Client.new(
-  url: ENV["ELASTIC_URL"],
-  transport_options: {
-    ssl: { ca_file: "/usr/share/certs/rootCA.pem" },
-  },
-  log: true,
-)
-
-# purge all
-if elastic.indices.exists? index: "wiki"
-  elastic.indices.delete(:index => "wiki")
-end
-
-elastic.indices.create(
-  :index => "wiki",
-  :body => {
-    "settings": {
-      "index": {
-        "analysis": {
-          "char_filter": {
-            "ignore_html_tags": {
-              "type": "html_strip",
-            },
-          },
-          "analyzer": {
-            "ignore_html_tags": {
-              "tokenizer": "lowercase",
-              "char_filter": [
-                "ignore_html_tags",
-              ],
-              "type": "custom",
-            },
-          },
-        },
-      },
-    },
-    "mappings": {
-      "properties": {
-        "content_html": {
-          "type": "text",
-          "analyzer": "ignore_html_tags",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256,
-            },
-          },
-        },
-      },
-    },
-  },
-)
-
 rich_pipeline = HTML::Pipeline.new [
   HTML::Pipeline::TableOfContentsFilter,
   VersionedImagesFilter,
-  HTML::Pipeline::AbsoluteSourceFilter,
+  # same impl except url join -- replaced by concat (because native uri cannot handle relative urls)
+  AbsoluteSourceFilter,
   HTML::Pipeline::AutolinkFilter,
   HTML::Pipeline::EmojiFilter,
 ]
@@ -172,34 +157,57 @@ Dir[WIKI_REPO_PATH + "/**/*"].select {
       )
     end
 
-    puts relativepath,
-         last_commit.author.name,
-         last_commit.author.email,
-         last_commit.author.date,
-         last_commit.message, language
+    puts relativepath #,
+#          last_commit.author.name,
+#          last_commit.author.email,
+#          last_commit.author.date,
+#          last_commit.message, language
 
     basename = File.basename(relativepath, File.extname(relativepath))
     title = basename.gsub("-", " ").titleize
 
-    elastic.index(
-      index: "wiki",
-      id: relativepath,
-      body: {
-        content_html: rich_result[:output].to_s,
-        content_plain: Sanitize.fragment(rich_result[:output].to_s),
-        toc: rich_result[:toc],
-        title: title,
-        file: relativepath,
-        last_change: {
-          # 2022-02-11 10:40:58 +0000
-          at: last_commit.date.iso8601,
-          name: last_commit.author.name,
-          email: last_commit.author.email,
-          sha: last_commit.sha,
-          parent_sha: last_commit.parent.sha,
-        },
-      },
+    db.execute(
+        "INSERT INTO
+        wiki (file, title, content_html, content_plain, toc, last_change)
+        VALUES (?, ?, ?, ?, ?, ?)",
+        [
+            relativepath,
+            title,
+            rich_result[:output].to_s,
+            Sanitize.fragment(rich_result[:output].to_s),
+            rich_result[:toc],
+            {
+                # 2022-02-11 10:40:58 +0000
+                at: last_commit.date.iso8601,
+                name: last_commit.author.name,
+                email: last_commit.author.email,
+                sha: last_commit.sha,
+                parent_sha: last_commit.parent.sha,
+            }.to_json
+        ]
     )
+
+#     elastic.index(
+#       index: "wiki",
+#       id: relativepath,
+#       body: {
+#         content_html: rich_result[:output].to_s,
+#         content_plain: Sanitize.fragment(rich_result[:output].to_s),
+#         toc: rich_result[:toc],
+#         title: title,
+#         file: relativepath,
+#         last_change: {
+#           # 2022-02-11 10:40:58 +0000
+#           at: last_commit.date.iso8601,
+#           name: last_commit.author.name,
+#           email: last_commit.author.email,
+#           sha: last_commit.sha,
+#           parent_sha: last_commit.parent.sha,
+#         },
+#       },
+#     )
+
+
   end
   puts ""
 end
