@@ -76,13 +76,9 @@ class SentryConfigMixin:
         if cls.SENTRY_DSN:
             sentry_sdk.init(
                 dsn=cls.SENTRY_DSN,
-                # Set traces_sample_rate to 1.0 to capture 100%
-                # of transactions for performance monitoring.
-                traces_sample_rate=1.0,
-                # Set profiles_sample_rate to 1.0 to profile 100%
-                # of sampled transactions.
-                # We recommend adjusting this value in production.
-                profiles_sample_rate=1.0,
+                # sample only 10% of events to reduce incoming data
+                traces_sample_rate=0.1,
+                profiles_sample_rate=0.1,
                 environment=cls.ENVIRONMENT_NAME,
                 release=cls.RELEASE_NAME,
                 enable_tracing=True,
