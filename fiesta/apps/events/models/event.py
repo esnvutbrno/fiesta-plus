@@ -3,18 +3,13 @@ from __future__ import annotations
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts.models import User
 from apps.files.storage import NamespacedFilesStorage
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
 
+
 # TODO Maybe pre-registration, registration and paused registration for different field.
-
-
-class State(models.TextChoices):
-    DRAFT = "draft", _("Draft")
-    PUBLISHED = "published", _("Published")
-    HIDDEN = "hidden", _("Hidden")  # Visible only after invite
-
 
 def has_permission_for_cover_photo_view(request: HttpRequest, name: str) -> bool:  # TODO
     if request.user.is_authenticated:
@@ -46,17 +41,25 @@ class Event(BaseTimestampedModel):
         verbose_name=_("subtitle"),
         help_text=_("short description of the event"),
         blank=True,
+        default="",
     )
 
     description = models.TextField(
         verbose_name=_("description"),
         help_text=_("full description of the event"),
+        default="",
     )
 
     capacity = models.SmallIntegerField(
         verbose_name=_("capacity"),
         help_text=_("capacity of the event"),
     )
+    
+    class State(models.TextChoices):
+        DRAFT = "draft", _("Draft")
+        PUBLISHED = "published", _("Published")
+        HIDDEN = "hidden", _("Hidden")  # Visible only after invite
+
 
     state = models.CharField(
         choices=State.choices,
@@ -124,7 +127,7 @@ class Event(BaseTimestampedModel):
 
     def __str__(self):
         # return self.title
-        return f"{self.title} - {self.start}"
+        return f"{self.title} - {self.start.date()}"
 
     class Meta:
         ordering = ["start"]

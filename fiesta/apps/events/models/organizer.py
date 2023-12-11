@@ -6,23 +6,25 @@ from django.utils.translation import gettext_lazy as _
 from apps.utils.models import BaseTimestampedModel
 
 
-class Role(models.TextChoices):
-    EVENT_LEADER = "event_leader", _("Event_leader")
-    OC = "oc", _("OC")
+
 
 
 class Organizer(BaseTimestampedModel):
-    state = models.CharField(
+    
+    class Role(models.TextChoices):
+        EVENT_LEADER = "event_leader", _("Event_leader")
+        OC = "oc", _("OC")
+    role = models.CharField(
         choices=Role.choices,
         default=Role.OC,
-        verbose_name=_("state"),
-        help_text=_("current state of the event"),
+        verbose_name=_("role"),
+        help_text=_("current role of the user on event"),
     )
 
     user = models.ForeignKey(
         "accounts.User",
         on_delete=models.CASCADE,
-        related_name="event",
+        related_name="event_organizers",
         verbose_name=_("user"),
         db_index=True,
     )
@@ -30,7 +32,7 @@ class Organizer(BaseTimestampedModel):
     event = models.ForeignKey(
         "events.Event",
         on_delete=models.CASCADE,
-        related_name="organizer",
+        related_name="event_organizers",
         verbose_name=_("event"),
         db_index=True,
     )
@@ -41,7 +43,7 @@ class Organizer(BaseTimestampedModel):
         unique_together = (("user", "event"),)
 
     def __str__(self):
-        return self.user + self.event
+        return f"{self.user} - {self.event}"
 
 
 __all__ = ["Organizer"]

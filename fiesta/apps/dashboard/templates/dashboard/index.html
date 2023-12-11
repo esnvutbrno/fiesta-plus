@@ -85,5 +85,8 @@
         </div>
       {% endif %}
     </div>
+    {% if blocks.events %}
+      <div class="w-full flex">{% include blocks.events with request=request %}</div>
+    {% endif %}
   </div>
 {% endblock %}
