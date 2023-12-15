@@ -15,20 +15,16 @@
       <span class="text-3xl" aria-label="{% trans "place" %}">📍</span>
       <address>{{ fr.place }}</address>
     </span>
-    <span class="flex flex-row justify-between items-center">
-      <span class="text-3xl" aria-label="{% trans "exact point" %}">🗺️</span>
-      <a class="link link-secondary"
-         href="{{ fr.location_as_google_maps_link }}"
-         rel="nofollow,noreferrer,noopener"
-         target="_blank">see on maps</a>
-    </span>
-
-
-
+    {% if br.location %}
+      <span class="flex flex-row justify-between items-center">
+        <span class="text-3xl" aria-label="{% trans "exact point" %}">🗺️</span>
+        <a class="link link-secondary"
+           href="{{ fr.location_as_google_maps_link }}"
+           rel="nofollow,noreferrer,noopener"
+           target="_blank">see on maps</a>
+      </span>
+    {% endif %}
   </div>
-
-
-
 {% endblock %}
 
 

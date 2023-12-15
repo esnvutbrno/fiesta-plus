@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 from apps.accounts.models import UserProfile
 from apps.fiestaforms.fields.datetime import DateTimeLocalField
-from apps.fiestaforms.forms import WebpackMediaFormMixin
+from apps.fiestaforms.forms import LegacyMediaFormMixin
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
@@ -19,8 +19,7 @@ USER_PROFILE_CONTACT_FIELDS = fields_for_model(
 )
 
 
-class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
-    _webpack_bundle = "jquery"
+class NewPickupRequestForm(LegacyMediaFormMixin, BaseNewRequestForm):
     submit_text = _("Send request for pickup")
 
     class Meta(BaseNewRequestForm.Meta):
@@ -68,9 +67,7 @@ class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
 #     TODO: add save/load of contacts to/from user_profile
 
 
-class PickupRequestEditorForm(WebpackMediaFormMixin, BaseRequestEditorForm):
-    _webpack_bundle = "jquery"
-
+class PickupRequestEditorForm(LegacyMediaFormMixin, BaseRequestEditorForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 

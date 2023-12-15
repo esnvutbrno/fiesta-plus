@@ -36,3 +36,7 @@ class WebpackMediaFormMixin:
         media += Media(js=[f["url"] for f in get_files(self._webpack_bundle)])
 
         return media
+
+
+class LegacyMediaFormMixin(WebpackMediaFormMixin):
+    _webpack_bundle = "jquery"

@@ -25,8 +25,9 @@ class PickupRequest(BaseRequestForPickupSystem):
     location = PlainLocationField(
         verbose_name=_("pickup point"),
         based_fields=["pickup_place"],
-        default="49.1922443,16.6113382",
-        zoom=4,
+        blank=True,
+        null=True,
+        zoom=12,
     )
 
     class Meta(BaseRequestForPickupSystem.Meta):
