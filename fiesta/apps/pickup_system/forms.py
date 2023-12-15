@@ -1,22 +1,16 @@
 from __future__ import annotations
 
-from django.forms import Textarea, fields_for_model
+from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import UserProfile
 from apps.fiestaforms.fields.datetime import DateTimeLocalField
 from apps.fiestaforms.forms import LegacyMediaFormMixin
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
-
-USER_PROFILE_CONTACT_FIELDS = fields_for_model(
-    UserProfile,
-    fields=("facebook", "instagram", "telegram", "whatsapp"),
-)
 
 
 class NewPickupRequestForm(LegacyMediaFormMixin, BaseNewRequestForm):

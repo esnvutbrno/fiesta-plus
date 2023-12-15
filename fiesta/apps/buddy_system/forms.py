@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-from django.forms import Textarea, fields_for_model
+from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import UserProfile
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
-
-USER_PROFILE_CONTACT_FIELDS = fields_for_model(
-    UserProfile,
-    fields=("facebook", "instagram", "telegram", "whatsapp"),
-)
 
 
 class NewBuddyRequestForm(BaseNewRequestForm):
