@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
@@ -58,6 +60,17 @@ class MatchBuddyRequestFormView(
             qs=BuddyRequest.objects.get_queryset(),
             membership=self.request.membership,
         )
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["note"].help_text = lazy(
+            lambda: render_to_string(
+                "buddy_system/parts/buddy_request_match_note_help.html",
+                context={"request": self.get_object()},
+            ),
+            str,
+        )
+        return form
 
 
 class ServeFilesFromBuddiesMixin:

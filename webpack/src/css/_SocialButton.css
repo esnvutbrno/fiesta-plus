@@ -25,8 +25,24 @@
         @apply w-full
     }
 
+    .SocialButton--email {
+        @apply text-white bg-primary hover:bg-primary/90
+    }
+
     .SocialButton--facebook {
         @apply text-white bg-[#3b5998] hover:bg-[#3b5998]/90
+    }
+
+    .SocialButton--telegram {
+        @apply text-white bg-[#0088cc] hover:bg-[#0088cc]/90
+    }
+
+    .SocialButton--instagram {
+        @apply text-white bg-gradient-to-r from-orange-400 to-pink-500
+    }
+
+    .SocialButton--whatsapp {
+        @apply text-white bg-[#25D366] hover:bg-[#25D366]/90
     }
 
     .SocialButton--google {

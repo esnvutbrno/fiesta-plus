@@ -1,5 +1,8 @@
 {% load i18n %}
-<div class="collapse collapse-arrow bg-base-200 w-full flex-grow">
+
+{% include "fiestarequests/available_contacts_row.html" with user=request.issuer %}
+
+<div class="collapse collapse-arrow bg-base-200 w-full flex-grow mt-2">
   <input type="checkbox" />
   <label class="collapse-title text-lg font-medium  ">{% translate 'What to include in message?' %}</label>
   <div class="collapse-content">

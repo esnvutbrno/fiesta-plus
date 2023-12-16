@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from django.template.loader import render_to_string
 from django.urls import reverse_lazy
+from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 
@@ -48,6 +50,17 @@ class MatchPickupRequestFormView(
         return self.request.in_space_of_section.pickup_system_requests.filter(
             state=BaseRequestProtocol.State.CREATED,
         )
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields["note"].help_text = lazy(
+            lambda: render_to_string(
+                "pickup_system/parts/pickup_request_match_note_help.html",
+                context={"request": self.get_object()},
+            ),
+            str,
+        )
+        return form
 
 
 class ServeFilesFromPickupsMixin:

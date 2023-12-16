@@ -69,13 +69,10 @@ class BuddyRequestMatchForm(BaseRequestMatchForm):
 
     class Meta(BaseRequestMatchForm.Meta):
         model = BuddyRequestMatch
-        labels = BaseRequestMatchForm.Meta.labels | {}
-        help_texts = BaseRequestMatchForm.Meta.help_texts | {
-            "note": lazy(
-                lambda: render_to_string("buddy_system/parts/buddy_request_match_note_help.html"),
-                str,
-            )
+        labels = BaseRequestMatchForm.Meta.labels | {
+            "note": _("Message for your upcoming buddy"),
         }
+        help_texts = BaseRequestMatchForm.Meta.help_texts | {}
         widgets = BaseRequestMatchForm.Meta.widgets | {
             "note": Textarea(
                 attrs={

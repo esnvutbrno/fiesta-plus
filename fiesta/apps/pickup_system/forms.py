@@ -51,10 +51,6 @@ class NewPickupRequestForm(LegacyMediaFormMixin, BaseNewRequestForm):
                 lambda: render_to_string("pickup_system/parts/pickup_request_place_help.html"),
                 str,
             ),
-            "note": lazy(
-                lambda: render_to_string("pickup_system/parts/pickup_request_note_help.html"),
-                str,
-            ),
         }
 
 
@@ -67,6 +63,14 @@ class PickupRequestEditorForm(LegacyMediaFormMixin, BaseRequestEditorForm):
 
         # labels somehow do not work
         self.fields["approving_request"].label = _("Are you sure you want to place a pickup request?")
+
+        self.fields["note"].help_text = lazy(
+            lambda: render_to_string(
+                "pickup_system/parts/pickup_request_match_note_help.html",
+                context={"request": self.instance},
+            ),
+            str,
+        )
 
     class Meta(BaseRequestEditorForm.Meta):
         model = PickupRequest
@@ -91,13 +95,10 @@ class PickupRequestMatchForm(BaseRequestMatchForm):
 
     class Meta(BaseRequestMatchForm.Meta):
         model = PickupRequestMatch
-        labels = BaseRequestMatchForm.Meta.labels | {}
-        help_texts = BaseRequestMatchForm.Meta.help_texts | {
-            "note": lazy(
-                lambda: render_to_string("pickup_system/parts/pickup_request_match_note_help.html"),
-                str,
-            )
+        labels = BaseRequestMatchForm.Meta.labels | {
+            "note": _("Message for student"),
         }
+        help_texts = BaseRequestMatchForm.Meta.help_texts | {}
         widgets = BaseRequestMatchForm.Meta.widgets | {
             "note": Textarea(
                 attrs={
