@@ -50,10 +50,12 @@
             <td class="font-semibold pr-4 md:pr-12">Gender:</td>
             <td>{{ profile.gender }}</td>
           </tr>
-          <tr>
-            <td class="font-semibold pr-4 md:pr-12">Birth date:</td>
-            <td>{{ profile.birth_date }}</td>
-          </tr>
+          {% if profile.birth_date %}
+            <tr>
+              <td class="font-semibold pr-4 md:pr-12">Birth date:</td>
+              <td>{{ profile.birth_date }}</td>
+            </tr>
+          {% endif %}
           <tr>
             <td class="font-semibold pr-4 md:pr-12">Joined:</td>
             <td>{{ user.date_joined }}</td>
