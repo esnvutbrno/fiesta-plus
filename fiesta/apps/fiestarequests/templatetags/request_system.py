@@ -31,7 +31,7 @@ def censor_description(description: str) -> str:
 @register.filter
 def request_state_to_css_variant(state: BaseRequestProtocol.State):
     return {
-        BaseRequestProtocol.State.CREATED: "info",
+        BaseRequestProtocol.State.CREATED: "info hidden",
         BaseRequestProtocol.State.MATCHED: "success",
         BaseRequestProtocol.State.CANCELLED: "danger",
     }.get(state)
