@@ -8,21 +8,23 @@ from click import secho
 from django.core.files.images import ImageFile
 
 from apps.accounts.models import UserProfile
+from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
 
 @click.command()
 def load_legacy_avatars():
-    for up in UserProfile.objects.filter(picture="").exclude(avatar_slug=""):
-        r = requests.get(f"https://fiesta.esncz.org/images/avatar/{up.avatar_slug}.jpg")
+    with synchronizer.without_profile_revalidation():
+        for up in UserProfile.objects.filter(picture="").exclude(avatar_slug=""):
+            r = requests.get(f"https://fiesta.esncz.org/images/avatar/{up.avatar_slug}.jpg")
 
-        up.picture = (
-            ImageFile(
-                BytesIO(r.content),
-                name="image.jpg",
+            up.picture = (
+                ImageFile(
+                    BytesIO(r.content),
+                    name="image.jpg",
+                )
+                if r.status_code == 200
+                else None
             )
-            if r.status_code == 200
-            else None
-        )
-        if up.picture:
-            up.save(update_fields=["picture"])
-            secho(f"Avatar for {up.user} loaded", fg="green")
+            if up.picture:
+                up.save(update_fields=["picture"])
+                secho(f"Avatar for {up.user} loaded", fg="green")
