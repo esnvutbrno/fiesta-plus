@@ -432,10 +432,10 @@ def process_user_row(row, i):
     #     continue
 
     section, _ = Section.objects.select_for_update().update_or_create(
-        name=section_short,
+        space_slug=slugify(section_short.replace(" ", "")),
         defaults=dict(
             country=Country("CZ"),
-            space_slug=slugify(section_short.replace(" ", "")),
+            name=section_short,
         ),
     )
     SectionMembership.objects.select_for_update().update_or_create(
@@ -481,8 +481,11 @@ def process_user_row(row, i):
             facebook=clean_facebook(facebook_url) or "",
             instagram=clean_instagram(instagram_url) or "",
             phone_number=to_python(phone_number) or "",
+            birth_date=birthday,
+            avatar_slug=avatar_name,
         ),
     )
+    return email, user
 
     if avatar_name and not user_profile.picture:
         r = requests.get(f"https://fiesta.esncz.org/images/avatar/{avatar_name}.jpg")
@@ -511,13 +514,15 @@ def reconcile_sections():
 
 
 def load(cursor: CursorWrapper):
-    # load_buddy_settings(cursor=cursor)
-    # load_pickup_settings(cursor=cursor)
-    load_faculties(cursor=cursor)
+    # load_faculties(cursor=cursor)
     # fill_id_to_user()
+
     load_users(cursor=cursor)
     load_buddy_requests(cursor=cursor)
     load_pickup_requests(cursor=cursor)
+
+    load_buddy_settings(cursor=cursor)
+    load_pickup_settings(cursor=cursor)
 
 
 @click.command()

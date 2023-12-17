@@ -166,6 +166,13 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         default=False,
     )
 
+    avatar_slug = models.CharField(
+        verbose_name=_("avatar slug"),
+        max_length=64,
+        blank=True,
+        default="",
+    )
+
     class Meta:
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
