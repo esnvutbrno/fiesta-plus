@@ -63,6 +63,11 @@ class Section(BaseTimestampedModel):
         db_index=True,
     )
 
+    allow_experimental_plugins = models.BooleanField(
+        default=False,
+        verbose_name=_("allow experimental plugins"),
+    )
+
     class SystemState(TextChoices):
         ENABLED = "enabled", _("Enabled")
         PAUSED = "paused", _("Paused")
