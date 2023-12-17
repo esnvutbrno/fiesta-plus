@@ -432,10 +432,10 @@ def process_user_row(row, i):
     #     continue
 
     section, _ = Section.objects.select_for_update().update_or_create(
-        space_slug=slugify(section_short.replace(" ", "")),
+        name=section_short,
         defaults=dict(
+            space_slug=slugify(section_short.replace(" ", "")),
             country=Country("CZ"),
-            name=section_short,
         ),
     )
     SectionMembership.objects.select_for_update().update_or_create(
@@ -515,11 +515,11 @@ def reconcile_sections():
 
 def load(cursor: CursorWrapper):
     # load_faculties(cursor=cursor)
-    # fill_id_to_user()
+    fill_id_to_user()
 
-    load_users(cursor=cursor)
-    load_buddy_requests(cursor=cursor)
-    load_pickup_requests(cursor=cursor)
+    # load_users(cursor=cursor)
+    # load_buddy_requests(cursor=cursor)
+    # load_pickup_requests(cursor=cursor)
 
     load_buddy_settings(cursor=cursor)
     load_pickup_settings(cursor=cursor)
