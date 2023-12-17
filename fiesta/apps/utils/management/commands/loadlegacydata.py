@@ -6,6 +6,7 @@ from io import BytesIO
 
 import djclick as click
 import requests
+from allauth.account.models import EmailAddress
 from click import secho
 from django.core.files.images import ImageFile
 from django.db import connections
@@ -14,11 +15,19 @@ from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.timezone import make_aware
 from django_countries.fields import Country
+from phonenumber_field.phonenumber import to_python
 
+from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_instagram
 from apps.accounts.hashers import LegacyBCryptSHA256PasswordHasher
 from apps.accounts.models import User, UserProfile
 from apps.accounts.services.user_profile_state_synchronizer import synchronizer
-from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
+from apps.buddy_system.apps import BuddySystemConfig
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
+from apps.fiestarequests.matching_policy import ManualByEditorMatchingPolicy, ManualByMemberMatchingPolicy
+from apps.pickup_system.apps import PickupSystemConfig
+from apps.pickup_system.models import PickupRequest, PickupRequestMatch, PickupSystemConfiguration
+from apps.plugins.models import Plugin
+from apps.plugins.utils import all_plugins_mapped_to_class
 from apps.sections.models import Section, SectionMembership, SectionUniversity
 from apps.sections.models.services.section_plugins_reconciler import SectionPluginsReconciler
 from apps.universities.models import Faculty, University
@@ -29,6 +38,10 @@ SELECT
     du.name, du.surname,
     du.registered,
     du.gender,
+    du.facebook_url,
+    du.instagram_url,
+    du.phone_number,
+    du.birthday,
     u.status,
     u.signature,
     json_array(ra.role),
@@ -64,6 +77,26 @@ LEFT JOIN data_user matcher ON bm.member = matcher.user_id
 LEFT JOIN user matcher_u ON bm.member = matcher_u.user_id;
 """
 
+LOAD_PICKUP_REQUESTS = """
+SELECT
+    pr.data_user,
+    pr.description,
+    pr.date_arrival,
+    pr.place_arrival,
+    issuer_u.university,
+    issuer.faculty_id,
+    matcher_u.university,
+    matcher.faculty_id,
+    pm.member,
+    pm.created
+FROM pickup_request pr
+INNER JOIN data_user issuer on pr.data_user = issuer.user_id
+INNER JOIN user issuer_u on pr.data_user = issuer_u.user_id
+LEFT JOIN pickup_match pm ON pm.international = pr.data_user
+LEFT JOIN data_user matcher ON pm.member = matcher.user_id
+LEFT JOIN user matcher_u ON pm.member = matcher_u.user_id;
+"""
+
 LOAD_FACULTIES = """
 select
     faculty.id, -- id
@@ -72,6 +105,38 @@ select
 faculty.faculty -- faculty of
 from faculty
 inner join fiesta.university u on faculty.university_id = u.id
+"""
+
+LOAD_BUDDY_SETTINGS = """
+select
+    u.section_short,
+       show_manual,
+       show_image,
+       show_university,
+       show_state,
+       show_faculty,
+       show_gender,
+       `limit`
+from buddy_settings
+inner join university u on buddy_settings.university_id = u.id
+inner join module_assignment ma on u.id = ma.university
+where ma.module = 'BuddyManagement'
+;
+"""
+
+LOAD_PICKUP_SETTINGS = """
+select
+    u.section_short,
+       show_image,
+       show_university,
+       show_state,
+       show_faculty,
+       show_gender
+from pickup_settings
+inner join university u on pickup_settings.university_id = u.id
+inner join module_assignment ma on u.id = ma.university
+where ma.module = 'PickupManagement'
+;
 """
 
 ID_TO_USER: dict[str, User] = {}
@@ -105,7 +170,63 @@ def unknown_faculty_for_university(uni_abbr: str):
     )[0]
 
 
-def load_requests(*, cursor: CursorWrapper):
+def load_pickup_requests(*, cursor: CursorWrapper):
+    secho("Loading pickup requests.")
+    cursor.execute(LOAD_PICKUP_REQUESTS)
+    for i, row in enumerate(cursor.fetchall(), start=1):
+        (
+            issuer_email,
+            description,
+            date_arrival,
+            place_arrival,
+            issuer_university,
+            issuer_faculty,
+            matcher_university,
+            matcher_faculty,
+            matched_by_email,
+            matched_at,
+        ) = row
+
+        secho(f"Processing {i: >4} {row=}.")
+
+        if issuer_faculty:
+            issuer_f = ID_TO_FACULTY[issuer_faculty]
+        else:
+            issuer_f = unknown_faculty_for_university(issuer_university)
+
+        responsible_section = Section.objects.filter(universities__abbr=issuer_university).first()
+
+        pr, _ = PickupRequest.objects.update_or_create(
+            issuer=ID_TO_USER[issuer_email],
+            responsible_section=responsible_section,
+            defaults=dict(
+                note=description,
+                state=PickupRequest.State.MATCHED if matched_by_email else PickupRequest.State.CREATED,
+                issuer_faculty=issuer_f,
+                created=ID_TO_USER[issuer_email].date_joined,
+                time=make_aware(date_arrival),
+                place=place_arrival,
+                location=None,
+            ),
+        )
+
+        if matched_by_email:
+            if matcher_faculty:
+                matcher_f = ID_TO_FACULTY.get(matcher_faculty)
+            else:
+                matcher_f = unknown_faculty_for_university(matcher_university)
+
+            PickupRequestMatch.objects.update_or_create(
+                request=pr,
+                defaults=dict(
+                    matcher=ID_TO_USER[matched_by_email],
+                    created=make_aware(matched_at) if matched_at else ID_TO_USER[matched_by_email].modified,
+                    matcher_faculty=matcher_f,
+                ),
+            )
+
+
+def load_buddy_requests(*, cursor: CursorWrapper):
     secho("Loading buddy requests.")
     cursor.execute(LOAD_BUDDY_REQUESTS)
     for i, row in enumerate(cursor.fetchall(), start=1):
@@ -164,6 +285,94 @@ def load_users(*, cursor: CursorWrapper):
         ID_TO_USER[email] = user
 
 
+def load_buddy_settings(*, cursor: CursorWrapper):
+    cursor.execute(LOAD_BUDDY_SETTINGS)
+
+    for (
+        section_short,
+        matched_by_editors,
+        show_image,
+        show_university,
+        show_state,
+        show_faculty,
+        show_gender,
+        limit,
+    ) in cursor.fetchall():
+        section = Section.objects.get(name=section_short)
+
+        conf, _ = BuddySystemConfiguration.objects.select_for_update().update_or_create(
+            section=section,
+            shared=False,
+            defaults=dict(
+                matching_policy=(
+                    ManualByMemberMatchingPolicy.id,
+                    ManualByEditorMatchingPolicy.id,
+                )[matched_by_editors],
+                display_issuer_first_name=False,
+                display_issuer_last_name=False,
+                display_issuer_picture=show_image,
+                display_issuer_gender=show_gender,
+                display_issuer_country=show_state,
+                display_issuer_university=show_university,
+                display_issuer_faculty=show_faculty,
+                rolling_limit=limit,
+                enable_note_from_matcher=True,
+            ),
+        )
+        plugin, _ = Plugin.objects.get_or_create(
+            section=section,
+            app_label=all_plugins_mapped_to_class().get(BuddySystemConfig).label,
+            defaults=dict(
+                state=Plugin.State.ENABLED,
+                configuration=conf,
+            ),
+        )
+        secho(f"Processed {section_short} into {plugin=} with {conf=}.")
+
+
+def load_pickup_settings(*, cursor: CursorWrapper):
+    cursor.execute(LOAD_PICKUP_SETTINGS)
+
+    for (
+        section_short,
+        show_image,
+        show_university,
+        show_state,
+        show_faculty,
+        show_gender,
+    ) in cursor.fetchall():
+        section = Section.objects.get(name=section_short)
+
+        conf, _ = PickupSystemConfiguration.objects.select_for_update().update_or_create(
+            section=section,
+            shared=False,
+            defaults=dict(
+                # matching_policy=(
+                #     ManualByMemberMatchingPolicy.id,
+                #     ManualByEditorMatchingPolicy.id,
+                # )[matched_by_editors],
+                display_issuer_first_name=False,
+                display_issuer_last_name=False,
+                display_issuer_picture=show_image,
+                display_issuer_gender=show_gender,
+                display_issuer_country=show_state,
+                display_issuer_university=show_university,
+                display_issuer_faculty=show_faculty,
+                rolling_limit=0,
+                enable_note_from_matcher=True,
+            ),
+        )
+        plugin, _ = Plugin.objects.get_or_create(
+            section=section,
+            app_label=all_plugins_mapped_to_class().get(PickupSystemConfig).label,
+            defaults=dict(
+                state=Plugin.State.ENABLED,
+                configuration=conf,
+            ),
+        )
+        secho(f"Processed {section_short} into {plugin=} with {conf=}.")
+
+
 def process_user_row(row, i):
     (
         email,
@@ -172,6 +381,10 @@ def process_user_row(row, i):
         last_name,
         registered,
         gender,
+        facebook_url,
+        instagram_url,
+        phone_number,
+        birthday,
         status,
         avatar_name,
         roles,
@@ -183,6 +396,7 @@ def process_user_row(row, i):
         uni_name,
     ) = row
     secho(f"Processing {i: >4}: {email}.")
+    # return email, get_single_object_or_none(User, username=email)
 
     # password = password.split('$')[3]
     # is:        $2y$10$t9haqcKqlgXKrCv1pVTAxuqKh7vDtwksh0w7PXb44eNjRQOvY58Mu
@@ -202,6 +416,14 @@ def process_user_row(row, i):
                 "enabled": User.State.EXPIRED,
                 "banned": User.State.BANNED,
             }[status],
+        ),
+    )
+    EmailAddress.objects.select_for_update().update_or_create(
+        email=email,
+        defaults=dict(
+            user=user,
+            verified=True,
+            primary=True,
         ),
     )
     ID_TO_USER[email] = user
@@ -256,6 +478,9 @@ def process_user_row(row, i):
                 "f": UserProfile.Gender.FEMALE,
                 "m": UserProfile.Gender.MALE,
             }[gender],
+            facebook=clean_facebook(facebook_url) or "",
+            instagram=clean_instagram(instagram_url) or "",
+            phone_number=to_python(phone_number) or "",
         ),
     )
 
@@ -286,10 +511,13 @@ def reconcile_sections():
 
 
 def load(cursor: CursorWrapper):
+    # load_buddy_settings(cursor=cursor)
+    # load_pickup_settings(cursor=cursor)
     load_faculties(cursor=cursor)
     # fill_id_to_user()
     load_users(cursor=cursor)
-    load_requests(cursor=cursor)
+    load_buddy_requests(cursor=cursor)
+    load_pickup_requests(cursor=cursor)
 
 
 @click.command()

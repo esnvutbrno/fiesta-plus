@@ -57,6 +57,12 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     # ### FIELDS, which are conditionally REQUIRED ###
     # see SectionsConfiguration
 
+    birth_date = models.DateField(
+        verbose_name=_("birth date"),
+        blank=True,
+        null=True,
+    )
+
     nationality = CountryField(
         verbose_name=_("nationality"),
         blank=True,

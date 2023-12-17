@@ -8,6 +8,11 @@ from webpack_loader.utils import get_files
 class DateInput(DjDateInput):
     input_type = "date"
 
+    def __init__(self, *args, **kwargs):
+        # see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/date
+        kwargs.setdefault("format", "%Y-%m-%d")
+        super().__init__(*args, **kwargs)
+
 
 class BaseModelForm(ModelForm):
     template_name = "fiestaforms/classic.html"
