@@ -58,7 +58,10 @@
           <hr>
           <div class="card-actions justify-between items-center">
             {% if configuration.display_request_creation_date %}
-              <span class="badge badge-outline badge-sm">{{ fr.created|date:'SHORT_DATETIME_FORMAT' }}</span>
+              <span class="badge badge-outline badge-sm">
+                {% translate 'created' %}
+                {{ fr.created|date:'SHORT_DATE_FORMAT' }}
+              </span>
             {% endif %}
 
             {% block request_card_actions %}{% endblock %}
