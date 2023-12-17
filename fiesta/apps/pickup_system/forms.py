@@ -61,9 +61,6 @@ class PickupRequestEditorForm(LegacyMediaFormMixin, BaseRequestEditorForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # labels somehow do not work
-        self.fields["approving_request"].label = _("Are you sure you want to place a pickup request?")
-
         self.fields["note"].help_text = lazy(
             lambda: render_to_string(
                 "pickup_system/parts/pickup_request_match_note_help.html",
