@@ -9,13 +9,17 @@ from apps.plugins.plugin import BasePluginAppConfig
 
 
 @lru_cache
-def all_plugin_apps() -> tuple[BasePluginAppConfig, ...]:
+def all_plugin_apps(filter_f: callable = None) -> tuple[BasePluginAppConfig, ...]:
     """Returns all django app configs considered as PluginApps -- inheriting from PluginAppConfig."""
     from django.apps import apps
 
     return tuple(
         sorted(
-            filter(lambda a: isinstance(a, BasePluginAppConfig), apps.get_app_configs()), key=attrgetter("verbose_name")
+            filter(
+                filter_f,
+                filter(lambda a: isinstance(a, BasePluginAppConfig), apps.get_app_configs()),
+            ),
+            key=attrgetter("verbose_name"),
         )
     )
 
