@@ -40,6 +40,7 @@ class MyProfileUpdateView(
 
 
 class ProfileFinishFormView(
+    LoginRequiredMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
