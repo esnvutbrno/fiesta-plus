@@ -49,5 +49,5 @@ class BaseRequestMatchAdmin(ModelAdmin):
         "matcher__email",
         "matcher__last_name",
         "matcher__first_name",
-        "request_match__responsible_section__name",
+        "request__responsible_section__name",
     ]
