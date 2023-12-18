@@ -61,7 +61,7 @@
                         class="btn btn-secondary btn-outline grow"
                         type="submit"
                         name="role"
-                        value="{{ object.Role.ADMIN.value }}">Promote to editor</button>
+                        value="{{ object.Role.EDITOR.value }}">Promote to editor</button>
 
                 <button hx-post="{% url "sections:membership-role-editor" object.pk %}"
                         class="btn btn-warning btn-outline grow"
