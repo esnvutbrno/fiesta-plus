@@ -43,7 +43,7 @@ class User(AbstractUser):
 
     @property
     def full_name_official(self):
-        return f"{self.last_name} {self.first_name}".strip()
+        return f"{self.last_name} {self.first_name}".strip() or self.username
 
     class Meta(AbstractUser.Meta):
         verbose_name = _("user")
