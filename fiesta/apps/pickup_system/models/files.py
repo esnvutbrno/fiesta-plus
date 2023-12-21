@@ -16,6 +16,10 @@ class BaseIssuerPictureServeView(
         raise NotImplementedError
 
     def has_permission(self, request: HttpRequest, name: str) -> bool:
+        # no membership? no picture
+        if not request.membership:
+            return False
+
         # picture is from requests placed on my section
         related_requests = self.get_request_queryset(request).filter(
             issuer__profile__picture=name,
@@ -45,6 +49,10 @@ class BaseMatcherPictureServeView(
         raise NotImplementedError
 
     def has_permission(self, request: HttpRequest, name: str) -> bool:
+        # no membership? no picture
+        if not request.membership:
+            return False
+
         # is the file in requests, for whose is the related section responsible?
         related_requests = self.get_request_queryset(request).filter(
             match__matcher__profile__picture=name,
