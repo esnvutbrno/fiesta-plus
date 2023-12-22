@@ -6,7 +6,11 @@
 {% load utils %}
 {% load user_profile %}
 
-{% block match_card_middle %}{#  nothing needed here #}{% endblock %}
+{% block match_card_middle %}
+  <div class="chat-bubble border-0 bg-transparent pl-0 pt-0 mt-2 text-base-content">
+    {% for interest in br.get_interests_display %}<span class="mr-2 badge badge-outline">{{ interest }}</span>{% endfor %}
+  </div>
+{% endblock %}
 
 {% block match_card_waiting_for_match_bottom %}
   {% get_waiting_buddy_requests_placed_before br as waiting_total %}
