@@ -7,10 +7,10 @@
   resolved "https://registry.yarnpkg.com/@alloc/quick-lru/-/quick-lru-5.2.0.tgz#7bf68b20c0a350f936915fcae06f58e32007ce30"
   integrity sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==
 
-"@alpinejs/collapse@^3.13.2":
-  version "3.13.2"
-  resolved "https://registry.yarnpkg.com/@alpinejs/collapse/-/collapse-3.13.2.tgz#f14cbcd17d2cc50002de93f314b2e3930b6873f1"
-  integrity sha512-0osMzn5yUrnGSbvFoPltwV2UnbFNL0Gn99wfIRPklhkbgWXrwji1dtpklZsHsLwDqzGC6Pp8Kw1FlCU7gEC0Yw==
+"@alpinejs/collapse@^3.13.3":
+  version "3.13.3"
+  resolved "https://registry.yarnpkg.com/@alpinejs/collapse/-/collapse-3.13.3.tgz#5b34adc372c2d6134ef95261d2777e378f577669"
+  integrity sha512-iGO6IzqBwVNxAaoS4XCCJIIg9U/mH7v4vk6wlzxXKFWMXt2yynw93TkdELyjwxQqeNTEGimZRR+2wNf9yhJn0A==
 
 "@alpinejs/persist@^3.13.2":
   version "3.13.2"
@@ -1241,10 +1241,10 @@ culori@^3:
   resolved "https://registry.yarnpkg.com/culori/-/culori-3.2.0.tgz#df6561503f0cc20e8e1c029f086466666c0ac62f"
   integrity sha512-HIEbTSP7vs1mPq/2P9In6QyFE0Tkpevh0k9a+FkjhD+cwsYm9WRSbn4uMdW9O0yXlNYC3ppxL3gWWPOcvEl57w==
 
-daisyui@4.4.19:
-  version "4.4.19"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.19.tgz#90187e2ce5c914e774bb174a13f446aac7f555ad"
-  integrity sha512-IjOLWwnndD4N7Ut5CDxbUsaVtbqXPeVHM92IcgxGFxpuOd3CCKW/PAXZH6JoBTHFRaN57vB9XqEhdWm5yC+bPA==
+daisyui@^4.4.19:
+  version "4.4.23"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.23.tgz#f2ce1b5eb6c95422e72e5c954a2c0af6bfb65ef0"
+  integrity sha512-IFQRGoGoAke8chxPcDqQJFldVVd51JL7b4mRA3LqsLexW/6xicZzz9X3GXdGdnYsu8QPxZN4uzQZ5fwRNYXOSg==
   dependencies:
     css-selector-tokenizer "^0.8"
     culori "^3"
