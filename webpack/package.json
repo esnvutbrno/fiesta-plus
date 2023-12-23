@@ -10,7 +10,7 @@
     "build": "webpack --mode production --config webpack.prod.config.js"
   },
   "dependencies": {
-    "@alpinejs/collapse": "^3.13.2",
+    "@alpinejs/collapse": "^3.13.3",
     "@alpinejs/persist": "^3.13.2",
     "@sentry/webpack-plugin": "^2.10.1",
     "@tailwindcss/forms": "^0.5.6",
