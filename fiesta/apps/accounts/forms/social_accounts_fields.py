@@ -73,4 +73,4 @@ def clean_whatsapp(value: str) -> str:
         except ValueError:
             pass
 
-    raise ValidationError(_("Not a valid WhatsApp link"))
+    raise ValidationError(_("Not a valid WhatsApp link or phone number"))
