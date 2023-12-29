@@ -28,7 +28,7 @@ def clean_facebook(value: str) -> str:
     if fb_id:
         return fb_id[0]
 
-    return _first_part_in_path(parsed.path)
+    return _first_part_in_path(parsed.path).removeprefix("@")
 
 
 def clean_instagram(value: str) -> str:
@@ -40,7 +40,7 @@ def clean_instagram(value: str) -> str:
     except ValueError:
         return value
 
-    return _first_part_in_path(parsed.path)
+    return _first_part_in_path(parsed.path).removeprefix("@")
 
 
 def clean_telegram(value: str) -> str:
