@@ -31,14 +31,8 @@ class BuddyRequest(BaseRequestForBuddySystem):
         verbose_name = _("buddy request")
         verbose_name_plural = _("buddy requests")
 
-    def __str__(self):
-        return f"Buddy Request {self.issuer}: {self.get_state_display()}"
-
 
 class BuddyRequestMatch(BaseRequestMatchForBuddySystem):
     class Meta(BaseRequestForBuddySystem.Meta):
         verbose_name = _("buddy request match")
         verbose_name_plural = _("buddy request matches")
-
-    def __str__(self):
-        return f"Buddy Request Match {self.matcher}: {self.request}"

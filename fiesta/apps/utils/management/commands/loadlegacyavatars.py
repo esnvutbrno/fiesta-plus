@@ -14,7 +14,6 @@ from apps.accounts.services.user_profile_state_synchronizer import synchronizer
 
 def load_picture(up):
     r = requests.get(f"https://fiesta.esncz.org/images/avatar/{up.avatar_slug}.jpg")
-
     up.picture = (
         ImageFile(
             BytesIO(r.content),
@@ -30,5 +29,9 @@ def load_picture(up):
 
 @click.command()
 def load_legacy_avatars():
-    with synchronizer.without_profile_revalidation(), ProcessPoolExecutor(max_workers=64) as executor:
-        executor.map(load_picture, UserProfile.objects.exclude(avatar_slug=""))
+    with synchronizer.without_profile_revalidation(), ProcessPoolExecutor(max_workers=8) as executor:
+        executor.map(
+            load_picture,
+            UserProfile.objects.exclude(avatar_slug="").filter(picture=""),
+            # .filter(user__username="xxx@gmail.com")
+        )

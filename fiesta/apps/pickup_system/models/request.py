@@ -34,9 +34,6 @@ class PickupRequest(BaseRequestForPickupSystem):
         verbose_name = _("pickup request")
         verbose_name_plural = _("pickup requests")
 
-    def __str__(self):
-        return f"Pickup Request {self.issuer}: {self.get_state_display()}"
-
     @property
     def location_as_google_maps_link(self):
         return f"https://www.google.com/maps/place/{self.location}?zoom=15"
@@ -47,6 +44,3 @@ class PickupRequestMatch(BaseRequestMatchForPickupSystem):
     class Meta(BaseRequestForPickupSystem.Meta):
         verbose_name = _("pickup request match")
         verbose_name_plural = _("pickup request matches")
-
-    def __str__(self):
-        return f"Pickup Request Match {self.matcher}: {self.request}"

@@ -54,7 +54,9 @@ INNER JOIN university uni ON uni.id = u.university
 INNER JOIN role_assignment ra ON ra.data_user = du.user_id
 LEFT JOIN country c on du.country_id = c.code_id
 LEFT JOIN faculty f on du.faculty_id = f.id
+-- where data_user = 'deawer23@seznam.cz'
 -- WHERE ra.role IN ('member', 'admin', 'editor')
+-- where du.registered > '2023-09-01'
 GROUP BY du.user_id
 ORDER BY u.user_id;
 """
@@ -74,7 +76,9 @@ INNER JOIN data_user issuer on br.data_user = issuer.user_id
 INNER JOIN user issuer_u on br.data_user = issuer_u.user_id
 LEFT JOIN buddy_match bm ON bm.international = br.data_user
 LEFT JOIN data_user matcher ON bm.member = matcher.user_id
-LEFT JOIN user matcher_u ON bm.member = matcher_u.user_id;
+LEFT JOIN user matcher_u ON bm.member = matcher_u.user_id
+-- where issuer.registered > '2023-09-01'
+;
 """
 
 LOAD_PICKUP_REQUESTS = """
@@ -94,7 +98,9 @@ INNER JOIN data_user issuer on pr.data_user = issuer.user_id
 INNER JOIN user issuer_u on pr.data_user = issuer_u.user_id
 LEFT JOIN pickup_match pm ON pm.international = pr.data_user
 LEFT JOIN data_user matcher ON pm.member = matcher.user_id
-LEFT JOIN user matcher_u ON pm.member = matcher_u.user_id;
+LEFT JOIN user matcher_u ON pm.member = matcher_u.user_id
+-- where issuer.registered > '2023-09-01'
+;
 """
 
 LOAD_FACULTIES = """
@@ -302,8 +308,8 @@ def load_buddy_settings(*, cursor: CursorWrapper):
 
         conf, _ = BuddySystemConfiguration.objects.select_for_update().update_or_create(
             section=section,
-            shared=False,
             defaults=dict(
+                shared=False,
                 matching_policy=(
                     ManualByMemberMatchingPolicy.id,
                     ManualByEditorMatchingPolicy.id,
@@ -345,8 +351,8 @@ def load_pickup_settings(*, cursor: CursorWrapper):
 
         conf, _ = PickupSystemConfiguration.objects.select_for_update().update_or_create(
             section=section,
-            shared=False,
             defaults=dict(
+                shared=False,
                 # matching_policy=(
                 #     ManualByMemberMatchingPolicy.id,
                 #     ManualByEditorMatchingPolicy.id,
@@ -441,18 +447,20 @@ def process_user_row(row, i):
     SectionMembership.objects.select_for_update().update_or_create(
         section=section,
         user=user,
-        role=(
-            SectionMembership.Role.ADMIN
-            if "admin" in roles
-            else (
-                SectionMembership.Role.EDITOR
-                if "editor" in roles
-                else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
-            )
+        defaults=dict(
+            created=make_aware(registered) if registered else timezone.now(),
+            role=(
+                SectionMembership.Role.ADMIN
+                if "admin" in roles
+                else (
+                    SectionMembership.Role.EDITOR
+                    if "editor" in roles
+                    else (SectionMembership.Role.MEMBER if "member" in roles else SectionMembership.Role.INTERNATIONAL)
+                )
+            ),
+            # TODO: state
+            state=SectionMembership.State.ACTIVE,
         ),
-        # TODO: state
-        state=SectionMembership.State.ACTIVE,
-        defaults=dict(created=make_aware(registered) if registered else timezone.now()),
     )
     university, _ = University.objects.get_or_create(abbr=uni_id, defaults=dict(name=uni_name, country=Country("CZ")))
     SectionUniversity.objects.select_for_update().update_or_create(
@@ -514,12 +522,12 @@ def reconcile_sections():
 
 
 def load(cursor: CursorWrapper):
-    # load_faculties(cursor=cursor)
-    fill_id_to_user()
+    load_faculties(cursor=cursor)
 
-    # load_users(cursor=cursor)
-    # load_buddy_requests(cursor=cursor)
-    # load_pickup_requests(cursor=cursor)
+    load_users(cursor=cursor)
+    # fill_id_to_user()
+    load_buddy_requests(cursor=cursor)
+    load_pickup_requests(cursor=cursor)
 
     load_buddy_settings(cursor=cursor)
     load_pickup_settings(cursor=cursor)
