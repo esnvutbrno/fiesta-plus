@@ -2,7 +2,9 @@ from __future__ import annotations
 
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.utils.translation import gettext_lazy as _
 
+from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.fiestatables.views.tables import PreprocessQuerySetMixin
 from apps.utils.admin.change_links_mixin import AdminChangeLinksMixin
 
@@ -32,6 +34,16 @@ class BaseRequestAdmin(PreprocessQuerySetMixin, AdminChangeLinksMixin, ModelAdmi
         "issuer__first_name",
         "responsible_section__name",
     ]
+
+    @admin.action(description=_("Mark selected created requests as cancelled"))
+    def make_cancelled(self, request, queryset):
+        queryset.filter(
+            state=BaseRequestProtocol.State.CREATED,
+        ).update(
+            state=BaseRequestProtocol.State.CANCELLED,
+        )
+
+    actions = [make_cancelled]
 
 
 class BaseRequestMatchAdmin(AdminChangeLinksMixin, ModelAdmin):
