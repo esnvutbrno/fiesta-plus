@@ -1241,10 +1241,10 @@ culori@^3:
   resolved "https://registry.yarnpkg.com/culori/-/culori-3.2.0.tgz#df6561503f0cc20e8e1c029f086466666c0ac62f"
   integrity sha512-HIEbTSP7vs1mPq/2P9In6QyFE0Tkpevh0k9a+FkjhD+cwsYm9WRSbn4uMdW9O0yXlNYC3ppxL3gWWPOcvEl57w==
 
-daisyui@4.4.19:
-  version "4.4.19"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.19.tgz#90187e2ce5c914e774bb174a13f446aac7f555ad"
-  integrity sha512-IjOLWwnndD4N7Ut5CDxbUsaVtbqXPeVHM92IcgxGFxpuOd3CCKW/PAXZH6JoBTHFRaN57vB9XqEhdWm5yC+bPA==
+daisyui@^4.4.19:
+  version "4.4.23"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.23.tgz#f2ce1b5eb6c95422e72e5c954a2c0af6bfb65ef0"
+  integrity sha512-IFQRGoGoAke8chxPcDqQJFldVVd51JL7b4mRA3LqsLexW/6xicZzz9X3GXdGdnYsu8QPxZN4uzQZ5fwRNYXOSg==
   dependencies:
     css-selector-tokenizer "^0.8"
     culori "^3"
@@ -1740,10 +1740,10 @@ html-entities@^2.3.2:
   resolved "https://registry.yarnpkg.com/html-entities/-/html-entities-2.4.0.tgz#edd0cee70402584c8c76cc2c0556db09d1f45061"
   integrity sha512-igBTJcNNNhvZFRtm8uA6xMY6xYleeDwn3PeBCkDz7tHttv4F2hsDI2aPgNERWzvRcNYHNT3ymRaQzllmXj4YsQ==
 
-htmx.org@^1.9.6:
-  version "1.9.8"
-  resolved "https://registry.yarnpkg.com/htmx.org/-/htmx.org-1.9.8.tgz#d811eaec231367e088dbc229782c37bea5347965"
-  integrity sha512-eH825QM6yJ1AeHTJgUxy3xnXnP/uXD56x52/VYnQ9CMw+o9H04ar/GY5PHuiZeelsqLK4wkviVdCel7u+3h4Fw==
+htmx.org@^1.9.9:
+  version "1.9.10"
+  resolved "https://registry.yarnpkg.com/htmx.org/-/htmx.org-1.9.10.tgz#63c67e1e7a447086a3119c156f08722c624aacac"
+  integrity sha512-UgchasltTCrTuU2DQLom3ohHrBvwr7OqpwyAVJ9VxtNBng4XKkVsqrv0Qr3srqvM9ZNI3f1MmvVQQqK7KW/bTA==
 
 http-deceiver@^1.2.7:
   version "1.2.7"
