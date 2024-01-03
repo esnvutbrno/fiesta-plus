@@ -46,6 +46,15 @@ class MyProfileUpdateView(
     def get_form_class(self):
         return UserProfileFormFactory.for_user(user=self.request.user)
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update(
+            {
+                "user": self.request.user,
+            }
+        )
+        return initial
+
 
 class ProfileFinishFormView(
     LoginRequiredMixin,

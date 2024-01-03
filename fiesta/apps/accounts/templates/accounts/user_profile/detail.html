@@ -70,11 +70,11 @@
       {% with profile=object.user.profile_or_none %}
         <tr>
           <td class="font-semibold pr-4 md:pr-12">University:</td>
-          <td>{{ profile.faculty.university }}</td>
+          <td>{{ profile.faculty.university|default:"" }}</td>
         </tr>
         <tr>
           <td class="font-semibold pr-4 md:pr-12">Faculty:</td>
-          <td>{{ profile.faculty }}</td>
+          <td>{{ profile.faculty|default:"" }}</td>
         </tr>
       {% endwith %}
     </table>

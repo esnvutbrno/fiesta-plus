@@ -78,10 +78,13 @@ class UserProfileForm(BaseModelForm):
             self.fields[f].help_text = None
 
     def save(self, commit=True):
+        # cannot get from self.object, since UserProfile can be not saved yet
+        user = self.initial.get("user")
         # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again
         for f in FORM_FIELDS_FROM_USER:
-            setattr(self.instance.user, f, self.cleaned_data.get(f))
-        self.instance.user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
+            setattr(user, f, self.cleaned_data.get(f))
+        user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
+        self.instance.user = user
 
         return super().save(commit=commit)
 
