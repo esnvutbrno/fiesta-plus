@@ -88,12 +88,17 @@ class UserProfileFormFactory:
     @classmethod
     def get_form_fields(cls, user: User):
         confs = cls.get_user_configuration(user)
+        profile: UserProfile | None = user.profile_or_none
         # TODO: what to do, when no specific configuration is found?
 
         fields_to_include = tuple(
             field_name
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
-            if any(conf_field.__get__(c) is not None for c in confs)
+            if
+            # is configurated to be displayed
+            any(conf_field.__get__(c) is not None for c in confs)
+            # or is already filled in user's profile
+            or getattr(profile, field_name, None)
         )
         return sorted(
             set(UserProfileForm.Meta.fields + fields_to_include),
