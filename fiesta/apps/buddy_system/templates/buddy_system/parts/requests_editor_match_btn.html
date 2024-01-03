@@ -1,11 +1,5 @@
 {% load i18n %}
-<a class="btn btn-xs btn-outline btn-primary whitespace-nowrap"
-   x-data="modal($el.href)"
-   x-bind="bind"
-   href="{% url "buddy_system:quick-match" record.pk %}">
-  {% if record.match %}
-    {% trans "Change buddy" %}
-  {% else %}
-    {% trans "Match" %}
-  {% endif %}
-</a>
+
+{% url "buddy_system:update-request-state" record.pk as request_state_update_url %}
+{% url "buddy_system:quick-match" record.pk as quick_match_url %}
+{% include "fiestarequests/requests_editor_match_btn.html" with request_state_update_url=request_state_update_url quick_match_url=quick_match_url %}

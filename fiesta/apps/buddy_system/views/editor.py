@@ -12,7 +12,7 @@ from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
-from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
+from apps.fiestarequests.views.editor import BaseQuickRequestMatchView, BaseUpdateRequestStateView
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
@@ -90,3 +90,13 @@ class QuickBuddyMatchView(BaseQuickRequestMatchView):
 
     form_url = "buddy_system:quick-match"
     match_model = BuddyRequestMatch
+
+
+class UpdateBuddyRequestStateView(BaseUpdateRequestStateView):
+    model = BuddyRequest
+    object: BuddyRequest
+
+    success_url = reverse_lazy("buddy_system:requests")
+
+    def get_queryset(self):
+        return self.request.in_space_of_section.buddy_system_requests
