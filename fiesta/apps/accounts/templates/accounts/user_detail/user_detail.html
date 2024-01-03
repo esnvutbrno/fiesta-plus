@@ -163,8 +163,8 @@
         <div class="card-body pt-0">
           <h2 class="card-title">{% trans "👤 Profile Details" %}</h2>
 
-          <div class="flex flex-row items-start gap-x-4">
-            <table class="table table-zebra w-1/2">
+          <div class="flex flex-col md:flex-row items-start gap-x-4">
+            <table class="table table-zebra md:w-1/2">
               <tr>
                 <th>{% trans "University" %}</th>
                 <td>
@@ -191,7 +191,13 @@
                 <td>{{ object.user.profile.get_gender_display }}</td>
               </tr>
             </table>
-            <table class="table table-zebra w-1/2">
+            <table class="table table-zebra md:w-1/2">
+              <tr>
+                <th>{% translate 'Email' %}</th>
+                <td>
+                  <a {% if object.user.primary_email %}class="link link-primary" href="mailto:{{ object.user.primary_email }}"{% endif %}>{{ object.user.primary_email|default:"-" }}</a>
+                </td>
+              </tr>
               <tr>
                 <th>{% trans "Facebook" %}</th>
                 <td>{{ object.user.profile.facebook|default:"-" }}</td>
