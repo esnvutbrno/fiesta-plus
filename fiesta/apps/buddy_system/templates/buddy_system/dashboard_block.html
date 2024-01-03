@@ -50,6 +50,13 @@
           <br>
           You have been matched with {{ br.match.matcher.full_name }}.
         </div>
+      {% elif br.state == br.State.CANCELLED %}
+        <div class="Dashboard__tile__value">❌ Cancelled</div>
+        <div class="Dashboard__tile__desc text-base-200">Your buddy request has been canceled.</div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "buddy_system:new-request" %}"
+             class="btn btn-lg btn-outline">create buddy request</a>
+        </div>
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}

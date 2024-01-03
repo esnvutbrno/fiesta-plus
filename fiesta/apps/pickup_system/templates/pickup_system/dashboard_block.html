@@ -31,7 +31,13 @@
              class="btn btn-lg btn-secondary">{% trans "find out about your pickup" %}</a>
         </div>
 
-
+      {% elif br.state == br.State.CANCELLED %}
+        <div class="Dashboard__tile__value">❌ Cancelled</div>
+        <div class="Dashboard__tile__desc text-base-200">Your pickup request has been canceled.</div>
+        <div class="Dashboard__tile__actions text-right">
+          <a href="{% url "pickup_system:new-request" %}"
+             class="btn btn-lg btn-outline">create pickup request</a>
+        </div>
       {% endif %}
     {% else %}
       {% get_waiting_requests_to_match as waiting_brs %}
