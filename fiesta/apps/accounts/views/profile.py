@@ -96,3 +96,12 @@ class ProfileFinishFormView(
 
     def get_success_url(self):
         return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse("accounts:my-profile")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update(
+            {
+                "user": self.request.user,
+            }
+        )
+        return initial
