@@ -54,9 +54,13 @@ class UserAdmin(DjangoUserAdmin):
         "memberships",
     )
     list_filter = (
-        "memberships__section",
-        "memberships__role",
-    ) + DjangoUserAdmin.list_filter
+        (
+            "memberships__section",
+            "memberships__role",
+        )
+        + DjangoUserAdmin.list_filter
+        + (("profile", admin.EmptyFieldListFilter),)
+    )
 
     ordering = ("-date_joined",)
 
