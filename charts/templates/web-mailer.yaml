@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-mailer
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+    {{- include "fiesta.componentLabels" "mailer" | nindent 4 }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "fiesta.selectorLabels" . | nindent 6 }}
+      {{- include "fiesta.componentLabels" "mailer" | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "fiesta.selectorLabels" . | nindent 8 }}
+        {{- include "fiesta.componentLabels" "mailer" | nindent 8 }}
+      annotations:
+        kubectl.kubernetes.io/default-logs-container: mailer
+    spec:
+      containers:
+        - name: mailer
+          image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
+          command:
+            - /bin/sh
+            - -c
+            - ./manage.py runmailer_pg
+          envFrom:
+            - secretRef:
+                name: {{ .Values.web.secretName }}
+            - configMapRef:
+                name: {{ .Values.web.configName }}
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: web-mailer-retry
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+    {{- include "fiesta.componentLabels" "mailer-retry" | nindent 4 }}
+spec:
+  schedule: "0,15,30,45 * * * *" #	Run every 15 minutes
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "fiesta.selectorLabels" . | nindent 12 }}
+            {{- include "fiesta.componentLabels" "mailer-retry" | nindent 12 }}
+        spec:
+          containers:
+            - name: mailer-retry
+              image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
+              command:
+                - /bin/sh
+                - -c
+                - ./manage.py retry_deferred
+              envFrom:
+                - secretRef:
+                    name: {{ .Values.web.secretName }}
+                - configMapRef:
+                    name: {{ .Values.web.configName }}
+          restartPolicy: OnFailure

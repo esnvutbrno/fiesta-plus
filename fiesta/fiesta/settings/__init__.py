@@ -9,7 +9,7 @@ from .auth import AuthConfigMixin
 from .db import DatabaseConfigMixin
 from .files import FilesConfigMixin, S3ConfigMixin
 from .logging import LoggingConfigMixin, SentryConfigMixin
-from .notifications import SmtpMailerConfigMixin
+from .notifications import DatabaseSmtpMailerConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
 from .templates import TemplatesConfigMixin
@@ -58,7 +58,7 @@ class LocalProduction(Base):
 
 
 class Production(
-    SmtpMailerConfigMixin,
+    DatabaseSmtpMailerConfigMixin,
     S3ConfigMixin,
     SentryConfigMixin,
     Base,

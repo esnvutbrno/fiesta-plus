@@ -815,6 +815,22 @@ files = [
 ]
 
 [[package]]
+name = "django-mailer"
+version = "2.3.1"
+description = "A reusable Django app for queuing the sending of email"
+category = "main"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "django-mailer-2.3.1.tar.gz", hash = "sha256:eefa89b8abf3f10574a3322b08c82e1265d7b0822c4bbb9bd7b9a4110c823ac9"},
+    {file = "django_mailer-2.3.1-py3-none-any.whl", hash = "sha256:d667ae8633d6b7c1e259d7142e6fbad0a4b079a528ecc6854b452d7bcb3e6aed"},
+]
+
+[package.dependencies]
+Django = ">=2.2"
+lockfile = ">=0.8"
+
+[[package]]
 name = "django-model-path-converter"
 version = "0.1.0"
 description = "The Django Model Path Converter package dynamically creates custom path converters for you models."
@@ -1149,6 +1165,18 @@ python-versions = ">=3.7"
 files = [
     {file = "jmespath-1.0.1-py3-none-any.whl", hash = "sha256:02e2e4cc71b5bcab88332eebf907519190dd9e6e82107fa7f83b1003a6252980"},
     {file = "jmespath-1.0.1.tar.gz", hash = "sha256:90261b206d6defd58fdd5e85f478bf633a2901798906be2ad389150c5c60edbe"},
+]
+
+[[package]]
+name = "lockfile"
+version = "0.12.2"
+description = "Platform-independent file locking module"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "lockfile-0.12.2-py2.py3-none-any.whl", hash = "sha256:6c3cb24f344923d30b2785d5ad75182c8ea7ac1b6171b08657258ec7429d50fa"},
+    {file = "lockfile-0.12.2.tar.gz", hash = "sha256:6aed02de03cba24efabcd600b30540140634fc06cfa603822d508d5361e9f799"},
 ]
 
 [[package]]
@@ -2099,4 +2127,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "4661766f13bf56e59c4abc2fcd20512280d0dfa9890f8c2f61f1fbc9af346674"
+content-hash = "866fce1557a136bfd1312a19ea6a035d2741ea49fe1c770b5263c05c8dbda406"
