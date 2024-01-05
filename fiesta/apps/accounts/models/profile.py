@@ -171,6 +171,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         max_length=64,
         blank=True,
         default="",
+        editable=False,
     )
 
     class Meta:
@@ -185,10 +186,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         synchronizer.revalidate_user_profile(profile=self)
 
     def __str__(self):
-        return (
-            f"{self.user} {self.nationality} "
-            f"{self.university or (self.faculty.university if self.faculty else None) or ''} "
-        )
+        return str(self.user)
 
     def is_esn_card_holder(self):
         return False

@@ -25,6 +25,7 @@ class UserAdmin(DjangoUserAdmin):
                     "username",
                     "password",
                     "state",
+                    "profile",
                     "is_active",
                     "is_staff",
                     "is_superuser",
@@ -40,7 +41,10 @@ class UserAdmin(DjangoUserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined", "modified")}),
     )
-    readonly_fields = ("modified",)
+    readonly_fields = (
+        "modified",
+        "profile",
+    )
     list_display = (
         "username",
         "first_name",
@@ -63,8 +67,9 @@ class UserAdmin(DjangoUserAdmin):
     @display
     def user_profile(self, obj):
         return format_html(
-            '<a href="{}">{}</a>',
+            '<a href="{}">{}: {}</a>',
             reverse("admin:accounts_userprofile_change", args=(obj.profile.pk,)),
+            obj.profile,
             obj.profile.state,
         )
 
