@@ -24,7 +24,7 @@ class PickupRequest(BaseRequestForPickupSystem):
     )
     location = PlainLocationField(
         verbose_name=_("pickup point"),
-        based_fields=["pickup_place"],
+        based_fields=["place"],
         blank=True,
         null=True,
         zoom=12,
