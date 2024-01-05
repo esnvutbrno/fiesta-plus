@@ -46,12 +46,15 @@ class UserAdmin(DjangoUserAdmin):
         "first_name",
         "last_name",
         "user_profile",
+        "date_joined",
         "memberships",
     )
     list_filter = (
         "memberships__section",
         "memberships__role",
     ) + DjangoUserAdmin.list_filter
+
+    ordering = ("-date_joined",)
 
     @display
     def memberships(self, obj):
