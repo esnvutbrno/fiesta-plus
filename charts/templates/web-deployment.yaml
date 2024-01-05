@@ -4,16 +4,19 @@ metadata:
   name: web
   labels:
     {{- include "fiesta.labels" . | nindent 4 }}
+    {{- include "fiesta.componentLabels" "web" | nindent 4 }}
 spec:
   replicas: 1
   selector:
     matchLabels:
       {{- include "fiesta.selectorLabels" . | nindent 6 }}
+      {{- include "fiesta.componentLabels" "web" | nindent 6 }}
   template:
     metadata:
       labels:
         app: web
         {{- include "fiesta.selectorLabels" . | nindent 8 }}
+        {{- include "fiesta.componentLabels" "web" | nindent 8 }}
       annotations:
         kubectl.kubernetes.io/default-logs-container: web
     spec:

@@ -39,7 +39,8 @@ class ProjectConfigMixin:
         return [f".{self.ROOT_DOMAIN}"]
 
     # overwritten by production mixins
-    EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
+    EMAIL_BACKEND = Value(default="mailer.backend.DbBackend")
+    MAILER_EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
 
     def DEFAULT_FROM_EMAIL(self):
         return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
@@ -108,6 +109,8 @@ class ProjectConfigMixin:
         # health checks
         "health_check",
         "health_check.contrib.migrations",
+        # django-mailer
+        "mailer",
     ]
 
     MIDDLEWARE = [
