@@ -68,7 +68,7 @@ class ESNAccountsProvider(CASProvider):
         # national_section = sa.extra_data.get("country")
 
         section, is_section_new = Section.objects.get_or_create(
-            code=section_code,
+            code__iexact=section_code.upper(),
             defaults=dict(
                 name=section_name,
                 # TODO: definitely not, user nationality != section assignment
