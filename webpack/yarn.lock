@@ -1241,10 +1241,10 @@ culori@^3:
   resolved "https://registry.yarnpkg.com/culori/-/culori-3.2.0.tgz#df6561503f0cc20e8e1c029f086466666c0ac62f"
   integrity sha512-HIEbTSP7vs1mPq/2P9In6QyFE0Tkpevh0k9a+FkjhD+cwsYm9WRSbn4uMdW9O0yXlNYC3ppxL3gWWPOcvEl57w==
 
-daisyui@4.4.19:
-  version "4.4.19"
-  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.4.19.tgz#90187e2ce5c914e774bb174a13f446aac7f555ad"
-  integrity sha512-IjOLWwnndD4N7Ut5CDxbUsaVtbqXPeVHM92IcgxGFxpuOd3CCKW/PAXZH6JoBTHFRaN57vB9XqEhdWm5yC+bPA==
+daisyui@^4.4.19:
+  version "4.6.0"
+  resolved "https://registry.yarnpkg.com/daisyui/-/daisyui-4.6.0.tgz#3b2d34ba2995633530b510ebaf9fbc6ed03374c1"
+  integrity sha512-B5ZB/sczXpp4LMdo/SZrtYY/U2hq+Vr9I15QawuWZ0VwgtSAbuZpAZUftKVryEsPuv3BM0yVlBED0nAmtis/dw==
   dependencies:
     css-selector-tokenizer "^0.8"
     culori "^3"
@@ -1567,9 +1567,9 @@ flat@^5.0.2:
   integrity sha512-b6suED+5/3rTpUBdG1gupIl8MPFCAMA0QXwmljLhvCUKcUvdE4gWky9zpuGCcXHOsz4J9wPGNWq6OKpmIzz3hQ==
 
 follow-redirects@^1.0.0:
-  version "1.15.3"
-  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.3.tgz#fe2f3ef2690afce7e82ed0b44db08165b207123a"
-  integrity sha512-1VzOtuEM8pC9SFU1E+8KfTjZyMztRsgEfwQl44z8A25uy13jSzTj6dyK2Df52iV0vgHCfBwLhDWevLn95w5v6Q==
+  version "1.15.4"
+  resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.4.tgz#cdc7d308bf6493126b17ea2191ea0ccf3e535adf"
+  integrity sha512-Cr4D/5wlrb0z9dgERpUL3LrmPKVDsETIJhaCMeDfuFYcqa5bldGV6wBsAN6X/vxlXQtFBMrXdXxdL8CbDTGniw==
 
 forwarded@0.2.0:
   version "0.2.0"
