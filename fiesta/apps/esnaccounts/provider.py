@@ -71,6 +71,7 @@ class ESNAccountsProvider(CASProvider):
             code__iexact=section_code.upper(),
             defaults=dict(
                 name=section_name,
+                code=section_code.upper(),
                 # TODO: definitely not, user nationality != section assignment
                 country=user_nationality,
                 space_slug=slugify(section_name).lower().replace("-", ""),

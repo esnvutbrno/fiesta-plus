@@ -41,7 +41,7 @@ metadata:
     {{- include "fiesta.labels" . | nindent 4 }}
     {{- include "fiesta.componentLabels" "mailer-retry" | nindent 4 }}
 spec:
-  schedule: "0,15,30,45 * * * *" #	Run every 15 minutes
+  schedule: "0,10,20,30,40,50 * * * *" #	Run every 15 minutes
   jobTemplate:
     spec:
       template:
