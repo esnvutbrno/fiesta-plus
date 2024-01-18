@@ -14,7 +14,7 @@
     <div class="alert alert-link text-xl max-w-2xl mx-auto flex flex-row justify-between py-16 px-8">
       No matches found.
 
-      {% if configuration.matching_policy_instance.can_member_match %}
+      {% if configuration.matching_policy_instance.matching_done_by_members %}
         <a href="{% url "buddy_system:matching-requests" %}"
            class="btn btn-primary btn-lg">get your first buddy</a>
       {% else %}

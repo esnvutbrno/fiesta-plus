@@ -7,6 +7,7 @@ from apps.buddy_system.models import BuddyRequest, BuddySystemConfiguration
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.plugins.models import Plugin
 from apps.plugins.utils import all_plugins_mapped_to_class
+from apps.sections.models import SectionMembership
 
 register = template.Library()
 
@@ -53,7 +54,6 @@ def get_waiting_buddy_requests_placed_before(context, br: BuddyRequest):
 def get_matched_buddy_requests(context):
     request: HttpRequest = context["request"]
 
-    # TODO: limit by semester / time
     return request.user.buddy_system_request_matches.filter(
         request__responsible_section=request.membership.section,
         request__state=BuddyRequest.State.MATCHED,
@@ -69,3 +69,8 @@ def get_buddy_system_configuration(context):
     )
 
     return buddy_system_plugin.configuration
+
+
+@register.simple_tag
+def can_member_match(configuration: BuddySystemConfiguration, membership: SectionMembership) -> bool:
+    return configuration.matching_policy_instance.can_member_match(membership=membership)

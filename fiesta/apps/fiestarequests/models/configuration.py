@@ -16,9 +16,6 @@ class BaseRequestSystemConfiguration(BasePluginConfiguration):
     display_issuer_faculty = models.BooleanField(default=False)
     display_request_creation_date = models.BooleanField(default=True)
 
-    # TODO: make it visible and working
-    rolling_limit = models.PositiveSmallIntegerField(default=0, editable=False)
-
     enable_note_from_matcher = models.BooleanField(
         default=True,
         help_text=_("Allows matcher to reply with custom notes to the request issuer"),

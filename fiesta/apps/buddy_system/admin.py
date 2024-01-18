@@ -11,6 +11,12 @@ from .models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
 class BuddySystemConfigurationAdmin(BaseChildConfigurationAdmin):
     show_in_index = True
 
+    list_display = BaseChildConfigurationAdmin.list_display + [
+        "matching_policy",
+        "rolling_limit",
+        "rolling_limit_window",
+    ]
+
 
 @admin.register(BuddyRequest)
 class BuddyRequestAdmin(BaseRequestAdmin):

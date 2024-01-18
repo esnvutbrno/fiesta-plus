@@ -66,7 +66,8 @@
           waiting request{{ count|pluralize:"s" }}
         {% endwith %}
       </div>
-      {% if configuration.matching_policy_instance.can_member_match %}
+      {% can_member_match configuration request.membership as can_match %}
+      {% if configuration.matching_policy_instance.matching_done_by_members and can_match %}
         <div class="Dashboard__tile__actions text-right">
           <a href="{% url "buddy_system:matching-requests" %}"
              class="btn btn-lg btn-outline">show waiting requests</a>
@@ -82,7 +83,7 @@
       {% if not request_matches.exists %}
         <div class="Dashboard__tile__value dark:text-base-300">So empty here 😔</div>
 
-        {% if configuration.matching_policy_instance.can_member_match %}
+        {% if configuration.matching_policy_instance.matching_done_by_members %}
           <div class="Dashboard__tile__actions text-right">
             <a href="{% url "buddy_system:matching-requests" %}"
                class="btn btn-lg btn-outline dark:text-base-300">get your first buddy</a>

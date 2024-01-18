@@ -46,8 +46,8 @@ class BaseRequestAdmin(PreprocessQuerySetMixin, AdminChangeLinksMixin, ModelAdmi
     actions = [make_cancelled]
 
 
-class BaseRequestMatchAdmin(AdminChangeLinksMixin, ModelAdmin):
-    list_display = ["matcher", "request_link", "note", "created"]
+class BaseRequestMatchAdmin(AdminChangeLinksMixin, PreprocessQuerySetMixin, ModelAdmin):
+    list_display = ["matcher", "responsible_section", "request_link", "note", "created"]
 
     list_display_links = ["matcher"]
 
@@ -73,3 +73,7 @@ class BaseRequestMatchAdmin(AdminChangeLinksMixin, ModelAdmin):
         "matcher__first_name",
         "request__responsible_section__name",
     ]
+
+    @admin.display(description=_("Responsible section"))
+    def responsible_section(self, obj):
+        return obj.request.responsible_section

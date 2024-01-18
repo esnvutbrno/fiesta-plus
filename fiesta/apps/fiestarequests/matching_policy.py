@@ -1,21 +1,28 @@
 from __future__ import annotations
 
+import dataclasses
 import typing
+from typing import ClassVar
 
 from django.db.models import Q, QuerySet
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from apps.fiestarequests.models import BaseRequestSystemConfiguration
 from apps.sections.models import SectionMembership
 
 if typing.TYPE_CHECKING:
     from apps.buddy_system.models import BuddyRequest
 
 
-class MatchingPolicyProtocol(typing.Protocol):
-    id: str
-    title: str
-    description: str
-    can_member_match: bool
+@dataclasses.dataclass
+class BaseMatchingPolicy:
+    conf: BaseRequestSystemConfiguration
+
+    id: ClassVar[str]
+    title: ClassVar[str]
+    description: ClassVar[str]
+    matching_done_by_members: ClassVar[bool]
 
     def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         # TODO: NotImplemented or base implementation?
@@ -25,6 +32,19 @@ class MatchingPolicyProtocol(typing.Protocol):
             "issuer__profile__faculty",
             "issuer__profile__university",
         )
+
+    def can_member_match(self, membership: SectionMembership) -> bool:
+        if self.conf.rolling_limit == 0:
+            return True
+        from apps.buddy_system.models import BuddyRequestMatch
+
+        matched_in_window = BuddyRequestMatch.objects.filter(
+            request__responsible_section=membership.section,
+            matcher=membership.user,
+            created__gte=timezone.now() - self.conf.rolling_limit_window,
+        ).count()
+
+        return matched_in_window < self.conf.rolling_limit
 
     def on_created_request(
         self,
@@ -43,25 +63,25 @@ class MatchingPolicyProtocol(typing.Protocol):
         )
 
 
-class ManualByEditorMatchingPolicy(MatchingPolicyProtocol):
+class ManualByEditorMatchingPolicy(BaseMatchingPolicy):
     id = "manual-by-editor"
     title = _("Manual by editors")
     description = _("Matching is done manually only by editors.")
-    can_member_match = False
+    matching_done_by_members = False
 
 
-class ManualByMemberMatchingPolicy(MatchingPolicyProtocol):
+class ManualByMemberMatchingPolicy(BaseMatchingPolicy):
     id = "manual-by-member"
     title = _("Manual by members")
     description = _("Matching is done manually directly by members.")
-    can_member_match = True
+    matching_done_by_members = True
 
 
-class ManualWithSameFacultyMatchingPolicy(MatchingPolicyProtocol):
+class ManualWithSameFacultyMatchingPolicy(BaseMatchingPolicy):
     id = "same-faculty"
     title = _("Manual by members with restriction to same faculty")
     description = _("Matching is done manually by members themselves, but limited to the same faculty.")
-    can_member_match = True
+    matching_done_by_members = True
 
     def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         from apps.accounts.models import UserProfile
@@ -73,20 +93,20 @@ class ManualWithSameFacultyMatchingPolicy(MatchingPolicyProtocol):
         )
 
 
-class LimitedSameFacultyMatchingPolicy(MatchingPolicyProtocol):
+class LimitedSameFacultyMatchingPolicy(BaseMatchingPolicy):
     id = "same-faculty-limited"
     title = _("Restricted to same faculty with limit")
     description = _(
         "Matching is done manually by members themselves, but limited to same faculty till"
         "the rolling limit - limitation is not enabled after reaching the limit."
     )
-    can_member_match = True
+    matching_done_by_members = True
 
     # same faculty for N buddies
     # after N matches (to rolling_limit), faculty is not limited
 
 
-class AutoMatchingPolicy(MatchingPolicyProtocol):
+class AutoMatchingPolicy(BaseMatchingPolicy):
     ...
     # by internationals' selected interests
     # request will be matched to one from buddies automatically
@@ -109,8 +129,11 @@ class MatchingPoliciesRegister:
 
     DESCRIPTION = " <br />".join(f"{p.title}: {p.description}" for p in AVAILABLE_POLICIES)
 
-    _ID_TO_POLICY = {p.id: p() for p in AVAILABLE_POLICIES}
+    _ID_TO_POLICY: dict[str, type[BaseMatchingPolicy]] = {p.id: p for p in AVAILABLE_POLICIES}
 
     @classmethod
-    def get_policy_by_id(cls, policy_id: str) -> MatchingPolicyProtocol:
-        return cls._ID_TO_POLICY.get(policy_id)
+    def get_policy(
+        cls,
+        configuration: BaseRequestSystemConfiguration,
+    ) -> BaseMatchingPolicy:
+        return cls._ID_TO_POLICY.get(configuration.matching_policy, cls.DEFAULT_POLICY)(conf=configuration)

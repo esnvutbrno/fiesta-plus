@@ -9,6 +9,7 @@ from django.views.generic import ListView
 
 from apps.buddy_system.forms import BuddyRequestMatchForm
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
+from apps.fiestarequests.matching_policy import BaseMatchingPolicy
 from apps.fiestarequests.views.matching import BaseTakeRequestView
 from apps.pickup_system.models.files import BaseIssuerPictureServeView, BaseMatcherPictureServeView
 from apps.plugins.middleware.plugin import HttpRequest
@@ -31,8 +32,18 @@ class MatchingRequestsView(
 
     model = BuddyRequest
 
+    _policy = None
+
     def has_permission(self):
-        return self.configuration.matching_policy_instance.can_member_match
+        self._policy: BaseMatchingPolicy = self.configuration.matching_policy_instance
+        return self._policy.matching_done_by_members and self._policy.can_member_match(
+            membership=self.request.membership
+        )
+
+    def get_permission_denied_message(self):
+        if not self._policy.can_member_match(membership=self.request.membership):
+            return _("You have reached the limit of request matches in time window.")
+        return super().get_permission_denied_message()
 
     def get_queryset(self):
         return self.configuration.matching_policy_instance.limit_requests(
@@ -52,8 +63,13 @@ class MatchBuddyRequestFormView(
     success_url = reverse_lazy("buddy_system:my-buddies")
     buddy_request: BuddyRequest
 
+    _policy = None
+
     def has_permission(self):
-        return self.configuration.matching_policy_instance.can_member_match
+        self._policy: BaseMatchingPolicy = self.configuration.matching_policy_instance
+        return self._policy.matching_done_by_members and self._policy.can_member_match(
+            membership=self.request.membership
+        )
 
     def get_queryset(self):
         return self.configuration.matching_policy_instance.limit_requests(
