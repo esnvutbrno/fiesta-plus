@@ -145,3 +145,12 @@ class ProjectConfigMixin:
     ENVIRONMENT_NAME: str = Value(environ_required=False)
     ENVIRONMENT_COLOR: str = Value(environ_required=False)
     RELEASE_NAME: str = Value(environ_required=False, default="fiesta-plus@dev")
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "django_cache",
+        }
+    }
+
+    SELECT2_CACHE_BACKEND = "default"
