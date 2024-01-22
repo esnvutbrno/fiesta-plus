@@ -14,7 +14,8 @@
             <img src="{{ fr.issuer_picture_url }}"
                  alt="{% trans "request issuer photo" %}"
                  width="{{ fr.issuer.profile.picture.width }}"
-                 height="{{ fr.issuer.profile.picture.height }}">
+                 height="{{ fr.issuer.profile.picture.height }}"
+                 loading="lazy">
           {% else %}
             <svg version="1.1"
                  xmlns="http://www.w3.org/2000/svg"
