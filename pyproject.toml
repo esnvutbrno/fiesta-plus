@@ -8,7 +8,7 @@ authors = ["ESN VUT BRNO"]
 python = "^3.11"
 Django = "^4.2"
 
-Pillow = "^10.1.0"
+Pillow = "^10.2.0"
 bcrypt = "^3.2.0"
 django-allauth = "^0.47.0"
 # support for dj4.0
