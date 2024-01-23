@@ -5,7 +5,7 @@ from datetime import datetime
 import django_tables2 as tables
 from django.contrib.humanize.templatetags.humanize import NaturalTimeFormatter
 from django.db.models import Choices, Model
-from django.db.models.fields.files import FieldFile
+from django.db.models.fields.files import ImageFieldFile
 from django.utils.html import format_html
 from django_countries import countries
 from django_countries.fields import Country
@@ -14,24 +14,31 @@ from django_tables2.columns import BoundColumn
 
 # TODO: probably not needed anymore
 class ImageColumn(tables.Column):
-    def render(self, value: FieldFile):
-        return format_html('<img src="{}" class="h-12" />', value.url)
+    def render(self, value: ImageFieldFile):
+        return format_html(
+            '<img src="{}" class="h-12" width={} height={} />',
+            value.url,
+            value.width,
+            value.height,
+        )
 
     def value(self, record, value):
         return value.url
 
 
 class AvatarColumn(ImageColumn):
-    def render(self, value: FieldFile):
+    def render(self, value: ImageFieldFile):
         return format_html(
             """
 <div class="avatar">
     <div class="w-12 rounded-xl">
-        <img src="{}" />
+        <img src="{}" width={} height={} />
     </div>
 </div>
 """,
             value.url,
+            value.width,
+            value.height,
         )
 
 

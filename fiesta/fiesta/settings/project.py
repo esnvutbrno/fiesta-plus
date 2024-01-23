@@ -75,6 +75,7 @@ class ProjectConfigMixin:
         "apps.pickup_system.apps.PickupSystemConfig",
         "apps.dashboard.apps.DashboardConfig",
         "apps.esncards.apps.ESNcardsConfig",
+        "apps.files.apps.FilesConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",

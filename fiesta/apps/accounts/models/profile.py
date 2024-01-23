@@ -107,6 +107,20 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("profile picture"),
         null=True,
         blank=True,
+        width_field="picture_width",
+        height_field="picture_height",
+    )
+    picture_width = models.PositiveSmallIntegerField(
+        verbose_name=_("profile picture width"),
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    picture_height = models.PositiveSmallIntegerField(
+        verbose_name=_("profile picture width"),
+        null=True,
+        blank=True,
+        editable=False,
     )
 
     interests = ArrayFieldWithDisplayableChoices(
