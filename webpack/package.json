@@ -12,7 +12,7 @@
   "dependencies": {
     "@alpinejs/collapse": "^3.13.2",
     "@alpinejs/persist": "^3.13.2",
-    "@sentry/webpack-plugin": "^2.10.1",
+    "@sentry/webpack-plugin": "^2.14.2",
     "@tailwindcss/forms": "^0.5.6",
     "@tailwindcss/typography": "^0.5.10",
     "alpinejs": "^3.13.2",
