@@ -10,6 +10,7 @@ from .db import DatabaseConfigMixin
 from .files import FilesConfigMixin, S3ConfigMixin
 from .logging import LoggingConfigMixin, SentryConfigMixin
 from .notifications import DatabaseSmtpMailerConfigMixin
+from .oscar import OscarConfigMixin
 from .project import ProjectConfigMixin
 from .security import SecurityConfigMixin
 from .templates import TemplatesConfigMixin
@@ -24,6 +25,7 @@ class Base(
     SecurityConfigMixin,
     TemplatesConfigMixin,
     AdminConfigMixin,
+    OscarConfigMixin,
     Configuration,
 ):
     ...

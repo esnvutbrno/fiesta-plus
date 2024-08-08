@@ -2090,6 +2090,18 @@ files = [
 ]
 
 [[package]]
+name = "sorl-thumbnail"
+version = "12.9.0"
+description = "Thumbnails for Django"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "sorl-thumbnail-12.9.0.tar.gz", hash = "sha256:0cbc2f52152e7f2266e3c2cb4ae5d83afd2e96fd5e1c42e5667362baaa3d2db3"},
+    {file = "sorl_thumbnail-12.9.0-py3-none-any.whl", hash = "sha256:ec586724bea7dc8c53561ce18335ea641fcd0e560d6387b2353a2afdd06705a4"},
+]
+
+[[package]]
 name = "soupsieve"
 version = "2.5"
 description = "A modern CSS selector implementation for Beautiful Soup."
@@ -2167,6 +2179,7 @@ phonenumbers = "*"
 pillow = ">=6.0"
 purl = ">=0.7"
 setuptools = ">=51.3.3"
+sorl-thumbnail = {version = ">=12.9,<12.10", optional = true, markers = "extra == \"sorl-thumbnail\""}
 
 [package.extras]
 docs = ["Sphinx (>=5.0)", "easy-thumbnails (>=2.7,<2.8.6)", "sorl-thumbnail (>=12.9,<12.10)", "sphinx-issues (==3.0.1)", "sphinx-rtd-theme (==1.0.0)", "sphinxcontrib-spelling (==7.5.1)"]
@@ -2327,4 +2340,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "5e57ce2fc79d2769af7679afdf3eebcc9df85ff95a2caf4696771a8bb6dec5fa"
+content-hash = "13116e331a9621105def46d04c942dd8c387c0a4ad87fc32f9acacdf3c920914"

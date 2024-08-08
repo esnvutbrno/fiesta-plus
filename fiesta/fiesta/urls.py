@@ -23,6 +23,7 @@ urlpatterns = [
     for app in all_plugin_apps()
 ] + [
     path("", include("apps.public.urls", namespace="public")),
+    path("", include("apps.fiestaoscar.urls")),
     path("admin/", include("loginas.urls")),
     path("admin/", admin.site.urls),
     # wiki is not plugin (yet)

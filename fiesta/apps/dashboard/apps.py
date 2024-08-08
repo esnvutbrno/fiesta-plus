@@ -27,5 +27,9 @@ class DashboardConfig(BasePluginAppConfig):
         # do not display in menu, since it's the home button link if the plugin is enabled
         return None
 
+    # TODO: workaround because oscar and its dashboard app and autoload
+    #  needed to data-migrate all activated plugins to this label
+    label = "fiesta_dashboard"
+
 
 __all__ = ["DashboardConfig"]
