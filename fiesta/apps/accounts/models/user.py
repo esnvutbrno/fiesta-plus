@@ -58,4 +58,5 @@ class User(AbstractUser):
     def primary_email(self):
         return next((email for email in self.emailaddress_set.all() if email.primary), self.email)
 
+
 __all__ = ["User"]

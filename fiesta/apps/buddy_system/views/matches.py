@@ -18,12 +18,11 @@ class MyBuddies(EnsureLocalUserViewMixin, ListView):
 
     def get_queryset(self):
         return (
-            self.request.user.buddy_system_request_matches.prefetch_related('request__issuer__emailaddress_set')
+            self.request.user.buddy_system_request_matches.prefetch_related("request__issuer__emailaddress_set")
             .select_related(
-                'request__issuer__profile__user', 
-                'request__issuer__profile__university', 
-                'request__issuer__profile__faculty')
-            .filter(
-                request__state=BaseRequestProtocol.State.MATCHED
+                "request__issuer__profile__user",
+                "request__issuer__profile__university",
+                "request__issuer__profile__faculty",
             )
+            .filter(request__state=BaseRequestProtocol.State.MATCHED)
         )
