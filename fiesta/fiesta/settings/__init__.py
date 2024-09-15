@@ -77,7 +77,7 @@ class Production(
                 conn_max_age=self.DATABASE_CONN_MAX_AGE,
                 conn_health_checks=self.DATABASE_CONN_HEALTH_CHECKS,
             ),
-            "wiki": DatabaseConfigMixin.DATABASES["wiki"],
+            "wiki": super().DATABASES["wiki"],
         }
 
     ENVIRONMENT_NAME = Value(default="production")
