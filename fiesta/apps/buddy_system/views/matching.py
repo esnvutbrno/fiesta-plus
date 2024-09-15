@@ -41,7 +41,8 @@ class MatchingRequestsView(
         )
 
     def get_permission_denied_message(self):
-        if not self._policy.can_member_match(membership=self.request.membership):
+        # can be called even in the context of unauthorized user (so no policy available)
+        if self._policy and not self._policy.can_member_match(membership=self.request.membership):
             return _("You have reached the limit of request matches in time window.")
         return super().get_permission_denied_message()
 
