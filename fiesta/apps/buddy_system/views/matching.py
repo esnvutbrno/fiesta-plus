@@ -47,7 +47,12 @@ class MatchingRequestsView(
 
     def get_queryset(self):
         return self.configuration.matching_policy_instance.limit_requests(
-            qs=BuddyRequest.objects.get_queryset(),
+            qs=BuddyRequest.objects.get_queryset().select_related(
+                # select all potentially necessary fields in the template afterward
+                "issuer__profile__user",
+                "issuer__profile__university",
+                "issuer__profile__faculty",
+            ),
             membership=self.request.membership,
         )
 

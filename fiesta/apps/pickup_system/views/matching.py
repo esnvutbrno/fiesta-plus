@@ -32,7 +32,9 @@ class MatchingRequestsView(
 
     def get_queryset(self):
         return self.request.in_space_of_section.pickup_system_requests.select_related(
-            "issuer__profile__user", "issuer__profile__university", "issuer__profile__faculty"
+            "issuer__profile__user",
+            "issuer__profile__university",
+            "issuer__profile__faculty",
         ).filter(
             state=PickupRequest.State.CREATED,
         )
