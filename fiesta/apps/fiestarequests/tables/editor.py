@@ -57,7 +57,18 @@ class BaseRequestsTable(tables.Table):
         verbose_name=_("Issuer"),
     )
 
+
     issuer_picture = AvatarColumn(accessor="issuer.profile.picture", verbose_name="🧑")
+    
+    issuer_faculty = Column(
+        accessor="issuer.profile_or_none.faculty",
+        verbose_name=_("Faculty"),
+    )
+    
+    issuer_nationality = Column(
+        accessor="issuer.profile_or_none.nationality",
+        verbose_name=_("Nationality"),
+    )
 
     matcher_name = Column(
         accessor="match.matcher.full_name_official",
@@ -73,12 +84,8 @@ class BaseRequestsTable(tables.Table):
         visible=False,
     )
 
-    matcher_picture = AvatarColumn(
-        accessor="match.matcher.profile.picture",
-        verbose_name=_("Matcher"),
-    )
-
     requested = NaturalDatetimeColumn(verbose_name=_("Requested"), accessor="created")
+    
     matched = NaturalDatetimeColumn(
         accessor="match.created",
         verbose_name=_("Matched"),
@@ -91,10 +98,11 @@ class BaseRequestsTable(tables.Table):
         sequence = (
             "issuer_name",
             "issuer_picture",
+            "issuer_faculty",
+            "issuer_nationality",
             "state",
             "...",
             "matcher_name",
-            "matcher_picture",
             "requested",
             "matched",
             "match_request",
