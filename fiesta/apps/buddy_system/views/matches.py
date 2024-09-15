@@ -4,8 +4,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import ListView
 from django.db.models import Prefetch
 from apps.accounts.models import UserProfile
-from apps.accounts.models.user import User
-from allauth.account.models import EmailAddress
 
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.plugins.middleware.plugin import HttpRequest
