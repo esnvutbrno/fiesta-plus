@@ -42,10 +42,8 @@ beautifulsoup4 = "^4.12.1"
 django-editorjs = "^0.2.1"
 django-editorjs-fields = "^0.2.7"
 django-mptt = "^0.14.0"
-django-storages = "^1.13.2"
-# TODO: when bumped to 1.35.19, urls are broken with 404s
-boto3 = "1.34.11"
-botocore = "1.34.11"
+# TODO: when bumped to 1.14.4, urls are broken with 404s
+django-storages = {version = "1.14.2", extras = ["s3"]}
 dj-database-url = "^2.0.0"
 django-health-check = "^3.17.0"
 django-money = "^3.2.0"
