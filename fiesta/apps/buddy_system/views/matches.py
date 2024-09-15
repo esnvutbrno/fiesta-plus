@@ -5,6 +5,7 @@ from django.views.generic import ListView
 from django.db.models import Prefetch
 from apps.accounts.models import UserProfile
 from apps.accounts.models.user import User
+from allauth.account.models import EmailAddress
 
 from apps.fiestarequests.models.request import BaseRequestProtocol
 from apps.plugins.middleware.plugin import HttpRequest
@@ -24,8 +25,10 @@ class MyBuddies(EnsureLocalUserViewMixin, ListView):
             'request__issuer__profile',
             queryset=UserProfile.objects.select_related('user', 'university', 'faculty')
         )
+        
         return (
-            self.request.user.buddy_system_request_matches.select_related('request__issuer').prefetch_related(user_profile_prefetch)
+            self.request.user.buddy_system_request_matches.select_related('request__issuer')
+            .prefetch_related(user_profile_prefetch, 'request__issuer__emailaddress_set')
             .filter(
                 request__state=BaseRequestProtocol.State.MATCHED
             )
