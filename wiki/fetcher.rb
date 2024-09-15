@@ -9,6 +9,7 @@ require "fileutils"
 require "facets/string/titlecase"
 require "sanitize"
 require "sqlite3"
+require "time"
 
 class String
   def titleize
