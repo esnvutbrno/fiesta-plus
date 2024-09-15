@@ -25,7 +25,6 @@ from apps.utils.breadcrumbs import (
     with_object_breadcrumb,
     with_plugin_home_breadcrumb,
 )
-from apps.utils.models.query import get_single_object_or_none
 
 
 def page_title(view: DetailView | View) -> BreadcrumbItem:
@@ -161,7 +160,7 @@ class UserDetailRedirectView(
 ):
     def get_redirect_url(self, *args, **kwargs):
         user = get_object_or_404(User, pk=kwargs.get("pk"))
-        membership = get_single_object_or_none(
+        membership = get_object_or_404(
             self.request.in_space_of_section.memberships,
             user=user,
         )
