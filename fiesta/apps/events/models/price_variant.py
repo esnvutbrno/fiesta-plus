@@ -27,9 +27,9 @@ class EventPriceVariantType(TextChoices):
             return False
 
         if variant.type == self.STANDARD or (
-            variant.type == self.WITH_ESN_CARD
-            and user.profile_or_none is not None
-            and user.profile.is_esn_card_holder()
+                variant.type == self.WITH_ESN_CARD
+                and user.profile_or_none is not None
+                and user.is_esn_card_holder
         ):
             return True
 
@@ -58,7 +58,7 @@ class PriceVariant(BaseModel):
 
     event = models.ForeignKey(
         "events.Event",
-        related_name="price_variant",
+        related_name="price_variants",
         on_delete=models.CASCADE,
         verbose_name=_("event"),
         null=True,

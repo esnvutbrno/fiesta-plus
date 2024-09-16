@@ -3,14 +3,18 @@ from __future__ import annotations
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts.models import User
+from apps.events.models.organizer import OrganizerRole
+from apps.events.models.participant import ParticipantState
 from apps.files.storage import NamespacedFilesStorage
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.utils.models import BaseTimestampedModel
 
+
 # TODO Maybe pre-registration, registration and paused registration for different field.
 
 
-class State(models.TextChoices):
+class EventState(models.TextChoices):
     DRAFT = "draft", _("Draft")
     PUBLISHED = "published", _("Published")
     HIDDEN = "hidden", _("Hidden")  # Visible only after invite
@@ -46,11 +50,13 @@ class Event(BaseTimestampedModel):
         verbose_name=_("subtitle"),
         help_text=_("short description of the event"),
         blank=True,
+        default="",
     )
 
     description = models.TextField(
         verbose_name=_("description"),
         help_text=_("full description of the event"),
+        default="",
     )
 
     capacity = models.SmallIntegerField(
@@ -59,8 +65,8 @@ class Event(BaseTimestampedModel):
     )
 
     state = models.CharField(
-        choices=State.choices,
-        default=State.DRAFT,
+        choices=EventState.choices,
+        default=EventState.DRAFT,
         max_length=16,
         verbose_name=_("state"),
         help_text=_("current state of the event"),
@@ -125,6 +131,21 @@ class Event(BaseTimestampedModel):
     def __str__(self):
         # return self.title
         return f"{self.title} - {self.start}"
+
+    def is_oc(self, user: User) -> bool:
+        return self.organizers.filter(user=user).exists()
+
+    def is_moc(self, user: User) -> bool:
+        return self.organizers.filter(user=user, state=OrganizerRole.EVENT_LEADER).exists()
+
+    def is_participant(self, user: User) -> bool:
+        return self.participants.filter(user=user, state=ParticipantState.CONFIRMED).exists()
+
+    def can_edit(self, user: User) -> bool:
+        return self.is_moc(user) or self.author == user or user.is_superuser
+
+    def can_see_participants(self, user: User) -> bool:
+        return self.is_moc(user) or self.author == user or user.is_superuser
 
     class Meta:
         ordering = ["start"]

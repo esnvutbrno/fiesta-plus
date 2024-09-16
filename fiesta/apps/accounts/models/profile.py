@@ -202,9 +202,6 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     def __str__(self):
         return str(self.user)
 
-    def is_esn_card_holder(self):
-        return False
-
 
 __all__ = [
     "UserProfile",

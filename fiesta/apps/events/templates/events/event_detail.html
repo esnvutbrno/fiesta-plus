@@ -1,0 +1,45 @@
+{% extends "fiesta/base.html" %}
+
+{% load event_tags %}
+{% load i18n %}
+
+
+{% block main %}
+  <h1>{{ event.title }}</h1>
+
+  Subtitle:{{ event.subtitle }} <br>
+  Description:{{ event.description }}<br>
+  Capacity:{{ event.capacity }}<br>
+  State:{{ event.get_state_display }}<br>
+  Start:{{ event.start }}<br>
+  End:{{ event.end }}<br>
+  Place:{{ event.place }}<br>
+  Author:{{ event.author }}<br>
+  ESN Section {{ event.section }}<br>
+  
+  <a href="{% url "events:event-update" event.id %}" class="button-with-icon">
+    <button class="button-style">Add event</button>
+    <svg class="h-8 w-8 text-black" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+    </svg>
+  </a>
+
+  <br><br>
+{% get_ocs event as organizers %}
+  {% if organizers is not None %}
+    {% for organizer in organizers %}
+      {{ organizer.user.get_full_name }}<br>
+    {% endfor %}
+  {% endif %}
+  <br><br>
+
+  {% get_price_variants event as prices %}
+  {% if prices is not None %}
+    {% for price in prices %}
+      {{ price.title }}
+      {{ price.amount }}
+      {{ price.data }}<br>
+    {% endfor %}
+  {% endif %}
+
+{% endblock main %}

@@ -19,6 +19,8 @@ class Place(BaseModel):
         verbose_name=_("description"),
         help_text=_("Descriptions of the place or directions"),
         blank=True,
+        default="",
+
     )
 
     link = models.CharField(
@@ -26,6 +28,7 @@ class Place(BaseModel):
         verbose_name=_("webpage link"),
         help_text=_("Link to the place"),
         blank=True,
+        default="",
     )
 
     map_link = models.CharField(
@@ -33,6 +36,7 @@ class Place(BaseModel):
         verbose_name=_("map link"),
         help_text=_("Link to a position to the place on a map"),
         blank=True,
+        default="",
     )
 
     section = models.ForeignKey(

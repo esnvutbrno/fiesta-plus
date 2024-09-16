@@ -1,0 +1,10 @@
+<form action="{% url "events:event-update" event.pk %}" method="post" {% if form.is_multipart %}enctype="multipart/form-data" hx-encoding="multipart/form-data"{% endif %}>
+  {% csrf_token %}
+  {% if redirect_field_value %}
+    <input type="hidden"
+           name="{{ redirect_field_name }}"
+           value="{{ redirect_field_value }}" />
+  {% endif %}
+  {{ form }}
+  {% include "events/price.html" %}
+</form>
