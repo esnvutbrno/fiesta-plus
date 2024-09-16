@@ -41,13 +41,19 @@ class MatchingRequestsView(
         )
 
     def get_permission_denied_message(self):
-        if not self._policy.can_member_match(membership=self.request.membership):
+        # can be called even in the context of unauthorized user (so no policy available)
+        if self._policy and not self._policy.can_member_match(membership=self.request.membership):
             return _("You have reached the limit of request matches in time window.")
         return super().get_permission_denied_message()
 
     def get_queryset(self):
         return self.configuration.matching_policy_instance.limit_requests(
-            qs=BuddyRequest.objects.get_queryset(),
+            qs=BuddyRequest.objects.get_queryset().select_related(
+                # select all potentially necessary fields in the template afterward
+                "issuer__profile__user",
+                "issuer__profile__university",
+                "issuer__profile__faculty",
+            ),
             membership=self.request.membership,
         )
 

@@ -88,4 +88,7 @@ class NamespacedFilesStorage(DEFAULT_STORAGE_CLASS):
                 # TODO: think about defining public url of bucket directly to nginx proxypass conf
                 "X-Accel-Redirect-Host": settings.S3_PUBLIC_URL,
                 "X-Accel-Redirect-Path": f"{self.namespace}/{name}",
+                # https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_buffering
+                # waiting for a client is fine here, it's not blocking us but the S3
+                "X-Accel-Buffering": "no",
             }
