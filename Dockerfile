@@ -3,6 +3,8 @@ ARG DJANGO_RELEASE_NAME
 ARG SENTRY_RELEASE_NAME
 ARG SENTRY_RELEASE_ENVIRONMENT
 
+ARG PYTHON_IMAGE=python:3.12.6-alpine3.20
+
 #
 # wiki renderer image
 #
@@ -91,7 +93,7 @@ RUN \
 #
 
 # venv builder
-FROM python:3.12.0-alpine3.18 as web-venv-builder
+FROM ${PYTHON_IMAGE} as web-venv-builder
 
 ARG POETRY_EXPORT_ARGS
 
@@ -113,7 +115,7 @@ RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.tx
 RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
 
 # base runtime image
-FROM python:3.12.6-alpine3.20 as web-base
+FROM ${PYTHON_IMAGE} as web-base
 
 COPY --from=web-venv-builder /venv /venv
 
