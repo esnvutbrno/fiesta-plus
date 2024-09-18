@@ -124,5 +124,4 @@ admin.site.unregister(EmailAddress)
 
 
 @admin.register(EmailAddress)
-class FiestaEmailAddressAdmin(EmailAddressAdmin):
-    ...  # to have it in accounts admin
+class FiestaEmailAddressAdmin(EmailAddressAdmin): ...  # to have it in accounts admin

@@ -37,7 +37,7 @@ class SectionPluginsValidator:
         #  }
 
         match plugin.app_config:
-            case (BuddySystemConfig() | PickupSystemConfig()):
+            case BuddySystemConfig() | PickupSystemConfig():
                 self._check_field_dependency(
                     plugin=plugin,
                     field_value=sections_conf.required_faculty,

@@ -101,12 +101,10 @@ class ServeFilesFromBuddiesMixin:
         return request.membership.section.buddy_system_requests
 
 
-class IssuerPictureServeView(ServeFilesFromBuddiesMixin, BaseIssuerPictureServeView):
-    ...
+class IssuerPictureServeView(ServeFilesFromBuddiesMixin, BaseIssuerPictureServeView): ...
 
 
 class MatcherPictureServeView(
     ServeFilesFromBuddiesMixin,
     BaseMatcherPictureServeView,
-):
-    ...
+): ...
