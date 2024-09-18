@@ -49,7 +49,7 @@ django-health-check = "^3.17.0"
 django-money = "^3.2.0"
 gunicorn = "^21.2.0"
 django-location-field = "^2.7.2"
-sentry-sdk = {extras = ["django"], version = "^1.35.0"}
+sentry-sdk = {extras = ["django"], version = "^2.8.0"}
 django-admin-env-notice = "^1.0"
 cryptography = "41.0.7"
 django-admin-relation-links = "^0.2.5"
