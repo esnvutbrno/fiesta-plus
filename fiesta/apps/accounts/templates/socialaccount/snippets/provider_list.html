@@ -1,9 +1,9 @@
 {% load socialaccount %}
 {% load social_accounts %}
-{% get_all_available_social_providers as socialaccount_providers %}
+{% get_all_available_social_providers as social_apps %}
 
 <div class="flex flex-row gap-2 justify-between flex-wrap">
-  {% for provider in socialaccount_providers %}
+  {% for app in social_apps %}
     {#  {% if provider.id == "openid" %}#}
     {#    {% for brand in provider.get_brands %}#}
     {# POST because security #}
@@ -20,18 +20,18 @@
     {#  {% endif %}#}
     {# POST because security #}
     <form method="POST"
-          action="{% provider_login_url provider.id process=process scope=scope auth_params=auth_params %}"
-          class="SocialButton__form SocialButton__form--{{ provider.id }}">
+          action="{% provider_login_url app.provider process=process scope=scope auth_params=auth_params %}"
+          class="SocialButton__form SocialButton__form--{{ app.provider }}">
       {% csrf_token %}
-      <button class="SocialButton SocialButton--{{ provider.id }}"
+      <button class="SocialButton SocialButton--{{ app.provider }}"
               title="{{ provider.name }}"
               name="submit"
               type="submit">
-        {% with "socialaccount/snippets/icons/"|add:provider.id|add:".html" as tmpl %}
+        {% with "socialaccount/snippets/icons/"|add:app.provider|add:".html" as tmpl %}
           {% include tmpl %}
         {% endwith %}
 
-        {{ provider.name }}
+        {{ app.name }}
       </button>
     </form>
   {% endfor %}

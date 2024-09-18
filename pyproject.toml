@@ -10,7 +10,7 @@ Django = "^4.2"
 
 Pillow = "^10.1.0"
 bcrypt = "^3.2.0"
-django-allauth = "^0.47.0"
+django-allauth = { version="^64.2.1", extras=["socialaccount"] }
 # support for dj4.0
 django-allauth-cas = { git = "https://github.com/thejoeejoee/django-allauth-cas", branch = "master" }
 django-click = "^2.3.0"
@@ -34,7 +34,7 @@ tablib = { extras = ["xlsx"], version = "^3.2.1" }
 faker_education = "^1.2"
 django-select2 = "^7.10.0"
 django-debug-toolbar = "^3.5.0"
-django-watchfiles = "^0.0.1"
+django-watchfiles = "^0.2.0"
 django-autocomplete-light = "^3.9.4"
 django-phonenumber-field = { extras = ["phonenumberslite"], version = "^6.3.0" }
 requests = "^2.31.0"
@@ -51,7 +51,7 @@ gunicorn = "^21.2.0"
 django-location-field = "^2.7.2"
 sentry-sdk = {extras = ["django"], version = "^1.35.0"}
 django-admin-env-notice = "^1.0"
-cryptography = "41.0.7"
+cryptography = "43.0.1"
 django-admin-relation-links = "^0.2.5"
 django-mailer = "^2.3.1"
 

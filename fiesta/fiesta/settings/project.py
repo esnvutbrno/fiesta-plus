@@ -131,6 +131,7 @@ class ProjectConfigMixin:
         "apps.sections.middleware.user_membership.UserMembershipMiddleware",
         "apps.plugins.middleware.plugin.CurrentPluginMiddleware",
         "apps.accounts.middleware.user_profile.UserProfileMiddleware",
+        "allauth.account.middleware.AccountMiddleware",
     ]
 
     # setup for django-country
