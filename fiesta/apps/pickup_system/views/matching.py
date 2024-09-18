@@ -73,12 +73,10 @@ class ServeFilesFromPickupsMixin:
         return request.membership.section.pickup_system_requests
 
 
-class IssuerPictureServeView(ServeFilesFromPickupsMixin, BaseIssuerPictureServeView):
-    ...
+class IssuerPictureServeView(ServeFilesFromPickupsMixin, BaseIssuerPictureServeView): ...
 
 
 class MatcherPictureServeView(
     ServeFilesFromPickupsMixin,
     BaseMatcherPictureServeView,
-):
-    ...
+): ...

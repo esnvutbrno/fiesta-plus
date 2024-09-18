@@ -25,8 +25,7 @@ class Base(
     TemplatesConfigMixin,
     AdminConfigMixin,
     Configuration,
-):
-    ...
+): ...
 
 
 class Development(Base):

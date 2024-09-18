@@ -49,8 +49,7 @@ class BaseMatchingPolicy:
     def on_created_request(
         self,
         request: BuddyRequest,
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @classmethod
     def _base_filter(cls, membership: SectionMembership) -> Q:

@@ -16,9 +16,10 @@ class ArrayFieldWithDisplayableChoices(ArrayField):
                 for value in getattr(instance, self.attname)
             ]
 
-        if "get_%s_display" % self.name not in cls.__dict__:
+        method_name = f"get_{self.name}_display"
+        if method_name not in cls.__dict__:
             setattr(
                 cls,
-                "get_%s_display" % self.name,
+                method_name,
                 get_array_display,
             )
