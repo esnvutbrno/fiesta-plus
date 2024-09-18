@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from configurations.values import SecretValue, Value
+from sentry_sdk.integrations.django import DjangoIntegration
 
 
 class LoggingConfigMixin:
@@ -76,10 +77,20 @@ class SentryConfigMixin:
         if cls.SENTRY_DSN:
             sentry_sdk.init(
                 dsn=cls.SENTRY_DSN,
-                # sample only 10% of events to reduce incoming data
-                traces_sample_rate=0.1,
-                profiles_sample_rate=0.1,
+                # sample only 50 % of events to reduce incoming data
+                # currently about 6M spans per peak month
+                traces_sample_rate=0.5,
+                profiles_sample_rate=0.5,
                 environment=cls.ENVIRONMENT_NAME,
                 release=cls.RELEASE_NAME,
                 enable_tracing=True,
+                send_default_pii=True,
+                auto_enabling_integrations=True,
+                auto_session_tracking=True,
+                integrations=[
+                    DjangoIntegration(
+                        # include spans from caches
+                        cache_spans=True,
+                    ),
+                ],
             )
