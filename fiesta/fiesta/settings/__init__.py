@@ -25,8 +25,7 @@ class Base(
     TemplatesConfigMixin,
     AdminConfigMixin,
     Configuration,
-):
-    ...
+): ...
 
 
 class Development(Base):
@@ -72,8 +71,12 @@ class Production(
     @property
     def DATABASES(self):
         return {
-            "default": dj_database_url.parse(self.DATABASE_URL),
-            "wiki": DatabaseConfigMixin.DATABASES["wiki"],
+            "default": dj_database_url.parse(
+                self.DATABASE_URL,
+                conn_max_age=self.DATABASE_CONN_MAX_AGE,
+                conn_health_checks=self.DATABASE_CONN_HEALTH_CHECKS,
+            ),
+            "wiki": super().DATABASES["wiki"],
         }
 
     ENVIRONMENT_NAME = Value(default="production")

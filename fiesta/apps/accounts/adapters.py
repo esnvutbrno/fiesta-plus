@@ -6,8 +6,7 @@ from django.http import HttpRequest
 from django_htmx.http import HttpResponseClientRedirect
 
 
-class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    ...
+class SocialAccountAdapter(DefaultSocialAccountAdapter): ...
 
 
 class AccountAdapter(DefaultAccountAdapter):

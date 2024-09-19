@@ -5,16 +5,17 @@ description = "New generation of social network for helping international studen
 authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 Django = "^4.2"
 
 Pillow = "^10.1.0"
 bcrypt = "^3.2.0"
-django-allauth = "^0.47.0"
+# 0.55.0 not compatible with allauth-cas
+django-allauth = "0.54.0"
 # support for dj4.0
 django-allauth-cas = { git = "https://github.com/thejoeejoee/django-allauth-cas", branch = "master" }
 django-click = "^2.3.0"
-django-configurations = { extras = ["cache", "database", "email"], version = "^2.4.1" }
+django-configurations = "^2.4.2"
 django-countries = "^7.2.1"
 django-extensions = "^3.1.5"
 django-filter = "^21.1"
@@ -25,7 +26,7 @@ django-model-path-converter = "^0.1.0"
 django-polymorphic = "^3.1.0"
 django-tables2 = "^2.5.3"
 django-redis = "^5.0.0"
-django-webpack-loader = "^1.6.0"
+django-webpack-loader = "^3.1.1"
 elasticsearch = "^7.17.0"
 factory-boy = "^3.2.1"
 mysqlclient = "^2.1.0"
@@ -34,27 +35,28 @@ python-magic = "^0.4.25"
 tablib = { extras = ["xlsx"], version = "^3.2.1" }
 faker_education = "^1.2"
 django-select2 = "^7.10.0"
-django-debug-toolbar = "^3.5.0"
-django-watchfiles = "^0.0.1"
+django-debug-toolbar = "^4.4.6"
+django-watchfiles = "^0.2.0"
 django-autocomplete-light = "^3.9.4"
 django-phonenumber-field = { extras = ["phonenumberslite"], version = "^6.3.0" }
 requests = "^2.31.0"
 beautifulsoup4 = "^4.12.1"
 django-editorjs = "^0.2.1"
 django-editorjs-fields = "^0.2.7"
-django-mptt = "^0.14.0"
-django-storages = "^1.13.2"
-boto3 = "^1.26.123"
+django-mptt = "^0.16.0"
+# TODO: when bumped to 1.14.4, urls are broken with 404s
+django-storages = {version = "1.14.2", extras = ["s3"]}
 dj-database-url = "^2.0.0"
 django-health-check = "^3.17.0"
 django-money = "^3.2.0"
-gunicorn = "^21.2.0"
+gunicorn = "^23.0.0"
 django-location-field = "^2.7.2"
-sentry-sdk = {extras = ["django"], version = "^1.35.0"}
+sentry-sdk = {extras = ["django"], version = "^2.14.0"}
 django-admin-env-notice = "^1.0"
-cryptography = "41.0.7"
+cryptography = "^43.0.0"
 django-admin-relation-links = "^0.2.5"
 django-mailer = "^2.3.1"
+
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.17.0"

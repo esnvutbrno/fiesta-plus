@@ -1,4 +1,5 @@
 """Checks related to project, usually to keep codestyle."""
+
 from __future__ import annotations
 
 import django

@@ -56,7 +56,7 @@ class User(AbstractUser):
 
     @property
     def primary_email(self):
-        return self.emailaddress_set.filter(primary=True).first() or self.email
+        return next((email for email in self.emailaddress_set.all() if email.primary), self.email)
 
 
 __all__ = ["User"]
