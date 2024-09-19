@@ -15,7 +15,7 @@ from django.db import models
 from ..models import Event, Participant
 from ..models.price_variant import PriceVariant, EventPriceVariantType
 from apps.utils.views import AjaxViewMixin
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.price import PriceForm
@@ -34,7 +34,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 class PriceView(
     EnsurePrivilegedUserViewMixin,
     SuccessMessageMixin,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     UpdateView,
 ):

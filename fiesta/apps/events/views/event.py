@@ -9,18 +9,15 @@ import django_tables2 as tables
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from django_filters import CharFilter, ChoiceFilter
-from django_tables2 import Column
-from django.db import models
 
 from ..models import Participant
-from ..models.event import Event, EventState
+from ..models.event import Event
 from apps.utils.views import AjaxViewMixin
-from apps.fiestaforms.views.htmx import HtmxFormMixin
+from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from apps.plugins.middleware.plugin import HttpRequest
 from apps.events.forms.event import AddEventForm, UpdateEventForm
 from ..models.participant import ParticipantState
-from ...fiestatables.columns import ImageColumn, NaturalDatetimeColumn, LabeledChoicesColumn
 from ...fiestatables.filters import BaseFilterSet, ProperDateFromToRangeFilter
 from ...fiestatables.views.tables import FiestaTableView
 from ...sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
@@ -33,7 +30,7 @@ from django.contrib.auth import REDIRECT_FIELD_NAME
 @with_breadcrumb(_("Add"))
 class AddEventView(
     CreateView,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin
 ):
@@ -60,7 +57,7 @@ class AddEventView(
 @with_breadcrumb(_("Update"))
 class UpdateEventView(
     UpdateView,
-    HtmxFormMixin,
+    HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin
 ):
