@@ -6,7 +6,7 @@ authors = ["ESN VUT BRNO"]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-Django = "^4.2"
+Django = ">=4.2,<5.0"
 
 Pillow = "^10.1.0"
 bcrypt = "^3.2.0"
