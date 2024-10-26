@@ -16,6 +16,7 @@ class UserProfileFormFactory:
     DESIRED_FIELD_ORDER = (
         "first_name",
         "last_name",
+        "birth_date",
         "nationality",
         "gender",
         "picture",
@@ -32,13 +33,16 @@ class UserProfileFormFactory:
     FIELDS_TO_CONFIGURATION = {
         UserProfile.university: SectionsConfiguration.required_university,
         UserProfile.faculty: SectionsConfiguration.required_faculty,
+        UserProfile.birth_date: SectionsConfiguration.required_birth_date,
         UserProfile.nationality: SectionsConfiguration.required_nationality,
         UserProfile.gender: SectionsConfiguration.required_gender,
         UserProfile.picture: SectionsConfiguration.required_picture,
         UserProfile.phone_number: SectionsConfiguration.required_phone_number,
         UserProfile.interests: SectionsConfiguration.required_interests,
     }
-    _FIELD_NAMES_TO_CONFIGURATION = {f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()}
+    _FIELD_NAMES_TO_CONFIGURATION: dict[str, Field] = {
+        f.field.name: conf_field for f, conf_field in FIELDS_TO_CONFIGURATION.items()
+    }
 
     @classmethod
     def get_user_configuration(cls, user: User):
@@ -84,12 +88,17 @@ class UserProfileFormFactory:
     @classmethod
     def get_form_fields(cls, user: User):
         confs = cls.get_user_configuration(user)
+        profile: UserProfile | None = user.profile_or_none
         # TODO: what to do, when no specific configuration is found?
 
         fields_to_include = tuple(
             field_name
             for field_name, conf_field in cls._FIELD_NAMES_TO_CONFIGURATION.items()
-            if any(conf_field.__get__(c) is not None for c in confs)
+            if
+            # is configurated to be displayed
+            any(conf_field.__get__(c) is not None for c in confs)
+            # or is already filled in user's profile
+            or getattr(profile, field_name, None)
         )
         return sorted(
             set(UserProfileForm.Meta.fields + fields_to_include),

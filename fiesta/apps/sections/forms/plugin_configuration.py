@@ -3,14 +3,14 @@ from __future__ import annotations
 from django.core.exceptions import ValidationError
 from django.forms import modelform_factory
 
-from apps.fiestaforms.forms import BaseModelForm
+from apps.fiestaforms.forms import BaseModelForm, LegacyMediaFormMixin
 from apps.plugins.models import BasePluginConfiguration
 from apps.sections.models import Section
 from apps.sections.services.sections_plugins_validator import SectionPluginsValidator
 
 
 def get_plugin_configuration_form(configuration: BasePluginConfiguration, for_section: Section) -> type[BaseModelForm]:
-    class BaseConfigurationForm(BaseModelForm):
+    class BaseConfigurationForm(LegacyMediaFormMixin, BaseModelForm):
         template_name = "sections/parts/plugin_configuration_form.html"
 
         def _post_clean(self):

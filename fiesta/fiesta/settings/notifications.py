@@ -5,7 +5,7 @@ from configurations.values import BooleanValue, PositiveIntegerValue, SecretValu
 from ._utils import BaseConfigurationProtocol
 
 
-class SmtpMailerConfigMixin(BaseConfigurationProtocol):
+class DatabaseSmtpMailerConfigMixin(BaseConfigurationProtocol):
     MAILER_PRIMARY_BACKEND = Value(default="django.core.mail.backends.smtp.EmailBackend")
     MAILER_PRIMARY_TIMEOUT = PositiveIntegerValue(default=10, cast=int)
     MAILER_PRIMARY_HOST_USE_TLS = BooleanValue(default=True)
@@ -14,8 +14,15 @@ class SmtpMailerConfigMixin(BaseConfigurationProtocol):
     MAILER_PRIMARY_HOST_PASSWORD = SecretValue()
     MAILER_PRIMARY_HOST_USER = SecretValue()
 
+    # cannot use file, because pods
+    MAILER_USE_FILE_LOCK = BooleanValue(default=False)
+
+    # backend used by django itself
+    EMAIL_BACKEND = Value(default="mailer.backend.DbBackend")
+
+    # mailer used by db mailer to actually send emails
     @property
-    def EMAIL_BACKEND(self):
+    def MAILER_EMAIL_BACKEND(self):
         return self.MAILER_PRIMARY_BACKEND
 
     @property

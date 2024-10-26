@@ -52,7 +52,7 @@ class BasePluginConfiguration(LifecycleModelMixin, BasePolymorphicModel):
 
     def clean(self):
         # cannot use isinstance, since children are allowed to create
-        if type(self) == BasePluginConfiguration:
+        if type(self) == BasePluginConfiguration:  # noqa: E721
             raise ValidationError(_("Base plugin configuration cannot be saved directly, only children."))
 
 

@@ -14,7 +14,10 @@ class PickupSystemConfigurationAdmin(BaseChildConfigurationAdmin):
 
 @admin.register(PickupRequest)
 class PickupRequestAdmin(BaseRequestAdmin):
-    pass
+    _d = BaseRequestAdmin.list_display[:]  # to get own copy
+    _d.insert(_d.index("state"), "place")
+    _d.insert(_d.index("state"), "time")
+    list_display = _d
 
 
 @admin.register(PickupRequestMatch)

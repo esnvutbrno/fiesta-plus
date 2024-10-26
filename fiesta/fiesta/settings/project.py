@@ -39,7 +39,8 @@ class ProjectConfigMixin:
         return [f".{self.ROOT_DOMAIN}"]
 
     # overwritten by production mixins
-    EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
+    EMAIL_BACKEND = Value(default="mailer.backend.DbBackend")
+    MAILER_EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
 
     def DEFAULT_FROM_EMAIL(self):
         return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
@@ -74,6 +75,7 @@ class ProjectConfigMixin:
         "apps.pickup_system.apps.PickupSystemConfig",
         "apps.dashboard.apps.DashboardConfig",
         "apps.esncards.apps.ESNcardsConfig",
+        "apps.files.apps.FilesConfig",
         "apps.fiestaforms.apps.FiestaFormsConfig",
         "apps.fiestarequests.apps.FiestaRequestsConfig",
         "apps.fiestatables.apps.FiestaTablesConfig",
@@ -108,6 +110,8 @@ class ProjectConfigMixin:
         # health checks
         "health_check",
         "health_check.contrib.migrations",
+        # django-mailer
+        "mailer",
     ]
 
     MIDDLEWARE = [
@@ -142,3 +146,12 @@ class ProjectConfigMixin:
     ENVIRONMENT_NAME: str = Value(environ_required=False)
     ENVIRONMENT_COLOR: str = Value(environ_required=False)
     RELEASE_NAME: str = Value(environ_required=False, default="fiesta-plus@dev")
+
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
+            "LOCATION": "django_cache",
+        }
+    }
+
+    SELECT2_CACHE_BACKEND = "default"

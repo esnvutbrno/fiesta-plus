@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from apps.accounts.forms.social_accounts_fields import clean_facebook, clean_instagram, clean_telegram, clean_whatsapp
 from apps.accounts.models import User, UserProfile
 from apps.fiestaforms.fields.array import ChoicedArrayField
-from apps.fiestaforms.forms import BaseModelForm
+from apps.fiestaforms.forms import BaseModelForm, DateInput
 from apps.fiestaforms.widgets.models import FacultyForCurrentUserWidget, UniversityForCurrentUserWidget
 
 FIELDS_FROM_USER = ("first_name", "last_name")
@@ -57,6 +57,7 @@ class UserProfileForm(BaseModelForm):
             # TODO: show only related facultites & universities
             "university": UniversityForCurrentUserWidget,
             "faculty": FacultyForCurrentUserWidget,
+            "birth_date": DateInput,
             "gender": RadioSelect,
         }
 
@@ -77,10 +78,13 @@ class UserProfileForm(BaseModelForm):
             self.fields[f].help_text = None
 
     def save(self, commit=True):
+        # cannot get from self.object, since UserProfile can be not saved yet
+        user = self.initial.get("user")
         # first save user fields, since validation in UserProfile.save() could fail and we've to submit the form again
         for f in FORM_FIELDS_FROM_USER:
-            setattr(self.instance.user, f, self.cleaned_data.get(f))
-        self.instance.user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
+            setattr(user, f, self.cleaned_data.get(f))
+        user.save(update_fields=FORM_FIELDS_FROM_USER.keys())
+        self.instance.user = user
 
         return super().save(commit=commit)
 

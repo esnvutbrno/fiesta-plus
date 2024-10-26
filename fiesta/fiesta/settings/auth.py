@@ -80,10 +80,15 @@ class AuthConfigMixin:
     # social account settings
     SOCIALACCOUNT_AUTO_SIGNUP = True  # after social login, do not enforce a signup form (only in case of conflict)
     SOCIALACCOUNT_ADAPTER = "apps.accounts.adapters.SocialAccountAdapter"
+
+    # trust providers when providing email and connect the account to the existing one
+    SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
     # general django urls
     LOGIN_URL = "/auth/login"
     LOGIN_REDIRECT_URL = "/accounts/after-login"
 
     ACCOUNT_LOGIN_ON_PASSWORD_RESET = False  # do not autologin after password reset
+
     ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # logout after password change
+
     ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference

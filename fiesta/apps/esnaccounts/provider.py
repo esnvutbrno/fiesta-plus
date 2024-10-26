@@ -68,9 +68,10 @@ class ESNAccountsProvider(CASProvider):
         # national_section = sa.extra_data.get("country")
 
         section, is_section_new = Section.objects.get_or_create(
-            name=section_name,
+            code__iexact=section_code.upper(),
             defaults=dict(
-                code=section_code,
+                name=section_name,
+                code=section_code.upper(),
                 # TODO: definitely not, user nationality != section assignment
                 country=user_nationality,
                 space_slug=slugify(section_name).lower().replace("-", ""),

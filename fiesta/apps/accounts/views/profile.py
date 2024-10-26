@@ -25,12 +25,20 @@ class MyProfileDetailView(LoginRequiredMixin, DetailView):
 
 class MyProfileUpdateView(
     LoginRequiredMixin,
+    AjaxViewMixin,
+    HtmxFormViewMixin,
+    SuccessMessageMixin,
     UpdateView,
 ):
     request: HttpRequest
-    template_name = "accounts/user_profile/update.html"
 
-    extra_context = {"form_url": reverse_lazy("accounts:profile-finish")}
+    template_name = "accounts/user_profile/update.html"
+    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+
+    success_url = reverse_lazy("accounts:my-profile")
+    success_message = _("Your profile has been updated.")
+
+    extra_context = {"form_url": reverse_lazy("accounts:my-profile-update")}
 
     def get_object(self, queryset=None):
         return self.request.user.profile_or_none
@@ -38,8 +46,18 @@ class MyProfileUpdateView(
     def get_form_class(self):
         return UserProfileFormFactory.for_user(user=self.request.user)
 
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update(
+            {
+                "user": self.request.user,
+            }
+        )
+        return initial
+
 
 class ProfileFinishFormView(
+    LoginRequiredMixin,
     HtmxFormViewMixin,
     AjaxViewMixin,
     SuccessMessageMixin,
@@ -78,3 +96,12 @@ class ProfileFinishFormView(
 
     def get_success_url(self):
         return get_next_redirect_url(self.request, REDIRECT_FIELD_NAME) or reverse("accounts:my-profile")
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial.update(
+            {
+                "user": self.request.user,
+            }
+        )
+        return initial

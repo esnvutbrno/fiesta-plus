@@ -12,6 +12,6 @@ class LegacyBCryptSHA256PasswordHasher(BCryptSHA256PasswordHasher):
         assert algorithm == self.algorithm
 
         return bcrypt.checkpw(
-            password=password.encode("ascii"),
+            password=password.encode("utf8"),
             hashed_password=data.encode("ascii"),
         )

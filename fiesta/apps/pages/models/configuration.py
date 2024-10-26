@@ -6,7 +6,6 @@ from apps.plugins.models import BasePluginConfiguration
 
 
 class PagesConfiguration(BasePluginConfiguration):
-    ...
 
     class Meta:
         verbose_name = _("pages configuration")

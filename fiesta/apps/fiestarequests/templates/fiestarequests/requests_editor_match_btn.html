@@ -1,0 +1,51 @@
+{% load i18n %}
+
+{% if record.state == record.State.CREATED %}
+  <div class="join join-horizontal">
+
+    <button hx-post="{{ request_state_update_url }}"
+            hx-confirm="{% translate "Are you sure you want to cancel this request?" %}"
+            class="btn btn-error btn-outline btn-xs join-item"
+            title="{% translate "Cancel" %}"
+            type="submit"
+            name="state"
+            value="{{ record.State.CANCELLED.value }}">&cross;</button>
+    <a class="btn btn-xs btn-outline btn-success whitespace-nowrap join-item"
+       x-data="modal($el.href)"
+       x-bind="bind"
+       href="{{ quick_match_url }}">{% trans "Match" %}</a>
+  </div>
+{% elif record.state == record.State.MATCHED %}
+  <div class="join join-horizontal">
+    <button hx-post="{{ request_state_update_url }}"
+            hx-confirm="{% translate "Are you sure you want to remove the request matcher?" %}"
+            class="btn btn-error btn-outline btn-xs join-item"
+            title="{% translate "Cancel match" %}"
+            type="submit"
+            name="state"
+            value="{{ record.State.CREATED.value }}">&cross;</button>
+    <a class="btn btn-xs btn-outline btn-info whitespace-nowrap join-item"
+       x-data="modal($el.href)"
+       x-bind="bind"
+       href="{{ quick_match_url }}">{% trans "Change match" %}</a>
+  </div>
+{% elif record.state == record.State.CANCELLED %}
+  <button hx-post="{{ request_state_update_url }}"
+          hx-confirm="{% translate "Are you sure you want to revert the cancellation of this request?" %}"
+          class="btn btn-error btn-xs"
+          title="{% translate "Revert cancellation" %}"
+          type="submit"
+          name="state"
+          value="{{ record.State.CREATED.value }}">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         fill="none"
+         viewBox="0 0 24 24"
+         stroke-width="1.5"
+         stroke="currentColor"
+         class="w-4 h-4">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+    </svg>
+
+    {% translate 'revert' %}
+  </button>
+{% endif %}

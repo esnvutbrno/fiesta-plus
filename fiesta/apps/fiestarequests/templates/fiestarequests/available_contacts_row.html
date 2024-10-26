@@ -1,0 +1,17 @@
+{% load i18n %}
+{% with user.profile_or_none as profile %}
+  <p class="text-lg flex flex-row gap-x-1">
+    <span class="mr-auto">{% translate 'Available contacts' %}:</span>
+
+    {% if profile.facebook %}<span class="badge badge-lg SocialButton--facebook">Facebook</span>{% endif %}
+
+    {% if profile.instagram %}<span class="badge badge-lg SocialButton--instagram">Instagram</span>{% endif %}
+
+    {% if profile.telegram %}<span class="badge badge-lg SocialButton--telegram">Telegram</span>{% endif %}
+
+    {% if profile.whatsapp %}<span class="badge badge-lg SocialButton--whatsapp">WhatsApp</span>{% endif %}
+
+    {% if user.primary_email %}<span class="badge badge-lg SocialButton--email">E-mail</span>{% endif %}
+
+  </p>
+{% endwith %}

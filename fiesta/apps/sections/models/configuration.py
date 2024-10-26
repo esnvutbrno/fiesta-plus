@@ -27,6 +27,13 @@ class SectionsConfiguration(BasePluginConfiguration):
         blank=True,
         help_text=FLAG_HELP_TEXT,
     )
+    required_birth_date = BooleanField(
+        verbose_name=_("required birth date"),
+        default=None,
+        null=True,
+        blank=True,
+        help_text=FLAG_HELP_TEXT,
+    )
     required_nationality = BooleanField(
         verbose_name=_("required nationality"),
         default=None,

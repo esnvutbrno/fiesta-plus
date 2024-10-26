@@ -4,7 +4,12 @@ from django.urls import path
 
 from ..accounts.models.profile import user_profile_picture_storage
 from .views import PickupSystemIndexView
-from .views.editor import PickupRequestEditorDetailView, PickupRequestsEditorView, QuickPickupMatchView
+from .views.editor import (
+    PickupRequestEditorDetailView,
+    PickupRequestsEditorView,
+    QuickPickupMatchView,
+    UpdatePickupRequestStateView,
+)
 from .views.matches import MyPickups
 from .views.matching import (
     IssuerPictureServeView,
@@ -27,6 +32,7 @@ urlpatterns = [
     ),
     path("detail/<uuid:pk>", PickupRequestEditorDetailView.as_view(), name="editor-detail"),
     path("quick-match/<uuid:pk>", QuickPickupMatchView.as_view(), name="quick-match"),
+    path("update-request-state/<uuid:pk>", UpdatePickupRequestStateView.as_view(), name="update-request-state"),
     # serve profile picture with proxy view
     # TODO: the url name is defined also in issuer/matcher_picture_url, better would be to generalize it
     IssuerPictureServeView.as_url(user_profile_picture_storage, url_name="serve-issuer-profile-picture"),

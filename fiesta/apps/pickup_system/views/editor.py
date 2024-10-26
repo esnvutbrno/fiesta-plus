@@ -10,7 +10,7 @@ from django_tables2.utils import Accessor
 
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
-from apps.fiestarequests.views.editor import BaseQuickRequestMatchView
+from apps.fiestarequests.views.editor import BaseQuickRequestMatchView, BaseUpdateRequestStateView
 from apps.fiestatables.views.tables import FiestaTableView
 from apps.pickup_system.forms import PickupRequestEditorForm, QuickPickupMatchForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
@@ -99,3 +99,13 @@ class QuickPickupMatchView(BaseQuickRequestMatchView):
 
     form_url = "pickup_system:quick-match"
     match_model = PickupRequestMatch
+
+
+class UpdatePickupRequestStateView(BaseUpdateRequestStateView):
+    model = PickupRequest
+    object: PickupRequest
+
+    success_url = reverse_lazy("pickup_system:requests")
+
+    def get_queryset(self):
+        return self.request.in_space_of_section.pickup_system_requests

@@ -2,12 +2,20 @@ from __future__ import annotations
 
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
+from django.utils.translation import gettext_lazy as _
+
+from apps.fiestarequests.models.request import BaseRequestProtocol
+from apps.fiestatables.views.tables import PreprocessQuerySetMixin
+from apps.utils.admin.change_links_mixin import AdminChangeLinksMixin
 
 
-class BaseRequestAdmin(ModelAdmin):
+class BaseRequestAdmin(PreprocessQuerySetMixin, AdminChangeLinksMixin, ModelAdmin):
     # https://github.com/gitaarik/django-admin-relation-links
+    prefetch_related = ["issuer", "responsible_section", "match", "match__matcher"]
 
-    list_display = ["responsible_section", "issuer", "state", "match", "created"]
+    list_display = ["issuer", "responsible_section", "state", "match_link", "created"]
+
+    change_links = ["match"]
 
     date_hierarchy = "created"
 
@@ -27,9 +35,23 @@ class BaseRequestAdmin(ModelAdmin):
         "responsible_section__name",
     ]
 
+    @admin.action(description=_("Mark selected created requests as cancelled"))
+    def make_cancelled(self, request, queryset):
+        queryset.filter(
+            state=BaseRequestProtocol.State.CREATED,
+        ).update(
+            state=BaseRequestProtocol.State.CANCELLED,
+        )
 
-class BaseRequestMatchAdmin(ModelAdmin):
-    list_display = ["matcher", "note", "created"]
+    actions = [make_cancelled]
+
+
+class BaseRequestMatchAdmin(AdminChangeLinksMixin, PreprocessQuerySetMixin, ModelAdmin):
+    list_display = ["matcher", "responsible_section", "request_link", "note", "created"]
+
+    list_display_links = ["matcher"]
+
+    change_links = ["request"]
 
     date_hierarchy = "created"
 
@@ -38,7 +60,7 @@ class BaseRequestMatchAdmin(ModelAdmin):
         ("request__responsible_section__country", admin.AllValuesFieldListFilter),
     ]
 
-    autocomplete_fields = ["matcher"]
+    autocomplete_fields = ["request", "matcher"]
 
     search_fields = [
         "request__issuer__username",
@@ -49,5 +71,9 @@ class BaseRequestMatchAdmin(ModelAdmin):
         "matcher__email",
         "matcher__last_name",
         "matcher__first_name",
-        "request_match__responsible_section__name",
+        "request__responsible_section__name",
     ]
+
+    @admin.display(description=_("Responsible section"))
+    def responsible_section(self, obj):
+        return obj.request.responsible_section

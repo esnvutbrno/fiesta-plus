@@ -29,6 +29,10 @@ jobs:
           echo "image_tag=sha-`echo ${GITHUB_SHA} | cut -c1-7`" >> $GITHUB_OUTPUT
           echo "release_version=${GITHUB_SHA}" >> $GITHUB_OUTPUT
 
+      - name: Invalidate wiki content
+        run: |
+          date > wiki/.ts
+
       - name: Prepare Sentry release
         uses: getsentry/action-release@v1
         env:

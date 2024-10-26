@@ -1,26 +1,19 @@
 from __future__ import annotations
 
-from django.forms import Textarea, fields_for_model
+from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import UserProfile
 from apps.fiestaforms.fields.datetime import DateTimeLocalField
-from apps.fiestaforms.forms import WebpackMediaFormMixin
+from apps.fiestaforms.forms import LegacyMediaFormMixin
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
 from apps.pickup_system.models import PickupRequest, PickupRequestMatch
 
-USER_PROFILE_CONTACT_FIELDS = fields_for_model(
-    UserProfile,
-    fields=("facebook", "instagram", "telegram", "whatsapp"),
-)
 
-
-class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
-    _webpack_bundle = "jquery"
+class NewPickupRequestForm(LegacyMediaFormMixin, BaseNewRequestForm):
     submit_text = _("Send request for pickup")
 
     class Meta(BaseNewRequestForm.Meta):
@@ -58,24 +51,23 @@ class NewPickupRequestForm(WebpackMediaFormMixin, BaseNewRequestForm):
                 lambda: render_to_string("pickup_system/parts/pickup_request_place_help.html"),
                 str,
             ),
-            "note": lazy(
-                lambda: render_to_string("pickup_system/parts/pickup_request_note_help.html"),
-                str,
-            ),
         }
 
 
 #     TODO: add save/load of contacts to/from user_profile
 
 
-class PickupRequestEditorForm(WebpackMediaFormMixin, BaseRequestEditorForm):
-    _webpack_bundle = "jquery"
-
+class PickupRequestEditorForm(LegacyMediaFormMixin, BaseRequestEditorForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # labels somehow do not work
-        self.fields["approving_request"].label = _("Are you sure you want to place a pickup request?")
+        self.fields["note"].help_text = lazy(
+            lambda: render_to_string(
+                "pickup_system/parts/pickup_request_match_note_help.html",
+                context={"request": self.instance},
+            ),
+            str,
+        )
 
     class Meta(BaseRequestEditorForm.Meta):
         model = PickupRequest
@@ -100,13 +92,10 @@ class PickupRequestMatchForm(BaseRequestMatchForm):
 
     class Meta(BaseRequestMatchForm.Meta):
         model = PickupRequestMatch
-        labels = BaseRequestMatchForm.Meta.labels | {}
-        help_texts = BaseRequestMatchForm.Meta.help_texts | {
-            "note": lazy(
-                lambda: render_to_string("pickup_system/parts/pickup_request_match_note_help.html"),
-                str,
-            )
+        labels = BaseRequestMatchForm.Meta.labels | {
+            "note": _("Message for student"),
         }
+        help_texts = BaseRequestMatchForm.Meta.help_texts | {}
         widgets = BaseRequestMatchForm.Meta.widgets | {
             "note": Textarea(
                 attrs={

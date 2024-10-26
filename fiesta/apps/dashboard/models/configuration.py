@@ -6,7 +6,6 @@ from apps.plugins.models import BasePluginConfiguration
 
 
 class DashboardConfiguration(BasePluginConfiguration):
-    ...
 
     class Meta:
         verbose_name = _("dashboard configuration")

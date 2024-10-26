@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TypedDict
 
 from django.core.exceptions import ObjectDoesNotExist
+from django.shortcuts import get_object_or_404
 from elasticsearch import Elasticsearch, Transport, Urllib3HttpConnection
 
 from apps.wiki import models
@@ -114,7 +115,7 @@ class ElasticAdapter:
 class LocalDbAdapter(ElasticAdapter):
     def _page_for_filename(self, file_name: str, *, base: str = "") -> Page | None:
         base = f"{base}/" if base and not file_name.startswith("_") else ""
-        return models.Page.objects.using("wiki").get(file__contains=f"{base}{file_name}.").__dict__
+        return get_object_or_404(models.Page.objects.using("wiki"), file__contains=f"{base}{file_name}.").__dict__
 
     def search(self, term: str) -> list[SearchPage]:
         results = models.Page.objects.using("wiki").raw(

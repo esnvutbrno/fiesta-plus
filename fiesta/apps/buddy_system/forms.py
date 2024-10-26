@@ -1,21 +1,15 @@
 from __future__ import annotations
 
-from django.forms import Textarea, fields_for_model
+from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
 from django.utils.translation import gettext_lazy as _
 
-from apps.accounts.models import UserProfile
 from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
 from apps.fiestaforms.fields.array import ChoicedArrayField
 from apps.fiestarequests.forms.editor import BaseQuickMatchForm, BaseRequestEditorForm
 from apps.fiestarequests.forms.match import BaseRequestMatchForm
 from apps.fiestarequests.forms.request import BaseNewRequestForm
-
-USER_PROFILE_CONTACT_FIELDS = fields_for_model(
-    UserProfile,
-    fields=("facebook", "instagram", "telegram", "whatsapp"),
-)
 
 
 class NewBuddyRequestForm(BaseNewRequestForm):
@@ -75,13 +69,10 @@ class BuddyRequestMatchForm(BaseRequestMatchForm):
 
     class Meta(BaseRequestMatchForm.Meta):
         model = BuddyRequestMatch
-        labels = BaseRequestMatchForm.Meta.labels | {}
-        help_texts = BaseRequestMatchForm.Meta.help_texts | {
-            "note": lazy(
-                lambda: render_to_string("buddy_system/parts/buddy_request_match_note_help.html"),
-                str,
-            )
+        labels = BaseRequestMatchForm.Meta.labels | {
+            "note": _("Message for your upcoming buddy"),
         }
+        help_texts = BaseRequestMatchForm.Meta.help_texts | {}
         widgets = BaseRequestMatchForm.Meta.widgets | {
             "note": Textarea(
                 attrs={

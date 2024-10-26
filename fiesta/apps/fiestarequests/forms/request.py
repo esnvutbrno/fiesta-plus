@@ -42,5 +42,3 @@ class BaseNewRequestForm(BaseModelForm):
 
         if self.initial.get("issuer_faculty"):
             self.fields["issuer_faculty"].disabled = True
-
-    # TODO: add save/load of contacts to/from user_profile

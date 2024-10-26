@@ -34,11 +34,8 @@ class UserPassesMembershipTestMixin(UserPassesTestMixin):
             #  !membership OR (membership.section==in_space_of_section)
             return False
 
-        if not self.test_membership(membership=membership):
-            # right section, but without sufficient role
-            return False
-
-        return True
+        return self.test_membership(membership=membership)
+        # False = right section, but without sufficient role
 
     def test_membership(self, membership: SectionMembership) -> bool:
         raise NotImplementedError("To be overriden")

@@ -28,6 +28,7 @@ class SectionAdmin(admin.ModelAdmin):
     list_display = (
         "name",
         "country",
+        "code",
         "space_slug",
         "all_universities",
         "all_plugins",

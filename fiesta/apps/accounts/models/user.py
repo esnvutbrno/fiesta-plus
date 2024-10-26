@@ -43,7 +43,7 @@ class User(AbstractUser):
 
     @property
     def full_name_official(self):
-        return f"{self.last_name} {self.first_name}".strip()
+        return f"{self.last_name} {self.first_name}".strip() or self.username
 
     @property
     def is_esn_card_holder(self):
@@ -60,7 +60,7 @@ class User(AbstractUser):
 
     @property
     def primary_email(self):
-        return self.emailaddress_set.filter(primary=True).first() or self.email
+        return next((email for email in self.emailaddress_set.all() if email.primary), self.email)
 
 
 __all__ = ["User"]

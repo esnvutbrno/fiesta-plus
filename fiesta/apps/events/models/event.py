@@ -12,10 +12,7 @@ from apps.utils.models import BaseTimestampedModel
 # TODO Maybe pre-registration, registration and paused registration for different field.
 
 def has_permission_for_cover_photo_view(request: HttpRequest, name: str) -> bool:  # TODO
-    if request.user.is_authenticated:
-        return True
-
-    return False
+    return request.user.is_authenticated
 
 
 class Event(BaseTimestampedModel):

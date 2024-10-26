@@ -7,6 +7,7 @@ from django.views.generic import CreateView, TemplateView, UpdateView
 
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.plugins.models import BasePluginConfiguration, Plugin
+from apps.plugins.plugin import BasePluginAppConfig
 from apps.plugins.utils import all_plugin_apps
 from apps.sections.forms.plugin_configuration import get_plugin_configuration_form
 from apps.sections.forms.plugin_state import ChangePluginStateForm, SetupPluginSettingsForm
@@ -26,6 +27,12 @@ class SectionPluginsView(
     def get_context_data(self, **kwargs):
         def by_label(label: str) -> Plugin | None:
             return self.request.in_space_of_section.plugins.filter(app_label=label).first()
+
+        def filter_app(app: BasePluginAppConfig) -> bool:
+            return (
+                self.request.in_space_of_section.allow_experimental_plugins
+                or app.feature_state != BasePluginAppConfig.FeatureState.EXPERIMENTAL
+            )
 
         ctx = super().get_context_data(**kwargs)
         ctx.update(
@@ -52,7 +59,7 @@ class SectionPluginsView(
                         )
                     ),
                 )
-                for app in all_plugin_apps()
+                for app in all_plugin_apps(filter_f=filter_app)
                 if (plugin := by_label(app.label)) or True
             ],
             PluginState=Plugin.State,

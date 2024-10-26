@@ -103,6 +103,9 @@ def base_request_model_factory(
                 else None
             )
 
+        def __str__(self):
+            return f"{self.issuer}: {self.get_state_display()}"
+
     class BaseRequestMatch(BaseTimestampedModel):
         class Meta(BaseTimestampedModel.Meta):
             abstract = True
@@ -144,5 +147,8 @@ def base_request_model_factory(
                 if self.matcher.profile_or_none
                 else None
             )
+
+        def __str__(self):
+            return f"{self.request} - {self.matcher}"
 
     return BaseRequest, BaseRequestMatch

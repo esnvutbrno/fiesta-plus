@@ -57,6 +57,12 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
     # ### FIELDS, which are conditionally REQUIRED ###
     # see SectionsConfiguration
 
+    birth_date = models.DateField(
+        verbose_name=_("birth date"),
+        blank=True,
+        null=True,
+    )
+
     nationality = CountryField(
         verbose_name=_("nationality"),
         blank=True,
@@ -101,6 +107,20 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("profile picture"),
         null=True,
         blank=True,
+        width_field="picture_width",
+        height_field="picture_height",
+    )
+    picture_width = models.PositiveSmallIntegerField(
+        verbose_name=_("profile picture width"),
+        null=True,
+        blank=True,
+        editable=False,
+    )
+    picture_height = models.PositiveSmallIntegerField(
+        verbose_name=_("profile picture width"),
+        null=True,
+        blank=True,
+        editable=False,
     )
 
     interests = ArrayFieldWithDisplayableChoices(
@@ -160,6 +180,14 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         default=False,
     )
 
+    avatar_slug = models.CharField(
+        verbose_name=_("avatar slug"),
+        max_length=64,
+        blank=True,
+        default="",
+        editable=False,
+    )
+
     class Meta:
         verbose_name = _("user profile")
         verbose_name_plural = _("user profiles")
@@ -172,10 +200,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
         synchronizer.revalidate_user_profile(profile=self)
 
     def __str__(self):
-        return (
-            f"{self.user} {self.nationality} "
-            f"{self.university or (self.faculty.university if self.faculty else None) or ''} "
-        )
+        return str(self.user)
 
 
 __all__ = [

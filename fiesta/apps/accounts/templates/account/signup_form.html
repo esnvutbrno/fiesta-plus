@@ -15,6 +15,10 @@
            value="{{ redirect_field_value }}" />
   {% endif %}
   <hr>
+  <div class="text-sm font-medium text-gray-500 inline-flex justify-between">
+    <span>Coming from <span class="text-secondary">fiesta.esncz.org</span>?</span>
+    <span>Use your original account to <a href="{{ login_url }}" class="link link-primary link-hover">log in</a>.</span>
+  </div>
   {% include "fiestaforms/parts/errors.html" with errors=form.non_field_errors %}
   {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
   {% include "fiestaforms/parts/field.html" with bf=form.password1 errors=form.errors.password1 %}

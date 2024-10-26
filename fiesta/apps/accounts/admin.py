@@ -25,6 +25,7 @@ class UserAdmin(DjangoUserAdmin):
                     "username",
                     "password",
                     "state",
+                    "profile",
                     "is_active",
                     "is_staff",
                     "is_superuser",
@@ -40,18 +41,28 @@ class UserAdmin(DjangoUserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined", "modified")}),
     )
-    readonly_fields = ("modified",)
+    readonly_fields = (
+        "modified",
+        "profile",
+    )
     list_display = (
         "username",
         "first_name",
         "last_name",
         "user_profile",
+        "date_joined",
         "memberships",
     )
     list_filter = (
-        "memberships__section",
-        "memberships__role",
-    ) + DjangoUserAdmin.list_filter
+        (
+            "memberships__section",
+            "memberships__role",
+        )
+        + DjangoUserAdmin.list_filter
+        + (("profile", admin.EmptyFieldListFilter),)
+    )
+
+    ordering = ("-date_joined",)
 
     @display
     def memberships(self, obj):
@@ -60,8 +71,9 @@ class UserAdmin(DjangoUserAdmin):
     @display
     def user_profile(self, obj):
         return format_html(
-            '<a href="{}">{}</a>',
+            '<a href="{}">{}: {}</a>',
             reverse("admin:accounts_userprofile_change", args=(obj.profile.pk,)),
+            obj.profile,
             obj.profile.state,
         )
 
@@ -112,5 +124,4 @@ admin.site.unregister(EmailAddress)
 
 
 @admin.register(EmailAddress)
-class FiestaEmailAddressAdmin(EmailAddressAdmin):
-    ...  # to have it in accounts admin
+class FiestaEmailAddressAdmin(EmailAddressAdmin): ...  # to have it in accounts admin

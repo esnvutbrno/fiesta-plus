@@ -4,7 +4,12 @@ from django.urls import path
 
 from ..accounts.models.profile import user_profile_picture_storage
 from .views import BuddySystemIndexView
-from .views.editor import BuddyRequestEditorDetailView, BuddyRequestsEditorView, QuickBuddyMatchView
+from .views.editor import (
+    BuddyRequestEditorDetailView,
+    BuddyRequestsEditorView,
+    QuickBuddyMatchView,
+    UpdateBuddyRequestStateView,
+)
 from .views.matches import MyBuddies
 from .views.matching import (
     IssuerPictureServeView,
@@ -34,6 +39,7 @@ urlpatterns = [
     ),
     path("detail/<uuid:pk>", BuddyRequestEditorDetailView.as_view(), name="editor-detail"),
     path("quick-match/<uuid:pk>", QuickBuddyMatchView.as_view(), name="quick-match"),
+    path("update-request-state/<uuid:pk>", UpdateBuddyRequestStateView.as_view(), name="update-request-state"),
     # serve profile picture with proxy view
     IssuerPictureServeView.as_url(user_profile_picture_storage, url_name="serve-issuer-profile-picture"),
     MatcherPictureServeView.as_url(user_profile_picture_storage, url_name="serve-matcher-profile-picture"),

@@ -24,17 +24,15 @@ class PickupRequest(BaseRequestForPickupSystem):
     )
     location = PlainLocationField(
         verbose_name=_("pickup point"),
-        based_fields=["pickup_place"],
-        default="49.1922443,16.6113382",
-        zoom=4,
+        based_fields=["place"],
+        blank=True,
+        null=True,
+        zoom=12,
     )
 
     class Meta(BaseRequestForPickupSystem.Meta):
         verbose_name = _("pickup request")
         verbose_name_plural = _("pickup requests")
-
-    def __str__(self):
-        return f"Pickup Request {self.issuer}: {self.get_state_display()}"
 
     @property
     def location_as_google_maps_link(self):
@@ -46,6 +44,3 @@ class PickupRequestMatch(BaseRequestMatchForPickupSystem):
     class Meta(BaseRequestForPickupSystem.Meta):
         verbose_name = _("pickup request match")
         verbose_name_plural = _("pickup request matches")
-
-    def __str__(self):
-        return f"Pickup Request Match {self.matcher}: {self.request}"

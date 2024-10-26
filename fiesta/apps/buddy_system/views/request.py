@@ -26,7 +26,9 @@ class BuddySystemEntrance(EnsureInSectionSpaceViewMixin, PluginConfigurationView
             return HttpResponseRedirect(reverse("buddy_system:new-request"))
 
         c: BuddySystemConfiguration = self.configuration
-        if c.matching_policy_instance.can_member_match:
+        if c.matching_policy_instance.matching_done_by_members and c.matching_policy_instance.can_member_match(
+            self.request.membership
+        ):
             return HttpResponseRedirect(reverse("buddy_system:matching-requests"))
 
         return HttpResponseRedirect(reverse("buddy_system:index"))

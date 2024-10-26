@@ -1,5 +1,6 @@
 {% extends "fiesta/base.html" %}
 
+{% load buddy_system %}
 {% load static %}
 {% load i18n %}
 {% load breadcrumbs %}
@@ -16,9 +17,15 @@
         <span class="badge badge-primary badge-outline badge-lg">{{ configuration.matching_policy_instance.title.lower }}</span>
       </p>
       <p>{{ configuration.matching_policy_instance.description }}</p>
-      {% if configuration.matching_policy_instance.can_member_match %}
-        <a class="btn btn-primary btn-lg"
-           href="{% url "buddy_system:matching-requests" %}">{% trans "Show buddy requests" %}</a>
+      {% can_member_match configuration request.membership as can_match %}
+
+      {% if configuration.matching_policy_instance.matching_done_by_members %}
+        {% if can_match %}
+          <a class="btn btn-primary btn-lg"
+             href="{% url "buddy_system:matching-requests" %}">{% trans "Show buddy requests" %}</a>
+        {% else %}
+          <div class="alert alert-warning">{% translate "Your buddy limit is already fulfilled." %}</div>
+        {% endif %}
       {% else %}
         <div class="alert alert-info">
           {% trans "Please, wait for match by coordinator." %}

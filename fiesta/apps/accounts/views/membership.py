@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, TemplateView
 
 from apps.fiestaforms.forms import BaseModelForm
-from apps.sections.models import SectionMembership, SectionsConfiguration
+from apps.sections.models import Section, SectionMembership, SectionsConfiguration
 from apps.sections.views.mixins.section_space import EnsureNotInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import BreadcrumbItem
 
@@ -73,6 +73,11 @@ class NewSectionMembershipFormView(
 
         if self.kwargs.get("section"):
             form.fields["section"].disabled = True
+
+        # only enabled sections
+        form.fields["section"].queryset = Section.objects.filter(
+            system_state=Section.SystemState.ENABLED,
+        )
 
         return form
 

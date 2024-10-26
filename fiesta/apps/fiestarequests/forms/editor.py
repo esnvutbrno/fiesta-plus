@@ -50,6 +50,11 @@ class BaseQuickMatchForm(BaseModelForm):
     def clean_matcher(self):
         matcher: User = self.cleaned_data["matcher"]
 
+        if not matcher.profile_or_none:
+            raise ValidationError(
+                _("This user has not completed their profile. Please ask them to do so before matching.")
+            )
+
         if not matcher.profile_or_none.faculty:
             raise ValidationError(_("This user has not set their faculty. Please ask them to do so or do it yourself."))
 

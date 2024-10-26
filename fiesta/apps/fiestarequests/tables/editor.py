@@ -102,4 +102,4 @@ class BaseRequestsTable(tables.Table):
 
         empty_text = _("No requests found")
 
-        attrs = dict(tbody={"hx-disable": True})
+        attrs = dict(tbody={"hx-boost": False})
