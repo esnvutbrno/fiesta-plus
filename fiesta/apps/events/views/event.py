@@ -54,7 +54,7 @@ class AddEventView(
     object: Event
 
     template_name = "fiestaforms/pages/card_page_for_ajax_form.html"
-    ajax_template_name = "fiestaforms/parts/ajax-form-container.html"
+    ajax_template_name = "events/parts/create_event_form.html"
 
     form_class = AddEventForm
 
