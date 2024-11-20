@@ -146,12 +146,36 @@ class ProjectConfigMixin:
     ENVIRONMENT_NAME: str = Value(environ_required=False)
     ENVIRONMENT_COLOR: str = Value(environ_required=False)
     RELEASE_NAME: str = Value(environ_required=False, default="fiesta-plus@dev")
-
+    
     CACHES = {
-        "default": {
-            "BACKEND": "django.core.cache.backends.db.DatabaseCache",
-            "LOCATION": "django_cache",
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': 'redis://fiesta-redis:6379/1',
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            }
         }
+    }
+    
+    SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+    SESSION_CACHE_ALIAS = "default"
+
+    
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'level': 'DEBUG',
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django_redis': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
     }
 
     SELECT2_CACHE_BACKEND = "default"
