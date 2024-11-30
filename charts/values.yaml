@@ -39,6 +39,9 @@ secrets:
   sentry:
     dsn: dsn
     jsLoaderUrl: url
+  recaptcha:
+    siteKey: key
+    secretKey: key
   mailer:
     primary:
       host: host

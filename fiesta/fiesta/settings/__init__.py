@@ -39,6 +39,8 @@ class Development(Base):
 
     USE_WEBPACK_INTEGRITY = False
 
+    SILENCED_SYSTEM_CHECKS = ["django_recaptcha.recaptcha_test_key_error"]
+
     def INSTALLED_APPS(self):
         return super().INSTALLED_APPS + ["debug_toolbar"]
 

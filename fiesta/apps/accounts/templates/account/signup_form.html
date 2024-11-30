@@ -23,6 +23,11 @@
   {% include "fiestaforms/parts/field.html" with bf=form.email errors=form.errors.email %}
   {% include "fiestaforms/parts/field.html" with bf=form.password1 errors=form.errors.password1 %}
   {% include "fiestaforms/parts/field.html" with bf=form.password2 errors=form.errors.password2 %}
+  <div class="Forms__field">
+    {{ form.recaptcha }}
+    {% if form.errors.recaptcha %}<div class="Forms__error_text">{{ form.errors.recaptcha }}</div>{% endif %}
+  </div>
+
   <button type="submit" class="btn btn-block btn-primary">Sign up</button>
   <div class="text-sm font-medium text-gray-500">
     Already registered?

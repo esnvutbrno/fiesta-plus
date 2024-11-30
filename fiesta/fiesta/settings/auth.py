@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from configurations.values import SecretValue
+
 
 class AuthConfigMixin:
     AUTH_PASSWORD_VALIDATORS = [
@@ -75,6 +77,10 @@ class AuthConfigMixin:
     ACCOUNT_USERNAME_REQUIRED = False  # email ftw
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = "https"
 
+    ACCOUNT_FORMS = {
+        "signup": "apps.accounts.forms.sign_up.SignupForm",
+    }
+
     ACCOUNT_EMAIL_VERIFICATION = "mandatory"
     SOCIALACCOUNT_EMAIL_VERIFICATION = "optional"
     # social account settings
@@ -92,3 +98,9 @@ class AuthConfigMixin:
     ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True  # logout after password change
 
     ACCOUNT_USERNAME_MIN_LENGTH = 4  # a personal preference
+
+    # rename it to get the same as defined in recaptcha original docs
+    RECAPTCHA_PUBLIC_KEY = SecretValue(environ_name="RECAPTCHA_SITE_KEY")
+    RECAPTCHA_PRIVATE_KEY = SecretValue(environ_name="RECAPTCHA_SECRET_KEY")
+
+    RECAPTCHA_USE_SSL = True  # Defaults to False

@@ -58,6 +58,10 @@ class LoggingConfigMixin:
                     "handlers": ["console"],
                     "level": self.LOG_LEVEL,
                 },
+                "django_recaptcha": {
+                    "handlers": ["console"],
+                    "level": self.LOG_LEVEL,
+                },
             },
         }
 
