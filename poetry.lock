@@ -870,6 +870,20 @@ files = [
 Django = ">=2.1"
 
 [[package]]
+name = "django-recaptcha"
+version = "4.0.0"
+description = "Django recaptcha form field/widget app."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-recaptcha-4.0.0.tar.gz", hash = "sha256:5316438f97700c431d65351470d1255047e3f2cd9af0f2f13592b637dad9213e"},
+    {file = "django_recaptcha-4.0.0-py3-none-any.whl", hash = "sha256:0d912d5c7c009df4e47accd25029133d47a74342dbd2a8edc2877b6bffa971a3"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-select2"
 version = "7.11.1"
 description = "Select2 option fields for Django"
@@ -2132,4 +2146,4 @@ anyio = ">=3.0.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "716d16cbcfcba887f4be4fdd30f814911acb8e539f3277f62803921c96ac6871"
+content-hash = "43d00087dadb290162ad108ddf32623fd1204085dc55e24e7f45680a996ddf58"

@@ -182,6 +182,9 @@ jobs:
               sentry:
                 dsn: ${{ secrets.SENTRY_DSN }}
                 jsLoaderUrl: ${{ secrets.SENTRY_JS_LOADER_URL }}
+              recaptcha:
+                siteKey: ${{ secrets.RECAPTCHA_SITE_KEY }}
+                secretKey: ${{ secrets.RECAPTCHA_SECRET_KEY }}
               mailer:
                 primary:
                   host: ${{ secrets.DJANGO_MAILER_PRIMARY_HOST }}

@@ -55,6 +55,7 @@ django-admin-env-notice = "^1.0"
 cryptography = "^43.0.0"
 django-admin-relation-links = "^0.2.5"
 django-mailer = "^2.3.1"
+django-recaptcha = "^4.0.0"
 
 
 [tool.poetry.dev-dependencies]
@@ -96,17 +97,16 @@ exclude = '''
 
 [tool.ruff]
 # see https://beta.ruff.rs/docs/rules/
-extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B", "I002"]
 line-length = 120
 target-version = "py311"
-ignore = ["E731"]
 
 exclude = [
     "migrations",
 ]
 
-[tool.ruff.isort]
-required-imports = ["from __future__ import annotations"]
+lint.ignore = ["E731"]
+extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B", "I002"]
+lint.isort.required-imports = ["from __future__ import annotations"]
 
 
 [tool.vulture]

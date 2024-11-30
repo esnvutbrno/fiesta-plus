@@ -101,6 +101,8 @@ class ProjectConfigMixin:
         "allauth_cas",
         # superuser can log in as any user
         "loginas",
+        # recaptcha
+        "django_recaptcha",
         # editorjs integration
         "django_editorjs_fields",
         # location fields
