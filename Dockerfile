@@ -167,7 +167,12 @@ ARG DJANGO_RELEASE_NAME
 ENV DJANGO_RELEASE_NAME=${DJANGO_RELEASE_NAME}
 
 # need production configuration, but not all values are ready in env
-RUN bash -c "DJANGO_SECRET_KEY=\$RANDOM DJANGO_CONFIGURATION=LocalProduction python manage.py collectstatic --no-input --verbosity 3"
+RUN bash -c " \
+    DJANGO_SECRET_KEY=\$RANDOM \
+    DJANGO_CONFIGURATION=LocalProduction \
+    DJANGO_RECAPTCHA_SITE_KEY=___ \
+    DJANGO_RECAPTCHA_SECRET_KEY=___ \
+    python manage.py collectstatic --no-input --verbosity 3"
 
 # given by webpack compiled results
 COPY --from=webpack-stable /usr/src/build/webpack-stats.json ${DJANGO_BUILD_DIR}
