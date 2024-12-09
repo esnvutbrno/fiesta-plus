@@ -79,6 +79,7 @@ class AuthConfigMixin:
 
     ACCOUNT_FORMS = {
         "signup": "apps.accounts.forms.sign_up.SignupForm",
+        "reset_password": "apps.accounts.forms.reset_password.ResetPasswordForm",
     }
 
     ACCOUNT_EMAIL_VERIFICATION = "mandatory"
