@@ -12,7 +12,7 @@ gem "github-linguist"
 gem "html-pipeline"
 gem "facets", "~> 3.1"
 gem "gemoji"
-gem "sanitize"
+gem "sanitize", ">= 7.0.0"
 gem "rinku"
 
 # for github-markup
