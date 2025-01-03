@@ -68,6 +68,8 @@ class Production(
 
     ROOT_DOMAIN = Value(environ_required=True)
 
+    EMAIL_DOMAIN = Value(environ_required=True)
+
     DATABASE_URL = SecretValue(environ_prefix="DJANGO")
 
     @property
