@@ -55,6 +55,8 @@ class LocalProduction(Base):
 
     ROOT_DOMAIN = "fiesta.test"
 
+    EMAIL_DOMAIN = "mail.fiesta.test"
+
     USE_WEBPACK_INTEGRITY = False
 
 
