@@ -20,6 +20,8 @@ web:
 
   port: 8000
 
+  emailDomain: mail.fiesta.plus
+
 proxy:
   repository: nginxdemos/hello
   tag: latest

@@ -34,6 +34,7 @@ class ProjectConfigMixin:
     ROOT_URLCONF = "fiesta.urls"
 
     ROOT_DOMAIN = "fiesta.test"  # TODO: fill from environ
+    EMAIL_DOMAIN = "mail.fiesta.test"
 
     def ALLOWED_HOSTS(self):
         return [f".{self.ROOT_DOMAIN}"]
@@ -43,7 +44,7 @@ class ProjectConfigMixin:
     MAILER_EMAIL_BACKEND = Value(default="django.core.mail.backends.console.EmailBackend")
 
     def DEFAULT_FROM_EMAIL(self):
-        return f"Fiesta+ <noreply@{self.ROOT_DOMAIN}>"
+        return f"Fiesta+ <noreply@{self.EMAIL_DOMAIN}>"
 
     INSTALLED_APPS = [
         # dj admin autocompletion widgets, must be before admin

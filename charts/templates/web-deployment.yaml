@@ -39,6 +39,8 @@ spec:
               name: web
           readinessProbe:
             initialDelaySeconds: 3
+            timeoutSeconds: 5
+            failureThreshold: 10
             # httpget doesn't work, timeouted
             exec:
               command:
@@ -51,6 +53,8 @@ spec:
           livenessProbe:
             initialDelaySeconds: 3
             periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 10
             exec:
               command:
                 - wget
