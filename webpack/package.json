@@ -33,7 +33,7 @@
     "webpack": "^5.94.0",
     "webpack-bundle-tracker": "^1.4.0",
     "webpack-cli": "^4.9.2",
-    "webpack-dev-server": "^4.7.4"
+    "webpack-dev-server": "^5.2.1"
   },
   "resolutions": {
     "autoprefixer": "10.4.5"
