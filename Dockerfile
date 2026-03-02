@@ -105,8 +105,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 ARG UV_SYNC_FLAGS="--no-dev"
 
-RUN python -m venv /venv
-ENV VIRTUAL_ENV=/venv
+ENV UV_PROJECT_ENVIRONMENT=/venv
 
 COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
