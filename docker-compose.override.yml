@@ -10,7 +10,7 @@ services:
       - webpack_build:/usr/src/build
     build:
       args:
-        - POETRY_EXPORT_ARGS=--dev
+        - UV_SYNC_FLAGS=--group dev
 
   proxy:
     volumes:
