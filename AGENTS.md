@@ -18,7 +18,7 @@ Guidelines for AI coding agents (Copilot, Claude, Cursor, etc.) working in this 
 |-------|-----------|
 | Language | Python 3.12+ |
 | Framework | Django 4.2 |
-| Package manager | Poetry (`pyproject.toml` + `poetry.lock`) |
+| Package manager | uv (`pyproject.toml` + `uv.lock`) |
 | Settings system | `django-configurations` (class-based, mixin composition) |
 | Database | PostgreSQL 15 (+ SQLite for wiki) |
 | Task queue | Celery + Redis |
@@ -116,6 +116,9 @@ All commands go through Docker Compose via `make`. The `web` service runs Django
 ```bash
 git clone git@github.com:esnvutbrno/fiesta-plus.git
 cd fiesta-plus
+
+# Install uv (required for dependency management)
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Copy env template and fill in at minimum DJANGO_SECRET_KEY
 cp .env.template .env
@@ -241,7 +244,7 @@ Production-only env vars (S3, Sentry, SMTP) are only needed for the `Production`
 
 ## What Agents Should NOT Do
 
-- Do not add Python dependencies without updating `pyproject.toml` via `poetry add <package>`.
+- Do not add Python dependencies without updating `pyproject.toml` via `uv add <package>`.
 - Do not bypass `pre-commit` hooks (`--no-verify`).
 - Do not hardcode secrets, credentials, or environment-specific values — use `django-environ` / env variables.
 - Do not use `print()` for debugging in production code — use Django's `logging` module.

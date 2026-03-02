@@ -26,7 +26,7 @@ GRAPH_MODELS_CMD = graph_models accounts plugins auth sections events \
 all: up
 
 pre-commit: ## Runs all included lints/checks/reformats
-	poetry run pre-commit run --all-files
+	uv run pre-commit run --all-files
 
 seed: DA_CMD = seed ## Seed database with fake data.
 seed: da
