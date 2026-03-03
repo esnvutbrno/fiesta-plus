@@ -87,6 +87,7 @@ class ProjectConfigMixin:
         "apps.sections.apps.SectionsConfig",
         "apps.universities.apps.UniversitiesConfig",
         "apps.utils.apps.UtilsConfig",
+        "apps.notifications.apps.NotificationsConfig",
         "apps.wiki.apps.WikiConfig",
         # Debugs
         "django_extensions",
