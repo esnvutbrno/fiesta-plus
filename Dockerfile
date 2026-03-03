@@ -95,24 +95,23 @@ RUN \
 # venv builder
 FROM ${PYTHON_IMAGE} as web-venv-builder
 
-ARG POETRY_EXPORT_ARGS
-
 # build deps
 RUN apk add --no-cache \
     build-base gcc python3-dev musl-dev gettext-dev libffi-dev g++ \
     postgresql-dev mariadb-dev libxml2-dev libxslt-dev \
     musl-dev rust cargo patchelf git jpeg-dev zlib-dev
 
-# final venv
-RUN python -m venv /venv
-# poetry to export & install
-RUN python -m pip install poetry
-# to speed up install process (whl are much smaller and quicker)
-RUN /venv/bin/pip install wheel
-COPY pyproject.toml poetry.lock ./
-# no hashes since we use deps from .git urls
-RUN poetry export --without-hashes ${POETRY_EXPORT_ARGS} -o /tmp/requirements.txt
-RUN --mount=type=cache,target=/root/.cache/pip /venv/bin/pip install -r /tmp/requirements.txt
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
+
+ARG UV_SYNC_FLAGS="--no-dev"
+
+ENV UV_PROJECT_ENVIRONMENT=/venv
+
+COPY pyproject.toml uv.lock ./
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync ${UV_SYNC_FLAGS} --no-install-project
+# seed setuptools into venv for pkg_resources compat
+RUN /venv/bin/pip install setuptools
 
 # base runtime image
 FROM ${PYTHON_IMAGE} as web-base
@@ -130,7 +129,7 @@ ENV DJANGO_SETTINGS_MODULE "fiesta.settings"
 # same for postgres container
 ENV TZ Europe/Prague
 
-COPY pyproject.toml poetry.lock /usr/src/app/
+COPY pyproject.toml uv.lock /usr/src/app/
 
 # configure users, dirs, install psycopg, install runtime deps
 RUN addgroup -S 1000 \
