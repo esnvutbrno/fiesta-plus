@@ -35,4 +35,5 @@ class NotificationPreferencesView(LoginRequiredMixin, SuccessMessageMixin, Updat
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
         kwargs["membership"] = getattr(self.request, "membership", None)
+        kwargs["user_profile"] = self.request.user.profile
         return kwargs

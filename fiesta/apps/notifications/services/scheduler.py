@@ -17,13 +17,17 @@ def enqueue_delayed_notification(
     section,
     related_object,
     send_after: datetime,
-) -> ScheduledNotification:
+) -> ScheduledNotification | None:
     """
     Create a ScheduledNotification to be sent at send_after.
 
     If an unsent notification of the same kind already exists for this
     recipient + object, update its send_after time (upsert / digest logic).
     """
+    if not recipient.email_notifications_enabled:
+        logger.info("Skipping scheduled notification for %s: global opt-out", recipient)
+        return None
+
     ct = ContentType.objects.get_for_model(related_object)
     existing = ScheduledNotification.objects.filter(
         kind=kind,
