@@ -12,6 +12,7 @@ H006: Model has no verbose name.
 H007: Model has no verbose name plural.
 H008: Must set db_index explicitly on a ForeignKey field.
 """
+
 import ast
 import inspect
 

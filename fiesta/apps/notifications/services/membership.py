@@ -49,7 +49,7 @@ def _send_member_received_email(*, membership, section) -> None:
 def _enqueue_editor_digests(*, membership, section, config) -> None:
     from django.utils import timezone
 
-    from apps.notifications.models import ScheduledNotification, SectionNotificationPreferences
+    from apps.notifications.models import NotificationKind, SectionNotificationPreferences
     from apps.notifications.services.scheduler import enqueue_delayed_notification
     from apps.sections.models import SectionMembership
 
@@ -75,8 +75,8 @@ def _enqueue_editor_digests(*, membership, section, config) -> None:
             pass  # No profile or other issue — default to sending
 
         enqueue_delayed_notification(
-            kind=ScheduledNotification.Kind.MEMBER_WAITING_DIGEST,
-            recipient=editor,
+            kind=NotificationKind.MEMBER_WAITING_DIGEST,
+            recipient=profile,
             section=section,
             related_object=membership,
             send_after=send_after,

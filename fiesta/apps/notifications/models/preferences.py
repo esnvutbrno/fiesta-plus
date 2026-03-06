@@ -37,7 +37,7 @@ class SectionNotificationPreferences(BaseTimestampedModel):
     )
 
     class Meta:
-        verbose_name = _("section notification preferences")
+        verbose_name = _("section notification preference")
         verbose_name_plural = _("section notification preferences")
         unique_together = [("user", "section")]
 

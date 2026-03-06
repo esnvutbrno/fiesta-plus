@@ -8,7 +8,7 @@ from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
 
-from apps.notifications.models import ScheduledNotification
+from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.mailer import send_notification_email
 
 logger = logging.getLogger(__name__)
@@ -70,13 +70,13 @@ class Command(BaseCommand):
 
         kind = notification.kind
 
-        if kind == ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER:
+        if kind == NotificationKind.BUDDY_MATCHED_ISSUER:
             self._send_buddy_matched_issuer(notification=notification, related_object=related_object, context=context)
 
-        elif kind == ScheduledNotification.Kind.PICKUP_MATCHED_ISSUER:
+        elif kind == NotificationKind.PICKUP_MATCHED_ISSUER:
             self._send_pickup_matched_issuer(notification=notification, related_object=related_object, context=context)
 
-        elif kind == ScheduledNotification.Kind.MEMBER_WAITING_DIGEST:
+        elif kind == NotificationKind.MEMBER_WAITING_DIGEST:
             self._send_member_waiting_digest(notification=notification, section=section, context=context)
 
         else:
@@ -105,7 +105,7 @@ class Command(BaseCommand):
             return
 
         context["match"] = related_object
-        with contextlib.suppress(Exception):
+        with contextlib.suppress(AttributeError):
             context["request"] = related_object.request
 
         send_notification_email(
@@ -120,7 +120,7 @@ class Command(BaseCommand):
             return
 
         context["match"] = related_object
-        with contextlib.suppress(Exception):
+        with contextlib.suppress(AttributeError):
             context["request"] = related_object.request
 
         send_notification_email(

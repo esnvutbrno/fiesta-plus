@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import transaction
 from django.utils import timezone
 
-from apps.notifications.models import ScheduledNotification
+from apps.notifications.models import NotificationKind
 from apps.notifications.services.mailer import send_notification_email
 from apps.notifications.services.scheduler import enqueue_delayed_notification
 
@@ -62,7 +62,7 @@ def notify_buddy_match(*, match, request, section) -> None:
         send_after = timezone.now() + config.email_notify_issuer_delay
         transaction.on_commit(
             lambda: enqueue_delayed_notification(
-                kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+                kind=NotificationKind.BUDDY_MATCHED_ISSUER,
                 recipient=issuer,
                 section=section,
                 related_object=match,
@@ -109,7 +109,7 @@ def notify_pickup_match(*, match, request, section) -> None:
         send_after = timezone.now() + config.email_notify_issuer_delay
         transaction.on_commit(
             lambda: enqueue_delayed_notification(
-                kind=ScheduledNotification.Kind.PICKUP_MATCHED_ISSUER,
+                kind=NotificationKind.PICKUP_MATCHED_ISSUER,
                 recipient=issuer,
                 section=section,
                 related_object=match,

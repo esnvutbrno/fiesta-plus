@@ -89,7 +89,6 @@ class ProjectConfigMixin:
         "apps.utils.apps.UtilsConfig",
         "apps.notifications.apps.NotificationsConfig",
         "apps.wiki.apps.WikiConfig",
-        "apps.notifications.apps.NotificationsConfig",
         # Debugs
         "django_extensions",
         # django-allauth
@@ -140,7 +139,36 @@ class ProjectConfigMixin:
 
     # setup for django-country
     # all EU countries first, then the rest
-    COUNTRIES_FIRST = "AT BE BG HR CY CZ DK EE FI FR DE GR HU IE IT LV LT LU MT NL PL PT RO SK SI ES SE GB".split()
+    COUNTRIES_FIRST = [
+        "AT",
+        "BE",
+        "BG",
+        "HR",
+        "CY",
+        "CZ",
+        "DK",
+        "EE",
+        "FI",
+        "FR",
+        "DE",
+        "GR",
+        "HU",
+        "IE",
+        "IT",
+        "LV",
+        "LT",
+        "LU",
+        "MT",
+        "NL",
+        "PL",
+        "PT",
+        "RO",
+        "SK",
+        "SI",
+        "ES",
+        "SE",
+        "GB",
+    ]
     COUNTRIES_FIRST_REPEAT = True
 
     LOCATION_FIELD = {
