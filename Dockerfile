@@ -111,7 +111,7 @@ COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync ${UV_SYNC_FLAGS} --no-install-project
 # seed setuptools into venv for pkg_resources compat
-RUN /venv/bin/pip install setuptools
+RUN /bin/uv pip install --python /venv/bin/python setuptools
 
 # base runtime image
 FROM ${PYTHON_IMAGE} as web-base
