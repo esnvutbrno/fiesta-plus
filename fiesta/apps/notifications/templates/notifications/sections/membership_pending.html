@@ -1,0 +1,15 @@
+{% extends "notifications/base_email.html" %}
+{% block content %}
+  <h2>New member(s) waiting for confirmation 👥</h2>
+  <p>Hi,</p>
+  <p>
+    There
+    {% if waiting_count == 1 %}
+      is <strong>1 new member</strong>
+    {% else %}
+      are <strong>{{ waiting_count }} new members</strong>
+    {% endif %}
+    waiting for confirmation in <strong>{{ section }}</strong>.
+  </p>
+  <p>Please log in to review and confirm or reject pending applications.</p>
+{% endblock %}

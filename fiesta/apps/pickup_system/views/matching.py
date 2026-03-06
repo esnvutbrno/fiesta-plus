@@ -66,6 +66,15 @@ class MatchPickupRequestFormView(
         )
         return form
 
+    def after_match_created(self, match, fiesta_request) -> None:
+        from apps.notifications.services.match import notify_pickup_match
+
+        notify_pickup_match(
+            match=match,
+            request=fiesta_request,
+            section=self.request.in_space_of,
+        )
+
 
 class ServeFilesFromPickupsMixin:
     @classmethod

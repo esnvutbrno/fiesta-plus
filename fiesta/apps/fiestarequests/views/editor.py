@@ -51,6 +51,9 @@ class BaseQuickRequestMatchView(
         except ObjectDoesNotExist:
             return {}
 
+    def after_match_created(self, match, fiesta_request) -> None:
+        """Hook for subclasses to trigger notifications after a match is created."""
+
     @transaction.atomic
     def form_valid(self, form):
         br: BaseRequestProtocol | models.Model = form.instance
@@ -64,16 +67,18 @@ class BaseQuickRequestMatchView(
 
         matcher: User = form.cleaned_data.get("matcher")
 
-        match = self.match_model(
+        new_match = self.match_model(
             request=br,
             matcher=matcher,
             matcher_faculty=matcher.profile_or_none.faculty,
         )
 
-        match.save()
+        new_match.save()
 
         br.state = BaseRequestProtocol.State.MATCHED
         br.save(update_fields=["state"])
+
+        transaction.on_commit(lambda: self.after_match_created(new_match, br))
 
         return super().form_valid(form)
 
@@ -108,6 +113,9 @@ class BaseUpdateRequestStateView(
 
         # TODO: django.lifecycle would be probably better
         if before == BaseRequestProtocol.State.MATCHED and after == BaseRequestProtocol.State.CREATED:
+            from apps.notifications.services.scheduler import cancel_scheduled_notifications_for
+
+            cancel_scheduled_notifications_for(self.object.match)
             self.object.match.delete()
 
         return resp

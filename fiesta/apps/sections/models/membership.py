@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_CREATE, AFTER_SAVE, LifecycleModelMixin, hook
@@ -71,6 +71,15 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("state"),
     )
 
+    notify_on_match = models.BooleanField(
+        default=True,
+        verbose_name=_("Email me when my request is matched"),
+    )
+    notify_on_new_member_waiting = models.BooleanField(
+        default=True,
+        verbose_name=_("Email me when a new member is waiting for approval"),
+    )
+
     # TODO: add flag to signalize, if membership has been added from ESN Accounts
 
     class Meta(BaseTimestampedModel.Meta):
@@ -104,6 +113,14 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         # the user profile is not validated by that section configuration anymore
 
         synchronizer.on_membership_update(membership=self)
+
+    @hook(AFTER_CREATE)
+    def _notify_on_new_membership(self) -> None:
+        if self.state != self.State.UNCONFIRMED:
+            return
+        from apps.notifications.services.membership import notify_new_membership
+
+        transaction.on_commit(lambda: notify_new_membership(membership=self))
 
     @property
     def is_international(self):

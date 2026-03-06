@@ -94,6 +94,15 @@ class MatchBuddyRequestFormView(
         )
         return form
 
+    def after_match_created(self, match, fiesta_request) -> None:
+        from apps.notifications.services.match import notify_buddy_match
+
+        notify_buddy_match(
+            match=match,
+            request=fiesta_request,
+            section=self.request.in_space_of,
+        )
+
 
 class ServeFilesFromBuddiesMixin:
     @classmethod

@@ -34,6 +34,16 @@ class BuddySystemConfiguration(BaseRequestSystemConfiguration):
         help_text=MatchingPoliciesRegister.DESCRIPTION,
     )
 
+    email_notify_on_match = models.BooleanField(
+        default=True,
+        verbose_name=_("Send email notifications on match"),
+    )
+    email_notify_issuer_delay = models.DurationField(
+        default=datetime.timedelta(hours=1),
+        verbose_name=_("Delay before notifying the issuer"),
+        help_text=_("Gives editors time to correct the match before the student is notified."),
+    )
+
     @property
     def matching_policy_instance(self) -> BaseMatchingPolicy:
         return MatchingPoliciesRegister.get_policy(self)

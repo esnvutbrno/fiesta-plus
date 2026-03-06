@@ -89,6 +89,7 @@ class ProjectConfigMixin:
         "apps.utils.apps.UtilsConfig",
         "apps.notifications.apps.NotificationsConfig",
         "apps.wiki.apps.WikiConfig",
+        "apps.notifications.apps.NotificationsConfig",
         # Debugs
         "django_extensions",
         # django-allauth

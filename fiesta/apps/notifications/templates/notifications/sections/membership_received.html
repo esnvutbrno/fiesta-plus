@@ -1,0 +1,15 @@
+{% extends "notifications/base_email.html" %}
+{% block content %}
+  <h2>Application received 🎓</h2>
+  <p>Hi {{ membership.user.first_name }},</p>
+  <p>
+    We've received your membership application for <strong>{{ section }}</strong>.
+    An editor will review your application and you'll be notified once it's approved.
+  </p>
+  <div class="info-box">
+    <p>
+      Your application is currently <strong>pending review</strong>.
+    </p>
+  </div>
+  <p>Thank you for joining ESN! We look forward to welcoming you.</p>
+{% endblock %}

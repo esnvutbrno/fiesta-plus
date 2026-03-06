@@ -1,0 +1,12 @@
+Great news — you've been matched with a buddy!
+===============================================
+
+Hi {{ notification.recipient.user.first_name }},
+
+Your buddy request has been matched! You now have a buddy at {{ section }} who will help you settle in.
+
+{% if match %}Your buddy: {{ match.matcher.user.get_full_name }}
+{% if match.matcher.user.email %}Email: {{ match.matcher.user.email }}{% endif %}
+{% endif %}
+
+Your buddy will be in touch soon. Don't hesitate to reach out first!
