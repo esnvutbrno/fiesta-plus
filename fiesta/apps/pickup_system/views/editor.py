@@ -106,7 +106,7 @@ class QuickPickupMatchView(BaseQuickRequestMatchView):
         notify_pickup_match(
             match=match,
             request=fiesta_request,
-            section=self.request.in_space_of,
+            section=self.request.in_space_of_section,
         )
 
 

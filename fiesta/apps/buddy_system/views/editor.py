@@ -97,7 +97,7 @@ class QuickBuddyMatchView(BaseQuickRequestMatchView):
         notify_buddy_match(
             match=match,
             request=fiesta_request,
-            section=self.request.in_space_of,
+            section=self.request.in_space_of_section,
         )
 
 
