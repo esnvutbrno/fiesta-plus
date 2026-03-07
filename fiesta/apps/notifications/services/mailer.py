@@ -5,6 +5,7 @@ import typing
 from typing import Any
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
@@ -33,7 +34,7 @@ def send_notification_email(
             if not recipient_user.profile.email_notifications_enabled:
                 logger.info("Skipping email to %s: global opt-out", recipient_email)
                 return
-        except Exception:
+        except ObjectDoesNotExist:
             pass  # No profile — proceed with sending
 
     html_content = render_to_string(f"{template_prefix}.html", context)
