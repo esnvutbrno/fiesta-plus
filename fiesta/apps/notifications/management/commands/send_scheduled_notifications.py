@@ -4,7 +4,6 @@ import contextlib
 import logging
 from typing import TYPE_CHECKING, Any, cast
 
-from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
@@ -12,6 +11,7 @@ from django.utils import timezone
 
 from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.mailer import send_notification_email
+from apps.notifications.services.urls import preferences_url as build_preferences_url
 
 if TYPE_CHECKING:
     from django.db.models import Model
@@ -60,10 +60,11 @@ class Command(BaseCommand):
                 continue
 
             try:
-                self._send(notification)
+                actually_sent = self._send(notification)
 
-                if notification.cancelled_at is not None:
-                    # Notification was soft-cancelled during _send (e.g. related object deleted).
+                if notification.cancelled_at is not None or not actually_sent:
+                    # Notification was soft-cancelled during _send (e.g. related object deleted)
+                    # or skipped (missing section/related_object/unknown kind).
                     # Roll back the claim so sent_at reflects that no email was actually sent.
                     ScheduledNotification.objects.filter(pk=notification_pk).update(sent_at=None)
                     skipped += 1
@@ -90,15 +91,12 @@ class Command(BaseCommand):
         section = notification.section
         if section is None:
             return False
-        preferences_url = (
-            f"https://{section.space_slug}.{settings.ROOT_DOMAIN}/notifications/preferences/" if section else ""
-        )
 
         context: dict[str, Any] = {
             "notification": notification,
             "related_object": related_object,
             "section": section,
-            "preferences_url": preferences_url,
+            "preferences_url": build_preferences_url(section),
         }
 
         kind = notification.kind
@@ -170,7 +168,7 @@ class Command(BaseCommand):
             context["request"] = related_object.request
 
         send_notification_email(
-            subject=f"{section} – You've been matched with a buddy!",
+            subject=f"{section} - You've been matched with a buddy!",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/buddy_system/matched_issuer",
             context=context,
@@ -190,7 +188,7 @@ class Command(BaseCommand):
             context["request"] = related_object.request
 
         send_notification_email(
-            subject=f"{section} – Your airport pickup has been arranged!",
+            subject=f"{section} - Your airport pickup has been arranged!",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/pickup_system/matched_issuer",
             context=context,
@@ -215,7 +213,7 @@ class Command(BaseCommand):
         context["waiting_count"] = waiting_count
 
         send_notification_email(
-            subject=f"{section} – {waiting_count} member(s) waiting for confirmation",
+            subject=f"{section} - {waiting_count} member(s) waiting for confirmation",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/sections/membership_pending",
             context=context,

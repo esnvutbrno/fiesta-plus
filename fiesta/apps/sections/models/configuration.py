@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import datetime
 
+from django.core.validators import MinValueValidator
 from django.db.models import BooleanField, DurationField
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_SAVE, hook
@@ -92,6 +93,7 @@ class SectionsConfiguration(BasePluginConfiguration):
     email_digest_interval = DurationField(
         default=datetime.timedelta(hours=24),
         verbose_name=_("How often to send the 'new members waiting' digest"),
+        validators=[MinValueValidator(datetime.timedelta(minutes=1))],
     )
 
     class Meta:

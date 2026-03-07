@@ -32,7 +32,7 @@ def send_notification_email(
     if recipient_user is not None and hasattr(recipient_user, "profile"):
         try:
             if not recipient_user.profile.email_notifications_enabled:
-                logger.info("Skipping email to %s: global opt-out", recipient_email)
+                logger.info("Skipping email to user pk=%s: global opt-out", recipient_user.pk)
                 return
         except ObjectDoesNotExist:
             pass  # No profile — proceed with sending
@@ -52,8 +52,7 @@ def send_notification_email(
         msg.send()
     except Exception:
         logger.exception(
-            "Failed to send notification email to %s (template: %s)",
-            recipient_email,
+            "Failed to send notification email (template: %s)",
             template_prefix,
         )
         raise

@@ -36,7 +36,7 @@
       <hr class="divider">
       <div class="footer">
         <p>
-          You are receiving this email because you are a member of {{ section }}.
+          {% if section %}You are receiving this email because you are a member of {{ section }}.{% endif %}
           {% if preferences_url %}<a href="{{ preferences_url }}">Manage email preferences</a>{% endif %}
         </p>
         <p>

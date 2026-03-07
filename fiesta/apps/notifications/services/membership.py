@@ -4,9 +4,8 @@ import logging
 from typing import TYPE_CHECKING
 from uuid import UUID
 
-from django.conf import settings
-
 from apps.notifications.services.mailer import send_notification_email
+from apps.notifications.services.urls import preferences_url
 
 if TYPE_CHECKING:
     from apps.sections.models import Section, SectionMembership, SectionsConfiguration
@@ -37,14 +36,13 @@ def notify_new_membership(membership: SectionMembership) -> None:
 
 
 def _send_member_received_email(*, membership: SectionMembership, section: Section) -> None:
-    preferences_url = f"https://{section.space_slug}.{settings.ROOT_DOMAIN}/notifications/preferences/"
     context = {
         "membership": membership,
         "section": section,
-        "preferences_url": preferences_url,
+        "preferences_url": preferences_url(section),
     }
     send_notification_email(
-        subject=f"{section} – Application received",
+        subject=f"{section} - Application received",
         recipient_email=membership.user.email,
         template_prefix="notifications/sections/membership_received",
         context=context,
