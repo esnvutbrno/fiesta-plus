@@ -24,12 +24,8 @@ def _make_buddy_config(notify=True, delay=timedelta(hours=1)):
 
 
 def _make_section_with_buddy_config(base_section, config):
-    mock_section = MagicMock(spec=base_section.__class__)
-    mock_section.pk = base_section.pk
-    mock_section.space_slug = base_section.space_slug
-    mock_section.__str__ = MagicMock(return_value=str(base_section))
-    mock_section.buddy_system_configuration = config
-    return mock_section
+    base_section.buddy_system_configuration = config  # type: ignore[attr-defined]
+    return base_section
 
 
 def _make_match_and_request(matcher, issuer):

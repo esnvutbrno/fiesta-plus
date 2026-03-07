@@ -44,9 +44,6 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
         model = UserProfile
         django_get_or_create = ("user",)
 
-    home_university = factory.SubFactory(
-        "apps.utils.factories.universities.UniversityFactory",
-    )
     user = factory.SubFactory("apps.utils.factories.accounts.UserFactory", profile=None)
     nationality = fuzzy.FuzzyChoice(COUNTRIES.items(), getter=itemgetter(0))
     gender = fuzzy.FuzzyChoice(UserProfile.Gender.choices, getter=itemgetter(0))
