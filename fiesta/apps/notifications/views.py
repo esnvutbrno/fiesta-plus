@@ -5,13 +5,22 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.utils.translation import gettext_lazy as _
 from django.views.generic.edit import UpdateView
 
+from apps.buddy_system.apps import BuddySystemConfig
 from apps.notifications.forms import NotificationPreferencesForm
 from apps.notifications.models import SectionNotificationPreferences
-from apps.plugins.middleware.plugin import HttpRequest
+from apps.pickup_system.apps import PickupSystemConfig
+from apps.plugins.views.mixins import CheckEnabledPluginsViewMixin
+from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class NotificationPreferencesView(LoginRequiredMixin, EnsureInSectionSpaceViewMixin, SuccessMessageMixin, UpdateView):
+class NotificationPreferencesView(
+    LoginRequiredMixin,
+    EnsureInSectionSpaceViewMixin,
+    CheckEnabledPluginsViewMixin,
+    SuccessMessageMixin,
+    UpdateView,
+):
     model = SectionNotificationPreferences
     form_class = NotificationPreferencesForm
     template_name = "notifications/preferences.html"
@@ -38,3 +47,12 @@ class NotificationPreferencesView(LoginRequiredMixin, EnsureInSectionSpaceViewMi
         kwargs["membership"] = getattr(self.request, "membership", None)
         kwargs["user_profile"] = getattr(self.request.user, "profile", None)
         return kwargs
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Hide match notification toggle when neither buddy_system nor pickup_system is enabled
+        if not self._is_plugin_enabled_for_user(BuddySystemConfig) and not self._is_plugin_enabled_for_user(
+            PickupSystemConfig
+        ):
+            form.fields.pop("notify_on_match", None)
+        return form
