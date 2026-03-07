@@ -26,7 +26,7 @@ config.module.rules.forEach(rule => {
 config.devServer = {
     host: '0.0.0.0',
     port: PORT,
-    allowedHosts: [`.${ROOT_DOMAIN}`],
+    allowedHosts: 'all',
     client: {
         webSocketURL: `wss://webpack.${ROOT_DOMAIN}/ws`,
     },
