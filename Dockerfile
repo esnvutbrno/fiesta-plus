@@ -184,7 +184,7 @@ CMD ["python -m gunicorn -b [::]:8000 fiesta.wsgi:application"]
 #
 # proxy image
 #
-FROM nginx:1.26.0-alpine as proxy-base
+FROM nginx:1.29.3-alpine as proxy-base
 
 RUN rm /etc/nginx/conf.d/default.conf
 
