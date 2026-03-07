@@ -18,12 +18,7 @@ def _get_prefs(user, section):
     from apps.notifications.models import SectionNotificationPreferences
 
     try:
-        profile = user.profile
-    except Exception:
-        return None
-
-    try:
-        return SectionNotificationPreferences.objects.get(user=profile, section=section)
+        return SectionNotificationPreferences.objects.get(user=user, section=section)
     except SectionNotificationPreferences.DoesNotExist:
         return None
 
@@ -84,7 +79,7 @@ def _send_buddy_matcher_email(*, match, request, section) -> None:
         recipient_email=match.matcher.email,
         template_prefix="notifications/buddy_system/matched_matcher",
         context=context,
-        recipient_profile=match.matcher.profile,
+        recipient_user=match.matcher,
     )
 
 
@@ -132,5 +127,5 @@ def _send_pickup_matcher_email(*, match, request, section) -> None:
         recipient_email=match.matcher.email,
         template_prefix="notifications/pickup_system/matched_matcher",
         context=context,
-        recipient_profile=match.matcher.profile,
+        recipient_user=match.matcher,
     )

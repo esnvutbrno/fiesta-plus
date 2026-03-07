@@ -18,7 +18,7 @@ ARG =
 
 MODELS_PNG = models.png
 GRAPH_MODELS_CMD = graph_models accounts plugins auth sections events \
-	universities esncards buddy_system \
+	universities esncards buddy_system pickup_system notifications \
 	--verbose-names --disable-sort-fields \
 	--pydot -X 'ContentType|Base*Model' \
 	 -g -o $(MODELS_PNG)

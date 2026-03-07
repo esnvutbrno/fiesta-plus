@@ -18,33 +18,58 @@ class Command(BaseCommand):
     help = "Send all pending scheduled notifications whose send_after time has passed."
 
     def handle(self, *args, **options) -> None:
-        sent = 0
-        skipped = 0
-
+        # Phase 1: Reserve notifications in a short transaction.
+        # select_for_update(skip_locked=True) ensures concurrent runs don't pick the same rows.
+        reserved_ids: list[int] = []
         with transaction.atomic():
-            pending = (
+            reserved_ids = list(
                 ScheduledNotification.objects.select_for_update(skip_locked=True)
                 .filter(
                     send_after__lte=timezone.now(),
                     sent_at__isnull=True,
                     cancelled_at__isnull=True,
                 )
-                .select_related("recipient")
+                .values_list("pk", flat=True)
             )
 
-            for notification in pending:
-                try:
-                    self._send(notification)
-                    if notification.cancelled_at is not None:
-                        # Notification was soft-cancelled during _send (e.g. related object deleted).
-                        skipped += 1
-                        continue
-                    notification.sent_at = timezone.now()
-                    notification.save(update_fields=["sent_at", "modified"])
-                    sent += 1
-                except Exception:
-                    logger.exception("Failed to send scheduled notification pk=%s", notification.pk)
+        if not reserved_ids:
+            self.stdout.write("No pending notifications.")
+            return
+
+        # Phase 2: Send each notification outside any transaction so DB locks are not held during I/O.
+        sent = 0
+        skipped = 0
+
+        for notification_pk in reserved_ids:
+            try:
+                notification = ScheduledNotification.objects.select_related("recipient", "section").get(
+                    pk=notification_pk
+                )
+            except ScheduledNotification.DoesNotExist:
+                skipped += 1
+                continue
+
+            # Skip if another process already handled it between Phase 1 and now.
+            if notification.sent_at is not None or notification.cancelled_at is not None:
+                skipped += 1
+                continue
+
+            try:
+                self._send(notification)
+
+                if notification.cancelled_at is not None:
+                    # Notification was soft-cancelled during _send (e.g. related object deleted).
                     skipped += 1
+                    continue
+
+                # Phase 3: Mark as sent in a short transaction.
+                notification.sent_at = timezone.now()
+                notification.save(update_fields=["sent_at", "modified"])
+                sent += 1
+
+            except Exception:
+                logger.exception("Failed to send scheduled notification pk=%s", notification.pk)
+                skipped += 1
 
         self.stdout.write(self.style.SUCCESS(f"Sent {sent} notification(s), skipped {skipped}."))
 
@@ -113,7 +138,7 @@ class Command(BaseCommand):
             recipient_email=notification.recipient.email,
             template_prefix="notifications/buddy_system/matched_issuer",
             context=context,
-            recipient_profile=notification.recipient,
+            recipient_user=notification.recipient,
         )
 
     def _send_pickup_matched_issuer(self, *, notification, related_object, context) -> None:
@@ -129,7 +154,7 @@ class Command(BaseCommand):
             recipient_email=notification.recipient.email,
             template_prefix="notifications/pickup_system/matched_issuer",
             context=context,
-            recipient_profile=notification.recipient,
+            recipient_user=notification.recipient,
         )
 
     def _send_member_waiting_digest(self, *, notification, section, context) -> None:
@@ -151,5 +176,5 @@ class Command(BaseCommand):
             recipient_email=notification.recipient.email,
             template_prefix="notifications/sections/membership_pending",
             context=context,
-            recipient_profile=notification.recipient,
+            recipient_user=notification.recipient,
         )

@@ -23,6 +23,8 @@ class ScheduledNotification(BaseTimestampedModel):
     mistakes) and for editor member-waiting digests.
     """
 
+    Kind = NotificationKind
+
     kind = models.CharField(
         max_length=64,
         choices=NotificationKind.choices,
@@ -30,7 +32,7 @@ class ScheduledNotification(BaseTimestampedModel):
     )
 
     recipient = models.ForeignKey(
-        "accounts.UserProfile",
+        "accounts.User",
         on_delete=models.CASCADE,
         related_name="scheduled_notifications",
         verbose_name=_("recipient"),

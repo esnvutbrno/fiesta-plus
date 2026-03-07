@@ -71,15 +71,6 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         verbose_name=_("state"),
     )
 
-    notify_on_match = models.BooleanField(
-        default=True,
-        verbose_name=_("Email me when my request is matched"),
-    )
-    notify_on_new_member_waiting = models.BooleanField(
-        default=True,
-        verbose_name=_("Email me when a new member is waiting for approval"),
-    )
-
     # TODO: add flag to signalize, if membership has been added from ESN Accounts
 
     class Meta(BaseTimestampedModel.Meta):

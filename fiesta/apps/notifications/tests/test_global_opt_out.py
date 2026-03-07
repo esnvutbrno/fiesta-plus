@@ -66,7 +66,7 @@ class GlobalOptOutNotificationsTestCase(TestCase):
         mock_send.assert_not_called()
         mock_enqueue.assert_called_once()
         self.assertEqual(mock_enqueue.call_args.kwargs["kind"], NotificationKind.BUDDY_MATCHED_ISSUER)
-        self.assertEqual(mock_enqueue.call_args.kwargs["recipient"], issuer.profile)
+        self.assertEqual(mock_enqueue.call_args.kwargs["recipient"], issuer)
 
     def test_enqueue_delayed_notification_skips_opted_out_and_creates_for_opted_in(self):
         section = KnownSectionFactory()
@@ -80,7 +80,7 @@ class GlobalOptOutNotificationsTestCase(TestCase):
 
         result = enqueue_delayed_notification(
             kind=NotificationKind.BUDDY_MATCHED_ISSUER,
-            recipient=opted_out_profile,
+            recipient=opted_out_user,
             section=section,
             related_object=related_object,
             send_after=send_after,
@@ -90,11 +90,11 @@ class GlobalOptOutNotificationsTestCase(TestCase):
         self.assertEqual(ScheduledNotification.objects.count(), 0)
 
         opted_in_user = UserFactory(profile=None)
-        opted_in_profile = UserProfile.objects.create(user=opted_in_user)
+        UserProfile.objects.create(user=opted_in_user)
 
         created = enqueue_delayed_notification(
             kind=NotificationKind.BUDDY_MATCHED_ISSUER,
-            recipient=opted_in_profile,
+            recipient=opted_in_user,
             section=section,
             related_object=related_object,
             send_after=send_after,
@@ -103,7 +103,7 @@ class GlobalOptOutNotificationsTestCase(TestCase):
         self.assertIsNotNone(created)
         assert created is not None
         self.assertEqual(ScheduledNotification.objects.count(), 1)
-        self.assertEqual(created.recipient, opted_in_profile)
+        self.assertEqual(created.recipient, opted_in_user)
 
     def test_send_notification_email_skips_opted_out_and_sends_for_opted_in(self):
         opted_out_user = UserFactory(profile=None)
@@ -119,13 +119,13 @@ class GlobalOptOutNotificationsTestCase(TestCase):
                 "section": "ESN Test",
                 "preferences_url": "https://example.com/preferences",
             },
-            recipient_profile=opted_out_profile,
+            recipient_user=opted_out_user,
         )
 
         self.assertEqual(len(mail.outbox), 0)
 
         opted_in_user = UserFactory(profile=None)
-        opted_in_profile = UserProfile.objects.create(user=opted_in_user)
+        UserProfile.objects.create(user=opted_in_user)
 
         send_notification_email(
             subject="Matched",
@@ -135,7 +135,7 @@ class GlobalOptOutNotificationsTestCase(TestCase):
                 "section": "ESN Test",
                 "preferences_url": "https://example.com/preferences",
             },
-            recipient_profile=opted_in_profile,
+            recipient_user=opted_in_user,
         )
 
         self.assertEqual(len(mail.outbox), 1)

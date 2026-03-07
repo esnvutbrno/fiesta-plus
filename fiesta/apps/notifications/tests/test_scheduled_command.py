@@ -129,3 +129,34 @@ class SendScheduledNotificationsTestCase(TestCase):
 
         source = inspect.getsource(Command.handle)
         self.assertIn("select_for_update", source)
+
+    @patch("apps.notifications.management.commands.send_scheduled_notifications.send_notification_email")
+    def test_send_failure_does_not_mark_sent(self, mock_send):
+        """When send_notification_email raises, sent_at must remain None."""
+        mock_send.side_effect = RuntimeError("SMTP connection failed")
+        notification = self._make_pending()
+
+        call_command(COMMAND_NAME)
+
+        notification.refresh_from_db()
+        self.assertIsNone(notification.sent_at)
+        self.assertIsNone(notification.cancelled_at)
+
+    @patch("apps.notifications.management.commands.send_scheduled_notifications.send_notification_email")
+    def test_partial_failure_sends_remaining(self, mock_send):
+        """If one notification fails, others are still sent."""
+        n1 = self._make_pending()
+        n2 = self._make_pending()
+
+        # First call raises, second succeeds
+        mock_send.side_effect = [RuntimeError("SMTP failure"), None]
+
+        call_command(COMMAND_NAME)
+
+        n1.refresh_from_db()
+        n2.refresh_from_db()
+        # One should have been sent, one should not — exact order depends on DB
+        sent_count = sum(1 for n in [n1, n2] if n.sent_at is not None)
+        failed_count = sum(1 for n in [n1, n2] if n.sent_at is None)
+        self.assertEqual(sent_count, 1)
+        self.assertEqual(failed_count, 1)

@@ -5,7 +5,6 @@ from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
-from apps.accounts.models import UserProfile
 from apps.notifications.models import ScheduledNotification
 from apps.notifications.services.membership import notify_new_membership
 from apps.notifications.tests.factories import SectionNotificationPreferencesFactory
@@ -25,11 +24,6 @@ def _make_sections_config(
     config.email_notify_on_new_member = notify_on_new_member
     config.email_digest_interval = digest_interval
     return config
-
-
-def _create_user_profile(user):
-    """Create a minimal UserProfile — avoids the broken UserProfileFactory."""
-    return UserProfile.objects.create(user=user)
 
 
 class NotifyNewMembershipTestCase(TestCase):
@@ -154,9 +148,8 @@ class NotifyNewMembershipTestCase(TestCase):
             role=SectionMembership.Role.EDITOR,
             state=SectionMembership.State.ACTIVE,
         )
-        editor_profile = _create_user_profile(editor)
         SectionNotificationPreferencesFactory(
-            user=editor_profile,
+            user=editor,
             section=self.section,
             notify_on_new_member_waiting=False,
         )

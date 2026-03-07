@@ -36,7 +36,7 @@ class SectionNotificationPreferencesFactory(DjangoModelFactory):
         model = SectionNotificationPreferences
         django_get_or_create = ("user", "section")
 
-    user = factory.SubFactory("apps.utils.factories.accounts.UserProfileFactory")
+    user = factory.SubFactory("apps.utils.factories.accounts.UserFactory")
     section = factory.SubFactory("apps.utils.factories.sections.KnownSectionFactory")
 
     notify_on_match = True

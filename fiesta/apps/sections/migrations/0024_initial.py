@@ -5,35 +5,28 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('sections', '0023_section_allow_experimental_plugins'),
+        ("sections", "0023_section_allow_experimental_plugins"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sectionmembership',
-            name='notify_on_match',
-            field=models.BooleanField(default=True, verbose_name='Email me when my request is matched'),
+            model_name="sectionsconfiguration",
+            name="email_digest_interval",
+            field=models.DurationField(
+                default=datetime.timedelta(days=1), verbose_name="How often to send the 'new members waiting' digest"
+            ),
         ),
         migrations.AddField(
-            model_name='sectionmembership',
-            name='notify_on_new_member_waiting',
-            field=models.BooleanField(default=True, verbose_name='Email me when a new member is waiting for approval'),
+            model_name="sectionsconfiguration",
+            name="email_notify_member_on_received",
+            field=models.BooleanField(default=True, verbose_name="Send confirmation email to new applicants"),
         ),
         migrations.AddField(
-            model_name='sectionsconfiguration',
-            name='email_digest_interval',
-            field=models.DurationField(default=datetime.timedelta(days=1), verbose_name="How often to send the 'new members waiting' digest"),
-        ),
-        migrations.AddField(
-            model_name='sectionsconfiguration',
-            name='email_notify_member_on_received',
-            field=models.BooleanField(default=True, verbose_name='Send confirmation email to new applicants'),
-        ),
-        migrations.AddField(
-            model_name='sectionsconfiguration',
-            name='email_notify_on_new_member',
-            field=models.BooleanField(default=True, verbose_name='Notify editors/admins when a new member is waiting for approval'),
+            model_name="sectionsconfiguration",
+            name="email_notify_on_new_member",
+            field=models.BooleanField(
+                default=True, verbose_name="Notify editors/admins when a new member is waiting for approval"
+            ),
         ),
     ]

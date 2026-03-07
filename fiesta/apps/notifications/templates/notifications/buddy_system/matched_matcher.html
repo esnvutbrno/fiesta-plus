@@ -1,18 +1,18 @@
 {% extends "notifications/base_email.html" %}
 {% block content %}
   <h2>You've matched a new buddy! 🎉</h2>
-  <p>Hi {{ match.matcher.user.first_name }},</p>
+  <p>Hi {{ match.matcher.first_name }},</p>
   <p>
-    You have successfully matched with <strong>{{ request.issuer.user.get_full_name }}</strong>
+    You have successfully matched with <strong>{{ request.issuer.get_full_name }}</strong>
     as their buddy in <strong>{{ section }}</strong>.
   </p>
   <div class="info-box">
     <p>
-      <strong>Your new buddy:</strong> {{ request.issuer.user.get_full_name }}
+      <strong>Your new buddy:</strong> {{ request.issuer.get_full_name }}
     </p>
-    {% if request.issuer.user.email %}
+    {% if request.issuer.email %}
       <p>
-        <strong>Email:</strong> {{ request.issuer.user.email }}
+        <strong>Email:</strong> {{ request.issuer.email }}
       </p>
     {% endif %}
   </div>

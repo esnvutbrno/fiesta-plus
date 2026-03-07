@@ -8,9 +8,10 @@ from django.views.generic.edit import UpdateView
 from apps.notifications.forms import NotificationPreferencesForm
 from apps.notifications.models import SectionNotificationPreferences
 from apps.plugins.middleware.plugin import HttpRequest
+from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 
 
-class NotificationPreferencesView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class NotificationPreferencesView(LoginRequiredMixin, EnsureInSectionSpaceViewMixin, SuccessMessageMixin, UpdateView):
     model = SectionNotificationPreferences
     form_class = NotificationPreferencesForm
     template_name = "notifications/preferences.html"
@@ -23,7 +24,7 @@ class NotificationPreferencesView(LoginRequiredMixin, SuccessMessageMixin, Updat
 
     def get_object(self, queryset=None) -> SectionNotificationPreferences:
         obj, _ = SectionNotificationPreferences.objects.get_or_create(
-            user=self.request.user.profile,
+            user=self.request.user,
             section=self.request.in_space_of_section,
             defaults={
                 "notify_on_match": True,
@@ -35,5 +36,5 @@ class NotificationPreferencesView(LoginRequiredMixin, SuccessMessageMixin, Updat
     def get_form_kwargs(self) -> dict:
         kwargs = super().get_form_kwargs()
         kwargs["membership"] = getattr(self.request, "membership", None)
-        kwargs["user_profile"] = self.request.user.profile
+        kwargs["user_profile"] = getattr(self.request.user, "profile", None)
         return kwargs

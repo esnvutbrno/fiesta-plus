@@ -43,7 +43,7 @@ def _send_member_received_email(*, membership, section) -> None:
         recipient_email=membership.user.email,
         template_prefix="notifications/sections/membership_received",
         context=context,
-        recipient_profile=membership.user.profile,
+        recipient_user=membership.user,
     )
 
 
@@ -66,18 +66,15 @@ def _enqueue_editor_digests(*, membership, section, config) -> None:
         editor = editor_membership.user
 
         try:
-            profile = editor.profile
-            prefs = SectionNotificationPreferences.objects.get(user=profile, section=section)
+            prefs = SectionNotificationPreferences.objects.get(user=editor, section=section)
             if not prefs.notify_on_new_member_waiting:
                 continue
         except SectionNotificationPreferences.DoesNotExist:
             pass  # Default is True — send
-        except Exception:
-            pass  # No profile or other issue — default to sending
 
         enqueue_delayed_notification(
             kind=NotificationKind.MEMBER_WAITING_DIGEST,
-            recipient=profile,
+            recipient=editor,
             section=section,
             related_object=membership,
             send_after=send_after,

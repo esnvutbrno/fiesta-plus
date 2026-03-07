@@ -1,11 +1,11 @@
 You've matched a new buddy!
 ===========================
 
-Hi {{ match.matcher.user.first_name }},
+Hi {{ match.matcher.first_name }},
 
-You have successfully matched with {{ request.issuer.user.get_full_name }} as their buddy in {{ section }}.
+You have successfully matched with {{ request.issuer.get_full_name }} as their buddy in {{ section }}.
 
-Your new buddy: {{ request.issuer.user.get_full_name }}
-{% if request.issuer.user.email %}Email: {{ request.issuer.user.email }}{% endif %}
+Your new buddy: {{ request.issuer.get_full_name }}
+{% if request.issuer.email %}Email: {{ request.issuer.email }}{% endif %}
 
 Please reach out to introduce yourself. They're excited to meet you!

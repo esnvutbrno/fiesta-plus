@@ -1,12 +1,12 @@
 You've signed up for an airport pickup!
 ========================================
 
-Hi {{ match.matcher.user.first_name }},
+Hi {{ match.matcher.first_name }},
 
-You have confirmed a pickup for {{ request.issuer.user.get_full_name }} at {{ section }}.
+You have confirmed a pickup for {{ request.issuer.get_full_name }} at {{ section }}.
 
-Student to pick up: {{ request.issuer.user.get_full_name }}
-{% if request.issuer.user.email %}Email: {{ request.issuer.user.email }}{% endif %}
+Student to pick up: {{ request.issuer.get_full_name }}
+{% if request.issuer.email %}Email: {{ request.issuer.email }}{% endif %}
 {% if request.arrival_time %}Arrival time: {{ request.arrival_time }}{% endif %}
 {% if request.airport %}Airport: {{ request.airport }}{% endif %}
 

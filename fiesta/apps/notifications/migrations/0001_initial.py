@@ -9,53 +9,139 @@ import uuid
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('sections', '0024_initial'),
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('accounts', '0027_userprofile_picture_height_userprofile_picture_width_and_more'),
+        ("sections", "0024_initial"),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("accounts", "0027_userprofile_picture_height_userprofile_picture_width_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='SectionNotificationPreferences',
+            name="SectionNotificationPreferences",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('notify_on_match', models.BooleanField(default=True, help_text='Receive an email when a buddy/pickup request is matched.', verbose_name='notify on match')),
-                ('notify_on_new_member_waiting', models.BooleanField(default=True, help_text='Receive an email digest when new members are waiting for confirmation. Only relevant for editors and admins.', verbose_name='notify on new member waiting')),
-                ('section', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notification_preferences', to='sections.section', verbose_name='section')),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='notification_preferences', to='accounts.userprofile', verbose_name='user')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, default=django.utils.timezone.now, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified"),
+                ),
+                (
+                    "notify_on_match",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Receive an email when a buddy/pickup request is matched.",
+                        verbose_name="notify on match",
+                    ),
+                ),
+                (
+                    "notify_on_new_member_waiting",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Receive an email digest when new members are waiting for confirmation. Only relevant for editors and admins.",
+                        verbose_name="notify on new member waiting",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notification_preferences",
+                        to="sections.section",
+                        verbose_name="section",
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="notification_preferences",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="user",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'section notification preferences',
-                'verbose_name_plural': 'section notification preferences',
-                'unique_together': {('user', 'section')},
+                "verbose_name": "section notification preferences",
+                "verbose_name_plural": "section notification preferences",
+                "unique_together": {("user", "section")},
             },
         ),
         migrations.CreateModel(
-            name='ScheduledNotification',
+            name="ScheduledNotification",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('created', django_extensions.db.fields.CreationDateTimeField(auto_now_add=True, default=django.utils.timezone.now, verbose_name='created')),
-                ('modified', django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name='modified')),
-                ('kind', models.CharField(choices=[('buddy_matched_issuer', 'Buddy matched — issuer delayed'), ('pickup_matched_issuer', 'Pickup matched — issuer delayed'), ('member_waiting_digest', 'New member waiting digest')], max_length=64, verbose_name='kind')),
-                ('object_id', models.UUIDField(blank=True, null=True, verbose_name='object id')),
-                ('send_after', models.DateTimeField(verbose_name='send after')),
-                ('sent_at', models.DateTimeField(blank=True, null=True, verbose_name='sent at')),
-                ('cancelled_at', models.DateTimeField(blank=True, null=True, verbose_name='cancelled at')),
-                ('content_type', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='contenttypes.contenttype')),
-                ('recipient', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='scheduled_notifications', to=settings.AUTH_USER_MODEL, verbose_name='recipient')),
-                ('section', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='scheduled_notifications', to='sections.section', verbose_name='section')),
+                ("id", models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    "created",
+                    django_extensions.db.fields.CreationDateTimeField(
+                        auto_now_add=True, default=django.utils.timezone.now, verbose_name="created"
+                    ),
+                ),
+                (
+                    "modified",
+                    django_extensions.db.fields.ModificationDateTimeField(auto_now=True, verbose_name="modified"),
+                ),
+                (
+                    "kind",
+                    models.CharField(
+                        choices=[
+                            ("buddy_matched_issuer", "Buddy matched — issuer delayed"),
+                            ("pickup_matched_issuer", "Pickup matched — issuer delayed"),
+                            ("member_waiting_digest", "New member waiting digest"),
+                        ],
+                        max_length=64,
+                        verbose_name="kind",
+                    ),
+                ),
+                ("object_id", models.UUIDField(blank=True, null=True, verbose_name="object id")),
+                ("send_after", models.DateTimeField(verbose_name="send after")),
+                ("sent_at", models.DateTimeField(blank=True, null=True, verbose_name="sent at")),
+                ("cancelled_at", models.DateTimeField(blank=True, null=True, verbose_name="cancelled at")),
+                (
+                    "content_type",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        to="contenttypes.contenttype",
+                    ),
+                ),
+                (
+                    "recipient",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="scheduled_notifications",
+                        to=settings.AUTH_USER_MODEL,
+                        verbose_name="recipient",
+                    ),
+                ),
+                (
+                    "section",
+                    models.ForeignKey(
+                        blank=True,
+                        null=True,
+                        on_delete=django.db.models.deletion.SET_NULL,
+                        related_name="scheduled_notifications",
+                        to="sections.section",
+                        verbose_name="section",
+                    ),
+                ),
             ],
             options={
-                'verbose_name': 'scheduled notification',
-                'verbose_name_plural': 'scheduled notifications',
-                'indexes': [models.Index(fields=['send_after', 'sent_at', 'cancelled_at'], name='notificatio_send_af_bf3496_idx')],
+                "verbose_name": "scheduled notification",
+                "verbose_name_plural": "scheduled notifications",
+                "indexes": [
+                    models.Index(
+                        fields=["send_after", "sent_at", "cancelled_at"], name="notificatio_send_af_bf3496_idx"
+                    )
+                ],
             },
         ),
     ]

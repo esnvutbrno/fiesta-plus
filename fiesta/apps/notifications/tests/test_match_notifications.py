@@ -6,7 +6,6 @@ from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
-from apps.accounts.models import UserProfile
 from apps.notifications.models import ScheduledNotification
 from apps.notifications.services.match import notify_buddy_match, notify_pickup_match
 from apps.notifications.tests.factories import SectionNotificationPreferencesFactory
@@ -64,11 +63,6 @@ def _make_match_and_request(matcher, issuer):
     return match_mock, request_mock
 
 
-def _create_user_profile(user):
-    """Create a minimal UserProfile for user — avoids broken UserProfileFactory."""
-    return UserProfile.objects.create(user=user)
-
-
 class NotifyBuddyMatchTestCase(TestCase):
     def setUp(self):
         self.base_section = KnownSectionFactory()
@@ -122,9 +116,8 @@ class NotifyBuddyMatchTestCase(TestCase):
     @patch("apps.notifications.services.match.send_notification_email")
     def test_buddy_match_matcher_opted_out_no_immediate_email(self, mock_send, mock_enqueue):
         """If matcher has prefs with notify_on_match=False, no immediate email is sent to them."""
-        matcher_profile = _create_user_profile(self.matcher)
         SectionNotificationPreferencesFactory(
-            user=matcher_profile,
+            user=self.matcher,
             section=self.base_section,
             notify_on_match=False,
         )
@@ -143,9 +136,8 @@ class NotifyBuddyMatchTestCase(TestCase):
     @patch("apps.notifications.services.match.send_notification_email")
     def test_buddy_match_issuer_opted_out_no_scheduled(self, mock_send, mock_enqueue):
         """If issuer has prefs with notify_on_match=False, no delayed notification is enqueued for them."""
-        issuer_profile = _create_user_profile(self.issuer)
         SectionNotificationPreferencesFactory(
-            user=issuer_profile,
+            user=self.issuer,
             section=self.base_section,
             notify_on_match=False,
         )

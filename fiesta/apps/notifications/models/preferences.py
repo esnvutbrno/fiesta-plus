@@ -10,7 +10,7 @@ class SectionNotificationPreferences(BaseTimestampedModel):
     """Per-user, per-section notification opt-in preferences."""
 
     user = models.ForeignKey(
-        "accounts.UserProfile",
+        "accounts.User",
         on_delete=models.CASCADE,
         related_name="notification_preferences",
         verbose_name=_("user"),

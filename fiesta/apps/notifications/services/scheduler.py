@@ -24,7 +24,7 @@ def enqueue_delayed_notification(
     If an unsent notification of the same kind already exists for this
     recipient + object, update its send_after time (upsert / digest logic).
     """
-    if not recipient.email_notifications_enabled:
+    if hasattr(recipient, "profile") and not recipient.profile.email_notifications_enabled:
         logger.info("Skipping scheduled notification for %s: global opt-out", recipient)
         return None
 
