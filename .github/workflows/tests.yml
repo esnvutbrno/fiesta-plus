@@ -37,6 +37,7 @@ jobs:
       DJANGO_BUILD_DIR: /tmp/build
       DJANGO_STATIC_ROOT: /tmp/static
       DJANGO_MEDIA_ROOT: /tmp/media
+      DJANGO_DATABASE_HOST: localhost
       ROOT_DOMAIN: fiesta.test
 
     steps:

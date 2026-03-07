@@ -6,13 +6,14 @@ from configurations.values import Value
 class DatabaseConfigMixin:
     DATABASE_CONN_MAX_AGE = Value(default=5 * 60)
     DATABASE_CONN_HEALTH_CHECKS = Value(default=True)
+    DATABASE_HOST = Value(default="db")
 
     @property
     def DATABASES(self):
         return {
             "default": {
                 "ENGINE": "django.db.backends.postgresql",
-                "HOST": "db",
+                "HOST": self.DATABASE_HOST,
                 "USER": "fiesta",
                 "NAME": "fiesta",
                 "PASSWORD": "fiesta",
