@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -18,6 +20,8 @@ from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
 from apps.utils.views import AjaxViewMixin
+
+logger = logging.getLogger(__name__)
 
 
 class BuddyRequestsTable(BaseRequestsTable):
@@ -94,11 +98,14 @@ class QuickBuddyMatchView(BaseQuickRequestMatchView):
     def after_match_created(self, match, fiesta_request) -> None:
         from apps.notifications.services.match import notify_buddy_match
 
-        notify_buddy_match(
-            match=match,
-            request=fiesta_request,
-            section=self.request.in_space_of_section,
-        )
+        try:
+            notify_buddy_match(
+                match=match,
+                request=fiesta_request,
+                section=self.request.in_space_of_section,
+            )
+        except Exception:
+            logger.exception("Failed to send buddy match notification for match pk=%s", match.pk)
 
 
 class UpdateBuddyRequestStateView(BaseUpdateRequestStateView):

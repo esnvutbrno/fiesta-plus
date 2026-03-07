@@ -1,15 +1,19 @@
 from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
 from django.conf import settings
 
 from apps.notifications.services.mailer import send_notification_email
 
+if TYPE_CHECKING:
+    from apps.sections.models import Section, SectionMembership, SectionsConfiguration
+
 logger = logging.getLogger(__name__)
 
 
-def notify_new_membership(membership) -> None:
+def notify_new_membership(membership: SectionMembership) -> None:
     """
     Called (via on_commit) when a new SectionMembership is created in UNCONFIRMED state.
 
@@ -31,7 +35,7 @@ def notify_new_membership(membership) -> None:
         _enqueue_editor_digests(membership=membership, section=section, config=config)
 
 
-def _send_member_received_email(*, membership, section) -> None:
+def _send_member_received_email(*, membership: SectionMembership, section: Section) -> None:
     preferences_url = f"https://{section.space_slug}.{settings.ROOT_DOMAIN}/notifications/preferences/"
     context = {
         "membership": membership,
@@ -47,7 +51,12 @@ def _send_member_received_email(*, membership, section) -> None:
     )
 
 
-def _enqueue_editor_digests(*, membership, section, config) -> None:
+def _enqueue_editor_digests(
+    *,
+    membership: SectionMembership,
+    section: Section,
+    config: SectionsConfiguration,
+) -> None:
     from django.utils import timezone
 
     from apps.notifications.models import NotificationKind, SectionNotificationPreferences
@@ -62,15 +71,19 @@ def _enqueue_editor_digests(*, membership, section, config) -> None:
         role__in=[SectionMembership.Role.EDITOR, SectionMembership.Role.ADMIN],
     ).select_related("user")
 
+    # Bulk-fetch preferences for all editors to avoid N+1 queries.
+    editor_users = [m.user for m in editors]
+    prefs_by_user: dict[int, SectionNotificationPreferences] = {
+        p.user_id: p for p in SectionNotificationPreferences.objects.filter(user__in=editor_users, section=section)
+    }
+
     for editor_membership in editors:
         editor = editor_membership.user
 
-        try:
-            prefs = SectionNotificationPreferences.objects.get(user=editor, section=section)
-            if not prefs.notify_on_new_member_waiting:
-                continue
-        except SectionNotificationPreferences.DoesNotExist:
-            pass  # Default is True — send
+        prefs = prefs_by_user.get(editor.pk)
+        if prefs is not None and not prefs.notify_on_new_member_waiting:
+            continue
+        # No prefs record → default is True (send).
 
         enqueue_delayed_notification(
             kind=NotificationKind.MEMBER_WAITING_DIGEST,

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import logging
+
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -17,6 +19,8 @@ from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.views.mixins.membership import EnsureLocalUserViewMixin
 from apps.sections.views.mixins.section_space import EnsureInSectionSpaceViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb, with_plugin_home_breadcrumb
+
+logger = logging.getLogger(__name__)
 
 
 @with_plugin_home_breadcrumb
@@ -97,11 +101,14 @@ class MatchBuddyRequestFormView(
     def after_match_created(self, match, fiesta_request) -> None:
         from apps.notifications.services.match import notify_buddy_match
 
-        notify_buddy_match(
-            match=match,
-            request=fiesta_request,
-            section=self.request.in_space_of_section,
-        )
+        try:
+            notify_buddy_match(
+                match=match,
+                request=fiesta_request,
+                section=self.request.in_space_of_section,
+            )
+        except Exception:
+            logger.exception("Failed to send buddy match notification for match pk=%s", match.pk)
 
 
 class ServeFilesFromBuddiesMixin:

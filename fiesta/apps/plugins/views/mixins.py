@@ -30,14 +30,14 @@ class CheckEnabledPluginsViewMixin(Generic[ConfigurationType]):
     @staticmethod
     def _get_enabled_plugin_app_labels(
         in_space_of_section: Section,
-        membership: SectionMembership,
+        membership: SectionMembership | None,
     ) -> tuple[str, ...]:
         return tuple(
             map(
                 attrgetter("app_label"),
                 (
                     in_space_of_section.enabled_plugins_for_privileged
-                    if membership.is_privileged
+                    if membership and membership.is_privileged
                     else in_space_of_section.enabled_plugins
                 ),
             )

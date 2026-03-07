@@ -1,10 +1,16 @@
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from django.contrib import admin
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from apps.notifications.models import ScheduledNotification, SectionNotificationPreferences
+
+if TYPE_CHECKING:
+    from django.db.models import QuerySet
+    from django.http import HttpRequest
 
 
 @admin.register(SectionNotificationPreferences)
@@ -24,18 +30,18 @@ class ScheduledNotificationAdmin(admin.ModelAdmin):
     search_fields = ["recipient__email", "recipient__first_name", "recipient__last_name"]
     readonly_fields = ["created", "modified", "content_type", "object_id", "content_object"]
     date_hierarchy = "send_after"
-    actions = ["action_send_now", "action_cancel"]
+    actions = ["mark_as_sent", "cancel_notifications"]
 
-    def get_queryset(self, request):
+    def get_queryset(self, request: HttpRequest) -> QuerySet[ScheduledNotification]:
         return super().get_queryset(request).select_related("recipient", "section", "content_type")
 
     @admin.action(description=_("Send now (bypass send_after)"))
-    def action_send_now(self, request, queryset):
+    def mark_as_sent(self, request: HttpRequest, queryset: QuerySet[ScheduledNotification]) -> None:
         updated = queryset.filter(sent_at__isnull=True, cancelled_at__isnull=True).update(send_after=timezone.now())
         self.message_user(request, _("Scheduled %s notification(s) to send immediately.") % updated)
 
     @admin.action(description=_("Cancel selected notifications"))
-    def action_cancel(self, request, queryset):
+    def cancel_notifications(self, request: HttpRequest, queryset: QuerySet[ScheduledNotification]) -> None:
         count = 0
         for notification in queryset.filter(sent_at__isnull=True, cancelled_at__isnull=True):
             notification.cancel()

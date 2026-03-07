@@ -39,7 +39,9 @@ class SectionNotificationPreferences(BaseTimestampedModel):
     class Meta:
         verbose_name = _("section notification preference")
         verbose_name_plural = _("section notification preferences")
-        unique_together = [("user", "section")]
+        constraints = [
+            models.UniqueConstraint(fields=["user", "section"], name="unique_user_section_prefs"),
+        ]
 
     def __str__(self) -> str:
         return f"{self.user} @ {self.section}"

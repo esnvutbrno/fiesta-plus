@@ -2,8 +2,10 @@ from __future__ import annotations
 
 import contextlib
 import logging
+from typing import TYPE_CHECKING, Any, cast
 
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils import timezone
@@ -11,32 +13,40 @@ from django.utils import timezone
 from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.mailer import send_notification_email
 
+if TYPE_CHECKING:
+    from django.db.models import Model
+
+    from apps.buddy_system.models import BuddyRequestMatch
+    from apps.pickup_system.models import PickupRequestMatch
+    from apps.sections.models import Section, SectionMembership
+
 logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
     help = "Send all pending scheduled notifications whose send_after time has passed."
 
-    def handle(self, *args, **options) -> None:
-        # Phase 1: Reserve notifications in a short transaction.
-        # select_for_update(skip_locked=True) ensures concurrent runs don't pick the same rows.
-        reserved_ids: list[int] = []
+    def handle(self, *args: object, **options: object) -> None:
+        now = timezone.now()
+
+        # Phase 1: Atomically claim pending notifications by stamping sent_at.
+        # select_for_update(skip_locked=True) + immediate UPDATE prevents concurrent
+        # workers from picking the same rows (locks held only for the UPDATE, not I/O).
         with transaction.atomic():
-            reserved_ids = list(
-                ScheduledNotification.objects.select_for_update(skip_locked=True)
-                .filter(
-                    send_after__lte=timezone.now(),
-                    sent_at__isnull=True,
-                    cancelled_at__isnull=True,
-                )
-                .values_list("pk", flat=True)
+            pending_qs = ScheduledNotification.objects.select_for_update(skip_locked=True).filter(
+                send_after__lte=now,
+                sent_at__isnull=True,
+                cancelled_at__isnull=True,
             )
+            reserved_ids: list[int] = list(pending_qs.values_list("pk", flat=True))
+            if reserved_ids:
+                ScheduledNotification.objects.filter(pk__in=reserved_ids).update(sent_at=now)
 
         if not reserved_ids:
             self.stdout.write("No pending notifications.")
             return
 
-        # Phase 2: Send each notification outside any transaction so DB locks are not held during I/O.
+        # Phase 2: Send each notification outside any transaction (no DB locks during I/O).
         sent = 0
         skipped = 0
 
@@ -49,11 +59,6 @@ class Command(BaseCommand):
                 skipped += 1
                 continue
 
-            # Skip if another process already handled it between Phase 1 and now.
-            if notification.sent_at is not None or notification.cancelled_at is not None:
-                skipped += 1
-                continue
-
             try:
                 self._send(notification)
 
@@ -62,31 +67,32 @@ class Command(BaseCommand):
                     skipped += 1
                     continue
 
-                # Phase 3: Mark as sent in a short transaction.
-                notification.sent_at = timezone.now()
-                notification.save(update_fields=["sent_at", "modified"])
                 sent += 1
 
             except Exception:
                 logger.exception("Failed to send scheduled notification pk=%s", notification.pk)
+                # Roll back the claim so the notification can be retried next run.
+                ScheduledNotification.objects.filter(pk=notification_pk).update(sent_at=None)
                 skipped += 1
 
         self.stdout.write(self.style.SUCCESS(f"Sent {sent} notification(s), skipped {skipped}."))
 
-    def _send(self, notification: ScheduledNotification) -> None:
+    def _send(self, notification: ScheduledNotification) -> bool:
         # Resolve the related object via GenericFK
         related_object = self._resolve_related_object(notification)
 
         # If the notification was soft-cancelled during resolution (deleted related object), stop.
         if notification.cancelled_at is not None:
-            return
+            return False
 
         section = notification.section
+        if section is None:
+            return False
         preferences_url = (
             f"https://{section.space_slug}.{settings.ROOT_DOMAIN}/notifications/preferences/" if section else ""
         )
 
-        context = {
+        context: dict[str, Any] = {
             "notification": notification,
             "related_object": related_object,
             "section": section,
@@ -96,25 +102,49 @@ class Command(BaseCommand):
         kind = notification.kind
 
         if kind == NotificationKind.BUDDY_MATCHED_ISSUER:
-            self._send_buddy_matched_issuer(notification=notification, related_object=related_object, context=context)
+            if related_object is None:
+                return False
+            self._send_buddy_matched_issuer(
+                notification=notification,
+                related_object=cast("BuddyRequestMatch", related_object),
+                context=context,
+                section=section,
+            )
+            return True
 
-        elif kind == NotificationKind.PICKUP_MATCHED_ISSUER:
-            self._send_pickup_matched_issuer(notification=notification, related_object=related_object, context=context)
+        if kind == NotificationKind.PICKUP_MATCHED_ISSUER:
+            if related_object is None:
+                return False
+            self._send_pickup_matched_issuer(
+                notification=notification,
+                related_object=cast("PickupRequestMatch", related_object),
+                context=context,
+                section=section,
+            )
+            return True
 
-        elif kind == NotificationKind.MEMBER_WAITING_DIGEST:
-            self._send_member_waiting_digest(notification=notification, section=section, context=context)
+        if kind == NotificationKind.MEMBER_WAITING_DIGEST:
+            if related_object is None:
+                return False
+            self._send_member_joined_editors(
+                notification=notification,
+                related_object=cast("SectionMembership", related_object),
+                context=context,
+                section=section,
+            )
+            return True
 
-        else:
-            logger.warning("Unknown notification kind %r — skipping notification %s", kind, notification.pk)
+        logger.warning("Unknown notification kind %r — skipping notification %s", kind, notification.pk)
+        return False
 
-    def _resolve_related_object(self, notification: ScheduledNotification):
+    def _resolve_related_object(self, notification: ScheduledNotification) -> Model | None:
         """Return the related object for the notification, or None if it no longer exists."""
         if not notification.content_type or not notification.object_id:
             return None
 
         try:
             return notification.content_type.get_object_for_this_type(pk=notification.object_id)
-        except Exception:
+        except ObjectDoesNotExist:
             logger.warning(
                 "Scheduled notification %s: related object %s/%s no longer exists — soft-cancelling.",
                 notification.pk,
@@ -125,49 +155,60 @@ class Command(BaseCommand):
             notification.save(update_fields=["cancelled_at", "modified"])
             return None
 
-    def _send_buddy_matched_issuer(self, *, notification, related_object, context) -> None:
-        if related_object is None:
-            return
-
+    def _send_buddy_matched_issuer(
+        self,
+        *,
+        notification: ScheduledNotification,
+        related_object: BuddyRequestMatch,
+        context: dict[str, Any],
+        section: Section,
+    ) -> None:
         context["match"] = related_object
         with contextlib.suppress(AttributeError):
             context["request"] = related_object.request
 
         send_notification_email(
-            subject=f"{notification.section} – You've been matched with a buddy!",
+            subject=f"{section} – You've been matched with a buddy!",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/buddy_system/matched_issuer",
             context=context,
             recipient_user=notification.recipient,
         )
 
-    def _send_pickup_matched_issuer(self, *, notification, related_object, context) -> None:
-        if related_object is None:
-            return
-
+    def _send_pickup_matched_issuer(
+        self,
+        *,
+        notification: ScheduledNotification,
+        related_object: PickupRequestMatch,
+        context: dict[str, Any],
+        section: Section,
+    ) -> None:
         context["match"] = related_object
         with contextlib.suppress(AttributeError):
             context["request"] = related_object.request
 
         send_notification_email(
-            subject=f"{notification.section} – Your airport pickup has been arranged!",
+            subject=f"{section} – Your airport pickup has been arranged!",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/pickup_system/matched_issuer",
             context=context,
             recipient_user=notification.recipient,
         )
 
-    def _send_member_waiting_digest(self, *, notification, section, context) -> None:
-        waiting_count = 0
-        try:
-            from apps.sections.models import SectionMembership
+    def _send_member_joined_editors(
+        self,
+        *,
+        notification: ScheduledNotification,
+        related_object: SectionMembership,
+        context: dict[str, Any],
+        section: Section,
+    ) -> None:
+        from apps.sections.models import SectionMembership
 
-            waiting_count = SectionMembership.objects.filter(
-                section=section,
-                state=SectionMembership.State.UNCONFIRMED,
-            ).count()
-        except Exception:
-            pass
+        waiting_count = SectionMembership.objects.filter(
+            section=section,
+            state=SectionMembership.State.UNCONFIRMED,
+        ).count()
 
         context["waiting_count"] = waiting_count
 

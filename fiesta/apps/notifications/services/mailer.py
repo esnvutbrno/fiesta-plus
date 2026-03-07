@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 import typing
+from typing import Any
 
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
@@ -18,7 +19,7 @@ def send_notification_email(
     subject: str,
     recipient_email: str,
     template_prefix: str,
-    context: dict,
+    context: dict[str, Any],
     recipient_user: User | None = None,
 ) -> None:
     """
