@@ -58,4 +58,4 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
     facebook = factory.Faker("url")
     instagram = factory.Faker("user_name")
     telegram = factory.Faker("url")
-    whatsapp = factory.Faker("phone_number")
+    whatsapp = factory.Sequence(lambda n: f"+420600{n:06d}")
