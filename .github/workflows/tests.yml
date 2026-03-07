@@ -38,6 +38,7 @@ jobs:
       DJANGO_STATIC_ROOT: /tmp/static
       DJANGO_MEDIA_ROOT: /tmp/media
       DJANGO_DATABASE_HOST: localhost
+      DJANGO_EMAIL_BACKEND: django.core.mail.backends.locmem.EmailBackend
       ROOT_DOMAIN: fiesta.test
 
     steps:

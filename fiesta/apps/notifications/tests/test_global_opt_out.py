@@ -12,8 +12,8 @@ from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.mailer import send_notification_email
 from apps.notifications.services.match import notify_buddy_match
 from apps.notifications.services.scheduler import enqueue_delayed_notification
-from apps.sections.tests.factories import KnownSectionFactory
 from apps.utils.factories.accounts import UserFactory
+from apps.utils.factories.sections import KnownSectionFactory
 
 
 def _make_buddy_config(notify=True, delay=timedelta(hours=1)):

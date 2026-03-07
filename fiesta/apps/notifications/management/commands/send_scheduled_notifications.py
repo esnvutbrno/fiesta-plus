@@ -64,6 +64,8 @@ class Command(BaseCommand):
 
                 if notification.cancelled_at is not None:
                     # Notification was soft-cancelled during _send (e.g. related object deleted).
+                    # Roll back the claim so sent_at reflects that no email was actually sent.
+                    ScheduledNotification.objects.filter(pk=notification_pk).update(sent_at=None)
                     skipped += 1
                     continue
 
