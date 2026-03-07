@@ -34,6 +34,9 @@ jobs:
       DJANGO_SECRET_KEY: ci-test-secret-key-not-for-production
       DJANGO_RECAPTCHA_SITE_KEY: dummy-recaptcha-site-key
       DJANGO_RECAPTCHA_SECRET_KEY: dummy-recaptcha-secret-key
+      DJANGO_BUILD_DIR: /tmp/build
+      DJANGO_STATIC_ROOT: /tmp/static
+      DJANGO_MEDIA_ROOT: /tmp/media
       ROOT_DOMAIN: fiesta.test
 
     steps:
