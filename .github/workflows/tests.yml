@@ -53,7 +53,7 @@ jobs:
       - name: Install dependencies
         run: |
           uv sync
-          uv pip install setuptools
+          uv pip install --python .venv setuptools
 
       - name: Run tests
         working-directory: fiesta
