@@ -26,8 +26,41 @@ logger = logging.getLogger(__name__)
 class Command(BaseCommand):
     help = "Send all pending scheduled notifications whose send_after time has passed."
 
+    def add_arguments(self, parser: object) -> None:
+        parser.add_argument(
+            "--batch-size",
+            type=int,
+            default=100,
+            help="Maximum number of pending notifications to process in a single run.",
+        )
+        parser.add_argument(
+            "--dry-run",
+            action="store_true",
+            help="Log pending notifications without sending or updating sent_at.",
+        )
+
     def handle(self, *args: object, **options: object) -> None:
+        batch_size = options["batch_size"]
+        dry_run = options["dry_run"]
         now = timezone.now()
+
+        # Dry-run: just log pending notifications without claiming them.
+        if dry_run:
+            pending_qs = ScheduledNotification.objects.filter(
+                send_after__lte=now,
+                sent_at__isnull=True,
+                cancelled_at__isnull=True,
+            ).select_related("recipient")[:batch_size]
+            would_send = 0
+            for notification in pending_qs:
+                logger.info(
+                    "Dry-run: would send scheduled notification pk=%s kind=%s",
+                    notification.pk,
+                    notification.kind,
+                )
+                would_send += 1
+            self.stdout.write(self.style.SUCCESS(f"Dry-run complete: would send {would_send} notification(s)."))
+            return
 
         # Phase 1: Atomically claim pending notifications by stamping sent_at.
         # select_for_update(skip_locked=True) + immediate UPDATE prevents concurrent
@@ -38,7 +71,10 @@ class Command(BaseCommand):
                 sent_at__isnull=True,
                 cancelled_at__isnull=True,
             )
-            reserved_ids: list[int] = list(pending_qs.values_list("pk", flat=True))
+            pending_count = pending_qs.count()
+            logger.info("Found %d pending notifications (batch size: %d)", pending_count, batch_size)
+
+            reserved_ids: list[int] = list(pending_qs.values_list("pk", flat=True)[:batch_size])
             if reserved_ids:
                 ScheduledNotification.objects.filter(pk__in=reserved_ids).update(sent_at=now)
 
@@ -49,6 +85,7 @@ class Command(BaseCommand):
         # Phase 2: Send each notification outside any transaction (no DB locks during I/O).
         sent = 0
         skipped = 0
+        failed = 0
 
         for notification_pk in reserved_ids:
             try:
@@ -76,9 +113,9 @@ class Command(BaseCommand):
                 logger.exception("Failed to send scheduled notification pk=%s", notification.pk)
                 # Roll back the claim so the notification can be retried next run.
                 ScheduledNotification.objects.filter(pk=notification_pk).update(sent_at=None)
-                skipped += 1
+                failed += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Sent {sent} notification(s), skipped {skipped}."))
+        self.stdout.write(self.style.SUCCESS(f"Sent {sent} notification(s), skipped {skipped}, failed {failed}."))
 
     def _send(self, notification: ScheduledNotification) -> bool:
         # Resolve the related object via GenericFK
