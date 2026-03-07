@@ -80,10 +80,11 @@ def _send_buddy_matcher_email(*, match, request, section) -> None:
         "preferences_url": preferences_url,
     }
     send_notification_email(
-        subject=f"{section} \u2013 Your buddy request has been matched!",
+        subject=f"{section} – Your buddy request has been matched!",
         recipient_email=match.matcher.email,
         template_prefix="notifications/buddy_system/matched_matcher",
         context=context,
+        recipient_profile=match.matcher.profile,
     )
 
 
@@ -127,8 +128,9 @@ def _send_pickup_matcher_email(*, match, request, section) -> None:
         "preferences_url": preferences_url,
     }
     send_notification_email(
-        subject=f"{section} \u2013 Your pickup request has been matched!",
+        subject=f"{section} – Your pickup request has been matched!",
         recipient_email=match.matcher.email,
         template_prefix="notifications/pickup_system/matched_matcher",
         context=context,
+        recipient_profile=match.matcher.profile,
     )

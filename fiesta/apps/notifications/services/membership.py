@@ -39,10 +39,11 @@ def _send_member_received_email(*, membership, section) -> None:
         "preferences_url": preferences_url,
     }
     send_notification_email(
-        subject=f"{section} \u2013 Application received",
+        subject=f"{section} – Application received",
         recipient_email=membership.user.email,
         template_prefix="notifications/sections/membership_received",
         context=context,
+        recipient_profile=membership.user.profile,
     )
 
 

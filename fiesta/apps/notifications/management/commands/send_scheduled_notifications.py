@@ -113,6 +113,7 @@ class Command(BaseCommand):
             recipient_email=notification.recipient.email,
             template_prefix="notifications/buddy_system/matched_issuer",
             context=context,
+            recipient_profile=notification.recipient,
         )
 
     def _send_pickup_matched_issuer(self, *, notification, related_object, context) -> None:
@@ -128,6 +129,7 @@ class Command(BaseCommand):
             recipient_email=notification.recipient.email,
             template_prefix="notifications/pickup_system/matched_issuer",
             context=context,
+            recipient_profile=notification.recipient,
         )
 
     def _send_member_waiting_digest(self, *, notification, section, context) -> None:
@@ -145,8 +147,9 @@ class Command(BaseCommand):
         context["waiting_count"] = waiting_count
 
         send_notification_email(
-            subject=f"{section} \u2013 {waiting_count} member(s) waiting for confirmation",
+            subject=f"{section} – {waiting_count} member(s) waiting for confirmation",
             recipient_email=notification.recipient.email,
             template_prefix="notifications/sections/membership_pending",
             context=context,
+            recipient_profile=notification.recipient,
         )
