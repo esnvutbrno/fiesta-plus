@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from django.db import models
+from django.db import models, transaction
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_CREATE, AFTER_SAVE, LifecycleModelMixin, hook
@@ -104,6 +104,14 @@ class SectionMembership(LifecycleModelMixin, BaseTimestampedModel):
         # the user profile is not validated by that section configuration anymore
 
         synchronizer.on_membership_update(membership=self)
+
+    @hook(AFTER_CREATE)
+    def _notify_on_new_membership(self) -> None:
+        if self.state != self.State.UNCONFIRMED:
+            return
+        from apps.notifications.services.membership import notify_new_membership
+
+        transaction.on_commit(lambda: notify_new_membership(membership=self))
 
     @property
     def is_international(self):

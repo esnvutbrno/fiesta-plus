@@ -23,8 +23,13 @@ class SectionSpaceMiddleware:
         requested_host: str = request.get_host()
         site: Site = get_current_site(request=request)
 
-        # 'xxx' or empty string
-        space_slug = requested_host.removesuffix(site.domain).removesuffix(".")
+        # 'xxx' or empty string — try site.domain first, fall back to ROOT_DOMAIN
+        domains = [site.domain, settings.ROOT_DOMAIN]
+        space_slug = requested_host
+        for domain in domains:
+            if requested_host.endswith(domain):
+                space_slug = requested_host.removesuffix(domain).removesuffix(".")
+                break
 
         request.in_space_of_section = get_single_object_or_none(
             Section.objects.prefetch_plugins(),

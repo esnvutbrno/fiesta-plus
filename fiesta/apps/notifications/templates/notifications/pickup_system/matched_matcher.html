@@ -1,0 +1,30 @@
+{% extends "notifications/base_email.html" %}
+{% block content %}
+  <h2>You've signed up for an airport pickup! ✈️</h2>
+  <p>Hi {{ match.matcher.first_name }},</p>
+  <p>
+    You have confirmed a pickup for <strong>{{ request.issuer.get_full_name }}</strong>
+    at <strong>{{ section }}</strong>.
+  </p>
+  <div class="info-box">
+    <p>
+      <strong>Student to pick up:</strong> {{ request.issuer.get_full_name }}
+    </p>
+    {% if request.issuer.email %}
+      <p>
+        <strong>Email:</strong> {{ request.issuer.email }}
+      </p>
+    {% endif %}
+    {% if request.arrival_time %}
+      <p>
+        <strong>Arrival time:</strong> {{ request.arrival_time }}
+      </p>
+    {% endif %}
+    {% if request.airport %}
+      <p>
+        <strong>Airport:</strong> {{ request.airport }}
+      </p>
+    {% endif %}
+  </div>
+  <p>Please coordinate with the student to confirm the meeting point.</p>
+{% endblock %}

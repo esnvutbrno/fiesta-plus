@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+      {% block subject %}Fiesta+{% endblock %}
+    </title>
+    <style>
+    body { margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif; color: #333333; }
+    .wrapper { max-width: 600px; margin: 0 auto; background-color: #ffffff; }
+    .header { background-color: #004b9c; padding: 24px 32px; }
+    .header h1 { margin: 0; color: #ffffff; font-size: 24px; font-weight: bold; letter-spacing: 1px; }
+    .content { padding: 32px; }
+    .content h2 { color: #004b9c; font-size: 20px; margin-top: 0; }
+    .content p { line-height: 1.6; margin: 0 0 16px; }
+    .button { display: inline-block; background-color: #004b9c; color: #ffffff !important; padding: 12px 24px; text-decoration: none; border-radius: 4px; font-weight: bold; margin: 8px 0; }
+    .footer { background-color: #f4f4f4; padding: 20px 32px; text-align: center; font-size: 12px; color: #888888; }
+    .footer a { color: #004b9c; text-decoration: none; }
+    .divider { border: none; border-top: 1px solid #eeeeee; margin: 24px 0; }
+    .info-box { background-color: #f0f5ff; border-left: 4px solid #004b9c; padding: 16px; margin: 16px 0; border-radius: 0 4px 4px 0; }
+    .info-box p { margin: 0; }
+    </style>
+  </head>
+  <body>
+    <div class="wrapper">
+      <div class="header">
+        <h1>
+          Fiesta+
+          {% if section %}· {{ section }}{% endif %}
+        </h1>
+      </div>
+      <div class="content">
+        {% block content %}{% endblock %}
+      </div>
+      <hr class="divider">
+      <div class="footer">
+        <p>
+          {% if section %}You are receiving this email because you are a member of {{ section }}.{% endif %}
+          {% if preferences_url %}<a href="{{ preferences_url }}">Manage email preferences</a>{% endif %}
+        </p>
+        <p>
+          © Fiesta+ · <a href="https://fiesta.plus">fiesta.plus</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

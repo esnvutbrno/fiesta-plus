@@ -1,0 +1,11 @@
+Application received
+====================
+
+Hi {{ membership.user.first_name }},
+
+We've received your membership application for {{ section }}.
+An editor will review your application and you'll be notified once it's approved.
+
+Your application is currently pending review.
+
+Thank you for joining ESN! We look forward to welcoming you.

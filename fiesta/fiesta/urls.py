@@ -33,6 +33,8 @@ urlpatterns = [
     path("plugins/", include("apps.plugins.urls", namespace="plugins")),
     # handling users/profiles/memberships
     path("accounts/", include("apps.accounts.urls", namespace="accounts")),
+    # notification preferences
+    path("notifications/", include("apps.notifications.urls", namespace="notifications")),
     # handling authentication (including social auth)
     path("auth/", include("allauth.urls")),
     path("auto-options/", include("django_select2.urls")),

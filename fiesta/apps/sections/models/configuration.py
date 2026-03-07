@@ -1,6 +1,9 @@
 from __future__ import annotations
 
-from django.db.models import BooleanField
+import datetime
+
+from django.core.validators import MinValueValidator
+from django.db.models import BooleanField, DurationField
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_SAVE, hook
 
@@ -77,6 +80,20 @@ class SectionsConfiguration(BasePluginConfiguration):
             "Decides, whenever is membership requested by user automatically approved for international users (e.g."
             " during registration process or requested by membership form)."
         ),
+    )
+
+    email_notify_on_new_member = BooleanField(
+        default=True,
+        verbose_name=_("Notify editors/admins when a new member is waiting for approval"),
+    )
+    email_notify_member_on_received = BooleanField(
+        default=True,
+        verbose_name=_("Send confirmation email to new applicants"),
+    )
+    email_digest_interval = DurationField(
+        default=datetime.timedelta(hours=24),
+        verbose_name=_("How often to send the 'new members waiting' digest"),
+        validators=[MinValueValidator(datetime.timedelta(minutes=1))],
     )
 
     class Meta:

@@ -100,7 +100,7 @@ exclude = [
 ]
 
 lint.ignore = ["E731"]
-extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B", "I002"]
+lint.extend-select = ["UP", "DJ", "PIE", "INT", "PTH", "SIM", "RET", "G", "DTZ", "B", "I002"]
 lint.isort.required-imports = ["from __future__ import annotations"]
 
 

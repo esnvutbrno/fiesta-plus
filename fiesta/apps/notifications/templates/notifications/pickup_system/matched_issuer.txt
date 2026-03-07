@@ -1,0 +1,12 @@
+Your airport pickup is confirmed!
+==================================
+
+Hi {{ notification.recipient.user.first_name }},
+
+Great news! Your airport pickup request has been matched at {{ section }}.
+
+{% if match %}Your pickup person: {{ match.matcher.user.get_full_name }}
+{% if match.matcher.user.email %}Email: {{ match.matcher.user.email }}{% endif %}
+{% endif %}
+
+They will reach out to confirm the meeting point. Safe travels!

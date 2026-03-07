@@ -1,4 +1,3 @@
-version: '3.3'
 services:
   web:
 #    environment:
@@ -30,6 +29,9 @@ services:
       - webpack_build:/usr/src/build
 
   dockerproxy:
+    labels:
+      dev.orbstack.domains: "*.${ROOT_DOMAIN},${ROOT_DOMAIN}"
+      dev.orbstack.http-port: 80
     environment:
       - DISABLE_ACCESS_LOGS=1
     volumes:

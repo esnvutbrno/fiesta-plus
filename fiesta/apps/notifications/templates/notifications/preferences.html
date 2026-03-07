@@ -1,0 +1,20 @@
+{% extends "accounts/user_profile/base.html" %}
+
+{% load i18n %}
+{% load breadcrumbs %}
+
+{% block upper_head %}
+  {{ block.super }}
+  {% trans "Notification Preferences" as title %}
+  {% breadcrumb_push_item title %}
+{% endblock upper_head %}
+
+{% block content %}
+  <h1 class="card-title">{% trans "Email notification preferences" %}</h1>
+
+  <form method="post" class="mt-4">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit" class="btn btn-primary mt-3">{% trans "Save preferences" %}</button>
+  </form>
+{% endblock content %}

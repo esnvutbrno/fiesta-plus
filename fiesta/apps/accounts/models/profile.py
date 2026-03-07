@@ -165,6 +165,7 @@ class UserProfile(LifecycleModelMixin, BaseTimestampedModel):
 
     # TODO: define formfield/widget to handle flagging
     preferences = models.PositiveSmallIntegerField(default=0, verbose_name=_("user preferences as flags"))
+    email_notifications_enabled = models.BooleanField(default=True, verbose_name=_("email notifications"))
 
     State = UserProfileState
 

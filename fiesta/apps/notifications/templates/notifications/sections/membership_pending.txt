@@ -1,0 +1,8 @@
+New member(s) waiting for confirmation
+=======================================
+
+Hi,
+
+There {% if waiting_count == 1 %}is 1 new member{% else %}are {{ waiting_count }} new members{% endif %} waiting for confirmation in {{ section }}.
+
+Please log in to review and confirm or reject pending applications.

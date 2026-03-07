@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db import models
+from django.db import models, transaction
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.utils.translation import gettext as _
@@ -56,6 +56,10 @@ class BaseTakeRequestView(
         data["form_url"] = reverse(self.form_url, kwargs={"pk": self.fiesta_request.pk})
         return data
 
+    def after_match_created(self, match, fiesta_request) -> None:
+        """Hook for subclasses to trigger notifications after a match is created."""
+
+    @transaction.atomic
     def form_valid(self, form):
         match: BaseRequestMatchProtocol = form.instance
         match.request = self.fiesta_request
@@ -67,5 +71,7 @@ class BaseTakeRequestView(
         self.fiesta_request.match = match
         self.fiesta_request.state = BaseRequestProtocol.State.MATCHED
         self.fiesta_request.save(update_fields=["state"])
+
+        transaction.on_commit(lambda: self.after_match_created(match, self.fiesta_request))
 
         return response
