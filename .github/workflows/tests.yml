@@ -32,6 +32,8 @@ jobs:
       DJANGO_SETTINGS_MODULE: fiesta.settings
       DJANGO_CONFIGURATION: Development
       DJANGO_SECRET_KEY: ci-test-secret-key-not-for-production
+      DJANGO_RECAPTCHA_SITE_KEY: dummy-recaptcha-site-key
+      DJANGO_RECAPTCHA_SECRET_KEY: dummy-recaptcha-secret-key
       ROOT_DOMAIN: fiesta.test
 
     steps:
