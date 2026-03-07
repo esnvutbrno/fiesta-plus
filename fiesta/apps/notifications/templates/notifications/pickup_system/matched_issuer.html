@@ -1,7 +1,7 @@
 {% extends "notifications/base_email.html" %}
 {% block content %}
   <h2>Your airport pickup is confirmed! ✈️</h2>
-  <p>Hi {{ notification.recipient.user.first_name }},</p>
+  <p>Hi {{ notification.recipient.first_name }},</p>
   <p>
     Great news! Your airport pickup request has been matched at <strong>{{ section }}</strong>.
     Someone will be there to pick you up!
@@ -9,11 +9,11 @@
   {% if match %}
     <div class="info-box">
       <p>
-        <strong>Your pickup person:</strong> {{ match.matcher.user.get_full_name }}
+        <strong>Your pickup person:</strong> {{ match.matcher.get_full_name }}
       </p>
-      {% if match.matcher.user.email %}
+      {% if match.matcher.email %}
         <p>
-          <strong>Email:</strong> {{ match.matcher.user.email }}
+          <strong>Email:</strong> {{ match.matcher.email }}
         </p>
       {% endif %}
     </div>

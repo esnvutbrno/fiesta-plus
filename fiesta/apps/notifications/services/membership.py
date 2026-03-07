@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import logging
 from typing import TYPE_CHECKING
+from uuid import UUID
 
 from django.conf import settings
 
@@ -73,7 +74,7 @@ def _enqueue_editor_digests(
 
     # Bulk-fetch preferences for all editors to avoid N+1 queries.
     editor_users = [m.user for m in editors]
-    prefs_by_user: dict[int, SectionNotificationPreferences] = {
+    prefs_by_user: dict[UUID, SectionNotificationPreferences] = {
         p.user_id: p for p in SectionNotificationPreferences.objects.filter(user__in=editor_users, section=section)
     }
 
