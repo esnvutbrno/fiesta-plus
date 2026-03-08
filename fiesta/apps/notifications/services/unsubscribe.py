@@ -1,10 +1,6 @@
 from __future__ import annotations
 
-import logging
-
 from django.core.signing import BadSignature, TimestampSigner
-
-logger = logging.getLogger(__name__)
 
 UNSUBSCRIBE_SALT = "notifications-unsubscribe"
 

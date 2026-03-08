@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING, Any
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.signing import BadSignature, SignatureExpired
-from django.http import HttpResponse
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.utils.decorators import method_decorator
 from django.utils.translation import gettext_lazy as _
@@ -76,7 +76,7 @@ class NotificationPreferencesView(
 class UnsubscribeView(View):
     template_name = "notifications/unsubscribe.html"
 
-    def get(self, request: object, token: str) -> HttpResponse:
+    def get(self, request: HttpRequest, token: str) -> HttpResponse:
         try:
             user_profile, action = self._resolve_token(token)
         except UserProfile.DoesNotExist:
@@ -111,7 +111,7 @@ class UnsubscribeView(View):
             },
         )
 
-    def post(self, request: object, token: str) -> HttpResponse:
+    def post(self, request: HttpRequest, token: str) -> HttpResponse:
         try:
             user_profile, action = self._resolve_token(token)
             self._unsubscribe(user_profile=user_profile, action=action)
@@ -120,21 +120,21 @@ class UnsubscribeView(View):
                 request,
                 self.template_name,
                 {"error": _("This unsubscribe link is invalid.")},
-                status=200,
+                status=400,
             )
         except SignatureExpired:
             return render(
                 request,
                 self.template_name,
                 {"error": _("This unsubscribe link has expired.")},
-                status=200,
+                status=400,
             )
         except BadSignature:
             return render(
                 request,
                 self.template_name,
                 {"error": _("This unsubscribe link is invalid.")},
-                status=200,
+                status=400,
             )
 
         return render(

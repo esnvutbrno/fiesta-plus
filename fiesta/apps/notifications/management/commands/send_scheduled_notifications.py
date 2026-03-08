@@ -66,13 +66,15 @@ class Command(BaseCommand):
         # select_for_update(skip_locked=True) + immediate UPDATE prevents concurrent
         # workers from picking the same rows (locks held only for the UPDATE, not I/O).
         with transaction.atomic():
-            pending_qs = ScheduledNotification.objects.select_for_update(skip_locked=True).filter(
-                send_after__lte=now,
-                sent_at__isnull=True,
-                cancelled_at__isnull=True,
+            pending_qs = (
+                ScheduledNotification.objects.select_for_update(skip_locked=True)
+                .filter(
+                    send_after__lte=now,
+                    sent_at__isnull=True,
+                    cancelled_at__isnull=True,
+                )
+                .order_by("send_after", "pk")
             )
-            pending_count = pending_qs.count()
-            logger.info("Found %d pending notifications (batch size: %d)", pending_count, batch_size)
 
             reserved_ids: list[int] = list(pending_qs.values_list("pk", flat=True)[:batch_size])
             if reserved_ids:
@@ -81,6 +83,8 @@ class Command(BaseCommand):
         if not reserved_ids:
             self.stdout.write("No pending notifications.")
             return
+
+        logger.info("Claimed %d notification(s) for sending (batch size: %d)", len(reserved_ids), batch_size)
 
         # Phase 2: Send each notification outside any transaction (no DB locks during I/O).
         sent = 0

@@ -7,16 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from factory.django import DjangoModelFactory
 
-from apps.accounts.models import UserProfile
 from apps.notifications.models import NotificationKind, ScheduledNotification, SectionNotificationPreferences
-
-
-def _create_profile(_obj):
-    """Create a UserProfile for a fresh user, avoiding the broken UserProfileFactory."""
-    from apps.utils.factories.accounts import UserFactory
-
-    user = UserFactory(profile=None)
-    return UserProfile.objects.create(user=user)
 
 
 class ScheduledNotificationFactory(DjangoModelFactory):
