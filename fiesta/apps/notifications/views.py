@@ -149,7 +149,7 @@ class UnsubscribeView(View):
 
     def _resolve_token(self, token: str) -> tuple[UserProfile, str]:
         user_id, action = verify_unsubscribe_token(token)
-        return UserProfile.objects.select_related("user").get(pk=user_id), action
+        return UserProfile.objects.select_related("user").get(user_id=user_id), action
 
     def _unsubscribe(self, *, user_profile: UserProfile, action: str) -> None:
         if action == "global":
@@ -159,11 +159,13 @@ class UnsubscribeView(View):
             return
 
         if action in {NotificationKind.BUDDY_MATCHED_ISSUER, NotificationKind.PICKUP_MATCHED_ISSUER}:
-            SectionNotificationPreferences.objects.filter(user=user_profile).update(notify_on_match=False)
+            SectionNotificationPreferences.objects.filter(user=user_profile.user).update(notify_on_match=False)
             return
 
         if action == NotificationKind.MEMBER_WAITING_DIGEST:
-            SectionNotificationPreferences.objects.filter(user=user_profile).update(notify_on_new_member_waiting=False)
+            SectionNotificationPreferences.objects.filter(user=user_profile.user).update(
+                notify_on_new_member_waiting=False
+            )
             return
 
         logger.warning("Unsupported unsubscribe action %r for user_profile=%s", action, user_profile.pk)

@@ -44,7 +44,7 @@ class UnsubscribeViewTestCase(TestCase):
         self.profile = UserProfile.objects.create(user=self.user)
 
     def test_unsubscribe_post_sets_global_opt_out(self):
-        token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
+        token = generate_unsubscribe_token(user_id=self.user.pk, action="global")
 
         response = self.client.post(
             f"/notifications/unsubscribe/{token}/",
@@ -56,7 +56,7 @@ class UnsubscribeViewTestCase(TestCase):
         self.assertFalse(self.profile.email_notifications_enabled)
 
     def test_unsubscribe_get_shows_confirmation_page(self):
-        token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
+        token = generate_unsubscribe_token(user_id=self.user.pk, action="global")
 
         response = self.client.get(
             f"/notifications/unsubscribe/{token}/",
@@ -69,7 +69,7 @@ class UnsubscribeViewTestCase(TestCase):
     def test_unsubscribe_post_is_idempotent_for_already_opted_out_user(self):
         self.profile.email_notifications_enabled = False
         self.profile.save(update_fields=["email_notifications_enabled", "modified"])
-        token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
+        token = generate_unsubscribe_token(user_id=self.user.pk, action="global")
 
         response = self.client.post(
             f"/notifications/unsubscribe/{token}/",
@@ -84,7 +84,7 @@ class UnsubscribeViewTestCase(TestCase):
 class NotificationMailerUnsubscribeHeadersTestCase(TestCase):
     def test_sent_email_contains_list_unsubscribe_headers(self):
         user = UserFactory(profile=None)
-        profile = UserProfile.objects.create(user=user)
+        UserProfile.objects.create(user=user)
 
         send_notification_email(
             subject="Subject",
@@ -94,7 +94,7 @@ class NotificationMailerUnsubscribeHeadersTestCase(TestCase):
                 "section": "ESN Test",
                 "preferences_url": "https://example.com/preferences",
             },
-            recipient_profile=profile,
+            recipient_user=user,
         )
 
         self.assertEqual(len(mail.outbox), 1)
