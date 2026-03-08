@@ -9,6 +9,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 
+from apps.notifications.services.unsubscribe import generate_unsubscribe_token
+
 logger = logging.getLogger(__name__)
 
 if typing.TYPE_CHECKING:
@@ -37,19 +39,31 @@ def send_notification_email(
         except ObjectDoesNotExist:
             pass  # No profile — proceed with sending
 
-    html_content = render_to_string(f"{template_prefix}.html", context)
-    text_content = render_to_string(f"{template_prefix}.txt", context)
+    email_context = dict(context)
+    unsubscribe_url = ""
+    if recipient_user is not None:
+        token = generate_unsubscribe_token(recipient_user.pk)
+        unsubscribe_url = f"https://{settings.ROOT_DOMAIN}/notifications/unsubscribe/{token}/"
 
-    msg = EmailMultiAlternatives(
+    email_context["unsubscribe_url"] = unsubscribe_url
+
+    html_content = render_to_string(f"{template_prefix}.html", email_context)
+    text_content = render_to_string(f"{template_prefix}.txt", email_context)
+
+    email = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
         from_email=settings.DEFAULT_FROM_EMAIL,
         to=[recipient_email],
     )
-    msg.attach_alternative(html_content, "text/html")
+    if unsubscribe_url:
+        email.extra_headers["List-Unsubscribe"] = f"<{unsubscribe_url}>"
+        email.extra_headers["List-Unsubscribe-Post"] = "List-Unsubscribe=One-Click"
+
+    email.attach_alternative(html_content, "text/html")
 
     try:
-        msg.send()
+        email.send()
     except Exception:
         logger.exception(
             "Failed to send notification email (template: %s)",

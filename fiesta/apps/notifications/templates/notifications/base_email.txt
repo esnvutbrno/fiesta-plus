@@ -7,3 +7,4 @@ Fiesta+{% if section %} · {{ section }}{% endif %}
 You are receiving this email because you are a member of {{ section }}.
 {% if preferences_url %}Manage preferences: {{ preferences_url }}{% endif %}
 © Fiesta+ · https://fiesta.plus
+{% if unsubscribe_url %}Unsubscribe: {{ unsubscribe_url }}{% endif %}

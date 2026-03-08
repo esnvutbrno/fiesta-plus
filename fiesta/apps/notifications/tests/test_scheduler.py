@@ -5,7 +5,8 @@ from datetime import timedelta
 from django.test import TestCase
 from django.utils import timezone
 
-from apps.notifications.models import ScheduledNotification
+from apps.accounts.models import UserProfile
+from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.scheduler import cancel_scheduled_notifications_for, enqueue_delayed_notification
 from apps.notifications.tests.factories import ScheduledNotificationFactory
 from apps.sections.models import Section
@@ -13,16 +14,23 @@ from apps.utils.factories.accounts import UserFactory
 from apps.utils.factories.sections import KnownSectionFactory
 
 
+def _make_user_with_profile():
+    """Create a User with an attached UserProfile, avoiding the broken UserProfileFactory."""
+    user = UserFactory(profile=None)
+    UserProfile.objects.create(user=user)
+    return user
+
+
 class EnqueueDelayedNotificationTestCase(TestCase):
     def setUp(self):
-        self.user = UserFactory(profile=None)
+        self.user = _make_user_with_profile()
         self.section: Section = KnownSectionFactory()
         self.send_after = timezone.now() + timedelta(hours=1)
 
     def test_enqueue_creates_new_notification(self):
         """Calling enqueue creates a ScheduledNotification with the correct fields."""
         notification = enqueue_delayed_notification(
-            kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+            kind=NotificationKind.BUDDY_MATCHED_ISSUER,
             recipient=self.user,
             section=self.section,
             related_object=self.section,  # use Section as a simple related_object
@@ -30,7 +38,7 @@ class EnqueueDelayedNotificationTestCase(TestCase):
         )
 
         self.assertIsNotNone(notification.pk)
-        self.assertEqual(notification.kind, ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER)
+        self.assertEqual(notification.kind, NotificationKind.BUDDY_MATCHED_ISSUER)
         self.assertEqual(notification.recipient, self.user)
         self.assertEqual(notification.section, self.section)
         self.assertEqual(notification.send_after, self.send_after)
@@ -40,7 +48,7 @@ class EnqueueDelayedNotificationTestCase(TestCase):
     def test_enqueue_upserts_existing_pending(self):
         """Calling enqueue again for the same recipient+object updates send_after instead of creating a duplicate."""
         first = enqueue_delayed_notification(
-            kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+            kind=NotificationKind.BUDDY_MATCHED_ISSUER,
             recipient=self.user,
             section=self.section,
             related_object=self.section,
@@ -49,7 +57,7 @@ class EnqueueDelayedNotificationTestCase(TestCase):
 
         later_time = self.send_after + timedelta(hours=2)
         second = enqueue_delayed_notification(
-            kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+            kind=NotificationKind.BUDDY_MATCHED_ISSUER,
             recipient=self.user,
             section=self.section,
             related_object=self.section,
@@ -66,7 +74,7 @@ class EnqueueDelayedNotificationTestCase(TestCase):
         """If an existing notification is already sent, a new one is created instead of updating."""
         # Create an already-sent notification
         sent_notification = ScheduledNotificationFactory(
-            kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+            kind=NotificationKind.BUDDY_MATCHED_ISSUER,
             recipient=self.user,
             section=self.section,
             object_id=self.section.pk,
@@ -79,7 +87,7 @@ class EnqueueDelayedNotificationTestCase(TestCase):
         sent_notification.save()
 
         new_notification = enqueue_delayed_notification(
-            kind=ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER,
+            kind=NotificationKind.BUDDY_MATCHED_ISSUER,
             recipient=self.user,
             section=self.section,
             related_object=self.section,
@@ -97,7 +105,7 @@ class CancelScheduledNotificationsTestCase(TestCase):
 
     def test_cancel_cancels_pending(self):
         """cancel_scheduled_notifications_for marks pending notifications as cancelled."""
-        user = UserFactory(profile=None)
+        user = _make_user_with_profile()
         notification = ScheduledNotificationFactory(
             recipient=user,
             section=self.section,
@@ -116,7 +124,7 @@ class CancelScheduledNotificationsTestCase(TestCase):
 
     def test_cancel_skips_already_sent(self):
         """cancel_scheduled_notifications_for does not touch notifications that are already sent."""
-        user = UserFactory(profile=None)
+        user = _make_user_with_profile()
         from django.contrib.contenttypes.models import ContentType
 
         notification = ScheduledNotificationFactory(
@@ -139,7 +147,7 @@ class CancelScheduledNotificationsTestCase(TestCase):
         from django.contrib.contenttypes.models import ContentType
 
         ct = ContentType.objects.get_for_model(self.section)
-        users = [UserFactory(profile=None) for _ in range(3)]
+        users = [_make_user_with_profile() for _ in range(3)]
 
         for user in users:
             n = ScheduledNotificationFactory(

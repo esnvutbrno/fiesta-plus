@@ -38,6 +38,12 @@
         <p>
           {% if section %}You are receiving this email because you are a member of {{ section }}.{% endif %}
           {% if preferences_url %}<a href="{{ preferences_url }}">Manage email preferences</a>{% endif %}
+          {% if unsubscribe_url %}
+            |
+            <a href="{{ unsubscribe_url }}"
+               style="color: #6b7280;
+                      text-decoration: underline">Unsubscribe</a>
+          {% endif %}
         </p>
         <p>
           © Fiesta+ · <a href="https://fiesta.plus">fiesta.plus</a>

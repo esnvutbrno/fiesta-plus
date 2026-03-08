@@ -1,0 +1,26 @@
+{% extends "fiesta/base.html" %}
+{% load i18n %}
+
+{% block main %}
+  <div class="container mx-auto max-w-lg py-8">
+    {% if error %}
+      <h1 class="text-2xl font-bold mb-4">{% trans "Unsubscribe Error" %}</h1>
+      <p>{{ error }}</p>
+    {% elif success %}
+      <h1 class="text-2xl font-bold mb-4">{% trans "Unsubscribed" %}</h1>
+      <p>
+        {% blocktrans with action=action_description %}You have been successfully unsubscribed from {{ action }}.{% endblocktrans %}
+      </p>
+    {% else %}
+      <h1 class="text-2xl font-bold mb-4">{% trans "Unsubscribe from Notifications" %}</h1>
+      <p>
+        {% blocktrans with email=email action=action_description %}
+                You are about to unsubscribe {{ email }} from {{ action }}.
+            {% endblocktrans %}
+      </p>
+      <form method="post">
+        <button type="submit" class="btn btn-primary mt-4">{% trans "Unsubscribe" %}</button>
+      </form>
+    {% endif %}
+  </div>
+{% endblock main %}
