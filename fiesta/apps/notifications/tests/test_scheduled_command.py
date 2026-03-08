@@ -9,6 +9,7 @@ from django.core.management import call_command
 from django.test import TestCase
 from django.utils import timezone
 
+from apps.accounts.models import UserProfile
 from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.tests.factories import ScheduledNotificationFactory
 from apps.sections.models import Section
@@ -18,10 +19,17 @@ from apps.utils.factories.sections import KnownSectionFactory
 COMMAND_NAME = "send_scheduled_notifications"
 
 
+def _make_user_with_profile():
+    """Create a User with an attached UserProfile, avoiding the broken UserProfileFactory."""
+    user = UserFactory(profile=None)
+    UserProfile.objects.create(user=user)
+    return user
+
+
 class SendScheduledNotificationsTestCase(TestCase):
     def setUp(self):
         self.section: Section = KnownSectionFactory()
-        self.recipient = UserFactory(profile=None)
+        self.recipient = _make_user_with_profile()
 
     def _make_pending(self, kind=NotificationKind.MEMBER_WAITING_DIGEST, send_after=None):
         """Create a pending notification whose send_after is in the past by default."""
@@ -182,8 +190,8 @@ class SendScheduledNotificationsTestCase(TestCase):
     @patch("apps.notifications.management.commands.send_scheduled_notifications.send_notification_email")
     def test_send_failure_logs_error_and_continues(self, mock_send):
         """A send exception is logged and processing continues to the next notification."""
-        first_recipient = UserFactory(profile=None)
-        second_recipient = UserFactory(profile=None)
+        first_recipient = _make_user_with_profile()
+        second_recipient = _make_user_with_profile()
         first = ScheduledNotificationFactory(
             recipient=first_recipient,
             section=self.section,

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.core import mail
 from django.core.signing import BadSignature, SignatureExpired
 from django.test import TestCase
@@ -20,7 +21,7 @@ class UnsubscribeTokenServiceTestCase(TestCase):
 
         user_id, action = verify_unsubscribe_token(token)
 
-        self.assertEqual(user_id, 321)
+        self.assertEqual(user_id, "321")
         self.assertEqual(action, "global")
 
     def test_verify_unsubscribe_token_raises_signature_expired(self):
@@ -45,7 +46,10 @@ class UnsubscribeViewTestCase(TestCase):
     def test_unsubscribe_post_sets_global_opt_out(self):
         token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
 
-        response = self.client.post(f"/notifications/unsubscribe/{token}/")
+        response = self.client.post(
+            f"/notifications/unsubscribe/{token}/",
+            SERVER_NAME=settings.ROOT_DOMAIN,
+        )
 
         self.profile.refresh_from_db()
         self.assertEqual(response.status_code, 200)
@@ -54,7 +58,10 @@ class UnsubscribeViewTestCase(TestCase):
     def test_unsubscribe_get_shows_confirmation_page(self):
         token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
 
-        response = self.client.get(f"/notifications/unsubscribe/{token}/")
+        response = self.client.get(
+            f"/notifications/unsubscribe/{token}/",
+            SERVER_NAME=settings.ROOT_DOMAIN,
+        )
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Unsubscribe from Notifications")
@@ -64,7 +71,10 @@ class UnsubscribeViewTestCase(TestCase):
         self.profile.save(update_fields=["email_notifications_enabled", "modified"])
         token = generate_unsubscribe_token(user_id=self.profile.pk, action="global")
 
-        response = self.client.post(f"/notifications/unsubscribe/{token}/")
+        response = self.client.post(
+            f"/notifications/unsubscribe/{token}/",
+            SERVER_NAME=settings.ROOT_DOMAIN,
+        )
 
         self.profile.refresh_from_db()
         self.assertEqual(response.status_code, 200)

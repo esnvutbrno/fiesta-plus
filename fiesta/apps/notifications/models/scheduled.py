@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
@@ -32,7 +33,7 @@ class ScheduledNotification(BaseTimestampedModel):
     )
 
     recipient = models.ForeignKey(
-        "accounts.User",
+        settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="scheduled_notifications",
         verbose_name=_("recipient"),
@@ -40,6 +41,8 @@ class ScheduledNotification(BaseTimestampedModel):
     section = models.ForeignKey(
         "sections.Section",
         on_delete=models.CASCADE,
+        null=True,
+        blank=True,
         related_name="scheduled_notifications",
         verbose_name=_("section"),
     )

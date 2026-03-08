@@ -7,7 +7,16 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 from factory.django import DjangoModelFactory
 
-from apps.notifications.models import ScheduledNotification, SectionNotificationPreferences
+from apps.accounts.models import UserProfile
+from apps.notifications.models import NotificationKind, ScheduledNotification, SectionNotificationPreferences
+
+
+def _create_profile(_obj):
+    """Create a UserProfile for a fresh user, avoiding the broken UserProfileFactory."""
+    from apps.utils.factories.accounts import UserFactory
+
+    user = UserFactory(profile=None)
+    return UserProfile.objects.create(user=user)
 
 
 class ScheduledNotificationFactory(DjangoModelFactory):
@@ -16,8 +25,8 @@ class ScheduledNotificationFactory(DjangoModelFactory):
     class Meta:
         model = ScheduledNotification
 
-    kind = ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER
-    recipient = factory.SubFactory("apps.utils.factories.accounts.UserFactory")
+    kind = NotificationKind.BUDDY_MATCHED_ISSUER
+    recipient = factory.SubFactory("apps.utils.factories.accounts.UserFactory", profile=None)
     section = factory.SubFactory("apps.utils.factories.sections.KnownSectionFactory")
 
     # Generic FK fields — point to a section by default (simple object that always exists)

@@ -5,12 +5,18 @@ from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
-from apps.notifications.models import ScheduledNotification
+from apps.accounts.models import UserProfile
+from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.membership import notify_new_membership
 from apps.notifications.tests.factories import SectionNotificationPreferencesFactory
 from apps.sections.models import SectionMembership
 from apps.utils.factories.accounts import UserFactory
 from apps.utils.factories.sections import KnownSectionFactory, SectionMembershipWithUserFactory
+
+
+def _create_user_profile(user):
+    """Ensure user has a UserProfile attached."""
+    UserProfile.objects.get_or_create(user=user)
 
 
 def _make_sections_config(
@@ -30,6 +36,7 @@ class NotifyNewMembershipTestCase(TestCase):
     def setUp(self):
         self.section = KnownSectionFactory()
         self.applicant = UserFactory(profile=None)
+        _create_user_profile(self.applicant)
         self.membership = SectionMembershipWithUserFactory(
             section=self.section,
             user=self.applicant,
@@ -78,7 +85,7 @@ class NotifyNewMembershipTestCase(TestCase):
         # Both editor and admin should have enqueue called
         self.assertEqual(mock_enqueue.call_count, 2)
         for call in mock_enqueue.call_args_list:
-            self.assertEqual(call.kwargs["kind"], ScheduledNotification.Kind.MEMBER_WAITING_DIGEST)
+            self.assertEqual(call.kwargs["kind"], NotificationKind.MEMBER_WAITING_DIGEST)
             self.assertEqual(call.kwargs["related_object"], self.membership)
 
     @patch("apps.notifications.services.scheduler.enqueue_delayed_notification")

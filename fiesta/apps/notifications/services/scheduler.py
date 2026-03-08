@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+from contextlib import suppress
 from datetime import datetime
 from typing import TYPE_CHECKING
 
@@ -36,9 +37,10 @@ def enqueue_delayed_notification(
 
     Uses select_for_update to prevent duplicate rows from concurrent requests.
     """
-    if hasattr(recipient, "profile") and not recipient.profile.email_notifications_enabled:
-        logger.info("Skipping scheduled notification for %s: global opt-out", recipient)
-        return None
+    with suppress(AttributeError):
+        if not recipient.profile.email_notifications_enabled:
+            logger.info("Skipping scheduled notification for %s: global opt-out", recipient)
+            return None
 
     ct = ContentType.objects.get_for_model(related_object)
 

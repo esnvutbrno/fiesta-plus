@@ -6,11 +6,17 @@ from unittest.mock import MagicMock, patch
 
 from django.test import TestCase
 
-from apps.notifications.models import ScheduledNotification
+from apps.accounts.models import UserProfile
+from apps.notifications.models import NotificationKind, ScheduledNotification
 from apps.notifications.services.match import notify_buddy_match, notify_pickup_match
 from apps.notifications.tests.factories import SectionNotificationPreferencesFactory
 from apps.utils.factories.accounts import UserFactory
 from apps.utils.factories.sections import KnownSectionFactory
+
+
+def _create_user_profile(user):
+    """Ensure user has a UserProfile attached."""
+    UserProfile.objects.get_or_create(user=user)
 
 
 def _make_buddy_config(notify=True, delay=timedelta(hours=1)):
@@ -59,7 +65,9 @@ class NotifyBuddyMatchTestCase(TestCase):
     def setUp(self):
         self.base_section = KnownSectionFactory()
         self.matcher = UserFactory(profile=None)
+        _create_user_profile(self.matcher)
         self.issuer = UserFactory(profile=None)
+        _create_user_profile(self.issuer)
         self.match, self.request_obj = _make_match_and_request(self.matcher, self.issuer)
 
     @patch("apps.notifications.services.match.send_notification_email")
@@ -87,7 +95,7 @@ class NotifyBuddyMatchTestCase(TestCase):
 
         mock_enqueue.assert_called_once()
         call_kwargs = mock_enqueue.call_args.kwargs
-        self.assertEqual(call_kwargs["kind"], ScheduledNotification.Kind.BUDDY_MATCHED_ISSUER)
+        self.assertEqual(call_kwargs["kind"], NotificationKind.BUDDY_MATCHED_ISSUER)
         self.assertEqual(call_kwargs["recipient"], self.issuer)
         self.assertEqual(call_kwargs["related_object"], self.match)
 
@@ -156,7 +164,9 @@ class NotifyPickupMatchTestCase(TestCase):
     def setUp(self):
         self.base_section = KnownSectionFactory()
         self.matcher = UserFactory(profile=None)
+        _create_user_profile(self.matcher)
         self.issuer = UserFactory(profile=None)
+        _create_user_profile(self.issuer)
         self.match, self.request_obj = _make_match_and_request(self.matcher, self.issuer)
 
     @patch("apps.notifications.services.match.send_notification_email")
