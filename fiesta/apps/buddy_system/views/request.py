@@ -97,7 +97,7 @@ class SignUpBeforeEntranceView(
 
 @with_plugin_home_breadcrumb
 @with_breadcrumb(_("New buddy request"))
-class NewBuddyRequestView(BaseNewRequestView):
+class NewBuddyRequestView(PluginConfigurationViewMixin[BuddySystemConfiguration], BaseNewRequestView):
     form_class = NewBuddyRequestForm
     success_message = _("Your buddy request has been successfully created!")
 
@@ -109,3 +109,27 @@ class NewBuddyRequestView(BaseNewRequestView):
         return i | {
             "interests": p.interests if p else None,
         }
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+
+        if not self._same_gender_option_eligible():
+            del form.fields["same_gender_only"]
+
+        return form
+
+    def _same_gender_option_eligible(self) -> bool:
+        if not (self.configuration and self.configuration.enable_same_gender_matching):
+            return False
+
+        profile: UserProfile | None = self.request.user.profile_or_none
+        return bool(profile and profile.gender in (UserProfile.Gender.MALE, UserProfile.Gender.FEMALE))
+
+    def form_valid(self, form):
+        profile: UserProfile | None = self.request.user.profile_or_none
+        form.instance.issuer_gender = profile.gender if profile else ""
+
+        if form.instance.issuer_gender not in (UserProfile.Gender.MALE, UserProfile.Gender.FEMALE):
+            form.instance.same_gender_only = False
+
+        return super().form_valid(form)

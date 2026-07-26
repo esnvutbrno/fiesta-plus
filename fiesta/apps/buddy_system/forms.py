@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from django.core.exceptions import ValidationError
 from django.forms import Textarea
 from django.template.loader import render_to_string
 from django.utils.functional import lazy
@@ -24,7 +25,7 @@ class NewBuddyRequestForm(BaseNewRequestForm):
     class Meta(BaseNewRequestForm.Meta):
         model = BuddyRequest
 
-        fields = BaseNewRequestForm.Meta.fields + ("interests",)
+        fields = BaseNewRequestForm.Meta.fields + ("interests", "same_gender_only")
         field_classes = BaseNewRequestForm.Meta.field_classes | {
             "interests": ChoicedArrayField,
         }
@@ -32,12 +33,17 @@ class NewBuddyRequestForm(BaseNewRequestForm):
             "note": _("Tell us about yourself"),
             "interests": _("What are you into?"),
             "approving_requests": _("I really want a buddy"),
+            "same_gender_only": _("Only match me with a buddy of the same gender"),
         }
         help_texts = BaseNewRequestForm.Meta.help_texts | {
             "note": lazy(
                 lambda: render_to_string("buddy_system/parts/buddy_request_note_help.html"),
                 str,
-            )
+            ),
+            "same_gender_only": _(
+                "Only available if your profile gender is set to male or female. If selected, you will "
+                "only be matched with a buddy of the same gender as you."
+            ),
         }
 
 
@@ -48,9 +54,20 @@ class BuddyRequestEditorForm(BaseRequestEditorForm):
         if self.instance.state != BuddyRequest.State.CREATED:
             self.fields["interests"].disabled = True
 
+        # surface the same-gender constraint to editors as read-only info; hide it when irrelevant
+        if self.instance.same_gender_only:
+            field = self.fields["same_gender_only"]
+            field.disabled = True
+            field.label = _("Same-gender buddy only")
+            field.help_text = _(
+                "This student asked to be matched only with a buddy of the same gender (%(gender)s)."
+            ) % {"gender": self.instance.get_issuer_gender_display()}
+        else:
+            del self.fields["same_gender_only"]
+
     class Meta(BaseRequestEditorForm.Meta):
         model = BuddyRequest
-        fields = BaseRequestEditorForm.Meta.fields + ("interests",)
+        fields = BaseRequestEditorForm.Meta.fields + ("interests", "same_gender_only")
         field_classes = BaseRequestEditorForm.Meta.field_classes | {
             "interests": ChoicedArrayField,
         }
@@ -58,10 +75,29 @@ class BuddyRequestEditorForm(BaseRequestEditorForm):
 
 
 class QuickBuddyMatchForm(BaseQuickMatchForm):
+    # NOTE: at runtime `self.instance` is actually a BuddyRequest, not a BuddyRequestMatch --
+    # QuickBuddyMatchView is an UpdateView with model=BuddyRequest, so get_object() (a BuddyRequest)
+    # is passed in as the form instance; this annotation only describes the form's Meta.model
     instance: BuddyRequestMatch
 
     class Meta(BaseQuickMatchForm.Meta):
         model = BuddyRequestMatch
+
+    def __init__(self, *args, same_gender_matching_enabled: bool = False, **kwargs):
+        self._same_gender_matching_enabled = same_gender_matching_enabled
+        super().__init__(*args, **kwargs)
+
+    def clean_matcher(self):
+        matcher = super().clean_matcher()
+
+        if (
+            self._same_gender_matching_enabled
+            and self.instance.same_gender_only
+            and matcher.profile_or_none.gender != self.instance.issuer_gender
+        ):
+            raise ValidationError(_("This request can only be matched with a buddy of the same gender."))
+
+        return matcher
 
 
 class BuddyRequestMatchForm(BaseRequestMatchForm):

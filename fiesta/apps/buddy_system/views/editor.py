@@ -9,11 +9,12 @@ from django_tables2.columns.base import LinkTransform
 from django_tables2.utils import Accessor
 
 from apps.buddy_system.forms import BuddyRequestEditorForm, QuickBuddyMatchForm
-from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch
+from apps.buddy_system.models import BuddyRequest, BuddyRequestMatch, BuddySystemConfiguration
 from apps.fiestaforms.views.htmx import HtmxFormViewMixin
 from apps.fiestarequests.tables.editor import BaseRequestsFilter, BaseRequestsTable
 from apps.fiestarequests.views.editor import BaseQuickRequestMatchView, BaseUpdateRequestStateView
 from apps.fiestatables.views.tables import FiestaTableView
+from apps.plugins.views import PluginConfigurationViewMixin
 from apps.sections.middleware.section_space import HttpRequest
 from apps.sections.views.mixins.membership import EnsurePrivilegedUserViewMixin
 from apps.utils.breadcrumbs import with_breadcrumb, with_object_breadcrumb, with_plugin_home_breadcrumb
@@ -81,7 +82,7 @@ class BuddyRequestEditorDetailView(
         return context
 
 
-class QuickBuddyMatchView(BaseQuickRequestMatchView):
+class QuickBuddyMatchView(PluginConfigurationViewMixin[BuddySystemConfiguration], BaseQuickRequestMatchView):
     model = BuddyRequest
     form_class = QuickBuddyMatchForm
 
@@ -90,6 +91,13 @@ class QuickBuddyMatchView(BaseQuickRequestMatchView):
 
     form_url = "buddy_system:quick-match"
     match_model = BuddyRequestMatch
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["same_gender_matching_enabled"] = bool(
+            self.configuration and self.configuration.enable_same_gender_matching
+        )
+        return kwargs
 
 
 class UpdateBuddyRequestStateView(BaseUpdateRequestStateView):
