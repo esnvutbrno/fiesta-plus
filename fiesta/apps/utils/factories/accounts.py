@@ -44,7 +44,7 @@ class UserProfileFactory(factory.django.DjangoModelFactory):
         model = UserProfile
         django_get_or_create = ("user",)
 
-    home_university = factory.SubFactory(
+    university = factory.SubFactory(
         "apps.utils.factories.universities.UniversityFactory",
     )
     user = factory.SubFactory("apps.utils.factories.accounts.UserFactory", profile=None)
