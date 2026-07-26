@@ -111,7 +111,8 @@ COPY pyproject.toml uv.lock ./
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync ${UV_SYNC_FLAGS} --no-install-project
 # seed setuptools into venv for pkg_resources compat
-RUN /venv/bin/pip install setuptools
+# setuptools>=82 dropped pkg_resources entirely; pin per setuptools' own deprecation notice
+RUN uv pip install --python /venv/bin/python "setuptools<81"
 
 # base runtime image
 FROM ${PYTHON_IMAGE} as web-base
