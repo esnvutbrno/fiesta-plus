@@ -1,3 +1,5 @@
+{% extends "notifications/base_email.txt" %}
+{% block content %}
 You've signed up for an airport pickup!
 ========================================
 
@@ -11,3 +13,4 @@ Student to pick up: {{ request.issuer.get_full_name }}
 {% if request.airport %}Airport: {{ request.airport }}{% endif %}
 
 Please coordinate with the student to confirm the meeting point.
+{% endblock %}

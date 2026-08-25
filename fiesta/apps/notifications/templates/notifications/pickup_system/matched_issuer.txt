@@ -1,3 +1,5 @@
+{% extends "notifications/base_email.txt" %}
+{% block content %}
 Your airport pickup is confirmed!
 ==================================
 
@@ -10,3 +12,4 @@ Great news! Your airport pickup request has been matched at {{ section }}.
 {% endif %}
 
 They will reach out to confirm the meeting point. Safe travels!
+{% endblock %}
