@@ -5,9 +5,10 @@ import typing
 from typing import Any
 
 from django.conf import settings
-from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
+
+from apps.notifications.services.opt_out import is_globally_opted_out
 
 logger = logging.getLogger(__name__)
 
@@ -29,13 +30,9 @@ def send_notification_email(
     template_prefix: e.g. "notifications/buddy_system/matched_matcher"
     Templates expected: {template_prefix}.html and {template_prefix}.txt
     """
-    if recipient_user is not None and hasattr(recipient_user, "profile"):
-        try:
-            if not recipient_user.profile.email_notifications_enabled:
-                logger.info("Skipping email to user pk=%s: global opt-out", recipient_user.pk)
-                return
-        except ObjectDoesNotExist:
-            pass  # No profile — proceed with sending
+    if recipient_user is not None and is_globally_opted_out(recipient_user):
+        logger.info("Skipping email to user pk=%s: global opt-out", recipient_user.pk)
+        return
 
     html_content = render_to_string(f"{template_prefix}.html", context)
     text_content = render_to_string(f"{template_prefix}.txt", context)

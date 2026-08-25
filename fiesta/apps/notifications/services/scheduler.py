@@ -8,6 +8,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 
 from apps.notifications.models import NotificationKind, ScheduledNotification
+from apps.notifications.services.opt_out import is_globally_opted_out
 
 if TYPE_CHECKING:
     from django.db.models import Model
@@ -36,7 +37,7 @@ def enqueue_delayed_notification(
 
     Uses select_for_update to prevent duplicate rows from concurrent requests.
     """
-    if hasattr(recipient, "profile") and not recipient.profile.email_notifications_enabled:
+    if is_globally_opted_out(recipient):
         logger.info("Skipping scheduled notification for %s: global opt-out", recipient)
         return None
 

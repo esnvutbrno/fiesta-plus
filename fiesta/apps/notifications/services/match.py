@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from apps.notifications.models import NotificationKind
 from apps.notifications.services.mailer import send_notification_email
+from apps.notifications.services.opt_out import is_globally_opted_out
 from apps.notifications.services.scheduler import enqueue_delayed_notification
 from apps.notifications.services.urls import preferences_url
 
@@ -29,14 +30,6 @@ def _get_prefs(user: User, section: Section) -> SectionNotificationPreferences |
         return SectionNotificationPreferences.objects.get(user=user, section=section)
     except SectionNotificationPreferences.DoesNotExist:
         return None
-
-
-def _is_globally_opted_out(user: User) -> bool:
-    """Return True if user has disabled email notifications globally."""
-    try:
-        return not user.profile.email_notifications_enabled
-    except Exception:
-        return False
 
 
 def _notify_match_enabled(prefs: SectionNotificationPreferences | None) -> bool:
@@ -64,7 +57,7 @@ def notify_buddy_match(*, match: BuddyRequestMatch, request: BuddyRequest, secti
 
     matcher = match.matcher
     matcher_prefs = _get_prefs(matcher, section)
-    if _notify_match_enabled(matcher_prefs) and not _is_globally_opted_out(matcher):
+    if _notify_match_enabled(matcher_prefs) and not is_globally_opted_out(matcher):
         _send_buddy_matcher_email(match=match, request=request, section=section)
 
     issuer = request.issuer
@@ -111,7 +104,7 @@ def notify_pickup_match(*, match: PickupRequestMatch, request: PickupRequest, se
 
     matcher = match.matcher
     matcher_prefs = _get_prefs(matcher, section)
-    if _notify_match_enabled(matcher_prefs) and not _is_globally_opted_out(matcher):
+    if _notify_match_enabled(matcher_prefs) and not is_globally_opted_out(matcher):
         _send_pickup_matcher_email(match=match, request=request, section=section)
 
     issuer = request.issuer
