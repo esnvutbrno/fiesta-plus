@@ -63,3 +63,35 @@ spec:
                 - configMapRef:
                     name: {{ .Values.web.configName }}
           restartPolicy: OnFailure
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: web-notifications-send
+  labels:
+    {{- include "fiesta.labels" . | nindent 4 }}
+    {{- include "fiesta.componentLabels" "notifications-send" | nindent 4 }}
+spec:
+  schedule: "0,10,20,30,40,50 * * * *" #	Run every 10 minutes
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            {{- include "fiesta.selectorLabels" . | nindent 12 }}
+            {{- include "fiesta.componentLabels" "notifications-send" | nindent 12 }}
+        spec:
+          containers:
+            - name: notifications-send
+              image: "{{ .Values.web.repository }}:{{ .Values.web.tag | default .Chart.AppVersion }}"
+              command:
+                - /bin/sh
+                - -c
+                - ./manage.py send_scheduled_notifications
+              envFrom:
+                - secretRef:
+                    name: {{ .Values.web.secretName }}
+                - configMapRef:
+                    name: {{ .Values.web.configName }}
+          restartPolicy: OnFailure
