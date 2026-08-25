@@ -47,8 +47,8 @@
                 {{ fr.issuer.profile.nationality.unicode_flag }} {{ fr.issuer.profile.nationality.name }}
               </span>
             {% endif %}
-            {% if configuration.display_issuer_university and fr.issuer.profile.home_university %}
-              <span class="w-1/2 text-center">{{ fr.issuer.profile.home_university }}</span>
+            {% if configuration.display_issuer_university and fr.issuer.profile.university %}
+              <span class="w-1/2 text-center">{{ fr.issuer.profile.university }}</span>
             {% endif %}
           </div>
           {# <p /> are added by filter #}

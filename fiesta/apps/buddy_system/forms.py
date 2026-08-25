@@ -89,11 +89,12 @@ class QuickBuddyMatchForm(BaseQuickMatchForm):
 
     def clean_matcher(self):
         matcher = super().clean_matcher()
+        matcher_profile = matcher.profile_or_none
 
         if (
             self._same_gender_matching_enabled
             and self.instance.same_gender_only
-            and matcher.profile_or_none.gender != self.instance.issuer_gender
+            and (not matcher_profile or matcher_profile.gender != self.instance.issuer_gender)
         ):
             raise ValidationError(_("This request can only be matched with a buddy of the same gender."))
 
