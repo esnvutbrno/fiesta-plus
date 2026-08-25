@@ -26,11 +26,15 @@ class BaseMatchingPolicy:
 
     def limit_requests(self, qs: QuerySet[BuddyRequest], membership: SectionMembership) -> QuerySet[BuddyRequest]:
         # TODO: NotImplemented or base implementation?
-        return qs.filter(self._base_filter(membership=membership)).select_related(
-            "issuer",
-            "issuer__profile",
-            "issuer__profile__faculty",
-            "issuer__profile__university",
+        return (
+            qs.filter(self._base_filter(membership=membership))
+            .filter(self._same_gender_filter(membership=membership))
+            .select_related(
+                "issuer",
+                "issuer__profile",
+                "issuer__profile__faculty",
+                "issuer__profile__university",
+            )
         )
 
     def can_member_match(self, membership: SectionMembership) -> bool:
@@ -61,6 +65,25 @@ class BaseMatchingPolicy:
             match__isnull=True,  # to be sure
         )
 
+    def _same_gender_filter(self, membership: SectionMembership) -> Q:
+        """Blocks matches against `same_gender_only` requests, unless enabled and the member's
+        own profile gender matches the issuer's. Only meaningful for buddy_system configurations."""
+        from apps.accounts.models import UserProfile
+
+        # `enable_same_gender_matching` lives on BuddySystemConfiguration; other request-system
+        # configurations don't define it, so read defensively instead of assuming the subclass.
+        if not getattr(self.conf, "enable_same_gender_matching", False):
+            return Q()
+
+        member_profile: UserProfile | None = membership.user.profile_or_none
+        matcher_gender = member_profile.gender if member_profile else ""
+
+        if matcher_gender not in (UserProfile.Gender.MALE, UserProfile.Gender.FEMALE):
+            # non-binary/unset gender can never match a same-gender-only request
+            return Q(same_gender_only=False)
+
+        return Q(same_gender_only=False) | Q(issuer_gender=matcher_gender)
+
 
 class ManualByEditorMatchingPolicy(BaseMatchingPolicy):
     id = "manual-by-editor"
@@ -87,8 +110,12 @@ class ManualWithSameFacultyMatchingPolicy(BaseMatchingPolicy):
 
         member_profile: UserProfile = membership.user.profile_or_none
 
-        return qs.filter(self._base_filter(membership=membership)).filter(
-            issuer_faculty=member_profile.faculty,
+        return (
+            super()
+            .limit_requests(qs=qs, membership=membership)
+            .filter(
+                issuer_faculty=member_profile.faculty,
+            )
         )
 
 

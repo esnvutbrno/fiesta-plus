@@ -34,6 +34,15 @@ class BuddySystemConfiguration(BaseRequestSystemConfiguration):
         help_text=MatchingPoliciesRegister.DESCRIPTION,
     )
 
+    enable_same_gender_matching = models.BooleanField(
+        verbose_name=_("enable same-gender matching"),
+        default=False,
+        help_text=_(
+            "Let issuers require that only a buddy of the same gender may match them. "
+            "Only available to issuers whose profile gender is set to male or female."
+        ),
+    )
+
     @property
     def matching_policy_instance(self) -> BaseMatchingPolicy:
         return MatchingPoliciesRegister.get_policy(self)

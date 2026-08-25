@@ -4,7 +4,7 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import UpdateView
-from django_tables2 import TemplateColumn, tables
+from django_tables2 import DateTimeColumn, TemplateColumn
 from django_tables2.columns.base import Column, LinkTransform
 from django_tables2.utils import Accessor
 
@@ -27,7 +27,7 @@ class PickupRequestsTable(BaseRequestsTable):
         order_by="match",
     )
 
-    time = tables.columns.DateTimeColumn()
+    time = DateTimeColumn()
 
     place = Column(
         linkify=lambda record: record.location_as_google_maps_link,
