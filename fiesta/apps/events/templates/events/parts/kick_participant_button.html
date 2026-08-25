@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<a href="#" 
+class="btn btn-sm btn-outline btn-primary"
+hx-post="{% url "events:event-kick" pk=event.pk pkp=record.pk %}"
+hx-confirm="Are you sure you want to kick this participant ?"
+hx-swap="outerHTML">  
+{% translate "Kick" %}
+</a>

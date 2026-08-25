@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from django.utils.translation import gettext_lazy as _
-from django_select2.forms import ModelSelect2Widget
+from django_select2.forms import ModelSelect2Widget, ModelSelect2MultipleWidget
 
 from apps.sections.models import SectionMembership
 
@@ -20,20 +20,7 @@ class RemoteModelSelectWidgetMixin:
     def media(self):
         return None
 
-
-class UserWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
-    search_fields = [
-        "first_name__icontains",
-        "last_name__icontains",
-        "username__icontains",
-    ]
-
-    @classmethod
-    def label_from_instance(cls, user):
-        return f"{user.full_name} ({user.username})"
-
-
-class ActiveLocalMembersFromSectionWidget(UserWidget):
+class ActiveLocalMembersFromSectionWidgetMixin:
     def filter_queryset(self, request, term, queryset=None, **dependent_fields):
         queryset = (
             (queryset or self.get_queryset())
@@ -51,6 +38,44 @@ class ActiveLocalMembersFromSectionWidget(UserWidget):
 
         return super().filter_queryset(request, term, queryset, **dependent_fields)
 
+class UserWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
+    search_fields = [
+        "first_name__icontains",
+        "last_name__icontains",
+        "username__icontains",
+    ]
+
+    @classmethod
+    def label_from_instance(cls, user):
+        return f"{user.full_name} ({user.username})"
+    
+class MultipleUserWidget(RemoteModelSelectWidgetMixin, ModelSelect2MultipleWidget):
+    search_fields = [
+        "first_name__icontains",
+        "last_name__icontains",
+        "username__icontains",
+    ]
+
+    @classmethod
+    def label_from_instance(cls, user):
+        return f"{user.full_name} ({user.username})"
+
+
+
+class ActiveLocalMembersFromSectionWidget(ActiveLocalMembersFromSectionWidgetMixin, UserWidget):
+    pass
+    
+class MultipleActiveLocalMembersFromSectionWidget(ActiveLocalMembersFromSectionWidgetMixin, MultipleUserWidget):
+    pass
+    
+class PlaceWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
+    search_fields = [
+        "name__icontains",
+    ]
+
+    @classmethod
+    def label_from_instance(cls, place):
+        return f"{place.name}"
 
 class UniversityWidget(RemoteModelSelectWidgetMixin, ModelSelect2Widget):
     search_fields = [

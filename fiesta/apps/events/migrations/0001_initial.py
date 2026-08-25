@@ -16,8 +16,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('plugins', '0014_alter_plugin_app_label'),
-        ('sections', '0015_alter_sectionsconfiguration_required_gender_and_more'),
     ]
 
     operations = [

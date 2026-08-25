@@ -36,7 +36,7 @@ class EventAdmin(admin.ModelAdmin):
 
 @admin.register(Organizer)
 class OrganizerAdmin(admin.ModelAdmin):
-    list_display = ("user", "event", "state")
+    list_display = ("user", "event", "role")
     show_in_index = True
 
 

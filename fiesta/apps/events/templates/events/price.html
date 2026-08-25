@@ -1,0 +1,17 @@
+{% load django_tables2 %}
+{% load fiestaforms %}
+{% load state %}
+
+
+{% load breadcrumbs %}
+{% load i18n %}
+{% load static %}
+{% load utils %}
+
+
+{% block breadcrumbs_right %}
+  <a class="btn btn-success btn-sm btn-outline"
+     href="{% url "events:price" event.pk %}"
+     x-data="modal($el.href)"
+     x-bind="bind">{% translate "Add price" %}</a>
+{% endblock breadcrumbs_right %}
