@@ -66,15 +66,23 @@ class BuddyRequestMatch(BaseRequestMatchForBuddySystem):
         from apps.plugins.models import Plugin
         from apps.plugins.utils import all_plugins_mapped_to_class
 
+        buddy_system_app = all_plugins_mapped_to_class().get(BuddySystemConfig)
+        if not buddy_system_app:
+            return
+
         try:
             plugin = self.request.responsible_section.plugins.get(
-                app_label=all_plugins_mapped_to_class()[BuddySystemConfig].label,
+                app_label=buddy_system_app.label,
             )
         except Plugin.DoesNotExist:
             return
 
         configuration = plugin.configuration
         if not configuration or not configuration.enable_same_gender_matching:
+            return
+
+        if self.request.issuer_gender not in (UserProfile.Gender.MALE, UserProfile.Gender.FEMALE):
+            # constraint is only meaningful for male/female issuers; treat it as inactive otherwise
             return
 
         matcher_profile = self.matcher.profile_or_none
