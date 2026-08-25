@@ -9,6 +9,7 @@ from django.utils import timezone
 from apps.notifications.models import NotificationKind
 from apps.notifications.services.mailer import send_notification_email
 from apps.notifications.services.opt_out import is_globally_opted_out
+from apps.notifications.services.plugin_config import get_plugin_configuration
 from apps.notifications.services.scheduler import enqueue_delayed_notification
 from apps.notifications.services.urls import preferences_url
 
@@ -46,9 +47,8 @@ def notify_buddy_match(*, match: BuddyRequestMatch, request: BuddyRequest, secti
     Respects BuddySystemConfiguration.email_notify_on_match flag and user prefs.
     Called inside transaction.on_commit().
     """
-    try:
-        config = section.buddy_system_configuration
-    except Exception:
+    config = get_plugin_configuration(section, "buddy_system")
+    if config is None:
         logger.debug("No BuddySystemConfiguration for section %s, skipping match notifications", section)
         return
 
@@ -93,9 +93,8 @@ def _send_buddy_matcher_email(*, match: BuddyRequestMatch, request: BuddyRequest
 
 def notify_pickup_match(*, match: PickupRequestMatch, request: PickupRequest, section: Section) -> None:
     """Same pattern as buddy, but for pickup_system."""
-    try:
-        config = section.pickup_system_configuration
-    except Exception:
+    config = get_plugin_configuration(section, "pickup_system")
+    if config is None:
         logger.debug("No PickupSystemConfiguration for section %s, skipping", section)
         return
 

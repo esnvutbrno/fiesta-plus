@@ -23,11 +23,6 @@ def _make_buddy_config(notify=True, delay=timedelta(hours=1)):
     return config
 
 
-def _make_section_with_buddy_config(base_section, config):
-    base_section.buddy_system_configuration = config  # type: ignore[attr-defined]
-    return base_section
-
-
 def _make_match_and_request(matcher, issuer):
     request_mock = MagicMock()
     request_mock.issuer = issuer
@@ -40,9 +35,12 @@ def _make_match_and_request(matcher, issuer):
 
 
 class GlobalOptOutNotificationsTestCase(TestCase):
+    @patch("apps.notifications.services.match.get_plugin_configuration")
     @patch("apps.notifications.services.match.enqueue_delayed_notification")
     @patch("apps.notifications.services.match.send_notification_email")
-    def test_opted_out_matcher_gets_no_immediate_email_but_issuer_is_still_enqueued(self, mock_send, mock_enqueue):
+    def test_opted_out_matcher_gets_no_immediate_email_but_issuer_is_still_enqueued(
+        self, mock_send, mock_enqueue, mock_get_config
+    ):
         matcher = UserFactory(profile=None)
         matcher_profile = UserProfile.objects.create(user=matcher)
         matcher_profile.email_notifications_enabled = False
@@ -51,9 +49,8 @@ class GlobalOptOutNotificationsTestCase(TestCase):
         issuer = UserFactory(profile=None)
         UserProfile.objects.create(user=issuer)
 
-        base_section = KnownSectionFactory()
-        config = _make_buddy_config()
-        section = _make_section_with_buddy_config(base_section, config)
+        section = KnownSectionFactory()
+        mock_get_config.return_value = _make_buddy_config()
         match, request = _make_match_and_request(matcher, issuer)
 
         with self.captureOnCommitCallbacks(execute=True):

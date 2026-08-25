@@ -37,11 +37,11 @@ class NotifyNewMembershipTestCase(TestCase):
             state=SectionMembership.State.UNCONFIRMED,
         )
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_sends_received_email_to_applicant(self, mock_send):
+    def test_sends_received_email_to_applicant(self, mock_send, mock_get_config):
         """Applicant receives a confirmation email when their membership application is registered."""
-        config = _make_sections_config()
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config()
 
         notify_new_membership(self.membership)
 
@@ -50,9 +50,10 @@ class NotifyNewMembershipTestCase(TestCase):
         self.assertIn("membership_received", call_kwargs["template_prefix"])
         self.assertEqual(call_kwargs["recipient_email"], self.applicant.email)
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.scheduler.enqueue_delayed_notification")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_enqueues_digest_for_editors(self, mock_send, mock_enqueue):
+    def test_enqueues_digest_for_editors(self, mock_send, mock_enqueue, mock_get_config):
         """Active editors and admins each get a digest ScheduledNotification enqueued."""
         editor = UserFactory(profile=None)
         SectionMembershipWithUserFactory(
@@ -70,8 +71,7 @@ class NotifyNewMembershipTestCase(TestCase):
             state=SectionMembership.State.ACTIVE,
         )
 
-        config = _make_sections_config()
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config()
 
         notify_new_membership(self.membership)
 
@@ -81,9 +81,10 @@ class NotifyNewMembershipTestCase(TestCase):
             self.assertEqual(call.kwargs["kind"], ScheduledNotification.Kind.MEMBER_WAITING_DIGEST)
             self.assertEqual(call.kwargs["related_object"], self.membership)
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.scheduler.enqueue_delayed_notification")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_skips_non_editor_members(self, mock_send, mock_enqueue):
+    def test_skips_non_editor_members(self, mock_send, mock_enqueue, mock_get_config):
         """Regular members and international students do NOT get a digest notification."""
         regular_member = UserFactory(profile=None)
         SectionMembershipWithUserFactory(
@@ -101,26 +102,26 @@ class NotifyNewMembershipTestCase(TestCase):
             state=SectionMembership.State.ACTIVE,
         )
 
-        config = _make_sections_config()
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config()
 
         notify_new_membership(self.membership)
 
         mock_enqueue.assert_not_called()
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_config_disabled_skips_applicant_email(self, mock_send):
+    def test_config_disabled_skips_applicant_email(self, mock_send, mock_get_config):
         """If config.email_notify_member_on_received=False, no confirmation email is sent to applicant."""
-        config = _make_sections_config(notify_member=False)
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config(notify_member=False)
 
         notify_new_membership(self.membership)
 
         mock_send.assert_not_called()
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.scheduler.enqueue_delayed_notification")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_config_disabled_skips_editor_digest(self, mock_send, mock_enqueue):
+    def test_config_disabled_skips_editor_digest(self, mock_send, mock_enqueue, mock_get_config):
         """If config.email_notify_on_new_member=False, no digest notifications are enqueued for editors."""
         editor = UserFactory(profile=None)
         SectionMembershipWithUserFactory(
@@ -130,16 +131,16 @@ class NotifyNewMembershipTestCase(TestCase):
             state=SectionMembership.State.ACTIVE,
         )
 
-        config = _make_sections_config(notify_on_new_member=False)
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config(notify_on_new_member=False)
 
         notify_new_membership(self.membership)
 
         mock_enqueue.assert_not_called()
 
+    @patch("apps.notifications.services.membership.get_plugin_configuration")
     @patch("apps.notifications.services.scheduler.enqueue_delayed_notification")
     @patch("apps.notifications.services.membership.send_notification_email")
-    def test_editor_opted_out_not_enqueued(self, mock_send, mock_enqueue):
+    def test_editor_opted_out_not_enqueued(self, mock_send, mock_enqueue, mock_get_config):
         """Editor with notify_on_new_member_waiting=False does not receive a digest notification."""
         editor = UserFactory(profile=None)
         SectionMembershipWithUserFactory(
@@ -154,8 +155,7 @@ class NotifyNewMembershipTestCase(TestCase):
             notify_on_new_member_waiting=False,
         )
 
-        config = _make_sections_config()
-        self.section.sections_plugin_configuration = config  # type: ignore[attr-defined]
+        mock_get_config.return_value = _make_sections_config()
 
         notify_new_membership(self.membership)
 
@@ -163,7 +163,7 @@ class NotifyNewMembershipTestCase(TestCase):
 
     @patch("apps.notifications.services.membership.send_notification_email")
     def test_no_config_skips_all(self, mock_send):
-        """If section has no SectionsConfiguration plugin, nothing is sent."""
+        """If section has no sections Plugin enabled, nothing is sent."""
         notify_new_membership(self.membership)
 
         mock_send.assert_not_called()

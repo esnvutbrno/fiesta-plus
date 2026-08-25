@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 from apps.notifications.services.mailer import send_notification_email
+from apps.notifications.services.plugin_config import get_plugin_configuration
 from apps.notifications.services.urls import preferences_url
 
 if TYPE_CHECKING:
@@ -22,9 +23,8 @@ def notify_new_membership(membership: SectionMembership) -> None:
     """
     section = membership.section
 
-    try:
-        config = section.sections_plugin_configuration
-    except Exception:
+    config = get_plugin_configuration(section, "sections")
+    if config is None:
         logger.debug("No SectionsConfiguration for section %s, skipping membership notifications", section)
         return
 
