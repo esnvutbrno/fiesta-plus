@@ -4,7 +4,7 @@ default_language_version:
 repos:
   # basic hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v6.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
@@ -23,14 +23,14 @@ repos:
       - id: detect-private-key
 
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.2
+    rev: 9.0.1
     hooks:
       - id: isort
         args: [ "--profile", "black", "--filter-files" ]
 
   # security linter on
   - repo: https://github.com/pycqa/bandit
-    rev: 1.7.9
+    rev: 1.9.4
     hooks:
       - id: bandit
         name: check security by Bandit
@@ -38,22 +38,22 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: 'v0.6.5'
+    rev: 'v0.16.6'
     hooks:
       - id: ruff
         name: lint by Ruff
         args: [ --fix, --exit-non-zero-on-fix ]
 
   # uncompromise python formatter
-  - repo: https://github.com/psf/black
-    rev: 24.8.0
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 26.5.1
     hooks:
       - id: black
         name: format by black
         exclude: ^.*\b(migrations)\b.*$
 
   - repo: https://github.com/Riverside-Healthcare/djlint
-    rev: 'v1.35.2'  # replace with the latest tag on GitHub
+    rev: 'v1.46.0'  # replace with the latest tag on GitHub
     hooks:
       - id: djlint-django
         entry: djlint  --reformat
